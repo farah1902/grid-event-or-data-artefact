@@ -1,0 +1,19 @@
+# local scratch / duplicates (not part of the project)
+_local_archive/
+/figures/
+out_check/
+*.zip
+
+# python / jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

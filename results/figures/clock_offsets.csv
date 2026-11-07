@@ -1,0 +1,22 @@
+date,event,city,delta_star_min,corr_at_0,corr_best
+2022-10-30,Europe fall-back (repeated hour),Laayoune,-60,0.8671,0.9865
+2022-10-30,Europe fall-back (repeated hour),Boujdour,-60,0.8802,0.9781
+2022-10-30,Europe fall-back (repeated hour),Foum eloued,-60,0.8585,0.9237
+2023-03-19,Morocco → GMT (Ramadan start),Laayoune,30,0.8385,0.8448
+2023-03-19,Morocco → GMT (Ramadan start),Boujdour,0,0.9025,0.9025
+2023-03-19,Morocco → GMT (Ramadan start),Foum eloued,20,0.8805,0.8875
+2023-03-19,Morocco → GMT (Ramadan start),Marrakech,30,0.9444,0.9609
+2023-04-23,Morocco → GMT+1 (missing hour),Laayoune,-120,0.6932,0.7747
+2023-04-23,Morocco → GMT+1 (missing hour),Boujdour,20,0.8416,0.8469
+2023-04-23,Morocco → GMT+1 (missing hour),Foum eloued,-60,0.8614,0.9096
+2023-04-23,Morocco → GMT+1 (missing hour),Marrakech,0,0.71,0.71
+2023-10-29,Europe fall-back (repeated hour),Laayoune,-120,0.6461,0.9972
+2023-10-29,Europe fall-back (repeated hour),Boujdour,-60,0.8671,0.9809
+2023-10-29,Europe fall-back (repeated hour),Foum eloued,-60,0.7486,0.8509
+2023-10-29,Europe fall-back (repeated hour),Marrakech,-30,0.7861,0.8263
+2024-03-10,Morocco → GMT (Ramadan start),Laayoune,120,0.5915,0.7119
+2024-03-10,Morocco → GMT (Ramadan start),Boujdour,-120,0.6704,0.8175
+2024-03-10,Morocco → GMT (Ramadan start),Foum eloued,-60,0.7831,0.854
+2024-04-14,Morocco → GMT+1 (missing hour),Laayoune,-20,0.8579,0.8618
+2024-04-14,Morocco → GMT+1 (missing hour),Boujdour,20,0.9125,0.9181
+2024-04-14,Morocco → GMT+1 (missing hour),Foum eloued,-120,0.6929,0.8425
