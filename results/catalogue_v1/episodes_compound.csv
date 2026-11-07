@@ -1,0 +1,39 @@
+episode,start,end,n_items,items,kinds,labels,cities
+EP007,2022-10-01 09:00:00,2022-10-01 11:40:00,2,"D049,F013",dead+fill,"conflict:G3|G4,A3",Foum eloued
+EP018,2022-10-19 11:40:00,2022-10-19 18:20:00,2,"F022,F023",fill,"A3,A3",Laayoune
+EP020,2022-10-23 08:10:00,2022-10-24 09:30:00,4,"D052,D053,F025,F026",dead+fill,"conflict:G3|G4,G3,A3,A3",Laayoune
+EP021,2022-10-25 08:10:00,2022-10-25 12:40:00,2,"D054,F027",dead+fill,"conflict:G3|G4,A3",Foum eloued
+EP023,2022-10-26 08:10:00,2022-10-26 11:00:00,2,"D055,F029",dead+fill,"conflict:G3|G4,A2",Laayoune
+EP025,2022-10-29 10:00:00,2022-10-29 14:10:00,2,"D056,F031",dead+fill,"G3,A2",Boujdour+Laayoune
+EP028,2022-10-29 20:40:00,2022-11-03 10:30:00,2,"D058,F033",dead+fill,"G3,A3",Foum eloued
+EP027,2022-10-30 06:00:00,2022-10-30 17:50:00,2,"D059,F032",dead+fill,"conflict:G3|G4,A3",Boujdour
+EP029,2022-11-05 07:20:00,2022-11-05 11:10:00,4,"D060,D061,F034,F035",dead+fill,"conflict:G3|G4,conflict:G3|G4,abstain,A3",Foum eloued+Laayoune
+EP033,2022-11-16 22:40:00,2022-11-17 10:50:00,2,"D064,F037",dead+fill,"G3,A3",Foum eloued
+EP035,2022-11-26 07:40:00,2022-11-26 11:50:00,2,"D066,F038",dead+fill,"conflict:G3|G4,A3",Foum eloued
+EP036,2022-11-27 07:20:00,2022-11-27 11:30:00,2,"D067,F039",dead+fill,"conflict:G3|G4,A3",Foum eloued
+EP041,2022-12-28 08:30:00,2022-12-28 10:10:00,2,"D069,F043",dead+fill,"conflict:A1|G3|G4,A2",Boujdour
+EP042,2022-12-29 09:00:00,2022-12-29 10:20:00,2,"D070,F044",dead+fill,"conflict:G3|G4,A2",Boujdour
+EP046,2023-01-14 09:00:00,2023-01-14 14:00:00,2,"D071,F047",dead+fill,"conflict:G3|G4,A3",Foum eloued
+EP047,2023-01-18 07:40:00,2023-01-18 11:20:00,2,"D072,F048",dead+fill,"conflict:G3|G4,A3",Laayoune
+EP049,2023-01-19 08:40:00,2023-01-19 11:20:00,2,"D074,F049",dead+fill,"conflict:G3|G4,A3",Boujdour
+EP054,2023-01-24 06:40:00,2023-01-24 11:40:00,2,"D076,F050",dead+fill,"conflict:G3|G4,A3",Laayoune
+EP056,2023-01-26 01:20:00,2023-01-29 10:50:00,3,"D077,F051,F052",dead+fill,"A1,A2,A2",Boujdour+Foum eloued+Laayoune
+EP058,2023-02-07 10:10:00,2023-02-07 12:30:00,2,"D078,F054",dead+fill,"G3,A3",Foum eloued
+EP061,2023-02-10 08:20:00,2023-02-12 14:50:00,2,"D079,F057",dead+fill,"G3,A3",Foum eloued
+EP065,2023-02-25 07:00:00,2023-02-25 13:30:00,2,"D081,F060",dead+fill,"conflict:G3|G4,A3",Foum eloued
+EP066,2023-03-04 08:00:00,2023-03-04 15:50:00,2,"D082,F061",dead+fill,"conflict:G3|G4,A3",Foum eloued
+EP077,2023-03-30 11:40:00,2023-03-30 14:00:00,3,"F067,F068,F069",fill,"A2,A2,A2",Boujdour+Foum eloued+Laayoune
+EP084,2023-05-04 03:20:00,2023-05-04 15:30:00,2,"D090,F073",dead+fill,"G3,A3",Foum eloued
+EP088,2023-05-27 10:10:00,2023-05-27 11:50:00,2,"D091,F076",dead+fill,"conflict:G3|G4,A3",Laayoune
+EP105,2023-07-16 14:50:00,2023-07-17 07:00:00,2,"D096,F086",dead+fill,"conflict:A1|G?,A2",Boujdour+Foum eloued+Laayoune
+EP111,2023-08-06 07:00:00,2023-08-06 15:20:00,3,"D098,D099,F090",dead+fill,"G3,G3,A3",Boujdour
+EP119,2023-08-30 08:50:00,2023-08-30 13:00:00,2,"D101,F093",dead+fill,"conflict:G3|G4,A3",Laayoune
+EP122,2023-09-08 03:10:00,2023-09-08 05:30:00,2,"F096,F097",fill,"A2,A2",Boujdour+Foum eloued+Laayoune
+EP124,2023-09-09 08:50:00,2023-09-09 11:30:00,2,"D102,F099",dead+fill,"conflict:G3|G4,A3",Laayoune
+EP161,2023-11-09 08:50:00,2023-11-09 12:00:00,2,"F117,F118",fill,"A2,A3",Boujdour+Foum eloued
+EP179,2023-12-16 07:30:00,2023-12-16 14:20:00,2,"D107,F125",dead+fill,"conflict:G3|G4,A3",Foum eloued
+EP187,2023-12-24 05:50:00,2023-12-24 17:00:00,3,"D109,F126,F127",dead+fill,"G3,abstain,abstain",Laayoune
+EP193,2023-12-31 11:20:00,2024-01-01 10:10:00,3,"D110,F131,F132",dead+fill,"conflict:G3|G4,A2,A3",Boujdour+Laayoune
+EP211,2024-03-02 09:00:00,2024-03-02 17:10:00,3,"D114,D115,F141",dead+fill,"conflict:G3|G4,G3,A3",Foum eloued
+EP215,2024-03-31 09:10:00,2024-04-02 07:00:00,4,"D117,D118,F144,F145",dead+fill,"A1,conflict:A1|G3|G4,A2,A2",Boujdour+Foum eloued+Laayoune
+EP216,2024-04-06 08:20:00,2024-04-06 10:20:00,3,"D119,F146,F147",dead+fill,"conflict:G3|G4,A2,abstain",Laayoune

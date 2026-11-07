@@ -1,0 +1,542 @@
+system,city,zone,code,kind,start,end,steps,n_zero,value,slope,quantised
+south,Laayoune,zone1,L1,dead,2022-09-26 08:20:00,2022-09-26 09:10:00,5,5,,,True
+south,Laayoune,zone1,L1,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Laayoune,zone1,L1,dead,2023-05-27 10:10:00,2023-05-27 10:40:00,3,3,,,True
+south,Laayoune,zone1,L1,dead,2023-12-10 08:10:00,2023-12-10 09:10:00,6,5,,,False
+south,Laayoune,zone1,L1,dead,2024-04-02 06:10:00,2024-04-02 07:00:00,5,5,,,True
+south,Laayoune,zone1,L1,dead,2024-04-06 08:20:00,2024-04-06 09:10:00,5,5,,,True
+south,Laayoune,zone1,L1,hold,2022-10-12 08:30:00,2022-10-12 09:30:00,6,0,32.821,,False
+south,Laayoune,zone1,L1,hold,2022-10-14 08:30:00,2022-10-14 09:30:00,6,0,38.788,,False
+south,Laayoune,zone1,L1,hold,2022-11-05 07:40:00,2022-11-05 08:40:00,6,0,33.815,,False
+south,Laayoune,zone1,L1,hold,2023-01-09 08:20:00,2023-01-09 09:20:00,6,0,37.794,,False
+south,Laayoune,zone1,L1,hold,2023-01-26 01:20:00,2023-01-27 13:20:00,216,0,57.685,,False
+south,Laayoune,zone1,L1,hold,2023-04-03 13:10:00,2023-04-03 15:00:00,11,0,40.777,,False
+south,Laayoune,zone1,L1,hold,2024-03-31 11:10:00,2024-04-02 06:10:00,258,0,73.598,,False
+south,Laayoune,zone1,L1,interp,2022-10-26 09:40:00,2022-10-26 11:00:00,8,0,,0.71757,False
+south,Laayoune,zone1,L1,interp,2022-10-29 10:00:00,2022-10-29 11:50:00,11,0,,0.70089,False
+south,Laayoune,zone1,L1,interp,2022-11-12 05:30:00,2022-11-12 09:10:00,22,0,,0.30953,False
+south,Laayoune,zone1,L1,interp,2023-03-11 07:40:00,2023-03-11 10:10:00,15,0,,1.17627,False
+south,Laayoune,zone1,L1,interp,2023-03-30 11:40:00,2023-03-30 12:50:00,7,0,,-1.91373,False
+south,Laayoune,zone1,L1,interp,2023-03-30 13:00:00,2023-03-30 14:00:00,6,0,,-2.19194,False
+south,Laayoune,zone1,L1,interp,2023-05-27 10:50:00,2023-05-27 11:50:00,6,0,,11.73427,False
+south,Laayoune,zone1,L1,interp,2023-07-16 15:30:00,2023-07-17 07:00:00,93,0,,0.09542,False
+south,Laayoune,zone1,L1,interp,2023-09-08 04:20:00,2023-09-08 05:30:00,7,0,,-1.24807,False
+south,Laayoune,zone1,L1,interp,2023-12-26 09:20:00,2023-12-26 11:00:00,10,0,,0.57809,False
+south,Laayoune,zone1,L1,interp,2023-12-27 09:20:00,2023-12-27 11:50:00,15,0,,-1.48953,False
+south,Laayoune,zone1,L1,interp,2023-12-28 09:10:00,2023-12-28 11:30:00,14,0,,-0.68089,False
+south,Laayoune,zone1,L1,interp,2023-12-31 11:20:00,2023-12-31 12:20:00,6,0,,2.28043,False
+south,Laayoune,zone1,L1,interp,2024-01-16 09:10:00,2024-01-16 11:30:00,14,0,,-1.2242,False
+south,Laayoune,zone1,L1,interp,2024-04-06 09:20:00,2024-04-06 10:20:00,6,0,,14.04127,False
+south,Laayoune,zone1,L1,interp,2024-04-21 02:00:00,2024-04-21 03:00:00,6,0,,-0.66051,False
+south,Laayoune,zone1,L1,interp,2024-05-09 10:30:00,2024-05-09 12:10:00,10,0,,0.75907,False
+south,Laayoune,zone2,L2,dead,2022-09-26 08:20:00,2022-09-26 09:10:00,5,5,,,True
+south,Laayoune,zone2,L2,dead,2022-11-05 07:20:00,2022-11-05 09:00:00,10,8,,,False
+south,Laayoune,zone2,L2,dead,2022-11-09 06:40:00,2022-11-09 09:00:00,14,14,,,True
+south,Laayoune,zone2,L2,dead,2023-01-23 06:40:00,2023-01-23 09:30:00,17,16,,,False
+south,Laayoune,zone2,L2,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Laayoune,zone2,L2,dead,2023-09-09 08:50:00,2023-09-09 10:00:00,7,6,,,False
+south,Laayoune,zone2,L2,hold,2022-10-12 23:20:00,2022-10-13 00:20:00,6,0,128.299,,False
+south,Laayoune,zone2,L2,hold,2023-01-26 01:20:00,2023-01-27 13:20:00,216,0,74.593,,False
+south,Laayoune,zone2,L2,hold,2023-03-05 08:40:00,2023-03-05 09:40:00,6,0,54.701,,False
+south,Laayoune,zone2,L2,hold,2023-04-03 13:10:00,2023-04-03 15:00:00,11,0,81.555,,False
+south,Laayoune,zone2,L2,hold,2024-03-31 11:10:00,2024-04-02 06:00:00,257,0,63.652,,False
+south,Laayoune,zone2,L2,interp,2022-10-26 09:40:00,2022-10-26 11:00:00,8,0,,3.57684,False
+south,Laayoune,zone2,L2,interp,2022-10-29 10:00:00,2022-10-29 11:50:00,11,0,,3.12029,False
+south,Laayoune,zone2,L2,interp,2022-11-12 05:30:00,2022-11-12 09:10:00,22,0,,1.1119,False
+south,Laayoune,zone2,L2,interp,2023-03-11 07:40:00,2023-03-11 10:10:00,15,0,,3.2061,False
+south,Laayoune,zone2,L2,interp,2023-03-19 05:30:00,2023-03-19 09:50:00,26,0,,0.21765,False
+south,Laayoune,zone2,L2,interp,2023-03-30 11:40:00,2023-03-30 12:50:00,7,0,,1.14598,False
+south,Laayoune,zone2,L2,interp,2023-03-30 13:00:00,2023-03-30 14:00:00,6,0,,0.15621,False
+south,Laayoune,zone2,L2,interp,2023-07-15 11:00:00,2023-07-15 12:00:00,6,0,,11.19952,False
+south,Laayoune,zone2,L2,interp,2023-07-16 15:30:00,2023-07-17 07:00:00,93,0,,-0.5621,False
+south,Laayoune,zone2,L2,interp,2023-09-08 04:20:00,2023-09-08 05:30:00,7,0,,-0.27357,False
+south,Laayoune,zone2,L2,interp,2023-09-09 10:00:00,2023-09-09 11:30:00,9,0,,7.73867,False
+south,Laayoune,zone2,L2,interp,2023-10-21 09:00:00,2023-10-21 11:10:00,13,0,,5.52034,False
+south,Laayoune,zone2,L2,interp,2023-12-24 05:50:00,2023-12-24 17:00:00,67,0,,1.08997,False
+south,Laayoune,zone2,L2,interp,2023-12-26 09:20:00,2023-12-26 11:00:00,10,0,,3.61423,False
+south,Laayoune,zone2,L2,interp,2023-12-27 09:20:00,2023-12-27 11:50:00,15,0,,2.73182,False
+south,Laayoune,zone2,L2,interp,2023-12-28 09:10:00,2023-12-28 11:30:00,14,0,,2.17749,False
+south,Laayoune,zone2,L2,interp,2023-12-31 11:20:00,2023-12-31 12:20:00,6,0,,10.17921,False
+south,Laayoune,zone2,L2,interp,2024-01-16 09:10:00,2024-01-16 11:30:00,14,0,,2.44271,False
+south,Laayoune,zone2,L2,interp,2024-01-20 06:00:00,2024-01-20 14:40:00,52,0,,10.2343,False
+south,Laayoune,zone2,L2,interp,2024-03-23 10:00:00,2024-03-23 11:00:00,6,0,,8.3468,False
+south,Laayoune,zone2,L2,interp,2024-04-06 08:30:00,2024-04-06 10:00:00,9,0,,0.54672,False
+south,Laayoune,zone2,L2,interp,2024-04-21 02:00:00,2024-04-21 03:00:00,6,0,,0.16262,False
+south,Laayoune,zone2,L2,interp,2024-05-09 10:30:00,2024-05-09 12:10:00,10,0,,1.79032,False
+south,Laayoune,zone3,L3,dead,2022-09-26 08:20:00,2022-09-26 09:10:00,5,5,,,True
+south,Laayoune,zone3,L3,dead,2022-11-10 06:10:00,2022-11-10 09:40:00,21,17,,,False
+south,Laayoune,zone3,L3,dead,2023-01-24 06:40:00,2023-01-24 09:30:00,17,14,,,False
+south,Laayoune,zone3,L3,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Laayoune,zone3,L3,dead,2023-12-24 05:50:00,2023-12-24 06:20:00,3,0,,,False
+south,Laayoune,zone3,L3,dead,2024-03-31 11:10:00,2024-04-02 07:00:00,263,263,,,True
+south,Laayoune,zone3,L3,hold,2022-09-25 08:20:00,2022-09-25 09:20:00,6,0,108.408,,False
+south,Laayoune,zone3,L3,hold,2022-10-12 08:30:00,2022-10-12 09:30:00,6,0,118.354,,False
+south,Laayoune,zone3,L3,hold,2023-01-26 01:20:00,2023-01-27 13:20:00,216,0,92.495,,False
+south,Laayoune,zone3,L3,hold,2023-04-03 13:10:00,2023-04-03 15:00:00,11,0,131.283,,False
+south,Laayoune,zone3,L3,interp,2022-10-20 09:40:00,2022-10-20 10:40:00,6,0,,23.23492,False
+south,Laayoune,zone3,L3,interp,2022-10-26 09:40:00,2022-10-26 11:00:00,8,0,,4.54569,False
+south,Laayoune,zone3,L3,interp,2022-10-29 10:00:00,2022-10-29 11:50:00,11,0,,3.71405,False
+south,Laayoune,zone3,L3,interp,2022-11-12 05:30:00,2022-11-12 09:10:00,22,0,,2.31378,False
+south,Laayoune,zone3,L3,interp,2023-01-24 09:30:00,2023-01-24 11:40:00,13,0,,0.37176,False
+south,Laayoune,zone3,L3,interp,2023-03-11 07:40:00,2023-03-11 10:10:00,15,0,,4.4928,False
+south,Laayoune,zone3,L3,interp,2023-03-19 05:20:00,2023-03-19 09:50:00,27,0,,4.5154,False
+south,Laayoune,zone3,L3,interp,2023-03-30 11:40:00,2023-03-30 12:50:00,7,0,,2.2957,False
+south,Laayoune,zone3,L3,interp,2023-03-30 13:00:00,2023-03-30 14:00:00,6,0,,0.77863,False
+south,Laayoune,zone3,L3,interp,2023-07-16 15:30:00,2023-07-17 07:00:00,93,0,,-0.95438,False
+south,Laayoune,zone3,L3,interp,2023-09-08 04:20:00,2023-09-08 05:30:00,7,0,,-1.24149,False
+south,Laayoune,zone3,L3,interp,2023-10-21 12:10:00,2023-10-21 13:30:00,8,0,,11.71034,False
+south,Laayoune,zone3,L3,interp,2023-12-24 06:20:00,2023-12-24 16:50:00,63,0,,1.3067,False
+south,Laayoune,zone3,L3,interp,2023-12-26 09:20:00,2023-12-26 11:00:00,10,0,,2.62766,False
+south,Laayoune,zone3,L3,interp,2023-12-27 09:20:00,2023-12-27 11:50:00,15,0,,3.48295,False
+south,Laayoune,zone3,L3,interp,2023-12-28 09:10:00,2023-12-28 11:30:00,14,0,,3.46162,False
+south,Laayoune,zone3,L3,interp,2023-12-31 11:20:00,2023-12-31 12:20:00,6,0,,4.80904,False
+south,Laayoune,zone3,L3,interp,2024-01-16 09:10:00,2024-01-16 11:30:00,14,0,,3.03774,False
+south,Laayoune,zone3,L3,interp,2024-01-20 05:50:00,2024-01-20 14:50:00,54,0,,5.69097,False
+south,Laayoune,zone3,L3,interp,2024-04-06 08:30:00,2024-04-06 10:00:00,9,0,,1.0085,False
+south,Laayoune,zone3,L3,interp,2024-04-21 02:00:00,2024-04-21 03:00:00,6,0,,-0.1624,False
+south,Laayoune,zone3,L3,interp,2024-05-09 10:30:00,2024-05-09 12:10:00,10,0,,2.46064,False
+south,Laayoune,zone4,L4,dead,2022-09-26 08:20:00,2022-09-26 09:10:00,5,5,,,True
+south,Laayoune,zone4,L4,dead,2022-10-26 08:10:00,2022-10-26 09:40:00,9,8,,,False
+south,Laayoune,zone4,L4,dead,2023-01-18 07:40:00,2023-01-18 09:30:00,11,10,,,False
+south,Laayoune,zone4,L4,dead,2023-01-19 08:00:00,2023-01-19 09:30:00,9,8,,,False
+south,Laayoune,zone4,L4,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Laayoune,zone4,L4,dead,2023-12-31 11:20:00,2023-12-31 14:40:00,20,19,,,False
+south,Laayoune,zone4,L4,dead,2024-02-29 08:50:00,2024-02-29 10:00:00,7,7,,,True
+south,Laayoune,zone4,L4,dead,2024-03-31 11:10:00,2024-04-02 07:00:00,263,263,,,True
+south,Laayoune,zone4,L4,hold,2022-09-25 08:20:00,2022-09-25 09:20:00,6,0,83.544,,False
+south,Laayoune,zone4,L4,hold,2022-10-12 08:30:00,2022-10-12 09:30:00,6,0,111.392,,False
+south,Laayoune,zone4,L4,hold,2022-10-12 23:20:00,2022-10-13 00:20:00,6,0,111.392,,False
+south,Laayoune,zone4,L4,hold,2023-01-26 01:20:00,2023-01-27 13:20:00,216,0,74.593,,False
+south,Laayoune,zone4,L4,hold,2023-03-30 13:00:00,2023-03-30 14:00:00,6,0,127.305,,False
+south,Laayoune,zone4,L4,hold,2023-04-03 13:10:00,2023-04-03 15:00:00,11,0,114.376,,False
+south,Laayoune,zone4,L4,interp,2022-10-26 09:40:00,2022-10-26 11:00:00,8,0,,15.68543,False
+south,Laayoune,zone4,L4,interp,2022-10-29 10:00:00,2022-10-29 11:50:00,11,0,,2.04626,False
+south,Laayoune,zone4,L4,interp,2022-11-12 05:30:00,2022-11-12 09:10:00,22,0,,1.33094,False
+south,Laayoune,zone4,L4,interp,2023-01-18 09:30:00,2023-01-18 11:20:00,11,0,,14.01319,False
+south,Laayoune,zone4,L4,interp,2023-03-11 07:40:00,2023-03-11 10:10:00,15,0,,1.72348,False
+south,Laayoune,zone4,L4,interp,2023-03-30 11:40:00,2023-03-30 12:50:00,7,0,,0.25284,False
+south,Laayoune,zone4,L4,interp,2023-07-16 15:30:00,2023-07-17 07:00:00,93,0,,-0.46658,False
+south,Laayoune,zone4,L4,interp,2023-09-08 04:20:00,2023-09-08 05:30:00,7,0,,-0.68383,False
+south,Laayoune,zone4,L4,interp,2023-10-25 10:40:00,2023-10-25 11:50:00,7,0,,23.09479,False
+south,Laayoune,zone4,L4,interp,2023-12-26 09:20:00,2023-12-26 11:00:00,10,0,,1.56043,False
+south,Laayoune,zone4,L4,interp,2023-12-27 09:20:00,2023-12-27 11:50:00,15,0,,1.49204,False
+south,Laayoune,zone4,L4,interp,2023-12-28 09:10:00,2023-12-28 11:30:00,14,0,,1.48928,False
+south,Laayoune,zone4,L4,interp,2023-12-31 14:40:00,2024-01-01 10:10:00,117,0,,1.26698,False
+south,Laayoune,zone4,L4,interp,2024-01-16 09:10:00,2024-01-16 11:30:00,14,0,,1.48636,False
+south,Laayoune,zone4,L4,interp,2024-04-06 08:30:00,2024-04-06 10:10:00,10,0,,0.99729,False
+south,Laayoune,zone4,L4,interp,2024-04-21 02:00:00,2024-04-21 03:00:00,6,0,,0.16444,False
+south,Laayoune,zone4,L4,interp,2024-05-04 10:40:00,2024-05-04 11:50:00,7,0,,3.5346,False
+south,Laayoune,zone4,L4,interp,2024-05-09 10:30:00,2024-05-09 12:10:00,10,0,,1.69883,False
+south,Laayoune,zone5,L5,dead,2022-09-26 08:20:00,2022-09-26 09:10:00,5,5,,,True
+south,Laayoune,zone5,L5,dead,2022-10-23 08:10:00,2022-10-23 09:40:00,9,8,,,False
+south,Laayoune,zone5,L5,dead,2022-10-23 18:30:00,2022-10-24 09:30:00,90,68,,,False
+south,Laayoune,zone5,L5,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Laayoune,zone5,L5,dead,2023-04-20 08:00:00,2023-04-20 09:30:00,9,7,,,False
+south,Laayoune,zone5,L5,dead,2023-08-30 08:50:00,2023-08-30 09:50:00,6,0,,,False
+south,Laayoune,zone5,L5,dead,2023-12-14 08:50:00,2023-12-14 10:00:00,7,6,,,False
+south,Laayoune,zone5,L5,dead,2024-03-26 21:40:00,2024-03-26 22:10:00,3,0,,,False
+south,Laayoune,zone5,L5,dead,2024-03-31 11:10:00,2024-04-02 07:00:00,263,263,,,True
+south,Laayoune,zone5,L5,hold,2022-10-12 08:30:00,2022-10-12 09:30:00,6,0,35.805,,False
+south,Laayoune,zone5,L5,hold,2023-01-26 01:20:00,2023-01-27 13:20:00,216,0,78.571,,False
+south,Laayoune,zone5,L5,hold,2023-04-03 13:10:00,2023-04-03 15:00:00,11,0,116.365,,False
+south,Laayoune,zone5,L5,interp,2022-10-19 11:40:00,2022-10-19 14:10:00,15,0,,0.29408,False
+south,Laayoune,zone5,L5,interp,2022-10-19 14:20:00,2022-10-19 18:20:00,24,0,,0.20622,False
+south,Laayoune,zone5,L5,interp,2022-10-23 09:40:00,2022-10-23 11:10:00,9,0,,3.0115,False
+south,Laayoune,zone5,L5,interp,2022-10-23 11:20:00,2022-10-23 18:30:00,43,0,,0.1117,False
+south,Laayoune,zone5,L5,interp,2022-10-26 09:40:00,2022-10-26 11:00:00,8,0,,3.2298,False
+south,Laayoune,zone5,L5,interp,2022-10-29 10:00:00,2022-10-29 11:50:00,11,0,,1.31976,False
+south,Laayoune,zone5,L5,interp,2022-11-12 05:30:00,2022-11-12 09:10:00,22,0,,1.24555,False
+south,Laayoune,zone5,L5,interp,2023-03-11 07:40:00,2023-03-11 10:10:00,15,0,,2.76645,False
+south,Laayoune,zone5,L5,interp,2023-03-30 11:40:00,2023-03-30 12:50:00,7,0,,0.25493,False
+south,Laayoune,zone5,L5,interp,2023-03-30 13:00:00,2023-03-30 14:00:00,6,0,,0.46919,False
+south,Laayoune,zone5,L5,interp,2023-07-16 15:30:00,2023-07-17 07:00:00,93,0,,-0.69981,False
+south,Laayoune,zone5,L5,interp,2023-08-30 09:50:00,2023-08-30 13:00:00,19,0,,0.29715,False
+south,Laayoune,zone5,L5,interp,2023-09-08 04:20:00,2023-09-08 05:30:00,7,0,,-1.08105,False
+south,Laayoune,zone5,L5,interp,2023-12-26 09:20:00,2023-12-26 11:00:00,10,0,,3.13406,False
+south,Laayoune,zone5,L5,interp,2023-12-27 09:20:00,2023-12-27 11:50:00,15,0,,3.53939,False
+south,Laayoune,zone5,L5,interp,2023-12-28 09:10:00,2023-12-28 11:30:00,14,0,,3.04522,False
+south,Laayoune,zone5,L5,interp,2023-12-31 11:20:00,2023-12-31 12:20:00,6,0,,4.0509,False
+south,Laayoune,zone5,L5,interp,2024-01-16 09:10:00,2024-01-16 11:30:00,14,0,,2.96925,False
+south,Laayoune,zone5,L5,interp,2024-04-06 08:30:00,2024-04-06 10:00:00,9,0,,1.00591,False
+south,Laayoune,zone5,L5,interp,2024-04-21 02:00:00,2024-04-21 03:00:00,6,0,,-0.16206,False
+south,Laayoune,zone5,L5,interp,2024-05-09 10:30:00,2024-05-09 12:10:00,10,0,,2.17547,False
+south,Boujdour,zone1,B1,dead,2023-01-19 08:40:00,2023-01-19 10:20:00,10,9,,,False
+south,Boujdour,zone1,B1,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Boujdour,zone1,B1,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Boujdour,zone1,B1,dead,2023-08-06 12:50:00,2023-08-06 13:20:00,3,3,,,True
+south,Boujdour,zone1,B1,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Boujdour,zone1,B1,hold,2022-09-29 09:20:00,2022-09-29 11:10:00,11,0,69.0,,True
+south,Boujdour,zone1,B1,hold,2023-01-26 02:20:00,2023-01-28 21:10:00,401,0,77.0,,True
+south,Boujdour,zone1,B1,hold,2023-08-10 09:30:00,2023-08-10 11:30:00,12,0,68.0,,True
+south,Boujdour,zone1,B1,hold,2023-09-30 09:30:00,2023-09-30 12:20:00,17,0,86.0,,True
+south,Boujdour,zone1,B1,hold,2023-12-31 11:20:00,2023-12-31 12:20:00,6,0,49.0,,True
+south,Boujdour,zone1,B1,hold,2024-01-04 09:20:00,2024-01-04 11:20:00,12,0,41.0,,True
+south,Boujdour,zone1,B1,hold,2024-02-27 20:50:00,2024-02-27 22:10:00,8,0,5.0,,True
+south,Boujdour,zone1,B1,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,38.0,,True
+south,Boujdour,zone1,B1,interp,2022-12-28 08:40:00,2022-12-28 10:10:00,9,0,,-0.10558,False
+south,Boujdour,zone1,B1,interp,2022-12-29 09:10:00,2022-12-29 10:10:00,6,0,,0.92752,False
+south,Boujdour,zone1,B1,interp,2023-01-19 10:20:00,2023-01-19 11:20:00,6,0,,6.45782,False
+south,Boujdour,zone1,B1,interp,2023-02-23 08:40:00,2023-02-23 11:00:00,14,0,,-0.75733,False
+south,Boujdour,zone1,B1,interp,2023-03-05 08:40:00,2023-03-05 10:10:00,9,0,,-0.10344,False
+south,Boujdour,zone1,B1,interp,2023-03-30 12:30:00,2023-03-30 13:50:00,8,0,,-1.70838,False
+south,Boujdour,zone1,B1,interp,2023-04-05 08:40:00,2023-04-05 13:30:00,29,0,,0.56763,False
+south,Boujdour,zone1,B1,interp,2023-04-06 08:30:00,2023-04-06 13:30:00,30,0,,-0.19241,False
+south,Boujdour,zone1,B1,interp,2023-09-08 03:10:00,2023-09-08 04:30:00,8,0,,-0.61958,False
+south,Boujdour,zone1,B1,interp,2023-10-12 10:10:00,2023-10-12 12:30:00,14,0,,0.25911,False
+south,Boujdour,zone1,B1,interp,2023-11-08 09:20:00,2023-11-08 11:10:00,11,0,,0.9684,False
+south,Boujdour,zone1,B1,interp,2023-11-09 08:50:00,2023-11-09 12:00:00,19,0,,1.27127,False
+south,Boujdour,zone1,B1,interp,2023-11-23 09:50:00,2023-11-23 11:30:00,10,0,,0.54617,False
+south,Boujdour,zone1,B1,interp,2023-11-24 09:10:00,2023-11-24 11:40:00,15,0,,0.06117,False
+south,Boujdour,zone1,B1,interp,2023-12-07 09:20:00,2023-12-07 12:20:00,18,0,,-0.32406,False
+south,Boujdour,zone1,B1,interp,2024-01-03 09:30:00,2024-01-03 10:50:00,8,0,,-4.34674,False
+south,Boujdour,zone2,B2,dead,2022-10-30 06:00:00,2022-10-30 08:40:00,16,15,,,False
+south,Boujdour,zone2,B2,dead,2022-12-28 08:30:00,2022-12-28 10:10:00,10,10,,,True
+south,Boujdour,zone2,B2,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Boujdour,zone2,B2,dead,2023-07-12 10:00:00,2023-07-12 11:30:00,9,8,,,False
+south,Boujdour,zone2,B2,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Boujdour,zone2,B2,dead,2023-08-06 07:00:00,2023-08-06 13:30:00,39,38,,,False
+south,Boujdour,zone2,B2,dead,2023-12-06 09:10:00,2023-12-06 10:00:00,5,5,,,True
+south,Boujdour,zone2,B2,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Boujdour,zone2,B2,hold,2022-09-21 03:40:00,2022-09-21 04:40:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-09-24 03:50:00,2022-09-24 04:50:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-09-29 03:00:00,2022-09-29 04:00:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-09-30 04:00:00,2022-09-30 05:00:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-10-09 04:00:00,2022-10-09 05:00:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-10-10 03:50:00,2022-10-10 04:50:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-10-12 03:50:00,2022-10-12 05:00:00,7,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-10-14 04:30:00,2022-10-14 05:30:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-10-16 04:00:00,2022-10-16 05:00:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2022-10-28 02:30:00,2022-10-28 03:30:00,6,0,14.0,,True
+south,Boujdour,zone2,B2,hold,2022-12-03 03:40:00,2022-12-03 04:40:00,6,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2022-12-06 03:00:00,2022-12-06 04:10:00,7,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2022-12-12 03:10:00,2022-12-12 04:10:00,6,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2023-01-14 03:50:00,2023-01-14 04:50:00,6,0,11.0,,True
+south,Boujdour,zone2,B2,hold,2023-01-26 02:10:00,2023-01-28 21:10:00,402,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2023-02-23 03:50:00,2023-02-23 04:50:00,6,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2023-03-05 08:40:00,2023-03-05 10:10:00,9,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2023-03-11 03:50:00,2023-03-11 05:00:00,7,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2023-03-16 03:40:00,2023-03-16 04:50:00,7,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2023-05-07 08:10:00,2023-05-07 10:20:00,13,0,4.0,,True
+south,Boujdour,zone2,B2,hold,2023-05-31 03:40:00,2023-05-31 05:20:00,10,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-06-02 04:10:00,2023-06-02 05:10:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-06-15 04:00:00,2023-06-15 05:00:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-07-04 07:30:00,2023-07-04 08:30:00,6,0,10.0,,True
+south,Boujdour,zone2,B2,hold,2023-07-07 07:20:00,2023-07-07 08:20:00,6,0,10.0,,True
+south,Boujdour,zone2,B2,hold,2023-08-16 04:10:00,2023-08-16 05:30:00,8,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2023-09-04 03:20:00,2023-09-04 04:30:00,7,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-09-08 05:10:00,2023-09-08 06:20:00,7,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-09-22 03:40:00,2023-09-22 04:40:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-10-19 03:20:00,2023-10-19 04:40:00,8,0,14.0,,True
+south,Boujdour,zone2,B2,hold,2023-10-24 05:20:00,2023-10-24 06:40:00,8,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-11-03 03:20:00,2023-11-03 05:00:00,10,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-11-05 03:50:00,2023-11-05 05:40:00,11,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-11-06 04:10:00,2023-11-06 05:10:00,6,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-11-18 02:00:00,2023-11-18 03:10:00,7,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-11-22 03:00:00,2023-11-22 04:50:00,11,0,13.0,,True
+south,Boujdour,zone2,B2,hold,2023-12-03 03:30:00,2023-12-03 05:40:00,13,0,12.0,,True
+south,Boujdour,zone2,B2,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,51.0,,True
+south,Boujdour,zone2,B2,interp,2022-09-29 09:20:00,2022-09-29 11:10:00,11,0,,0.17335,False
+south,Boujdour,zone2,B2,interp,2022-10-30 08:40:00,2022-10-30 17:50:00,55,0,,0.76916,False
+south,Boujdour,zone2,B2,interp,2022-12-29 09:10:00,2022-12-29 10:10:00,6,0,,1.32544,False
+south,Boujdour,zone2,B2,interp,2023-02-23 08:40:00,2023-02-23 11:00:00,14,0,,0.34429,False
+south,Boujdour,zone2,B2,interp,2023-03-30 12:30:00,2023-03-30 13:50:00,8,0,,0.24391,False
+south,Boujdour,zone2,B2,interp,2023-04-05 08:40:00,2023-04-05 13:30:00,29,0,,0.13361,False
+south,Boujdour,zone2,B2,interp,2023-04-06 08:30:00,2023-04-06 13:30:00,30,0,,0.1604,False
+south,Boujdour,zone2,B2,interp,2023-08-06 13:30:00,2023-08-06 15:20:00,11,0,,3.03838,False
+south,Boujdour,zone2,B2,interp,2023-08-10 09:30:00,2023-08-10 11:30:00,12,0,,-0.08081,False
+south,Boujdour,zone2,B2,interp,2023-09-03 09:30:00,2023-09-03 11:00:00,9,0,,0.51537,False
+south,Boujdour,zone2,B2,interp,2023-09-08 03:10:00,2023-09-08 04:30:00,8,0,,-0.12382,False
+south,Boujdour,zone2,B2,interp,2023-09-30 09:30:00,2023-09-30 12:20:00,17,0,,0.29178,False
+south,Boujdour,zone2,B2,interp,2023-10-12 10:10:00,2023-10-12 12:30:00,14,0,,0.06476,False
+south,Boujdour,zone2,B2,interp,2023-11-08 09:20:00,2023-11-08 11:10:00,11,0,,0.4033,False
+south,Boujdour,zone2,B2,interp,2023-11-09 08:50:00,2023-11-09 12:00:00,19,0,,0.29328,False
+south,Boujdour,zone2,B2,interp,2023-11-23 09:50:00,2023-11-23 11:30:00,10,0,,0.36412,False
+south,Boujdour,zone2,B2,interp,2023-11-24 09:10:00,2023-11-24 11:40:00,15,0,,-0.06116,False
+south,Boujdour,zone2,B2,interp,2023-12-07 09:20:00,2023-12-07 12:20:00,18,0,,0.27007,False
+south,Boujdour,zone2,B2,interp,2023-12-31 11:20:00,2023-12-31 12:20:00,6,0,,0.29335,False
+south,Boujdour,zone2,B2,interp,2024-01-04 09:20:00,2024-01-04 11:20:00,12,0,,0.2395,False
+south,Boujdour,zone3,B3,dead,2022-10-29 12:00:00,2022-10-29 14:10:00,13,0,,,False
+south,Boujdour,zone3,B3,dead,2022-10-29 15:00:00,2022-10-29 16:00:00,6,0,,,False
+south,Boujdour,zone3,B3,dead,2022-12-29 09:00:00,2022-12-29 10:20:00,8,7,,,False
+south,Boujdour,zone3,B3,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Boujdour,zone3,B3,dead,2023-07-13 09:40:00,2023-07-13 10:50:00,7,7,,,True
+south,Boujdour,zone3,B3,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Boujdour,zone3,B3,dead,2023-08-05 14:10:00,2023-08-05 15:00:00,5,0,,,False
+south,Boujdour,zone3,B3,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Boujdour,zone3,B3,hold,2023-01-26 02:20:00,2023-01-28 21:10:00,401,0,31.0,,True
+south,Boujdour,zone3,B3,hold,2023-03-05 08:40:00,2023-03-05 10:10:00,9,0,31.0,,True
+south,Boujdour,zone3,B3,hold,2023-08-10 09:30:00,2023-08-10 11:30:00,12,0,30.0,,True
+south,Boujdour,zone3,B3,hold,2023-09-08 03:10:00,2023-09-08 04:30:00,8,0,41.0,,True
+south,Boujdour,zone3,B3,hold,2023-09-28 04:40:00,2023-09-28 05:40:00,6,0,26.0,,True
+south,Boujdour,zone3,B3,hold,2023-11-08 09:10:00,2023-11-08 11:10:00,12,0,32.0,,True
+south,Boujdour,zone3,B3,hold,2023-12-31 11:20:00,2023-12-31 12:20:00,6,0,35.0,,True
+south,Boujdour,zone3,B3,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,41.0,,True
+south,Boujdour,zone3,B3,interp,2022-09-29 09:20:00,2022-09-29 11:10:00,11,0,,0.69294,False
+south,Boujdour,zone3,B3,interp,2022-12-28 08:40:00,2022-12-28 10:10:00,9,0,,0.21098,False
+south,Boujdour,zone3,B3,interp,2023-02-23 08:40:00,2023-02-23 11:00:00,14,0,,1.30811,False
+south,Boujdour,zone3,B3,interp,2023-03-30 12:30:00,2023-03-30 13:50:00,8,0,,0.48751,False
+south,Boujdour,zone3,B3,interp,2023-04-05 08:40:00,2023-04-05 13:30:00,29,0,,0.53438,False
+south,Boujdour,zone3,B3,interp,2023-04-06 08:30:00,2023-04-06 13:30:00,30,0,,0.35284,False
+south,Boujdour,zone3,B3,interp,2023-08-05 16:10:00,2023-08-05 17:50:00,10,0,,3.92233,False
+south,Boujdour,zone3,B3,interp,2023-09-30 09:30:00,2023-09-30 12:20:00,17,0,,0.5249,False
+south,Boujdour,zone3,B3,interp,2023-10-12 10:10:00,2023-10-12 12:30:00,14,0,,0.90708,False
+south,Boujdour,zone3,B3,interp,2023-11-09 08:50:00,2023-11-09 12:00:00,19,0,,0.73342,False
+south,Boujdour,zone3,B3,interp,2023-11-23 09:50:00,2023-11-23 11:30:00,10,0,,1.36577,False
+south,Boujdour,zone3,B3,interp,2023-11-24 09:10:00,2023-11-24 11:40:00,15,0,,0.06117,False
+south,Boujdour,zone3,B3,interp,2023-12-07 09:20:00,2023-12-07 12:20:00,18,0,,0.21615,False
+south,Boujdour,zone3,B3,interp,2024-01-04 09:20:00,2024-01-04 11:20:00,12,0,,0.47919,False
+south,Foum eloued,zone1,F1,dead,2022-10-01 09:00:00,2022-10-01 09:30:00,3,2,,,False
+south,Foum eloued,zone1,F1,dead,2022-10-02 08:50:00,2022-10-02 09:30:00,4,3,,,False
+south,Foum eloued,zone1,F1,dead,2022-10-25 08:10:00,2022-10-25 09:40:00,9,8,,,False
+south,Foum eloued,zone1,F1,dead,2022-11-16 22:40:00,2022-11-17 08:50:00,61,60,,,False
+south,Foum eloued,zone1,F1,dead,2022-11-26 07:40:00,2022-11-26 09:00:00,8,7,,,False
+south,Foum eloued,zone1,F1,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Foum eloued,zone1,F1,dead,2023-02-25 07:00:00,2023-02-25 09:50:00,17,16,,,False
+south,Foum eloued,zone1,F1,dead,2023-03-26 08:10:00,2023-03-26 08:40:00,3,0,,,False
+south,Foum eloued,zone1,F1,dead,2023-05-04 03:20:00,2023-05-04 14:30:00,67,66,,,False
+south,Foum eloued,zone1,F1,dead,2023-06-07 09:30:00,2023-06-07 10:00:00,3,3,,,True
+south,Foum eloued,zone1,F1,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Foum eloued,zone1,F1,dead,2024-02-29 08:30:00,2024-02-29 12:50:00,26,26,,,True
+south,Foum eloued,zone1,F1,dead,2024-03-02 09:00:00,2024-03-02 10:10:00,7,6,,,False
+south,Foum eloued,zone1,F1,dead,2024-03-02 16:10:00,2024-03-02 17:10:00,6,0,,,False
+south,Foum eloued,zone1,F1,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Foum eloued,zone1,F1,dead,2024-04-30 08:20:00,2024-04-30 10:30:00,13,0,,,False
+south,Foum eloued,zone1,F1,dead,2024-05-14 10:00:00,2024-05-14 11:00:00,6,0,,,False
+south,Foum eloued,zone1,F1,hold,2023-07-08 12:20:00,2023-07-08 14:00:00,10,0,37.155,,False
+south,Foum eloued,zone1,F1,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,31.823,,False
+south,Foum eloued,zone1,F1,interp,2022-10-01 09:30:00,2022-10-01 11:40:00,13,0,,0.25094,False
+south,Foum eloued,zone1,F1,interp,2022-10-25 09:40:00,2022-10-25 12:40:00,18,0,,0.19957,False
+south,Foum eloued,zone1,F1,interp,2022-10-25 13:10:00,2022-10-25 14:10:00,6,0,,0.77381,False
+south,Foum eloued,zone1,F1,interp,2022-11-17 08:50:00,2022-11-17 10:50:00,12,0,,6.21545,False
+south,Foum eloued,zone1,F1,interp,2022-11-26 09:00:00,2022-11-26 11:50:00,17,0,,4.00318,False
+south,Foum eloued,zone1,F1,interp,2023-01-26 02:20:00,2023-01-27 15:50:00,225,0,,-0.00488,False
+south,Foum eloued,zone1,F1,interp,2023-02-11 07:50:00,2023-02-11 14:30:00,40,0,,0.08683,False
+south,Foum eloued,zone1,F1,interp,2023-02-25 09:50:00,2023-02-25 13:30:00,22,0,,0.18627,False
+south,Foum eloued,zone1,F1,interp,2023-03-30 12:30:00,2023-03-30 14:00:00,9,0,,-0.50045,False
+south,Foum eloued,zone1,F1,interp,2023-05-04 14:30:00,2023-05-04 15:30:00,6,0,,0.3888,False
+south,Foum eloued,zone1,F1,interp,2023-07-09 11:10:00,2023-07-09 12:20:00,7,0,,-0.33692,False
+south,Foum eloued,zone1,F1,interp,2023-07-18 09:40:00,2023-07-18 10:50:00,7,0,,0.22595,False
+south,Foum eloued,zone1,F1,interp,2023-08-05 09:20:00,2023-08-05 10:40:00,8,0,,2.37353,False
+south,Foum eloued,zone1,F1,interp,2023-09-08 03:10:00,2023-09-08 04:20:00,7,0,,0.08619,False
+south,Foum eloued,zone1,F1,interp,2023-10-10 09:40:00,2023-10-10 10:50:00,7,0,,1.96611,False
+south,Foum eloued,zone1,F1,interp,2023-10-11 09:20:00,2023-10-11 11:30:00,13,0,,0.6428,False
+south,Foum eloued,zone1,F1,interp,2023-10-12 08:10:00,2023-10-12 09:30:00,8,0,,-0.70609,False
+south,Foum eloued,zone1,F1,interp,2023-10-14 10:20:00,2023-10-14 11:20:00,6,0,,-0.83698,False
+south,Foum eloued,zone1,F1,interp,2024-02-13 09:20:00,2024-02-13 10:30:00,7,0,,0.11678,False
+south,Foum eloued,zone1,F1,interp,2024-02-15 08:50:00,2024-02-15 09:50:00,6,0,,-0.02457,False
+south,Foum eloued,zone1,F1,interp,2024-03-02 10:10:00,2024-03-02 16:10:00,36,0,,0.07031,False
+south,Foum eloued,zone1,F1,interp,2024-03-14 09:40:00,2024-03-14 11:00:00,8,0,,0.38135,False
+south,Foum eloued,zone1,F1,interp,2024-04-24 06:00:00,2024-04-24 07:50:00,11,0,,0.51253,False
+south,Foum eloued,zone2,F2,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Foum eloued,zone2,F2,dead,2023-02-15 09:00:00,2023-02-15 09:40:00,4,3,,,False
+south,Foum eloued,zone2,F2,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Foum eloued,zone2,F2,dead,2023-12-17 08:10:00,2023-12-17 09:20:00,7,6,,,False
+south,Foum eloued,zone2,F2,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Foum eloued,zone2,F2,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,36.411,,False
+south,Foum eloued,zone2,F2,interp,2022-10-25 13:10:00,2022-10-25 14:10:00,6,0,,2.01678,False
+south,Foum eloued,zone2,F2,interp,2023-01-26 02:20:00,2023-01-27 15:50:00,225,0,,-0.00031,False
+south,Foum eloued,zone2,F2,interp,2023-03-30 12:30:00,2023-03-30 14:00:00,9,0,,2.36952,False
+south,Foum eloued,zone2,F2,interp,2023-07-08 12:20:00,2023-07-08 14:00:00,10,0,,0.33161,False
+south,Foum eloued,zone2,F2,interp,2023-07-09 11:10:00,2023-07-09 12:20:00,7,0,,1.35166,False
+south,Foum eloued,zone2,F2,interp,2023-07-18 09:40:00,2023-07-18 10:50:00,7,0,,-0.69994,False
+south,Foum eloued,zone2,F2,interp,2023-08-05 09:20:00,2023-08-05 10:40:00,8,0,,1.50976,False
+south,Foum eloued,zone2,F2,interp,2023-09-08 03:10:00,2023-09-08 04:20:00,7,0,,0.11152,False
+south,Foum eloued,zone2,F2,interp,2023-10-10 09:40:00,2023-10-10 10:50:00,7,0,,1.46673,False
+south,Foum eloued,zone2,F2,interp,2023-10-11 09:20:00,2023-10-11 11:30:00,13,0,,0.89195,False
+south,Foum eloued,zone2,F2,interp,2023-10-12 08:10:00,2023-10-12 09:30:00,8,0,,-0.35094,False
+south,Foum eloued,zone2,F2,interp,2023-10-14 10:20:00,2023-10-14 11:20:00,6,0,,2.11715,False
+south,Foum eloued,zone2,F2,interp,2024-02-13 09:20:00,2024-02-13 10:30:00,7,0,,0.76958,False
+south,Foum eloued,zone2,F2,interp,2024-02-15 08:50:00,2024-02-15 09:50:00,6,0,,3.49826,False
+south,Foum eloued,zone2,F2,interp,2024-03-14 09:40:00,2024-03-14 11:00:00,8,0,,1.28311,False
+south,Foum eloued,zone3,F3,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Foum eloued,zone3,F3,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Foum eloued,zone3,F3,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Foum eloued,zone3,F3,hold,2023-10-12 08:10:00,2023-10-12 09:30:00,8,0,138.695,,False
+south,Foum eloued,zone3,F3,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,66.286,,False
+south,Foum eloued,zone3,F3,interp,2022-10-25 13:10:00,2022-10-25 14:10:00,6,0,,-2.27842,False
+south,Foum eloued,zone3,F3,interp,2023-01-26 02:20:00,2023-01-27 15:50:00,225,0,,0.00326,False
+south,Foum eloued,zone3,F3,interp,2023-02-04 08:20:00,2023-02-04 09:20:00,6,0,,0.74099,False
+south,Foum eloued,zone3,F3,interp,2023-03-30 12:30:00,2023-03-30 14:00:00,9,0,,0.76243,False
+south,Foum eloued,zone3,F3,interp,2023-07-08 12:20:00,2023-07-08 14:00:00,10,0,,0.76129,False
+south,Foum eloued,zone3,F3,interp,2023-07-09 11:10:00,2023-07-09 12:20:00,7,0,,0.02355,False
+south,Foum eloued,zone3,F3,interp,2023-07-18 09:40:00,2023-07-18 10:50:00,7,0,,1.21998,False
+south,Foum eloued,zone3,F3,interp,2023-08-05 09:20:00,2023-08-05 10:40:00,8,0,,5.18653,False
+south,Foum eloued,zone3,F3,interp,2023-09-08 03:10:00,2023-09-08 04:20:00,7,0,,0.09002,False
+south,Foum eloued,zone3,F3,interp,2023-10-10 09:40:00,2023-10-10 10:50:00,7,0,,-1.1326,False
+south,Foum eloued,zone3,F3,interp,2023-10-11 09:20:00,2023-10-11 11:30:00,13,0,,2.53534,False
+south,Foum eloued,zone3,F3,interp,2023-10-14 10:20:00,2023-10-14 11:20:00,6,0,,0.79179,False
+south,Foum eloued,zone3,F3,interp,2024-02-13 09:20:00,2024-02-13 10:30:00,7,0,,0.57705,False
+south,Foum eloued,zone3,F3,interp,2024-02-15 08:50:00,2024-02-15 09:50:00,6,0,,0.42739,False
+south,Foum eloued,zone3,F3,interp,2024-03-14 09:40:00,2024-03-14 11:00:00,8,0,,1.57973,False
+south,Foum eloued,zone4,F4,dead,2022-10-29 20:40:00,2022-11-03 08:50:00,649,648,,,False
+south,Foum eloued,zone4,F4,dead,2022-11-21 03:10:00,2022-11-21 08:50:00,34,34,,,True
+south,Foum eloued,zone4,F4,dead,2022-11-27 07:20:00,2022-11-27 09:00:00,10,9,,,False
+south,Foum eloued,zone4,F4,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Foum eloued,zone4,F4,dead,2023-02-07 12:00:00,2023-02-07 12:30:00,3,0,,,False
+south,Foum eloued,zone4,F4,dead,2023-03-04 08:00:00,2023-03-04 09:40:00,10,9,,,False
+south,Foum eloued,zone4,F4,dead,2023-03-08 08:30:00,2023-03-08 09:20:00,5,4,,,False
+south,Foum eloued,zone4,F4,dead,2023-03-08 09:40:00,2023-03-08 10:20:00,4,4,,,True
+south,Foum eloued,zone4,F4,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Foum eloued,zone4,F4,dead,2024-01-27 08:50:00,2024-01-27 10:10:00,8,7,,,False
+south,Foum eloued,zone4,F4,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Foum eloued,zone4,F4,dead,2024-04-09 09:00:00,2024-04-09 09:50:00,5,5,,,True
+south,Foum eloued,zone4,F4,hold,2023-01-26 02:20:00,2023-01-27 15:50:00,225,0,18.371,,False
+south,Foum eloued,zone4,F4,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,23.745,,False
+south,Foum eloued,zone4,F4,interp,2022-10-25 13:10:00,2022-10-25 14:10:00,6,0,,0.03445,False
+south,Foum eloued,zone4,F4,interp,2022-11-03 08:50:00,2022-11-03 10:30:00,10,0,,7.40665,False
+south,Foum eloued,zone4,F4,interp,2022-11-27 09:00:00,2022-11-27 11:30:00,15,0,,2.42985,False
+south,Foum eloued,zone4,F4,interp,2023-02-07 10:10:00,2023-02-07 11:50:00,10,0,,0.2274,False
+south,Foum eloued,zone4,F4,interp,2023-02-07 13:40:00,2023-02-07 17:00:00,20,0,,0.13197,False
+south,Foum eloued,zone4,F4,interp,2023-03-04 09:40:00,2023-03-04 15:50:00,37,0,,1.83444,False
+south,Foum eloued,zone4,F4,interp,2023-03-30 12:30:00,2023-03-30 14:00:00,9,0,,0.13908,False
+south,Foum eloued,zone4,F4,interp,2023-07-08 12:20:00,2023-07-08 14:00:00,10,0,,0.02591,False
+south,Foum eloued,zone4,F4,interp,2023-07-09 11:10:00,2023-07-09 12:20:00,7,0,,0.60175,False
+south,Foum eloued,zone4,F4,interp,2023-07-18 09:40:00,2023-07-18 10:50:00,7,0,,0.82117,False
+south,Foum eloued,zone4,F4,interp,2023-08-05 09:20:00,2023-08-05 10:40:00,8,0,,-0.1375,False
+south,Foum eloued,zone4,F4,interp,2023-09-08 03:10:00,2023-09-08 04:20:00,7,0,,0.08685,False
+south,Foum eloued,zone4,F4,interp,2023-10-10 09:40:00,2023-10-10 10:50:00,7,0,,0.29577,False
+south,Foum eloued,zone4,F4,interp,2023-10-11 09:20:00,2023-10-11 11:30:00,13,0,,-0.77061,False
+south,Foum eloued,zone4,F4,interp,2023-10-12 08:10:00,2023-10-12 09:30:00,8,0,,-1.02168,False
+south,Foum eloued,zone4,F4,interp,2023-10-14 10:20:00,2023-10-14 11:20:00,6,0,,0.42267,False
+south,Foum eloued,zone4,F4,interp,2024-02-13 09:20:00,2024-02-13 10:30:00,7,0,,-0.42639,False
+south,Foum eloued,zone4,F4,interp,2024-02-15 08:50:00,2024-02-15 09:50:00,6,0,,-0.1405,False
+south,Foum eloued,zone4,F4,interp,2024-03-14 09:40:00,2024-03-14 11:00:00,8,0,,-0.29014,False
+south,Foum eloued,zone5,F5,dead,2022-11-05 08:00:00,2022-11-05 08:50:00,5,4,,,False
+south,Foum eloued,zone5,F5,dead,2022-12-08 08:30:00,2022-12-08 09:20:00,5,5,,,True
+south,Foum eloued,zone5,F5,dead,2023-01-14 09:00:00,2023-01-14 09:30:00,3,2,,,False
+south,Foum eloued,zone5,F5,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Foum eloued,zone5,F5,dead,2023-03-12 08:20:00,2023-03-12 09:20:00,6,5,,,False
+south,Foum eloued,zone5,F5,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Foum eloued,zone5,F5,dead,2023-08-19 09:20:00,2023-08-19 10:00:00,4,4,,,True
+south,Foum eloued,zone5,F5,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Foum eloued,zone5,F5,dead,2024-04-13 05:40:00,2024-04-13 07:00:00,8,7,,,False
+south,Foum eloued,zone5,F5,dead,2024-05-05 11:00:00,2024-05-05 13:20:00,14,13,,,False
+south,Foum eloued,zone5,F5,hold,2023-03-30 12:30:00,2023-03-30 14:00:00,9,0,12.23,,False
+south,Foum eloued,zone5,F5,hold,2023-07-09 11:10:00,2023-07-09 12:20:00,7,0,14.293,,False
+south,Foum eloued,zone5,F5,hold,2023-08-05 09:20:00,2023-08-05 10:40:00,8,0,21.919,,False
+south,Foum eloued,zone5,F5,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,15.397,,False
+south,Foum eloued,zone5,F5,interp,2022-10-25 13:10:00,2022-10-25 14:10:00,6,0,,0.06123,False
+south,Foum eloued,zone5,F5,interp,2022-11-05 08:50:00,2022-11-05 11:10:00,14,0,,2.62874,False
+south,Foum eloued,zone5,F5,interp,2023-01-14 09:30:00,2023-01-14 14:00:00,27,0,,0.31544,False
+south,Foum eloued,zone5,F5,interp,2023-01-26 02:20:00,2023-01-27 15:50:00,225,0,,0.00019,False
+south,Foum eloued,zone5,F5,interp,2023-05-14 09:20:00,2023-05-14 13:00:00,22,0,,0.31737,False
+south,Foum eloued,zone5,F5,interp,2023-06-25 09:50:00,2023-06-25 10:50:00,6,0,,1.04481,False
+south,Foum eloued,zone5,F5,interp,2023-07-08 12:20:00,2023-07-08 14:00:00,10,0,,-0.10718,False
+south,Foum eloued,zone5,F5,interp,2023-07-18 09:40:00,2023-07-18 10:50:00,7,0,,0.21573,False
+south,Foum eloued,zone5,F5,interp,2023-09-08 03:10:00,2023-09-08 04:20:00,7,0,,-0.02988,False
+south,Foum eloued,zone5,F5,interp,2023-10-10 09:40:00,2023-10-10 10:50:00,7,0,,0.06751,False
+south,Foum eloued,zone5,F5,interp,2023-10-11 09:20:00,2023-10-11 11:30:00,13,0,,-0.45479,False
+south,Foum eloued,zone5,F5,interp,2023-10-12 08:10:00,2023-10-12 09:30:00,8,0,,0.60815,False
+south,Foum eloued,zone5,F5,interp,2023-10-14 10:20:00,2023-10-14 11:20:00,6,0,,-0.02673,False
+south,Foum eloued,zone5,F5,interp,2024-02-13 09:20:00,2024-02-13 10:30:00,7,0,,-0.42881,False
+south,Foum eloued,zone5,F5,interp,2024-02-15 08:50:00,2024-02-15 09:50:00,6,0,,0.70071,False
+south,Foum eloued,zone5,F5,interp,2024-02-24 13:00:00,2024-02-24 14:10:00,7,0,,0.62614,False
+south,Foum eloued,zone5,F5,interp,2024-03-14 09:40:00,2024-03-14 11:00:00,8,0,,-0.22461,False
+south,Foum eloued,zone5,F5,interp,2024-04-23 10:00:00,2024-04-23 11:10:00,7,0,,0.76954,False
+south,Foum eloued,zone5,F5,interp,2024-04-24 06:00:00,2024-04-24 07:20:00,8,0,,0.48241,False
+south,Foum eloued,zone5,F5,interp,2024-05-13 21:30:00,2024-05-13 23:10:00,10,0,,0.99205,False
+south,Foum eloued,zone5,F5,interp,2024-05-14 20:30:00,2024-05-14 23:20:00,17,0,,0.29403,False
+south,Foum eloued,zone6,F6,dead,2022-10-05 10:10:00,2022-10-05 11:00:00,5,4,,,False
+south,Foum eloued,zone6,F6,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Foum eloued,zone6,F6,dead,2023-02-10 08:20:00,2023-02-12 02:40:00,254,253,,,False
+south,Foum eloued,zone6,F6,dead,2023-04-15 23:00:00,2023-04-15 23:30:00,3,3,,,True
+south,Foum eloued,zone6,F6,dead,2023-06-06 09:10:00,2023-06-06 11:00:00,11,11,,,True
+south,Foum eloued,zone6,F6,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Foum eloued,zone6,F6,dead,2023-10-28 10:20:00,2023-10-28 11:10:00,5,5,,,True
+south,Foum eloued,zone6,F6,dead,2023-12-16 07:30:00,2023-12-16 10:00:00,15,14,,,False
+south,Foum eloued,zone6,F6,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Foum eloued,zone6,F6,hold,2023-08-05 09:20:00,2023-08-05 10:40:00,8,0,23.244,,False
+south,Foum eloued,zone6,F6,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,21.651,,False
+south,Foum eloued,zone6,F6,interp,2022-10-25 13:10:00,2022-10-25 14:10:00,6,0,,0.09928,False
+south,Foum eloued,zone6,F6,interp,2023-01-26 02:20:00,2023-01-27 15:50:00,225,0,,0.00092,False
+south,Foum eloued,zone6,F6,interp,2023-02-12 02:40:00,2023-02-12 14:50:00,73,0,,0.20797,False
+south,Foum eloued,zone6,F6,interp,2023-03-30 12:30:00,2023-03-30 14:00:00,9,0,,0.01405,False
+south,Foum eloued,zone6,F6,interp,2023-07-08 12:20:00,2023-07-08 14:00:00,10,0,,-0.22673,False
+south,Foum eloued,zone6,F6,interp,2023-07-09 11:10:00,2023-07-09 12:20:00,7,0,,0.16462,False
+south,Foum eloued,zone6,F6,interp,2023-07-18 09:40:00,2023-07-18 10:50:00,7,0,,-0.01665,False
+south,Foum eloued,zone6,F6,interp,2023-09-08 03:10:00,2023-09-08 04:20:00,7,0,,0.00952,False
+south,Foum eloued,zone6,F6,interp,2023-10-10 09:40:00,2023-10-10 10:50:00,7,0,,-0.00174,False
+south,Foum eloued,zone6,F6,interp,2023-10-11 09:20:00,2023-10-11 11:30:00,13,0,,0.13338,False
+south,Foum eloued,zone6,F6,interp,2023-10-12 08:10:00,2023-10-12 09:30:00,8,0,,0.25145,False
+south,Foum eloued,zone6,F6,interp,2023-10-14 10:20:00,2023-10-14 11:20:00,6,0,,-0.08941,False
+south,Foum eloued,zone6,F6,interp,2023-12-16 10:00:00,2023-12-16 14:20:00,26,0,,0.75772,False
+south,Foum eloued,zone6,F6,interp,2024-02-13 09:20:00,2024-02-13 10:30:00,7,0,,0.0054,False
+south,Foum eloued,zone6,F6,interp,2024-02-15 08:50:00,2024-02-15 09:50:00,6,0,,-0.14727,False
+south,Foum eloued,zone6,F6,interp,2024-03-14 09:40:00,2024-03-14 11:00:00,8,0,,0.10374,False
+south,Foum eloued,zone7,F7,dead,2023-01-28 21:10:00,2023-01-29 10:50:00,82,82,,,True
+south,Foum eloued,zone7,F7,dead,2023-03-10 13:10:00,2023-03-10 13:40:00,3,0,,,False
+south,Foum eloued,zone7,F7,dead,2023-07-16 14:50:00,2023-07-17 07:00:00,97,97,,,True
+south,Foum eloued,zone7,F7,dead,2024-03-31 11:10:00,2024-04-02 06:00:00,257,257,,,True
+south,Foum eloued,zone7,F7,dead,2024-04-18 08:50:00,2024-04-18 10:00:00,7,6,,,False
+south,Foum eloued,zone7,F7,hold,2022-10-25 13:10:00,2022-10-25 14:10:00,6,0,146.205,,False
+south,Foum eloued,zone7,F7,hold,2023-08-05 09:20:00,2023-08-05 10:40:00,8,0,88.572,,False
+south,Foum eloued,zone7,F7,hold,2024-03-31 09:10:00,2024-03-31 11:10:00,12,0,39.542,,False
+south,Foum eloued,zone7,F7,interp,2023-01-26 02:20:00,2023-01-27 15:50:00,225,0,,0.00206,False
+south,Foum eloued,zone7,F7,interp,2023-03-30 12:30:00,2023-03-30 14:00:00,9,0,,0.1657,False
+south,Foum eloued,zone7,F7,interp,2023-07-08 12:20:00,2023-07-08 14:00:00,10,0,,-0.11252,False
+south,Foum eloued,zone7,F7,interp,2023-07-09 11:10:00,2023-07-09 12:20:00,7,0,,0.02432,False
+south,Foum eloued,zone7,F7,interp,2023-07-18 09:40:00,2023-07-18 10:50:00,7,0,,0.50439,False
+south,Foum eloued,zone7,F7,interp,2023-09-08 03:10:00,2023-09-08 04:20:00,7,0,,-0.22306,False
+south,Foum eloued,zone7,F7,interp,2023-10-10 09:40:00,2023-10-10 10:50:00,7,0,,4.23275,False
+south,Foum eloued,zone7,F7,interp,2023-10-11 09:20:00,2023-10-11 11:30:00,13,0,,1.45226,False
+south,Foum eloued,zone7,F7,interp,2023-10-12 08:10:00,2023-10-12 09:30:00,8,0,,-1.97716,False
+south,Foum eloued,zone7,F7,interp,2023-10-14 10:20:00,2023-10-14 11:20:00,6,0,,0.07264,False
+south,Foum eloued,zone7,F7,interp,2023-11-09 09:30:00,2023-11-09 11:20:00,11,0,,8.21934,False
+south,Foum eloued,zone7,F7,interp,2024-02-13 09:20:00,2024-02-13 10:30:00,7,0,,1.67638,False
+south,Foum eloued,zone7,F7,interp,2024-02-15 08:50:00,2024-02-15 09:50:00,6,0,,11.28154,False
+south,Foum eloued,zone7,F7,interp,2024-03-14 09:40:00,2024-03-14 11:00:00,8,0,,-0.89827,False
+Marrakech,Marrakech,zone2,M2,dead,2023-01-13 08:30:00,2023-01-13 14:30:00,12,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-01-23 01:30:00,2023-01-24 00:00:00,45,45,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-01-24 00:30:00,2023-01-24 10:00:00,19,19,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-01-24 10:30:00,2023-01-24 20:00:00,19,19,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-08-19 17:30:00,2023-08-20 00:00:00,13,12,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-08-20 00:30:00,2023-08-20 02:00:00,3,2,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-08-20 07:00:00,2023-08-20 09:00:00,4,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-08-20 12:00:00,2023-08-20 17:30:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-09-09 16:30:00,2023-09-09 21:00:00,9,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-09-09 22:30:00,2023-09-10 00:00:00,3,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-09-10 00:30:00,2023-09-10 04:00:00,7,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-09-10 04:30:00,2023-09-10 10:00:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-09-10 10:30:00,2023-09-10 16:00:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-09-27 12:30:00,2023-09-30 10:00:00,139,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-09-30 10:30:00,2023-10-01 00:00:00,27,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-10-01 12:00:00,2023-10-01 16:00:00,8,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-10-20 12:30:00,2023-10-20 16:00:00,7,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-10-21 11:00:00,2023-10-22 00:00:00,26,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-10-22 00:30:00,2023-10-22 10:00:00,19,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-10-22 10:30:00,2023-10-22 16:00:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-11-04 18:30:00,2023-11-04 21:00:00,5,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-11-04 21:30:00,2023-11-04 23:30:00,4,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-11-05 01:00:00,2023-11-05 10:00:00,18,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-11-05 10:30:00,2023-11-05 16:30:00,12,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-11-06 01:00:00,2023-11-06 10:00:00,18,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-11-06 10:30:00,2023-11-06 16:00:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-11-25 16:30:00,2023-11-26 00:00:00,15,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-11-26 00:30:00,2023-11-26 16:00:00,31,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-02 16:30:00,2023-12-03 00:00:00,15,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-03 00:30:00,2023-12-03 10:00:00,19,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-03 10:30:00,2023-12-03 16:00:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-09 16:30:00,2023-12-10 00:00:00,15,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-10 00:30:00,2023-12-10 10:00:00,19,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-10 10:30:00,2023-12-10 16:30:00,12,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-16 16:30:00,2023-12-16 19:00:00,5,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-16 22:00:00,2023-12-17 00:00:00,4,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-17 02:00:00,2023-12-17 10:00:00,16,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-17 10:30:00,2023-12-17 16:00:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-23 16:30:00,2023-12-24 00:00:00,15,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-24 00:30:00,2023-12-24 10:00:00,19,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-24 10:30:00,2023-12-24 16:00:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2023-12-30 12:00:00,2024-01-01 00:00:00,72,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2024-01-01 00:30:00,2024-01-01 10:00:00,19,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2024-01-01 10:30:00,2024-01-01 16:30:00,12,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2024-01-06 16:30:00,2024-01-07 00:00:00,15,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2024-01-07 00:30:00,2024-01-07 07:30:00,14,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2024-01-07 08:00:00,2024-01-07 10:00:00,4,0,,,True
+Marrakech,Marrakech,zone2,M2,dead,2024-01-07 10:30:00,2024-01-07 16:00:00,11,0,,,True
+Marrakech,Marrakech,zone2,M2,hold,2023-01-21 10:30:00,2023-01-21 17:30:00,14,0,6.0,,True
+Marrakech,Marrakech,zone2,M2,hold,2023-05-01 04:30:00,2023-05-01 11:00:00,13,0,10.0,,True
+Marrakech,Marrakech,zone2,M2,hold,2023-05-13 02:30:00,2023-05-13 08:30:00,12,0,7.0,,True
+Marrakech,Marrakech,zone2,M2,hold,2023-06-28 17:00:00,2023-06-29 01:00:00,16,0,10.0,,True
+Marrakech,Marrakech,zone2,M2,hold,2023-07-01 22:30:00,2023-07-02 04:30:00,12,0,8.0,,True
+Marrakech,Marrakech,zone2,M2,hold,2023-07-05 07:30:00,2023-07-05 13:30:00,12,0,10.0,,True
+Marrakech,Marrakech,zone2,M2,hold,2023-07-19 09:30:00,2023-07-19 16:00:00,13,0,11.0,,True
