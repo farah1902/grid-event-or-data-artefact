@@ -185,6 +185,7 @@ Other files:
 | `hierarchy_consistency_by_kind.csv` | residual, kind (dead or fill), level, n, correct (share) |
 | `detector_recall_of_rule_items.csv` | system, label (label model), items, detected (share with Z > γ in the item), median_score |
 | `detector_only_nature.csv` | system, nature, n, median_h, median_rho, n_multizone |
+| `structural_zeros.csv` | check, band (raw, W1–W4, V4), unit (zone, city or all zones), value. Checks: `share_v_exactly_0` / `share_u_exactly_0` (share of non-warm-up steps where the zone or city part is exactly 0); `B1_16-18Mar2024_*` (window share of zeros, old MAD, old and fixed max score); `zone_steps_old_MAD_below_1e-4` and `zone_steps_with_scale`. From `tools/diag_structural_zeros.py` on the LightGBM forecast residual (F35, D51) |
 
 **`detector_items.csv`** — one row per detector-only candidate.
 
@@ -240,7 +241,7 @@ Other files:
 
 The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label N means that no typed class fits** (F32).
 
-**`summary.json`** — headline numbers of the run (backend, γ, MAEs, hierarchy consistency, end-model agreement, fused changes, recall, nature counts, runtime).
+**`summary.json`** — headline numbers of the run: backend (`lightgbm` or `sklearn`), lightgbm_version, colab (true if run on Colab), γ, MAEs, hierarchy consistency, end-model agreement, fused changes, recall, nature counts, runtime. Check `backend` before citing any NB3 number.
 
 ## Figure-side tables — `results/figures/`
 

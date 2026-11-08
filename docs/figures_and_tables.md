@@ -39,7 +39,7 @@ Every figure in `results/figures/` exists as PNG (200 dpi) and PDF. Style is set
 
 ## Figures added by NB3 (detector and end model)
 
-All NB3 figures come from the local run with the scikit-learn fallback (D39). Regenerate them from the Colab LightGBM run before publishing.
+All NB3 figures come from the reference run (LightGBM 4.6.0, structural-zero fix; D51, D52). Cosmetic fixes for NB7: Fig 8 repeats day labels on its x-axis (12-hour ticks with a day-only format); E19(b)'s legend overlaps the MLP bar.
 
 | File | Notebook | Content | Role | Notes / caveats |
 |---|---|---|---|---|

@@ -1,6 +1,6 @@
 system,nature,n,median_h,median_rho,n_multizone
 Marrakech,other,4,1.75,0.97,2
 Marrakech,surge,3,2.0,1.63,3
-south,other,152,1.08,1.0,12
-south,partial drop,27,1.33,0.5,0
-south,surge,137,2.0,1.82,1
+south,other,139,1.0,0.9,35
+south,partial drop,33,1.83,0.45,2
+south,surge,111,2.83,1.74,0

@@ -1,70 +1,72 @@
 {
   "backend": "lightgbm",
+  "lightgbm_version": "4.6.0",
+  "colab": false,
   "main_residual": "forecast",
   "gamma": {
-    "south": 33.348,
-    "Marrakech": 16.882
+    "south": 25.51,
+    "Marrakech": 16.854
   },
   "predictor_MAE": {
     "south | forecast": 0.0288,
     "south | nowcast": 0.0292,
     "south | expected (rho_hat = 1)": 0.1835,
     "south | STL": 0.0594,
-    "Marrakech | forecast": 0.1076,
+    "Marrakech | forecast": 0.1077,
     "Marrakech | nowcast": 0.1077,
     "Marrakech | expected (rho_hat = 1)": 0.2755
   },
   "hierarchy_consistency": {
-    "forecast": 0.772,
-    "nowcast": 0.791,
-    "STL": 0.699
+    "forecast": 0.714,
+    "nowcast": 0.694,
+    "STL": 0.621
   },
-  "detector_only_candidates": 323,
+  "detector_only_candidates": 290,
   "normal_windows": 300,
   "end_model": {
     "GBDT, all features": {
-      "agree_rule_items": 0.957,
+      "agree_rule_items": 0.947,
       "normal_windows_as_N": 1.0
     },
     "GBDT, no detector features": {
-      "agree_rule_items": 0.954,
+      "agree_rule_items": 0.957,
       "normal_windows_as_N": 1.0
     },
     "GBDT, no episode features": {
-      "agree_rule_items": 0.95,
+      "agree_rule_items": 0.943,
       "normal_windows_as_N": 1.0
     },
     "GBDT, detector features only": {
-      "agree_rule_items": 0.548,
+      "agree_rule_items": 0.541,
       "normal_windows_as_N": 0.97
     },
     "MLP, all features": {
-      "agree_rule_items": 0.925,
-      "normal_windows_as_N": 1.0
+      "agree_rule_items": 0.9,
+      "normal_windows_as_N": 0.997
     }
   },
-  "fused_changes": 5,
+  "fused_changes": 3,
   "low_support_classes": [
     "A1",
     "G1",
     "G2"
   ],
   "detector_only_nature": {
-    "other": 156,
-    "surge": 140,
-    "partial drop": 27
+    "other": 143,
+    "surge": 114,
+    "partial drop": 33
   },
   "detector_recall": {
     "Marrakech | A3": 0.0,
     "Marrakech | G3": 0.086,
     "Marrakech | G4": 0.077,
     "south | A1": 1.0,
-    "south | A2": 0.737,
-    "south | A3": 0.511,
+    "south | A2": 0.789,
+    "south | A3": 0.534,
     "south | G2": 0.0,
-    "south | G3": 0.944,
+    "south | G3": 1.0,
     "south | G4": 0.946,
     "south | N": 1.0
   },
-  "runtime_min": 11.1
+  "runtime_min": 19.8
 }

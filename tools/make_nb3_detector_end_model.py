@@ -389,7 +389,7 @@ fig.suptitle("E19 — End model: agreement with the label model, ablations, and 
 fig.tight_layout(); savefig(fig, FIG, "E19_end_model"); plt.show()"""))
 
 cells.append(M("## 8. Summary (copied into docs/results_summary.md)"))
-cells.append(C(r"""summary = dict(backend=BACKEND, main_residual=MAIN, gamma={k: round(v, 3) for k, v in GAMMA.items()},
+cells.append(C(r"""summary = dict(backend=BACKEND, lightgbm_version=lightgbm.__version__, colab=IN_COLAB, main_residual=MAIN, gamma={k: round(v, 3) for k, v in GAMMA.items()},
                predictor_MAE={f"{r.system} | {r.residual}": r.MAE for r in pred_metrics[pred_metrics.period == "all"].itertuples()},
                hierarchy_consistency=hier.set_index("residual")["all"].to_dict(),
                detector_only_candidates=int(len(det)), normal_windows=int(len(nw)),
@@ -400,6 +400,14 @@ cells.append(C(r"""summary = dict(backend=BACKEND, main_residual=MAIN, gamma={k:
 summary = json.loads(json.dumps(summary, default=lambda o: str(o)))
 (OUT_E / "summary.json").write_text(json.dumps(summary, indent=2))
 summary"""))
+
+cells.append(M("""## 9. Colab only: push every output to Google Drive
+Colab caches writes to the mounted Drive and can leave files unsent (seen on the first Colab run: the figures arrived, the CSVs did not). `flush_and_unmount` forces the upload. Afterwards, save the notebook (Ctrl+S) so the executed copy reaches Drive too."""))
+cells.append(C(r"""if IN_COLAB:
+    drive.flush_and_unmount()
+    print("Drive flushed and unmounted: now press Ctrl+S to save this notebook to Drive")
+else:
+    print("local run: nothing to flush")"""))
 
 nb = new_notebook(cells=cells)
 nb.metadata["kernelspec"] = {"name": "python3", "display_name": "Python 3", "language": "python"}

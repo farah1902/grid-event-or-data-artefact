@@ -164,3 +164,76 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **For the next agent or session:**
 - When the user returns the Colab outputs (`results/detector_v1/`, `results/end_model_v1/`, NB3 figures, the executed notebook), replace the numbers in results_summary §8, F28–F34 and paper_handoff, and note the backend change here.
 - Then NB4 (injection).
+
+## Session 4 — 2026-11-08 — NB3 on Colab, a scale bug, LightGBM 4.6.0 locally, the reference run
+
+**User requests:**
+1. "How can I synchronise between Colab and my local machine to keep you updated?"
+2. Installed Google Drive for desktop; asked to check that the repo is on Drive, then ran NB3 on Colab.
+3. "I closed Foxit, check your fig8 and update."
+
+**Sync set-up:**
+- Drive for desktop in Streaming mode mounts `G:\My Drive`; the Drive copy of the repo is `G:\My Drive\grid-event-or-data-artefact` (no `.git`). Before the run, all 52 files NB3 reads were hash-identical to the local repo.
+- A switch to Mirroring moved the Drive to `C:\Users\Dell\My Drive` and emptied G: while it downloaded; the user switched back to Streaming.
+- **Colab left outputs unsent:** the figures reached Drive, the CSVs and `summary.json` did not, and the notebook was unsaved. Fixed by `drive.flush_and_unmount()` and Ctrl+S. NB3 now ends with that flush cell (D52).
+
+**Run 2 — Colab, LightGBM 4.6.0, code of a9ec65a (11.1 min, 0 errors):**
+- Committed as 21e6695 to keep a record.
+- Close to the sklearn run on the predictors (MAE 0.0288 vs 0.0285) and on the hierarchy (dead g 3/3, dead v 0.958).
+- **But nine B1 detector-only candidates on 16–18 Mar 2024 scored 3,973–15,182** (everything else < 293).
+
+**Diagnosis (F35):**
+- Boujdour has 3 zones, so its city median is one of them, and that zone's v is exactly 0.
+- B1 was the median zone on 52 % of the V4-band window, so the median and MAD of |v| were 0 and z = |v| / 1e-6.
+- The sklearn residuals stayed just below the 50 % line.
+- Zeros biased every zone-level scale downward (v = 0 on 28–37 % of Boujdour steps).
+
+**Fix (D51):** `robust_score` excludes structural zeros (|s| ≤ 1e-12) from the median and MAD. On the same residuals, B1's V4 score drops from 14,940 to 2.1. Diagnostic: `tools/diag_structural_zeros.py` → `results/detector_v1/structural_zeros.csv`.
+
+**LightGBM locally (D52):**
+- Colab ships 4.6.0. Installed 4.6.0 locally (`pip install lightgbm==4.6.0`): the south forecast ran in 121 s with MAE 0.0288, no crash. 4.7.0 is the crashing version.
+- Pinned in `requirements.txt`. NB3's `summary.json` now records `lightgbm_version` and `colab`.
+
+**Run 3 — local, LightGBM 4.6.0, with D51 (19.8 min, 0 errors) = reference:**
+- Waited 22 min for Foxit to release `fig8_residual_hierarchy.pdf`; a locked PDF makes `savefig` fail.
+- Results:
+  - γ = 25.5 (south), 16.9 (Marrakech);
+  - hierarchy consistency: forecast 0.714, nowcast 0.694, STL 0.621;
+  - by kind: dead g 3/3, dead v 0.915, fill g 1/6, fill u 0.550, fill v 0.651;
+  - recall: G3 18/18, G4 95 %, A2 79 %, A3 53 %;
+  - 290 detector-only candidates: 143 other, 114 surges, 33 partial drops; 42 multi-zone;
+  - end model 94.7 % (95.7 % without detector features);
+  - fusion changes 3 labels (the three vote-less linear fills → A3).
+
+**How the three runs compare** (south; sklearn a9ec65a / Colab LightGBM before the fix / reference):
+
+| Quantity | sklearn | LightGBM, before fix | Reference |
+|---|---|---|---|
+| Forecast MAE | 0.0285 | 0.0288 | 0.0288 |
+| Nowcast MAE | 0.0287 | 0.0292 | 0.0292 |
+| γ south | 37.24 | 33.35 | 25.51 |
+| Hierarchy (forecast / nowcast / STL) | 0.738 / 0.752 / 0.699 | 0.772 / 0.791 / 0.699 | 0.714 / 0.694 / 0.621 |
+| Dead v / fill u / fill v (forecast) | 0.958 / 0.325 / 0.779 | 0.958 / 0.350 / 0.849 | 0.915 / 0.550 / 0.651 |
+| Recall A2 / A3 / G3 / G4 | 0.667 / 0.523 / 0.944 / 0.946 | 0.737 / 0.511 / 0.944 / 0.946 | 0.789 / 0.534 / 1.000 / 0.946 |
+| Detector-only candidates | 311 | 323 | 290 |
+| End model, all features | 0.968 | 0.957 | 0.947 |
+| Fused label changes | 4 | 5 | 3 |
+
+- **What is stable:** clean-data MAE, outage localisation (dead g 3/3, dead v > 0.9), the nowcast adding nothing, the end model reproducing the label model, and the three vote-less linear fills → A3.
+- **What moved:** fill localisation, γ and the detector-only list. The forecast/nowcast order on hierarchy consistency flips between runs, which confirms it is noise.
+
+**Figures checked visually:**
+- Fig 8 and E16–E19 are correct.
+- Cosmetic issues are left for NB7: Fig 8 repeats day labels on its x-axis; E19(b)'s legend overlaps a bar.
+
+**Documentation updated:**
+- results_summary §8 (rewritten);
+- findings section D (F28–F34 rewritten, new F35);
+- decisions D40 result, D43 note, new D51–D52, D39 superseded note;
+- methods eq. 15 as implemented;
+- paper_handoff (status, §1, correction #36, contribution 3, RQ3, threats 11, 12, 15);
+- data_dictionary (`structural_zeros.csv`, summary keys), figures_and_tables, CLAUDE.md (LightGBM and Colab sync sections), README, docs/README.
+
+**Generator note:** `tools/make_nb3_detector_end_model.py` changed (flush cell and summary keys). The notebook was regenerated and executed from it, so they match. The D51 docstring in `src/detector.py` was edited after the run (text only).
+
+**For the next agent or session:** NB4 (injection). Use the injection additions in paper_handoff §8. Add one for F35: a multi-zone event in Boujdour (3 zones) to check the zone-level scale after D51.

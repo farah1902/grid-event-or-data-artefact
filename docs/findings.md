@@ -223,65 +223,68 @@ Confidence levels:
 
 ## D. Detector and end model (NB3, 2026-11-08)
 
-**Backend caveat for every number in this section:** LightGBM crashed in the local Windows environment, so the run that produced these numbers used scikit-learn's HistGradientBoosting fallback (D39). The Colab run with LightGBM is the reference. Numbers may shift slightly when it replaces this run; update this section then.
+**Run behind every number in this section:** local, LightGBM 4.6.0, with the structural-zero fix (D51, D52). The two earlier runs (sklearn fallback; Colab LightGBM before the fix) are superseded; how their numbers differed is in the research log (session 4) and in F35.
 
 ### F28 — The predictors are accurate on clean data — *solid*
 - **Out-of-sample MAE of ρ on rule-clean steps:**
 
 | System | Forecast | Nowcast | STL | ρ̂ = 1 (expected value) |
 |---|---|---|---|---|
-| South | 0.0285 | 0.0287 | 0.0594 | 0.1835 |
-| Marrakech | 0.102 | 0.102 | n/a | 0.276 |
+| South | 0.0288 | 0.0292 | 0.0594 | 0.1835 |
+| Marrakech | 0.108 | 0.108 | n/a | 0.276 |
 
-- The south second fold (Jul 2023 +) has MAE 0.0276, so there is no degradation across the temporal split.
-- **Residual autocorrelation** (lag-1, median over zones): forecast 0.19, nowcast 0.20 (statsmodels Ljung–Box Q at lag 144: about 9,000 and 12,000). Some structure is left, which a better predictor could remove.
+- The south second fold (Jul 2023 +) has MAE 0.0278, so there is no degradation across the temporal split.
+- **Residual autocorrelation** (lag-1, median over zones): forecast 0.18, nowcast 0.20 (statsmodels Ljung–Box Q at lag 144: about 11,000 and 14,000). Some structure is left, which a better predictor could remove.
+- **Backend robustness:** the sklearn HistGradientBoosting fallback gave the same MAE within 0.0003 (research log, session 4).
 - **Evidence:** `results/detector_v1/predictor_metrics.csv`, `ljung_box.csv`, E16.
 
 ### F29 — The guide's graph nowcast neither helps nor hurts on real data — *solid (measurement), strong (interpretation)*
-- **No gain on normal data:** adding every other zone's current ρ (guide eq. 13) leaves the MAE essentially unchanged (0.0287 vs 0.0285).
-- **No absorption of logger artefacts:** the concern behind D40 was that the nowcast would "explain away" logger artefacts. It does not on the real data: the region score g during C06 is 227.9 with the nowcast vs 222.6 with the forecast (C09: 240.3 vs 230.0).
-- **Hierarchy consistency:** nowcast 0.752, forecast 0.738, STL 0.699 (206 southern items outside the warm-up). The nowcast/forecast difference is about 3 items.
+- **No gain on normal data:** adding every other zone's current ρ (guide eq. 13) does not lower the MAE (0.0292 vs 0.0288).
+- **No absorption of logger artefacts:** the concern behind D40 was that the nowcast would "explain away" logger artefacts. It does not on the real data: the region score g during C06 is 232.6 with the nowcast vs 218.0 with the forecast (C09: 240.4 vs 230.0).
+- **Hierarchy consistency:** forecast 0.714, nowcast 0.694, STL 0.621 (206 southern items outside the warm-up). The forecast/nowcast gap is 4 city-level fill items. In the two superseded runs the order was reversed (nowcast ahead by 3–4 items), so the difference is noise.
 - **Why:** trees trained only on rule-clean steps never see all zones dropping together, so an all-zone drop is out of distribution and gets a near-normal prediction. **For shared anomalies the rules do not flag**, which is the detector's purpose, the nowcast could still absorb them. This is untested on real data; NB4 must inject unflagged multi-zone events and compare.
-- **Choice:** forecast as the main residual (D40). It is equal within noise, simpler, and does not depend on shared shocks being masked during training.
+- **Choice:** forecast as the main residual (D40). It is at least as good, simpler, and does not depend on shared shocks being masked during training.
 
-### F30 — The residual hierarchy localises outages, not fills — *solid*
-- **Share of items whose top-scoring level matches their structural level** (forecast residual, raw band; nowcast and STL in brackets):
+### F30 — The residual hierarchy localises outages reliably and fills only partly — *solid*
+- **Share of items whose top-scoring level matches their structural level** (raw band):
 
 | Item kind | Expected level | n | Forecast | Nowcast | STL |
 |---|---|---|---|---|---|
 | dead | g (multi-city) | 3 | 1.00 | 1.00 | 1.00 |
-| dead | v (one zone) | 71 | 0.958 | 0.958 | 0.915 |
+| dead | v (one zone) | 71 | 0.915 | 0.915 | 0.873 |
 | fill | g | 6 | 0.167 | 0.167 | 0.167 |
-| fill | u | 40 | 0.325 | 0.350 | 0.125 |
-| fill | v | 86 | 0.779 | 0.802 | 0.814 |
+| fill | u | 40 | 0.550 | 0.450 | 0.325 |
+| fill | v | 86 | 0.651 | 0.651 | 0.570 |
 
-- **Mechanism:** a dead event is a coherent amplitude shock (every affected zone goes to about −1), so the median across zones carries it to the right level. A hold or linear fill makes each zone drift away from its *own* expected path by a different amount and sign, so the shared part (median) is small and the zone part dominates.
-- **Paper:** the guide's claim "an artefact on the logger moves the region part" holds for **zero-fill** artefacts (C06, C09, C12: g scores 187–230; Fig 8) but **not for fill artefacts**. Fill artefacts are identified by the rules (holds, collinearity), not by the residual hierarchy. That makes the rules and the detector complementary. Say so.
+- **Mechanism:** a dead event is a coherent amplitude shock (every affected zone goes to about −1), so the median across zones carries it to the right level. A hold or linear fill makes each zone drift away from its *own* expected path by a different amount and sign, so the shared part (median) is small and the zone part dominates. City-wide fills reach u about half the time; multi-city fills almost never reach g (1 of 6, C05).
+- **The fix of F35 changed these numbers.** Before it, structural zeros inflated zone-level scores, so v "won" too often: dead v 0.958, fill v 0.849, fill u 0.350 (Colab LightGBM run). With honest scales, the conclusion holds and is sharper: outages localise (3/3, 92 %), fills are ambiguous.
+- **Paper:** the guide's claim "an artefact on the logger moves the region part" holds for **zero-fill** artefacts (C06, C09, C12: g scores 176–230; Fig 8) but **not for fill artefacts**. Fill artefacts are identified by the rules (holds, collinearity), not by the residual hierarchy. That makes the rules and the detector complementary. Say so.
 - **Evidence:** `results/detector_v1/hierarchy_consistency.csv`, `hierarchy_consistency_by_kind.csv`, Fig 8.
 
-### F31 — Multi-scale scoring needs phase alignment and a warm-up; then the detector finds most outages — *solid*
+### F31 — Multi-scale scoring needs phase alignment, a warm-up and honest scales; then the detector finds most outages — *solid*
 - **First version** (causal MODWT bands, negative set = "not masked"):
   - γ = 103.8;
   - the top detector-only candidates were artefacts of the method: flags 8–10 h after real disturbances on normal data (causal band smear), and a score of 9,014 in the first week (empty baseline);
   - recall of G3/G4 items was only 39 % / 29 %.
-- **After phase alignment** (measured group delays W1–W4 = 4, 11, 25, 53 steps, V4 = 43, matching the analytical LA(8) shifts), a 21-day warm-up and a negative set away from rule events (D42–D43):
-  - γ = 37.2 in the south and 20.0 in Marrakech;
-  - southern recall of rule items: A1 3/3, G3 94 %, G4 95 %, A2 67 %, A3 52 %, the 3 vote-less fills 3/3. The G2 item falls in the warm-up.
-- **Marrakech is weak:** recall G3 14 %, G4 8 %, A3 0. Its predictor MAE is 0.10 (whole kW, a small zone), and its 48 dead items are mostly noise-floor runs (F15).
+- **After phase alignment** (measured group delays W1–W4 = 4, 11, 25, 53 steps, V4 = 43, matching the analytical LA(8) shifts), a 21-day warm-up, a negative set away from rule events (D42–D43) and the structural-zero fix (D51):
+  - γ = 25.5 in the south and 16.9 in Marrakech (37.2 / 33.3 before the fix, with sklearn / LightGBM);
+  - southern recall of rule items: A1 3/3, G3 18/18, G4 95 %, A2 79 %, A3 53 %, the 3 vote-less fills 3/3. The G2 item falls in the warm-up.
+- **Marrakech is weak:** recall G3 9 %, G4 8 %, A3 0. Its predictor MAE is 0.11 (whole kW, a small zone), and its 48 dead items are mostly noise-floor runs (F15).
 - **Cost of the warm-up:** 11 southern items (14 Sep – 5 Oct 2022) have no detector score, including the only G2 candidate.
 - **Evidence:** `results/detector_v1/detector_recall_of_rule_items.csv`, research log.
 
 ### F32 — The detector finds anomalies outside the typology — *strong*
-- **Numbers:** 311 detector-only candidates (305 south, 6 Marrakech). 299 are single-zone; median duration 1.5 h (10–90 %: 0.5–5.5 h).
-- **Descriptive bins:** 151 "other", 140 surges (mean ρ > 1.4), 20 partial drops (mean ρ < 0.7 and minimum ρ < 0.5).
+- **Numbers:** 290 detector-only candidates (283 south, 7 Marrakech). 248 are single-zone; median duration 1.3 h (10–90 %: 0.5–5.7 h).
+- **Descriptive bins:** 143 "other", 114 surges (mean ρ > 1.4), 33 partial drops (mean ρ < 0.7 and minimum ρ < 0.5).
 - **Examples (E18):**
-  - **Near-dead runs the dead definition misses:** F1, 17 Dec 2022, ρ ≈ 0.06 for 6.3 h (just above ε = 0.05); B1, 29 Oct 2022, ρ ≈ 0.13 for 4.5 h; L3, 14 Nov 2023, ρ ≈ 0.07–0.1 for about 4 h.
+  - **Near-dead runs the dead definition misses:** F1, 17 Dec 2022, mean ρ ≈ 0.08 for 7.3 h (just above ε = 0.05); B1, 29 Oct 2022, ρ ≈ 0.08 for 0.5 h; L3, 14 Nov 2023, ρ ≈ 0.07–0.1 for about 4 h (score 213).
   - **Dead runs shorter than the 3-step minimum:** F3 (8 Jun 2023), L2 (11 Mar 2024).
-  - **A system-wide disturbance shorter than 30 min:** 5 Feb 2024 09:50, all 15 zones flagged; F1 hits zero for one step and B1/B2 dip.
-  - **Half-load periods:** L4, 1–2 Nov 2023, ρ ≈ 0.5 for 22 h.
-  - **Sustained surges:** L2 at about 1.8× expected for days (1–4 Nov 2023, three candidates); L4 (Dec 2023, Jan 2024); B3 (Apr 2023); B2 (Jul and Dec 2023).
-  - **A rectangular plateau** at the ρ clip (B2, 13 Jul 2023, 3 h).
-- **End-model label of the 311 candidates:** N 301, A3 9, A2 1. The end model is trained only on typed classes and normal windows, so "N" here means **no typed class fits**. These are untyped anomalies, not normal behaviour.
+  - **A system-wide disturbance shorter than 30 min:** 5 Feb 2024 09:40, all 15 zones flagged (score 226); F1 hits zero for one step and B1/B2 dip.
+  - **Half-load periods:** L4, 1–2 Nov 2023, ρ ≈ 0.4–0.7 (four candidates).
+  - **Sustained surges:** L2 at about 1.8× expected through Nov 2023 (18 candidates, 15 surges; the three highest-scoring candidates of the whole run, 224–277, on 1–3 Nov); L4 (24 Dec 2023, 20 Jan 2024); B3 (27 Apr 2023); B2 (13 Jul 2023; 12–15 Dec 2023 at the ρ clip of 3 for days, which may also be a broken expected value).
+  - **Short single-step spikes** (other): L5, 3 Aug 2023 (ρ 2.6 then 0.2); L3, 12 Oct 2023 (ρ 3.0).
+- **Multi-zone candidates** (42) are mostly short (0.5–6 h) city-wide wobbles. Several fall on calendar transitions: Laâyoune on 12 Mar 2024 (first day of Ramadan 2024, three candidates up to 4.3 h) and L1/L4/L5 on 19 Mar 2023 (the switch to GMT, a clock-ambiguous date; results_summary §3). The predictor has calendar features for both, but not for the transition day itself. This is an observation, not a typed result.
+- **End-model label of the 290 candidates:** N 270, A3 13, G4 5, A2 1, G3 1. The end model is trained only on typed classes and normal windows, so "N" here means **no typed class fits**. These are untyped anomalies, not normal behaviour.
 - **Paper:**
   1. Coverage beyond the rules is real but mostly *outside* the typology.
   2. **The dead threshold ε and the 3-step minimum matter.** Several partial drops are near-misses of the dead definition (guide ablation 6: ε ∈ {0.02, 0.05, 0.1}).
@@ -292,24 +295,31 @@ Confidence levels:
 - **Evidence:** `results/detector_v1/detector_items.csv`, `detector_only_nature.csv`, E17, E18.
 
 ### F33 — The end model reproduces the label model; detector and episode features add no agreement on real data — *solid*
-- **Out of fold by episode, GBDT with all 43 features:**
-  - 96.8 % agreement with the label model's arg max on the 281 rule items;
+- **Out of fold by episode, GBDT (LightGBM) with all 43 features:**
+  - 94.7 % agreement with the label model's arg max on the 281 rule items;
   - 100 % of the 300 normal windows predicted N;
-  - per class: A1 3/3, A2 57/57, A3 95/95, G3 50/53, G4 67/69, G2 0/1 (a singleton cannot be learned out of fold);
+  - per class: A1 3/3, A2 57/57, A3 95/95, G3 45/53, G4 66/69, G2 0/1 (a singleton cannot be learned out of fold);
   - the 3 vote-less fills → A3, not N.
 - **Ablations:**
-  - without detector features: 96.8 % (normal windows 99.7 %);
-  - without episode features: 96.8 %;
-  - detector features only: 51.6 %;
-  - MLP with all features: 90.4 %.
+  - without detector features: 95.7 % (3 items more than with them);
+  - without episode features: 94.3 %;
+  - detector features only: 54.1 %;
+  - MLP with all features: 90.0 %.
 - **Meaning:**
-  - The targets q are functions of rule features, so on real data the end model mostly re-learns the rules. Detector features cannot raise agreement with rule-derived targets. Their value must be shown on injected data (NB4), where rules miss or misfire.
-  - Episode features did **not** fix F25: the C12 tail item on L1 is still G4 (f = G4, p = 0.93).
+  - The targets q are functions of rule features, so on real data the end model mostly re-learns the rules. Detector features cannot raise agreement with rule-derived targets; here they slightly lower it (the G3/G4 split). Their value must be shown on injected data (NB4), where rules miss or misfire.
+  - Episode features did **not** fix F25: the C12 tail item on L1 (2 Apr 2024) is still G4 after fusion (p = 0.83), although the end model alone now says G3.
 - **Evidence:** `results/end_model_v1/end_model_metrics.csv`, E19.
 
-### F34 — Fusion changes 4 rule labels — *strong*
-- β = 0.5, with end-model abstention on the low-support classes A1, G1 and G2 (D50; 4 items affected). 4 of 281 rule labels change:
-  - L3, 24 Dec 2023 05:50 (R5, R6, R9): G3 → G4 (p = 0.56);
-  - three vote-less single-zone linear fills (L2/L3 on 24 Dec 2023, L1 on 6 Apr 2024): N (q ≈ 0.52) → A3 (p = 0.97–0.98). A straight line is a fill even when the neighbours are too quiet for R20's 0.8 threshold. This is a sensible correction of a rule threshold by the end model.
-- **Without D50:** the only G2 item (26 Sep 2022) became G3 (0.82). That was purely an artefact of out-of-fold prediction for a singleton class.
+### F34 — Fusion changes 3 rule labels — *strong*
+- β = 0.5, with end-model abstention on the low-support classes A1, G1 and G2 (D50; 4 items affected). 3 of 281 rule labels change, all N → A3: the three vote-less single-zone linear fills (L2/L3 on 24 Dec 2023, L1 on 6 Apr 2024; q_N ≈ 0.52; p_A3 = 0.94–0.99). A straight line is a fill even when the neighbours are too quiet for R20's 0.8 threshold. This is a sensible correction of a rule threshold by the end model.
+- The G3 → G4 change on L3 (24 Dec 2023 05:50) seen in both superseded runs no longer happens: that item sits on the G3/G4 boundary.
+- **Without D50:** the only G2 item (26 Sep 2022) became G3 (0.82, sklearn run). That was purely an artefact of out-of-fold prediction for a singleton class.
 - **Evidence:** `results/end_model_v1/p_type.csv`.
+
+### F35 — The median hierarchy has structural zeros that can collapse the robust scale — *solid* (bug found and fixed)
+- **Mechanism:** the median of an odd number of zones is attained by one of them, so that zone's v is exactly 0 at that step; a city's u is exactly 0 when its median zone is also the region median. In the raw band, v is exactly 0 on 28–37 % of steps for the Boujdour zones (3 zones), 12–24 % in Laâyoune (5) and 9–20 % in Foum El Oued (7); u is exactly 0 on 9–19 % of steps.
+- **Failure:** with zeros in the robust-scale estimate (D43 as first written), the median and MAD of |v| collapse to 0 whenever one zone is the city median for half of the 28-day window. The Colab LightGBM run hit this: B1 was Boujdour's median zone on 52 % of the V4-band window before 16–18 Mar 2024, and nine B1 "candidates" scored 3,973–15,182, while every other candidate scored below 293. The sklearn run stayed just below the 50 % line, so it did not show. Only 925 of 1,257,663 V4 zone-steps had a collapsed scale, but zeros biased **every** zone-level scale downward, most for small cities.
+- **Fix (D51):** structural zeros (|s| ≤ 1e-12) are excluded from the median and MAD. B1's score on 16–18 Mar 2024 drops from 14,940 to 2.1 (V4 band).
+- **Consequences:** γ fell (33.3 → 25.5, LightGBM), the zone level stopped "winning" by inflation (F30), and the detector-only list lost its spurious Boujdour entries (323 → 290 candidates; 42 multi-zone instead of 18).
+- **Paper:** this is worth one sentence in the method (eq. 15) and one in the limitations: a median hierarchy over few zones needs its scale estimated on informative steps only. It also shows why an independent rerun with another backend was worth doing.
+- **Evidence:** `results/detector_v1/structural_zeros.csv` (`tools/diag_structural_zeros.py`), commit 21e6695 (the Colab run before the fix).

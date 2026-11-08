@@ -261,7 +261,9 @@ for j = 1…4. Each band is then phase-aligned: W_j and V_4 are shifted back by 
 
 **Residual hierarchy** (eq. 14), per band b: g_t = median over the system's zones, u_t^c = median over city c minus g_t, v_t^z = e_t^z − g_t − u_t^{c(z)}.
 
-**Level scores** (eq. 15, D43): a trailing 28-day robust z-score of |ε| for ε ∈ {g, u^c, v^z}, with a minimum of 7 days of history. The median and MAD use only steps that are rule-clean at that level. Scores are undefined during a 21-day warm-up.
+**Level scores** (eq. 15, D43): a trailing 28-day robust z-score of |ε| for ε ∈ {g, u^c, v^z}, with a minimum of 7 days of history. The median and MAD use only steps that are rule-clean at that level and exclude **structural zeros** (|ε| ≤ 10⁻¹²). A median over an odd number of zones is attained by one of them, so that zone's v is exactly 0 by construction. Left in, these zeros collapse the scale whenever one zone is its city's median for half the window (D51, F35). Scores are undefined during a 21-day warm-up.
+
+z_t = (|ε_t| − med_W|ε|) / (1.4826 · MAD_W|ε| + 10⁻⁶), W = {s ∈ (t − 28 d, t] : s rule-clean at the level, |ε_s| > 10⁻¹²}   (eq. 15 as implemented)
 
 **Zone-step score and flags:**
 

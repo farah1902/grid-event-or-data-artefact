@@ -19,7 +19,8 @@ Pipeline per system (south = L, B, F with 15 zones on one 10-min logger timeline
   4. Hierarchy (eq. 14) per band: g = median over the system's zones, u_c = median over city c - g,
      v_z = e_z - g - u_c(z).
   5. Level scores (eq. 15): robust z-score of |level| against a trailing 28-day median and MAD computed on
-     steps that are clean at that level (no zone of the region / city / zone flagged by the rules).
+     steps that are clean at that level (no zone of the region / city / zone flagged by the rules), excluding
+     structural zeros of the hierarchy (D51).
 
 Dependencies: numpy, pandas, lightgbm, PyWavelets, statsmodels (STL baseline, Ljung-Box).
 """
@@ -239,12 +240,21 @@ def hierarchy(E, city):
     return g, u, v
 
 
+STRUCTURAL_ZERO = 1e-12
+
+
 def robust_score(s, clean, window, min_periods):
-    """Eq. 15 with a trailing window; median and MAD of |s| estimated on clean steps only."""
+    """Eq. 15 with a trailing window; median and MAD of |s| estimated on clean steps only.
+
+    Structural zeros are excluded from the estimate (D51). A city median over an odd number of zones is attained
+    by one of them, so v of that zone is exactly 0 (and u of a city is exactly 0 when its median zone is also the
+    region median). These zeros carry no information about the zone. If they fill half the trailing window, the
+    median and MAD collapse to 0 and the score becomes |s| / 1e-6 (observed: B1, V4 band, 16-18 Mar 2024,
+    z = 15 182 with LightGBM residuals; F35)."""
     a = s.abs()
-    ac = a.where(clean)
-    med = ac.rolling(window, min_periods=min_periods).median()
-    mad = (a - med).abs().where(clean).rolling(window, min_periods=min_periods).median()
+    est = clean & (a > STRUCTURAL_ZERO)
+    med = a.where(est).rolling(window, min_periods=min_periods).median()
+    mad = (a - med).abs().where(est).rolling(window, min_periods=min_periods).median()
     return (a - med) / (1.4826 * mad + 1e-6)
 
 

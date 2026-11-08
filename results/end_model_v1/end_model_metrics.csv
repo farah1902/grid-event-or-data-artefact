@@ -1,6 +1,6 @@
 variant,agree_rule_items,normal_windows_as_N,soft_CE_rule,soft_CE_normal,agree_A1,agree_A2,agree_A3,agree_G1,agree_G2,agree_G3,agree_G4,agree_N
-"GBDT, all features",0.957,1.0,0.311,0.001,0.667,1.0,1.0,,0.0,0.906,0.971,0.0
-"GBDT, no detector features",0.954,1.0,0.298,0.002,0.667,1.0,1.0,,0.0,0.868,0.986,0.0
-"GBDT, no episode features",0.95,1.0,0.316,0.001,0.667,0.982,1.0,,0.0,0.887,0.971,0.0
-"GBDT, detector features only",0.548,0.97,1.481,0.075,0.333,0.737,0.463,,0.0,0.453,0.623,0.0
-"MLP, all features",0.925,1.0,0.372,0.0,1.0,0.965,0.989,,0.0,0.83,0.928,0.0
+"GBDT, all features",0.947,1.0,0.3,0.001,1.0,1.0,1.0,,0.0,0.849,0.957,0.0
+"GBDT, no detector features",0.957,1.0,0.3,0.0,0.667,1.0,1.0,,0.0,0.887,0.986,0.0
+"GBDT, no episode features",0.943,1.0,0.309,0.001,1.0,0.982,1.0,,0.0,0.83,0.971,0.0
+"GBDT, detector features only",0.541,0.97,1.57,0.079,0.333,0.807,0.411,,0.0,0.509,0.565,0.0
+"MLP, all features",0.9,0.997,0.369,0.006,0.667,0.982,0.979,,0.0,0.717,0.928,0.0

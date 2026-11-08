@@ -24,13 +24,14 @@ src/rules_v0.py               rule engine v0 (frozen baseline; reproduces result
 src/rules_v1.py               rule engine v1: items, 19 rules, votes, episodes
 src/label_model.py            Dawid–Skene label model (constrained one-coin variant + guide's full variant)
 src/viz.py                    shared plotting style and stacked-zone plot
-src/detector.py               predictors (LightGBM, sklearn fallback), phase-aligned MODWT, residual hierarchy, level scores
+src/detector.py               predictors (LightGBM, sklearn fallback), phase-aligned MODWT, residual hierarchy, level scores (structural zeros excluded, D51)
 src/end_model.py              detector-only candidates, normal windows, item features, soft-label end model, fusion
 notebooks/NB1_evidence_figures.ipynb   Fig 1, 3, 4, 5, E1–E8 (executed)
 notebooks/NB1b_rules_v1.ipynb          rule engine v1 diagnostics, Fig 7, E9–E11 (executed)
 notebooks/NB2_label_model.ipynb        label model, E12–E15 (executed)
-notebooks/NB3_detector_end_model.ipynb detector + end model, Fig 8, E16–E19 (executed locally with the sklearn fallback; Colab run = reference)
+notebooks/NB3_detector_end_model.ipynb detector + end model, Fig 8, E16–E19 (executed locally with LightGBM 4.6.0 = reference run)
 tools/make_nb*.py             generators that write the notebooks (see "Notebooks" below)
+tools/diag_structural_zeros.py diagnostic behind F35/D51 (writes results/detector_v1/structural_zeros.csv)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary
 results/labels_v1/            label-model outputs (q.csv = probabilistic labels)
@@ -81,7 +82,15 @@ Notebooks resolve `ROOT` from the repo root or from `notebooks/`. On Colab they 
 
 ## LightGBM on the author's Windows machine
 
-LightGBM 4.7.0 crashes there (access violation in `LGBM_DatasetSetField`). `detector.predict_rho(backend="auto")` falls back to scikit-learn's HistGradientBoosting and prints the backend; NB3 then uses the same backend for the end model. **Run NB3 on Colab for the reference LightGBM results** (D39).
+LightGBM **4.7.0** crashes there (access violation in `LGBM_DatasetSetField`); **4.6.0 works** and is pinned in `requirements.txt` (D52). If LightGBM fails, `detector.predict_rho(backend="auto")` falls back to scikit-learn's HistGradientBoosting and prints the backend; `summary.json` records `backend` and `lightgbm_version`. Check them before citing NB3 numbers.
+
+## Colab ↔ local sync
+
+The author has Google Drive for desktop in Streaming mode: the Drive copy of the repo is `G:\My Drive\grid-event-or-data-artefact` (Colab: `/content/drive/MyDrive/grid-event-or-data-artefact`). It has no `.git`; the local repo is the master copy.
+- Before a Colab run, hash-compare the files the notebook reads and copy changed ones to G:.
+- After it, check timestamps and `summary.json` on G:, then copy only that notebook's outputs (results folders, its figures, the executed `.ipynb`) into the repo.
+- Colab can leave files written to Drive unsent: NB3 ends with `drive.flush_and_unmount()`, and the user must press Ctrl+S to save the executed notebook.
+- A PDF open in Foxit locks it; notebooks then fail when `savefig` overwrites it.
 
 ## Notebooks
 
@@ -94,7 +103,7 @@ Editing the `.ipynb` directly also works, but the generator then goes stale. If 
 ## What comes next (roadmap)
 
 See `docs/paper_handoff.md` § "What is still missing". In short:
-- **NB3:** done locally with the fallback backend; replace its numbers with the Colab LightGBM run when the user provides it.
+- **NB3:** done (reference run local, LightGBM 4.6.0, with the D51 fix).
 - **NB4:** injection benchmark and baselines. This is the only place accuracy against known types can be measured.
 - **NB5:** downstream forecasting.
 - **NB6:** Tetouan transfer.

@@ -259,6 +259,7 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - `detector.predict_rho(backend="auto")` therefore falls back to scikit-learn's `HistGradientBoostingRegressor` (same histogram-GBDT family; absolute-error loss) **for the whole call** when LightGBM raises. The notebook prints the backend used.
   - **The Colab run with LightGBM is the reference run**; local runs that fell back are for code validation.
   - The user asked for lightgbm, PyWavelets and statsmodels explicitly (2026-11-08).
+  - **Superseded by D52:** LightGBM 4.6.0 works locally, so the reference run is local again. The fallback stays in the code for other machines.
 
 ### D40 — Which residual carries the region / city / zone hierarchy [guide deviation]
 - **Guide eq. 13:** predict zone z from its own past plus the **current** values of its neighbours (leave-one-zone-out graph nowcast), then split that residual into g, u, v (eq. 14).
@@ -268,9 +269,9 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - **nowcast:** the guide's version, forecast features plus every other zone's current ρ;
   - an **STL** residual (statsmodels) as a classical baseline.
 - **Test:** for every southern rule item, the level with the highest score (g, the item's cities' u, the item's zones' v) should match the level its structure implies (multi-city → g, ≥ 90 % of one city → u, one zone → v). Also compare clean-data prediction error.
-- **Result:** the hypothesis was **not** confirmed on the real data (F29). The nowcast's g scores for logger events are as large as the forecast's (C06: 227.9 vs 222.6). Hierarchy consistency is 0.752 (nowcast) vs 0.738 (forecast) vs 0.699 (STL), a difference of about 3 of 206 items. Neighbours also don't improve clean MAE (0.0287 vs 0.0285).
+- **Result:** the hypothesis was **not** confirmed on the real data (F29). The nowcast's g scores for logger events are as large as the forecast's (C06: 232.6 vs 218.0). Hierarchy consistency is 0.714 (forecast) vs 0.694 (nowcast) vs 0.621 (STL) in the reference run; the two superseded runs had the nowcast 3–4 items ahead, so the difference is noise. Neighbours also don't improve clean MAE (0.0292 vs 0.0288).
 - **Choice:** `MAIN = "forecast"`.
-  - The two are equal within noise; the forecast is simpler.
+  - The two are equal within noise (the sign of the difference flips between runs); the forecast is simpler.
   - Its region response does not depend on shared shocks having been masked during training. The nowcast's does: unflagged shared anomalies could be explained away by the neighbours.
   - NB4 must test this with unflagged injected multi-zone events. If the nowcast is as good there, either can be used.
 
@@ -295,6 +296,7 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - g: no zone of the system flagged;
   - u_c: no zone of city c flagged;
   - v_z: zone z not flagged.
+- **Structural zeros** of the median hierarchy (|s| ≤ 1e-12) are also excluded from the median and MAD (D51, added after F35).
 - **Warm-up:** scores are NaN for the first 21 days of each system (x̂ needs 14 days and the robust window 7 more). In v1 of the notebook, the top detector-only "candidate" (score 9014) was an artefact of the empty baseline in the first week.
 - **Zone-step score Z** = max over the 6 bands and over the levels that contain the zone.
 - **γ** = 99.5th percentile of Z over **rule-negative** zone-steps. A zone-step counts as rule-negative if:
@@ -359,3 +361,25 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **Decision:** classes whose total training mass Σ_i q_i(y) over rule items is below 3 items are "low support". On real data this is A1 (about 3), G1 and G2 (1). For rule items whose label-model arg max is a low-support class, fusion returns p = q: the end model abstains.
 - **Why:** out of fold, a class with one example is never in the training folds when that example is scored. Without abstention, fusion turned the only G2 item (26 Sep 2022, all Laâyoune zones, q_G2 = 0.99) into G3 (0.82). That was an artefact of the evaluation design, not evidence.
 - **Effect:** β (still 0.5) and abstention only matter where the two experts disagree. NB4 tunes β on injected data, where these classes have many examples.
+
+### D51 — Structural zeros are excluded from the level-score scale [bug fix, 2026-11-08]
+- **Problem (F35):** u and v come from medians (eq. 14). The median of an odd number of zones is one of them, so that zone's v is exactly 0 at that step; a city's u is exactly 0 when its median zone is also the region median. If these zeros fill at least half of the trailing 28-day window, the median and the MAD of |v| are 0 and the robust z (D43) becomes |v| / 1e-6.
+- **Where it bit:** the Colab LightGBM run (commit 21e6695). B1 (Boujdour has 3 zones) was the city's median zone on 52 % of the V4-band window before 16–18 Mar 2024. Its old V4 scale was 0, and nine detector-only "candidates" on B1 scored 3,973–15,182 (the sklearn run happened to stay below the 50 % line, top score 317). Only 925 of 1,257,663 V4 zone-steps had a collapsed scale, but the bias exists everywhere: zeros pull the median and MAD of small cities' v down and inflate their scores.
+- **Decision:** `detector.robust_score` estimates the median and MAD only on steps that are clean **and** have |s| > 1e-12 (`STRUCTURAL_ZERO`). The score itself is still computed at every step; at a structural zero it is negative (not anomalous). Eq. 14 (e = g + u + v) is unchanged.
+- **Alternatives rejected:**
+  - leave-one-out medians (v_z = e_z − median of the *other* zones), which break the additive identity of eq. 14;
+  - a larger fixed MAD floor, which is unit-dependent and ad hoc;
+  - the mean instead of the median, which loses robustness to the very events being scored.
+- **Effect** (`results/detector_v1/structural_zeros.csv`, LightGBM forecast residual):
+  - B1, 16–18 Mar 2024, V4: old score 14,940, fixed score 2.1;
+  - the maximum zone score drops to the level of real events.
+- **Code:** `src/detector.py` (`robust_score`, `STRUCTURAL_ZERO`); diagnostic `tools/diag_structural_zeros.py`.
+
+### D52 — LightGBM 4.6.0 pinned; the reference run is local again
+- **Finding:** LightGBM 4.6.0 (the version Colab ships) runs on the author's Windows machine; 4.7.0 crashed (D39). The local 4.6.0 south forecast reproduces Colab's MAE (0.0288).
+- **Decision:** `requirements.txt` pins `lightgbm==4.6.0`. NB3 runs locally with LightGBM; Colab stays an option (the notebook now ends with `drive.flush_and_unmount()` on Colab, because Colab left the CSVs of the first run unsent while the figures arrived).
+- **Run record:**
+  - 2026-11-08, local, sklearn fallback, code a9ec65a (D39);
+  - 2026-11-08, Colab, LightGBM 4.6.0, code a9ec65a, commit 21e6695: exposed F35;
+  - 2026-11-08, local, LightGBM 4.6.0, with D51: **the reference run**, numbers in `results_summary.md` §8.
+- `summary.json` now records `lightgbm_version` and `colab`.

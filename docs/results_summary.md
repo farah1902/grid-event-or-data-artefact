@@ -186,82 +186,97 @@ The value in brackets is the correlation at δ\*. The 2023-03-26 and 2024-03-31 
 
 ## 8. Detector and end model (NB3; `results/detector_v1/`, `results/end_model_v1/`)
 
-**These numbers come from the local run with the scikit-learn HistGradientBoosting fallback, because LightGBM crashed on Windows (D39). Replace them with the Colab LightGBM run when it is available.** Runtime 12.9 min.
+**Reference run:** local, LightGBM 4.6.0, with the structural-zero fix (D51, D52), 2026-11-08, 19.8 min. Earlier runs are superseded: the local sklearn-fallback run (a9ec65a) and the Colab LightGBM run before the fix (21e6695). Their numbers are recorded in the research log (session 4) and must not be cited.
 
 **Predictors** (`predictor_metrics.csv`; MAE of ρ on rule-clean steps, out of sample):
 
 | System | Residual | All | Jul 2023 + |
 |---|---|---|---|
-| south | forecast | 0.0285 | 0.0276 |
-| south | nowcast (guide eq. 13) | 0.0287 | 0.0277 |
+| south | forecast | 0.0288 | 0.0278 |
+| south | nowcast (guide eq. 13) | 0.0292 | 0.0282 |
 | south | STL (non-robust) | 0.0594 | 0.0589 |
 | south | ρ̂ = 1 (expected value) | 0.1835 | 0.1796 |
-| Marrakech | forecast | 0.1020 | 0.0886 |
-| Marrakech | nowcast | 0.1019 | 0.0890 |
+| Marrakech | forecast | 0.1077 | 0.0921 |
+| Marrakech | nowcast | 0.1077 | 0.0925 |
 | Marrakech | ρ̂ = 1 | 0.2755 | 0.2673 |
 
-Residual lag-1 autocorrelation (median over southern zones): forecast 0.193, nowcast 0.200. Ljung–Box Q (median): forecast 3,259 at lag 1 and 9,054 at lag 144; nowcast 3,532 and 12,007.
+Residual lag-1 autocorrelation (median over southern zones; `ljung_box.csv`): forecast 0.179, nowcast 0.196. Ljung–Box Q (median): forecast 2,813 at lag 1 and 11,205 at lag 144; nowcast 3,358 and 14,038.
 
 **MODWT group delays** (steps): W1 4, W2 11, W3 25, W4 53, V4 43. Spill half-width 53 steps.
+
+**Structural zeros of the hierarchy** (`structural_zeros.csv`, raw band, LightGBM forecast residual; F35, D51):
+- share of steps where a zone's v is exactly 0: Boujdour 0.281–0.365 (B1 0.365), Laâyoune 0.124–0.240, Foum El Oued 0.091–0.203;
+- share where a city's u is exactly 0: Boujdour 0.085, Foum El Oued 0.129, Laâyoune 0.188;
+- B1, 16–18 Mar 2024, V4 band: B1 is the city median on up to 52.3 % of the trailing window; the old scale (zeros included) has MAD = 0 and score 14,940; the fixed score is 2.1;
+- zone-steps with a collapsed old V4 scale (MAD < 1e-4): 925 of 1,257,663; none in the other bands.
 
 **Hierarchy consistency** (`hierarchy_consistency*.csv`; 206 southern items with a defined expected level, 11 warm-up items excluded):
 
 | Residual | All | g (n = 9) | u (n = 40) | v (n = 157) |
 |---|---|---|---|---|
-| forecast | 0.738 | 0.444 | 0.325 | 0.860 |
-| nowcast | 0.752 | 0.444 | 0.350 | 0.873 |
-| STL | 0.699 | 0.444 | 0.125 | 0.860 |
+| forecast | 0.714 | 0.444 | 0.550 | 0.771 |
+| nowcast | 0.694 | 0.444 | 0.450 | 0.771 |
+| STL | 0.621 | 0.444 | 0.325 | 0.707 |
 
-By kind (forecast): dead g 3/3 = 1.000; dead v 0.958 (n = 71); fill g 0.167 (n = 6); fill u 0.325 (n = 40); fill v 0.779 (n = 86).
+By kind:
 
-**Region score g at the logger events** (forecast / nowcast): C06 222.6 / 227.9; C09 230.0 / 240.3; C12 186.7 / 188.7. For C05's multi-city fill item: 88.3 / 93.8.
+| Kind | Expected level | n | Forecast | Nowcast | STL |
+|---|---|---|---|---|---|
+| dead | g | 3 | 1.000 | 1.000 | 1.000 |
+| dead | v | 71 | 0.915 | 0.915 | 0.873 |
+| fill | g | 6 | 0.167 | 0.167 | 0.167 |
+| fill | u | 40 | 0.550 | 0.450 | 0.325 |
+| fill | v | 86 | 0.651 | 0.651 | 0.570 |
 
-**Threshold:** γ = 37.24 (south) and 20.01 (Marrakech), from 1,129,478 of 1,257,663 southern and 30,270 of 35,040 Marrakech zone-steps counted as rule-negative. The first, unaligned version gave γ = 103.79 and 19.12.
+**Region score g at the logger events** (raw band, maximum over the item; forecast / nowcast): C06 218.0 / 232.6; C09 230.0 / 240.4; C12 175.6 / 177.1. For C05's multi-city fill item: 86.1 / 90.7.
+
+**Threshold:** γ = 25.51 (south) and 16.85 (Marrakech), from 1,128,259 of 1,256,385 southern and 30,270 of 35,040 Marrakech zone-steps counted as rule-negative. History: the first, unaligned version gave γ = 103.79 (south); the aligned version before the structural-zero fix gave 37.24 (sklearn) and 33.35 (LightGBM).
 
 **Detector recall of rule items** (share with Z > γ somewhere in the item; `detector_recall_of_rule_items.csv`):
 
 | System | Label | Items | Recall | Median score |
 |---|---|---|---|---|
-| south | A1 | 3 | 1.000 | 625 |
-| south | A2 | 57 | 0.667 | 51 |
-| south | A3 | 88 | 0.523 | 87 |
+| south | A1 | 3 | 1.000 | 566 |
+| south | A2 | 57 | 0.789 | 49 |
+| south | A3 | 88 | 0.534 | 56 |
 | south | G2 | 1 | 0 (in the warm-up) | n/a |
-| south | G3 | 18 | 0.944 | 171 |
-| south | G4 | 56 | 0.946 | 117 |
-| south | N (fill) | 3 | 1.000 | 185 |
+| south | G3 | 18 | 1.000 | 139 |
+| south | G4 | 56 | 0.946 | 101 |
+| south | N (fill) | 3 | 1.000 | 134 |
 | Marrakech | A3 | 7 | 0.000 | 5 |
-| Marrakech | G3 | 35 | 0.143 | 12 |
-| Marrakech | G4 | 13 | 0.077 | 16 |
+| Marrakech | G3 | 35 | 0.086 | 10 |
+| Marrakech | G4 | 13 | 0.077 | 12 |
 
 **Detector-only candidates** (`detector_items.csv`, `detector_only_nature.csv`):
-- 311 in total: 305 south, 6 Marrakech.
-- Zones: 299 single-zone, 10 two-zone, 1 three-zone, 1 fifteen-zone.
-- Duration quantiles (10 / 50 / 90 %): 0.5 / 1.5 / 5.5 h.
+- 290 in total: 283 south, 7 Marrakech.
+- Zones: 248 single-zone, 29 two-zone, 4 three-zone, 1 four-zone, 3 five-zone, 3 six-zone, 1 seven-zone, 1 fifteen-zone.
+- Duration quantiles (10 / 50 / 90 %): 0.5 / 1.33 / 5.67 h. Highest score 276.7 (L2, 2 Nov 2023, surge).
 
-| System | Nature | n | Median h | Median ρ |
-|---|---|---|---|---|
-| south | other | 146 | 1.17 | 0.99 |
-| south | surge | 139 | 2.17 | 1.88 |
-| south | partial drop | 20 | 1.75 | 0.49 |
-| Marrakech | other | 5 | 2.50 | 1.04 |
-| Marrakech | surge | 1 | 3.00 | 1.72 |
+| System | Nature | n | Median h | Median ρ | Multi-zone |
+|---|---|---|---|---|---|
+| south | other | 139 | 1.00 | 0.90 | 35 |
+| south | surge | 111 | 2.83 | 1.74 | 0 |
+| south | partial drop | 33 | 1.83 | 0.45 | 2 |
+| Marrakech | other | 4 | 1.75 | 0.97 | 2 |
+| Marrakech | surge | 3 | 2.00 | 1.63 | 3 |
 
-End-model label of the candidates: N 301 ("no typed class fits"), A3 9, A2 1.
+End-model label of the candidates: N 270 ("no typed class fits"), A3 13, G4 5, A2 1, G3 1.
 
-**Normal windows:** 300 (south: 244 single-zone, 6 all-zone; Marrakech: 50 single-zone).
+**Normal windows:** 300. South 250: 189 single-zone, 19 Boujdour-wide, 18 Laâyoune-wide, 19 Foum-El-Oued-wide, 5 all-zone. Marrakech: 50 single-zone.
 
-**End model** (`end_model_metrics.csv`; out of fold, GroupKFold 5 by episode; 43 features):
+**End model** (`end_model_metrics.csv`; out of fold, GroupKFold 5 by episode; 43 features; LightGBM):
 
 | Variant | Agreement with the label model on 281 rule items | Normal windows predicted N | Soft CE (rule) |
 |---|---|---|---|
-| GBDT, all features | 0.968 | 1.000 | 0.298 |
-| GBDT, no detector features | 0.968 | 0.997 | 0.291 |
-| GBDT, no episode features | 0.968 | 1.000 | 0.299 |
-| GBDT, detector features only | 0.516 | 0.967 | 1.601 |
-| MLP, all features | 0.904 | 0.993 | 0.403 |
+| GBDT, all features | 0.947 | 1.000 | 0.300 |
+| GBDT, no detector features | 0.957 | 1.000 | 0.300 |
+| GBDT, no episode features | 0.943 | 1.000 | 0.309 |
+| GBDT, detector features only | 0.541 | 0.970 | 1.570 |
+| MLP, all features | 0.900 | 0.997 | 0.369 |
 
-Per class (GBDT, all features): A1 3/3, A2 57/57, A3 95/95, G2 0/1, G3 50/53, G4 67/69, N (vote-less fills) 0/3 (they go to A3).
+Per class (GBDT, all features): A1 3/3, A2 57/57, A3 95/95, G2 0/1 (→ G4), G3 45/53 (8 → G4), G4 66/69 (3 → G3), N (vote-less fills) 0/3 (they go to A3).
 
 **Fusion** (β = 0.5; end-model abstention on low-support classes A1, G1, G2, affecting 4 items):
-- 4 of 281 rule labels change: one G3 → G4 (L3, 24 Dec 2023, p = 0.56) and three N → A3 (vote-less single-zone linear fills, p = 0.97–0.98).
-- Final rule-item labels (`p_type.csv`): A3 98, G4 70, A2 57, G3 52, A1 3, G2 1.
+- 3 of 281 rule labels change, all N → A3: the vote-less single-zone linear fills on L2 and L3 (24 Dec 2023, p = 0.979 and 0.987) and L1 (6 Apr 2024, p = 0.944).
+- Final rule-item labels (`p_type.csv`): A3 98, G4 69, A2 57, G3 53, A1 3, G2 1.
+- The C12 tail item on L1 (2 Apr 2024 06:10) stays G4 after fusion (p = 0.83); the end model alone says G3. Episode features do not resolve F25.
