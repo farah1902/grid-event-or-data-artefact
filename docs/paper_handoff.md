@@ -1,0 +1,162 @@
+# Paper handoff — state of the science for the writing agent
+
+Read this first if you are writing the paper. It says what the project has established, what changed relative to
+the research guide (`docs/research_guide.md`), what the paper can claim now, and what is still missing. Every
+claim points to a finding (F…) in `docs/findings.md` or a decision (D…) in `docs/decisions.md`. Every number is in
+`docs/results_summary.md`.
+
+**Status: 2026-11-08.**
+- Done: rule engine v1 (19 rules) and the label model (constrained Dawid–Skene).
+- Not done: the detector (NB3), the injection benchmark (NB4), downstream forecasting (NB5), the Tetouan transfer (NB6) and the final figures (NB7).
+
+## 1. The paper in one paragraph (current evidence)
+
+Feeder telemetry from three southern Moroccan cities that share one data logger contains far more data artefacts
+than grid events. The artefacts take four mechanical forms:
+- zero fills;
+- held (frozen) values;
+- **straight-line interpolation**, a signature the original plan did not anticipate and which is the most common fill mechanism in this data;
+- clock errors, where the logger follows European daylight saving in autumn.
+
+The large "outages" in the record are compound acquisition failures: holds or straight-line fills that turn into
+exact zeros, with held and zeroed zones side by side in different cities. No clean regional outage survives
+(F03, F07). About one in five dead runs "restores" through a synthetic straight line, so restoration dynamics are
+not trustworthy evidence (F05, F16).
+
+Hierarchical rules can still separate the cases, and a constrained Dawid–Skene label model turns their sparse,
+single-label votes into stable, calibrated probabilities. The guide's unconstrained formulation is not identifiable
+on these votes (F20–F22).
+
+In the southern system the provisional labels give about 2,600 artefact zone-hours against about 300 grid-event
+zone-hours. Counting every zero as an outage would overstate outage time about four-fold (F26, provisional until
+NB4 and NB5).
+
+## 2. Suggested storyline
+
+1. **Problem:** utilities clean feeder telemetry blind (guide). Real-data motivation figures: Fig 3 (C05/C06), Fig 4 (C12) and E1b (C09). Put them early.
+2. **Typology** with measurable signatures at hierarchy levels, extended with the linear-fill signature (F01). New typology table and Fig 2.
+3. **Candidate generation:** per-step states (zero, noise floor, hold, linear fill), typed items and episodes (methods §2–3).
+4. **Rules** (methods §4): 19 rules, including the interpolation family. Fig 7.
+5. **Label model:** why the guide's equations fail (F20, F21), the constrained model, stability and recovery (F22), robustness (F24). E12, E14.
+6. **(Pending)** multi-scale residual detector and end model (NB3); injection benchmark against baselines (NB4).
+7. **Case studies on real data:** the catalogue (Table 4 draft in results_summary §7), C01/C09 re-reads, synthetic restoration ramps, the daily logger freeze.
+8. **(Pending)** downstream: forecasting error and outage statistics, naive vs typed cleaning (NB5). F26 is the preview.
+9. **(Pending)** Tetouan transfer (NB6).
+10. **Threats and limitations** (§6 below).
+
+## 3. Corrections to the guide (continuing the guide's own table, #1–13)
+
+These are changes to the **guide's plan**, found by running it on the real data. The guide's corrections #1–13 stand.
+
+| # | Guide item | Problem found | Fix | Ref |
+|---|---|---|---|---|
+| 14 | Typology A1–A4 (zeros, holds, stuck, clock) | Straight-line interpolation is a common fill mechanism (85 pure and 16 mixed fill items of 155) and is invisible to hold detection | New state (eq. 21); A2/A3 cover holds **and** linear fills; new rules R19–R21 | F01, D07, D26 |
+| 15 | C05 = L, B, F4 holds | F1–F3, F5–F7 are linearly filled over the same span: all 15 zones | Episode EP056: A2, A2 → A1 | F02 |
+| 16 | C09 = G1 candidate ("L normal") | L is linearly interpolated during the B/F zeros | A1 (0.93); no G1 left in the real data (R7 fires 0×) | F03, F07 |
+| 17 | C01 = noise-floor feeder outage | Zeros → straight line → zeros | Re-segmented into 4 items | F06 |
+| 18 | Restoration ratio, ramp and overshoot (eq. 3, R1, R5, R7, H2) | 21 % of dead runs restore through a synthetic straight line. C02's r = 0.22 was an artefact | Measure after the ramp (D22). R5 turns out uninformative (log(a/b) = 0.12) | F05, F16 |
+| 19 | Dead = x ≤ 5 % x̂ (eq. 4); v0 also required an exact zero | v0 dropped exactly the noise-floor runs that H1 is about | No exact-zero requirement | D15 |
+| 20 | Rules vote on "events" | Large events are compound (fill → zero), so one label per event cannot describe them | Typed items (dead, fill, clock, transfer) linked into episodes | D13 |
+| 21 | R4: any step with one zone dead and another held | A 1-h stuck sensor during a 108-h outage would vote A1 | Co-extensive = time IoU ≥ 0.5 | D19 |
+| 22 | R15: \|δ\*\| ≥ 50 min | Fires on 18/33 dates, including Ramadan dates and fits with correlation 0.09–0.30 | Fit-quality guard (corr ≥ 0.9, gain ≥ 0.05) → 6 votes | D21, F12 |
+| 23 | Label model eq. 10–11 (fired rules only) | With single-label rules, θ = 1 for every class, so votes carry no information | Abstention is an observed output (eq. 24) | D28, F20 |
+| 24 | Unconstrained Dawid–Skene, "identifiable because most items get several votes" | Most items get 1–3 votes and rules rarely co-fire. The model is unstable (63 % restart agreement) and loses class meaning | Feasible classes by level, applicability domains, constrained one-coin parameters, defining-rule and π priors (eq. 24–26) | D29–D34, F21, F22 |
+| 25 | Equal number of all-abstain N windows in the label model | They add no information once classes are gated by level | Deferred to the end model (NB3) as negatives | D35 |
+| 26 | Clock shift "+50 to +60 min" | The sign convention was not defined | δ\* < 0 means stamped earlier after the date; Oct 2022 = −60 | D08, F04 |
+| 27 | Hold minimum 6 steps | Laâyoune has a daily 30–50 min freeze in all zones (218 episodes) below the threshold | Keep 6; sensitivity sweep; report as a finding | D18, F09 |
+| 28 | Eq. 8 windows [d, d+13] vs [d−14, d−1] | v0 uses [d+1, d+14] vs [d−13, d] | Documented; one-day shift, no effect on the C11 result | methods §3 |
+| 29 | R10 window "06:00–11:00" | v0 uses start hours 6–11 inclusive | Documented (06:00–11:59) | D24 |
+
+## 4. Contributions — status against the guide's list
+
+| # | Guide contribution | Status | Evidence |
+|---|---|---|---|
+| 1 | Typology (4 artefact + 5 grid-event types) with measurable signatures | **Done and extended** (linear-fill signature) | F01–F06, methods §2 |
+| 2 | Hierarchical weak supervision without manual annotation, calibrated probabilistic labels | **Label model done.** Stability and synthetic-recovery calibration shown (ECE 0.033). Calibration against known types is pending (NB4) | F20–F24 |
+| 3 | Multi-scale residual detector split into region/city/zone parts | Not started (NB3) | — |
+| 4 | Released typed event catalogue for UCI 1158 | Draft exists (`results/labels_v1/q.csv`, 327 items, plus episodes). Release after NB4 validation | results_summary §6–7 |
+| 5 | Type-aware cleaning improves forecasts and outage statistics | Not started (NB5). Preview: naive zero = outage overstates outage time ≈ 4.2× (provisional) | F26 |
+| 6 | Transfer test on Tetouan | Not started (NB6) | — |
+| new | Methodological: the guide's Dawid–Skene fails on sparse single-label rule sets; a constrained, level-gated variant works | Done | F20–F22, D28–D34 |
+| new | Empirical: straight-line interpolation and synthetic restoration ramps in utility telemetry; a daily logger freeze | Done | F01, F05, F09 |
+
+## 5. Research questions and hypotheses — evidence so far
+
+| Item | Status | Evidence |
+|---|---|---|
+| RQ1: can the hierarchy alone give reliable type labels? | Partly. Labels are stable and agree 98 % with majority vote. **Reliability vs truth: NB4** | F22, F23 |
+| RQ2: which signatures separate events from artefacts? | Holds and linear fills (log(a/b) 3.4–4.0) and simultaneity with fill (R1, R3, R4, R21) are strong. Exact-zero share (R6, 2.2) is moderate. **Restoration overshoot (R5, 0.12) is uninformative.** Conservation: one example | F16, results_summary §6 |
+| RQ3: does learning beat rules alone and unsupervised detectors? | Pending (NB3, NB4). Real-data labels ≈ rules (98 % agreement). The gain must come from injection robustness and the end model | — |
+| RQ4: does type-aware cleaning help? | Pending (NB5). Preview F26 | F26 |
+| RQ5: transfer without re-tuning? | Pending (NB6) | — |
+| H1: acquisition failures → exact zeros or simultaneous holds; de-energised feeders → noise floor | **Supported and extended.** All 3 multi-city zero fills have η = 1.0 and come with holds or linear fills; 84 of 126 dead items have η < 0.9 and are mostly single-zone. Caveat: some noise floors are linear fills (D16) | F03, F06, F17 |
+| H2: real outages restore with a ramp or overshoot; gaps return straight to expected | **Weak / threatened.** Synthetic ramps (21 %); R5 uninformative | F05, F16 |
+| H3: transfers conserve current; faults and gaps don't | One clean case (κ = 0.07); the 12 other level-shift candidates have κ ≥ 0.72 | F19 |
+
+## 6. Threats to validity and limitations (current)
+
+1. **No ground truth on real data.** All real-data labels are provisional. Validation = injection (NB4) plus external records, which the user chose not to pursue (R17/R18 not implemented). Say this plainly.
+2. **Circularity.** Labels come from rules, so agreement with rules (98 %) is not accuracy. The parameter-recovery test only checks identifiability under the model's assumptions (D36).
+3. **G1 has no real example** (F07). G1 performance will rest entirely on injected events.
+4. **R10 window overlaps the morning linear-fill window** (F08). Some G4 may be data maintenance, and G4 is driven by a defining rule.
+5. **Item-level labels ignore episode context** (F25). For example, the C12 tail zero on L1 is labelled G4 (0.96). An episode-context rule or the end model should fix this.
+6. **Marrakech** dead items are mostly whole-kW noise-floor runs in one small zone (F15). Report the south separately.
+7. **Thresholds** were set on the same data. The sensitivity sweep (guide ablation 6) is still to be run on injected data.
+8. **Clock.** Timestamps are uncorrected (D11). R10 and all time-of-day features are in recorded time. The logger's clock regime is only partly understood (F04).
+9. **Label-model priors matter.** The defining-rule prior changes 39 % of dead labels (G3/G4 split) (F24). Report it as a modelling choice with its sensitivity.
+10. **Small classes:** A1 has 3 items, G2 1 and G5 1 on real data. No per-class real-data statistics are possible; use case studies.
+
+## 7. Claims the paper must NOT make (yet)
+
+- Any accuracy, F1 or calibration number "on real data". Only synthetic recovery and, later, injection results exist.
+- That a regional outage (G1) was detected in the data.
+- That restoration dynamics (ramp, overshoot) distinguish outages from artefacts.
+- The 4.2× outage-time overstatement as a final result (provisional until NB4 and NB5).
+- Any causal link between events and the Boujdour II commissioning (26 Jan 2023) or the 400 kV switch (Jul 2023). These are coincidences in time only; external validation was not pursued.
+- Marrakech outage counts as physical outages.
+- Results "in local time": no clock correction has been applied.
+
+## 8. What is still missing (in roadmap order)
+
+| Notebook | Content | Will provide |
+|---|---|---|
+| NB3 | MODWT multi-scale TCN-GAT nowcast (or the LightGBM fallback), residual hierarchy g/u/v (eq. 13–15), end model on q with detector features (eq. 12), fusion (eq. 16). **Add sampled N windows here (D35) and episode features (F25)** | Fig 8; contribution 3 |
+| NB4 | Injection of observed signatures at 1/3/7 %, including **linear fills** and **synthetic restoration ramps**; baselines; metrics (eq. 17–18); ablations including the new interpolation family and the label-model priors | Tables 5–7, Figs 9–11; first real validation |
+| NB5 | Forecasting with S0–S3 cleaning, DM test, outage-hours check | Table 8, Fig 12; confirms or refutes F26 |
+| NB6 | Tetouan transfer with frozen rules | Table 9 |
+| NB7 | Final figures (basemap, typology diagram, framework diagram) | Figs 1, 2, 6 |
+
+**Injection additions required by the findings:**
+- straight-line gap fills (single-zone and multi-zone, slopes as observed in `zone_runs.csv`);
+- zero spells ending in a straight-line ramp (F05);
+- daily short multi-zone freezes (F09);
+- G1 events (none exist in the real data).
+
+## 9. Writing conventions
+
+- **Terms:**
+  - *dead state* (x = 0 or x ≤ 5 % of expected); *exact zero*; *noise floor*;
+  - *hold* (identical non-zero values, last value carried forward); *linear fill* or *straight-line interpolation* (constant first difference); *fill* = hold or linear fill;
+  - *item* (the unit rules vote on); *episode* (linked items);
+  - *zero-fill gap* (A1), *simultaneous fill* (A2), *single-zone fill* (A3), *clock error* (A4);
+  - *regional outage* (G1), *city outage* (G2), *unplanned feeder outage* (G3), *planned work* (G4), *load transfer* (G5).
+- **Notation:** follow the guide (x, x̂, ρ, η, r_E, π_E, τ_E, S_E, κ, δ\*, q_i(y), θ_r). New: a_rl, b_rl, 𝒴(i), 𝒜(i), S(r, l) (methods §5).
+- **Refer to events** by date and zone codes (e.g. "31 Mar 2024, B/F and L3–L5"), with the guide's C-ids where they exist. Item ids (D###…) are internal and change between runs.
+- **Times:** "as recorded". Mention in captions that no clock correction is applied.
+- **Units:** A for the south, kW for Marrakech. Use ρ or ratios when comparing.
+- **Numbers:** cite only from `docs/results_summary.md`. If a number is missing there, compute it from `results/` and add it there first.
+
+## 10. Where things are
+
+| Need | File |
+|---|---|
+| Every number | `docs/results_summary.md` |
+| Method text and equations | `docs/methods.md` |
+| Why something was done | `docs/decisions.md` |
+| What was found | `docs/findings.md` |
+| Column meanings | `docs/data_dictionary.md` |
+| Figures and their roles | `docs/figures_and_tables.md` |
+| Chronology | `docs/research_log.md` |
+| Original plan, equations 1–20, references | `docs/research_guide.md` |
+| Probabilistic catalogue | `results/labels_v1/q.csv`, `episodes_labelled.csv` |
+| Code | `src/rules_v1.py`, `src/label_model.py` |

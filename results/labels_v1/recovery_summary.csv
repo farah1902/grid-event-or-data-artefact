@@ -1,0 +1,6 @@
+,accuracy,accuracy,macro_f1,macro_f1,ece,ece,brier,brier
+,mean,std,mean,std,mean,std,mean,std
+labeler,,,,,,,,
+DS constrained,0.922,0.021,0.872,0.08,0.033,0.012,0.124,0.028
+DS full (guide),0.682,0.058,0.493,0.077,0.276,0.065,0.577,0.118
+majority vote,0.911,0.017,0.843,0.064,,,,

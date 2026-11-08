@@ -1,0 +1,23 @@
+{
+  "items": 327,
+  "labels": {
+    "A3": 95,
+    "G4": 69,
+    "A2": 57,
+    "G3": 53,
+    "N": 34,
+    "A4": 14,
+    "A1": 3,
+    "G2": 1,
+    "G5": 1
+  },
+  "artefact_items": 169,
+  "grid_items": 124,
+  "normal_items": 34,
+  "mean_confidence": 0.945,
+  "items_conf_below_0.7": 8,
+  "restart_agreement_min_constrained": 1.0,
+  "restart_agreement_min_full": 0.6269,
+  "agreement_DS_MV": 0.982,
+  "agreement_DS_DSfull": 0.569
+}
