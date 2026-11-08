@@ -1,7 +1,7 @@
 # Results summary — numbers to cite
 
 This is the single source of truth for numbers. Every value below comes from a file in `results/`, named in each
-section. Status: as of 2026-11-08 (rule engine v1 + label model). **No result here has been validated against
+section. Status: as of 2026-11-08 (rule engine v1, label model, detector and end model). **No result here has been validated against
 known types yet; that is NB4.** Item ids (D###, F###, …) change if the rule engine is re-run with other
 parameters.
 
@@ -183,3 +183,85 @@ The value in brackets is the correlation at δ\*. The 2023-03-26 and 2024-03-31 
 | C13 | 2024-04-14 | L, B, F | K007/K015/K023 A4 (0.70 each) | missing hour (R14 only) |
 | new | 2022-09-26 08:20, 0.8 h | L1–L5 | D048 G2 (0.99) | the only city-outage candidate (F18) |
 | new | 2024-03-31 | B | K014 N (0.60) | +60 profile shift with no missing hour, during Ramadan |
+
+## 8. Detector and end model (NB3; `results/detector_v1/`, `results/end_model_v1/`)
+
+**These numbers come from the local run with the scikit-learn HistGradientBoosting fallback, because LightGBM crashed on Windows (D39). Replace them with the Colab LightGBM run when it is available.** Runtime 12.9 min.
+
+**Predictors** (`predictor_metrics.csv`; MAE of ρ on rule-clean steps, out of sample):
+
+| System | Residual | All | Jul 2023 + |
+|---|---|---|---|
+| south | forecast | 0.0285 | 0.0276 |
+| south | nowcast (guide eq. 13) | 0.0287 | 0.0277 |
+| south | STL (non-robust) | 0.0594 | 0.0589 |
+| south | ρ̂ = 1 (expected value) | 0.1835 | 0.1796 |
+| Marrakech | forecast | 0.1020 | 0.0886 |
+| Marrakech | nowcast | 0.1019 | 0.0890 |
+| Marrakech | ρ̂ = 1 | 0.2755 | 0.2673 |
+
+Residual lag-1 autocorrelation (median over southern zones): forecast 0.193, nowcast 0.200. Ljung–Box Q (median): forecast 3,259 at lag 1 and 9,054 at lag 144; nowcast 3,532 and 12,007.
+
+**MODWT group delays** (steps): W1 4, W2 11, W3 25, W4 53, V4 43. Spill half-width 53 steps.
+
+**Hierarchy consistency** (`hierarchy_consistency*.csv`; 206 southern items with a defined expected level, 11 warm-up items excluded):
+
+| Residual | All | g (n = 9) | u (n = 40) | v (n = 157) |
+|---|---|---|---|---|
+| forecast | 0.738 | 0.444 | 0.325 | 0.860 |
+| nowcast | 0.752 | 0.444 | 0.350 | 0.873 |
+| STL | 0.699 | 0.444 | 0.125 | 0.860 |
+
+By kind (forecast): dead g 3/3 = 1.000; dead v 0.958 (n = 71); fill g 0.167 (n = 6); fill u 0.325 (n = 40); fill v 0.779 (n = 86).
+
+**Region score g at the logger events** (forecast / nowcast): C06 222.6 / 227.9; C09 230.0 / 240.3; C12 186.7 / 188.7. For C05's multi-city fill item: 88.3 / 93.8.
+
+**Threshold:** γ = 37.24 (south) and 20.01 (Marrakech), from 1,129,478 of 1,257,663 southern and 30,270 of 35,040 Marrakech zone-steps counted as rule-negative. The first, unaligned version gave γ = 103.79 and 19.12.
+
+**Detector recall of rule items** (share with Z > γ somewhere in the item; `detector_recall_of_rule_items.csv`):
+
+| System | Label | Items | Recall | Median score |
+|---|---|---|---|---|
+| south | A1 | 3 | 1.000 | 625 |
+| south | A2 | 57 | 0.667 | 51 |
+| south | A3 | 88 | 0.523 | 87 |
+| south | G2 | 1 | 0 (in the warm-up) | n/a |
+| south | G3 | 18 | 0.944 | 171 |
+| south | G4 | 56 | 0.946 | 117 |
+| south | N (fill) | 3 | 1.000 | 185 |
+| Marrakech | A3 | 7 | 0.000 | 5 |
+| Marrakech | G3 | 35 | 0.143 | 12 |
+| Marrakech | G4 | 13 | 0.077 | 16 |
+
+**Detector-only candidates** (`detector_items.csv`, `detector_only_nature.csv`):
+- 311 in total: 305 south, 6 Marrakech.
+- Zones: 299 single-zone, 10 two-zone, 1 three-zone, 1 fifteen-zone.
+- Duration quantiles (10 / 50 / 90 %): 0.5 / 1.5 / 5.5 h.
+
+| System | Nature | n | Median h | Median ρ |
+|---|---|---|---|---|
+| south | other | 146 | 1.17 | 0.99 |
+| south | surge | 139 | 2.17 | 1.88 |
+| south | partial drop | 20 | 1.75 | 0.49 |
+| Marrakech | other | 5 | 2.50 | 1.04 |
+| Marrakech | surge | 1 | 3.00 | 1.72 |
+
+End-model label of the candidates: N 301 ("no typed class fits"), A3 9, A2 1.
+
+**Normal windows:** 300 (south: 244 single-zone, 6 all-zone; Marrakech: 50 single-zone).
+
+**End model** (`end_model_metrics.csv`; out of fold, GroupKFold 5 by episode; 43 features):
+
+| Variant | Agreement with the label model on 281 rule items | Normal windows predicted N | Soft CE (rule) |
+|---|---|---|---|
+| GBDT, all features | 0.968 | 1.000 | 0.298 |
+| GBDT, no detector features | 0.968 | 0.997 | 0.291 |
+| GBDT, no episode features | 0.968 | 1.000 | 0.299 |
+| GBDT, detector features only | 0.516 | 0.967 | 1.601 |
+| MLP, all features | 0.904 | 0.993 | 0.403 |
+
+Per class (GBDT, all features): A1 3/3, A2 57/57, A3 95/95, G2 0/1, G3 50/53, G4 67/69, N (vote-less fills) 0/3 (they go to A3).
+
+**Fusion** (β = 0.5; end-model abstention on low-support classes A1, G1, G2, affecting 4 items):
+- 4 of 281 rule labels change: one G3 → G4 (L3, 24 Dec 2023, p = 0.56) and three N → A3 (vote-less single-zone linear fills, p = 0.97–0.98).
+- Final rule-item labels (`p_type.csv`): A3 98, G4 70, A2 57, G3 52, A1 3, G2 1.

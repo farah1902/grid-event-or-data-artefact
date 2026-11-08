@@ -37,6 +37,20 @@ Every figure in `results/figures/` exists as PNG (200 dpi) and PDF. Style is set
 | `E14_key_event_posteriors` | NB2 | Full posterior q(y) for the items of the key events | **main candidate** | Reader-friendly evidence for the catalogue |
 | `E15_label_robustness` | NB2 | % of labels changing when a rule family or a prior changes | supp | F24 |
 
+## Figures added by NB3 (detector and end model)
+
+All NB3 figures come from the local run with the scikit-learn fallback (D39). Regenerate them from the Colab LightGBM run before publishing.
+
+| File | Notebook | Content | Role | Notes / caveats |
+|---|---|---|---|---|
+| `fig8_residual_hierarchy` | NB3 | Level scores g, u, v during C05/C06 (logger: hold → zero fill) vs C02 (F4 feeder outage); g from the forecast and nowcast residuals | **main** (guide Fig 8) | Logger zero fill → g about 10², while a feeder outage moves only v (F4). Holds move v and u but not g coherently (F30) |
+| `E16_predictor_example` | NB3 | One normal week of L1: observed ρ, forecast, nowcast, residual | supp | F28 |
+| `E17_detector_only_candidates` | NB3 | Detector-only candidates over time (score, zones) and start hours | supp | F32 |
+| `E18_detector_only_gallery` | NB3 | Top-scoring candidates per nature (partial drop, surge, other) | **main candidate** | Shows near-dead runs above ε, a sub-30-min system-wide disturbance and sustained surges (F32) |
+| `E19_end_model` | NB3 | (a) label model vs out-of-fold end model on rule items; (b) agreement per ablation variant; (c) end-model labels of detector candidates | supp | F33 |
+
+Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) should now show the residual hierarchy feeding the end model and the detector-only candidate stream.
+
 ## The guide's figure and table plan — status
 
 | Guide item | Status | Where / what remains |
@@ -48,7 +62,7 @@ Every figure in `results/figures/` exists as PNG (200 dpi) and PDF. Style is set
 | Fig 5 (clock evidence) | done | `fig5_clock_2022-10-30` |
 | Fig 6 (framework diagram) | **to draw** | Update: item kinds (dead, fill, clock, transfer), episodes, constrained label model (D28–D34) |
 | Fig 7 (rule coverage, overlap, conflict) | done | `fig7_rule_diagnostics` |
-| Fig 8 (residual hierarchy g, u, v) | pending | NB3 |
+| Fig 8 (residual hierarchy g, u, v) | done | `fig8_residual_hierarchy` (NB3) |
 | Fig 9 (detection PR curves) | pending | NB4 |
 | Fig 10 (attribution confusion matrix) | pending | NB4 |
 | Fig 11 (reliability diagram) | pending | NB4. NB2 has the synthetic-recovery ECE only |

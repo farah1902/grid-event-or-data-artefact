@@ -6,8 +6,11 @@ claim points to a finding (F…) in `docs/findings.md` or a decision (D…) in `
 `docs/results_summary.md`.
 
 **Status: 2026-11-08.**
-- Done: rule engine v1 (19 rules) and the label model (constrained Dawid–Skene).
-- Not done: the detector (NB3), the injection benchmark (NB4), downstream forecasting (NB5), the Tetouan transfer (NB6) and the final figures (NB7).
+- Done:
+  - rule engine v1 (19 rules);
+  - the label model (constrained Dawid–Skene);
+  - **the detector and end model (NB3)**. NB3's numbers come from a local run with the scikit-learn fallback because LightGBM crashed on Windows. **The Colab LightGBM run is the reference**, and its numbers must replace them.
+- Not done: the injection benchmark (NB4), downstream forecasting (NB5), the Tetouan transfer (NB6) and the final figures (NB7).
 
 ## 1. The paper in one paragraph (current evidence)
 
@@ -27,6 +30,18 @@ Hierarchical rules can still separate the cases, and a constrained Dawid–Skene
 single-label votes into stable, calibrated probabilities. The guide's unconstrained formulation is not identifiable
 on these votes (F20–F22).
 
+A multi-scale residual detector split into region, city and zone parts (eq. 14) places **zero-fill artefacts and
+outages** at the right hierarchy level (multi-city dead items: 3/3 at the region; single-zone dead items: 96 % at
+the zone). It does **not** do so for **fill** artefacts, whose residuals are zone-specific by construction (F30).
+Rules and detector are therefore complementary.
+
+The detector also finds about 300 anomalies that no rule covers. Most fall outside the typology:
+- partial outages just above the dead threshold;
+- sub-30-min system-wide disturbances;
+- sustained surges.
+
+This points to typology extensions and to the ε sensitivity question (F32).
+
 In the southern system the provisional labels give about 2,600 artefact zone-hours against about 300 grid-event
 zone-hours. Counting every zero as an outage would overstate outage time about four-fold (F26, provisional until
 NB4 and NB5).
@@ -38,7 +53,13 @@ NB4 and NB5).
 3. **Candidate generation:** per-step states (zero, noise floor, hold, linear fill), typed items and episodes (methods §2–3).
 4. **Rules** (methods §4): 19 rules, including the interpolation family. Fig 7.
 5. **Label model:** why the guide's equations fail (F20, F21), the constrained model, stability and recovery (F22), robustness (F24). E12, E14.
-6. **(Pending)** multi-scale residual detector and end model (NB3); injection benchmark against baselines (NB4).
+6. **Detector and end model** (NB3, methods §6–7):
+   - forecast residual;
+   - phase-aligned MODWT bands;
+   - residual hierarchy (Fig 8): it works for outages, not for fills (F30);
+   - detector-only candidates and typology gaps (F32, E18);
+   - the end model reproduces the label model (F33) and corrects the threshold of one rule (F34).
+   - Then the **(pending)** injection benchmark against baselines (NB4).
 7. **Case studies on real data:** the catalogue (Table 4 draft in results_summary §7), C01/C09 re-reads, synthetic restoration ramps, the daily logger freeze.
 8. **(Pending)** downstream: forecasting error and outage statistics, naive vs typed cleaning (NB5). F26 is the preview.
 9. **(Pending)** Tetouan transfer (NB6).
@@ -66,6 +87,12 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | 27 | Hold minimum 6 steps | Laâyoune has a daily 30–50 min freeze in all zones (218 episodes) below the threshold | Keep 6; sensitivity sweep; report as a finding | D18, F09 |
 | 28 | Eq. 8 windows [d, d+13] vs [d−14, d−1] | v0 uses [d+1, d+14] vs [d−13, d] | Documented; one-day shift, no effect on the C11 result | methods §3 |
 | 29 | R10 window "06:00–11:00" | v0 uses start hours 6–11 inclusive | Documented (06:00–11:59) | D24 |
+| 30 | TCN-GAT nowcaster | Not needed to test the hierarchy idea; heavy on CPU | LightGBM (Huber) nowcasts, the guide's own fallback | D39 |
+| 31 | Eq. 13 graph nowcast (neighbours' current values) as the residual | Adds nothing on clean data (MAE 0.0287 vs 0.0285); also does not absorb masked logger artefacts | Forecast residual as main; the nowcast is kept as a comparison and a feature | D40, F29 |
+| 32 | MODWT bands of ρ, one predictor per band | Five predictors per zone. Causal coefficients smear events by up to 18 h | MODWT of the residual, phase-aligned by measured group delays | D42, F31 |
+| 33 | "An artefact on the logger moves the region part" (eq. 14 rationale) | True for zero fills; false for holds and linear fills (zone-specific drift) | Report hierarchy accuracy by kind; rules handle fills | F30 |
+| 34 | Detector adds coverage within the typology | Detector-only anomalies are mostly outside it (partial outages, short interruptions, surges) | Report them as untyped; propose typology extensions; ε sweep in NB4 | F32 |
+| 35 | Fusion eq. 16 for every class | The end model cannot learn a class with one example out of fold (the G2 item flipped to G3) | End-model abstention on classes with < 3 items of training mass | D50, F34 |
 
 ## 4. Contributions — status against the guide's list
 
@@ -73,7 +100,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 |---|---|---|---|
 | 1 | Typology (4 artefact + 5 grid-event types) with measurable signatures | **Done and extended** (linear-fill signature) | F01–F06, methods §2 |
 | 2 | Hierarchical weak supervision without manual annotation, calibrated probabilistic labels | **Label model done.** Stability and synthetic-recovery calibration shown (ECE 0.033). Calibration against known types is pending (NB4) | F20–F24 |
-| 3 | Multi-scale residual detector split into region/city/zone parts | Not started (NB3) | — |
+| 3 | Multi-scale residual detector split into region/city/zone parts | **Done** (LightGBM fallback nowcaster). Hierarchy accuracy by kind: works for dead and zero-fill events, not for fills. Coverage beyond the rules: 311 candidates, mostly untyped | F28–F32, Fig 8, E18 |
 | 4 | Released typed event catalogue for UCI 1158 | Draft exists (`results/labels_v1/q.csv`, 327 items, plus episodes). Release after NB4 validation | results_summary §6–7 |
 | 5 | Type-aware cleaning improves forecasts and outage statistics | Not started (NB5). Preview: naive zero = outage overstates outage time ≈ 4.2× (provisional) | F26 |
 | 6 | Transfer test on Tetouan | Not started (NB6) | — |
@@ -86,7 +113,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 |---|---|---|
 | RQ1: can the hierarchy alone give reliable type labels? | Partly. Labels are stable and agree 98 % with majority vote. **Reliability vs truth: NB4** | F22, F23 |
 | RQ2: which signatures separate events from artefacts? | Holds and linear fills (log(a/b) 3.4–4.0) and simultaneity with fill (R1, R3, R4, R21) are strong. Exact-zero share (R6, 2.2) is moderate. **Restoration overshoot (R5, 0.12) is uninformative.** Conservation: one example | F16, results_summary §6 |
-| RQ3: does learning beat rules alone and unsupervised detectors? | Pending (NB3, NB4). Real-data labels ≈ rules (98 % agreement). The gain must come from injection robustness and the end model | — |
+| RQ3: does learning beat rules alone and unsupervised detectors? | On real data the end model reproduces the label model (96.8 % out of fold). Detector features add no agreement with rule-derived targets, and they cannot by construction. It corrects one rule threshold (3 vote-less linear fills → A3). **The test is NB4** (injection), where rules miss or misfire | F33, F34 |
 | RQ4: does type-aware cleaning help? | Pending (NB5). Preview F26 | F26 |
 | RQ5: transfer without re-tuning? | Pending (NB6) | — |
 | H1: acquisition failures → exact zeros or simultaneous holds; de-energised feeders → noise floor | **Supported and extended.** All 3 multi-city zero fills have η = 1.0 and come with holds or linear fills; 84 of 126 dead items have η < 0.9 and are mostly single-zone. Caveat: some noise floors are linear fills (D16) | F03, F06, F17 |
@@ -105,6 +132,10 @@ These are changes to the **guide's plan**, found by running it on the real data.
 8. **Clock.** Timestamps are uncorrected (D11). R10 and all time-of-day features are in recorded time. The logger's clock regime is only partly understood (F04).
 9. **Label-model priors matter.** The defining-rule prior changes 39 % of dead labels (G3/G4 split) (F24). Report it as a modelling choice with its sensitivity.
 10. **Small classes:** A1 has 3 items, G2 1 and G5 1 on real data. No per-class real-data statistics are possible; use case studies.
+11. **Backend:** NB3's numbers come from the scikit-learn fallback (D39). Replace them with the Colab LightGBM run.
+12. **The residual hierarchy does not localise fill artefacts** (F30). Don't present eq. 14 as a general artefact localiser.
+13. **Detector-only candidates are untyped** (F32). The end model's "N" for them means "no typed class fits", not "normal".
+14. **End-model circularity:** trained on q, the end model can at most reproduce the rules on real data (F33). Its benefit has to be shown on injected data.
 
 ## 7. Claims the paper must NOT make (yet)
 
@@ -115,18 +146,24 @@ These are changes to the **guide's plan**, found by running it on the real data.
 - Any causal link between events and the Boujdour II commissioning (26 Jan 2023) or the 400 kV switch (Jul 2023). These are coincidences in time only; external validation was not pursued.
 - Marrakech outage counts as physical outages.
 - Results "in local time": no clock correction has been applied.
+- That the residual hierarchy localises all artefacts (only zero fills and outages; F30).
+- That detector-only candidates labelled N are normal (F32).
+- That detector features improve the end model on real data (they don't change agreement; F33).
 
 ## 8. What is still missing (in roadmap order)
 
 | Notebook | Content | Will provide |
 |---|---|---|
-| NB3 | MODWT multi-scale TCN-GAT nowcast (or the LightGBM fallback), residual hierarchy g/u/v (eq. 13–15), end model on q with detector features (eq. 12), fusion (eq. 16). **Add sampled N windows here (D35) and episode features (F25)** | Fig 8; contribution 3 |
+| NB3 | **Done** (local fallback run; Colab LightGBM run pending): residual hierarchy, Fig 8, detector-only candidates, end model, fusion | contribution 3 |
 | NB4 | Injection of observed signatures at 1/3/7 %, including **linear fills** and **synthetic restoration ramps**; baselines; metrics (eq. 17–18); ablations including the new interpolation family and the label-model priors | Tables 5–7, Figs 9–11; first real validation |
 | NB5 | Forecasting with S0–S3 cleaning, DM test, outage-hours check | Table 8, Fig 12; confirms or refutes F26 |
 | NB6 | Tetouan transfer with frozen rules | Table 9 |
 | NB7 | Final figures (basemap, typology diagram, framework diagram) | Figs 1, 2, 6 |
 
-**Injection additions required by the findings:**
+**Injection additions required by the findings (including NB3):**
+- **unflagged** multi-zone shared shocks, to compare the forecast and nowcast residuals (F29);
+- partial outages (0.05 < ρ < 0.5) and sub-30-min interruptions, to test ε and the 3-step minimum (F32);
+- sustained unconserved level shifts (F32);
 - straight-line gap fills (single-zone and multi-zone, slopes as observed in `zone_runs.csv`);
 - zero spells ending in a straight-line ramp (F05);
 - daily short multi-zone freezes (F09);

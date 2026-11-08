@@ -232,3 +232,88 @@ b_{rl} = \frac{\beta_1 + \sum_i n_i \mathbb{1}[o_{ir} = l]}{\beta_1 + \beta_0 + 
 **Outputs.**
 - q.csv: one row per item with q(y) for every class, label = arg max, confidence = max q, entropy, and the majority-vote and full-model labels.
 - Episodes are summarised as the time-ordered sequence of their items' labels.
+
+## 6. Detector: residuals, multi-scale bands, residual hierarchy (`src/detector.py`, NB3)
+
+**Systems.** South: 15 zones (L1–L5, B1–B3, F1–F7) on one 10-min timeline. Marrakech: 2 zones at 30 min; its hierarchy is degenerate (one city, so u ≡ 0).
+
+**Target and mask.** ρ_t^z = x_t^z / x̂_t^z (eq. 2), clipped to [0, 3]. M_t^z = 1 if the step is dead, held or interpolated (rule engine v1 states) or ρ is missing.
+
+**Predictors** (D39–D41). Each zone gets a LightGBM regressor with the Huber objective (δ = 0.1), trained on steps with M = 0 only (the guide's masked loss). Two-fold temporal cross-fitting at 2023-07-01 makes every prediction out of sample.
+
+- *Forecast features:*
+  - the zone's own lags at 1, 2, 3 and 6 steps, 1 day, 2 days and 7 days, with flagged steps set to NaN;
+  - the mean of the last 6 steps and the median of the previous day (both masked);
+  - calendar (D48).
+- *Nowcast features* (guide eq. 13): the forecast features plus the current ρ of every other zone of the system.
+
+```latex
+e_t^{z} = \rho_t^{z} - \hat\rho_t^{z} \tag{27}
+```
+
+**Multi-scale bands** (D42). MODWT pyramid with the LA(8) filters g̃ = g/√2 and h̃_l = (−1)^l g̃_{L−1−l}:
+
+```latex
+W_{j,t} = \sum_{l=0}^{L-1} \tilde h_l\, V_{j-1,\,t-2^{j-1} l}, \qquad V_{j,t} = \sum_{l=0}^{L-1} \tilde g_l\, V_{j-1,\,t-2^{j-1} l}, \qquad V_{0} = e \tag{28}
+```
+
+for j = 1…4. Each band is then phase-aligned: W_j and V_4 are shifted back by their group delay ν (4, 11, 25 and 53 steps for W1–W4, 43 for V4), measured as the energy centroid of the band's impulse response. That shift makes them approximately zero-phase: non-causal, which is fine for a retrospective catalogue. The bands are b ∈ {raw (e itself), W1, W2, W3, W4, V4}.
+
+**Residual hierarchy** (eq. 14), per band b: g_t = median over the system's zones, u_t^c = median over city c minus g_t, v_t^z = e_t^z − g_t − u_t^{c(z)}.
+
+**Level scores** (eq. 15, D43): a trailing 28-day robust z-score of |ε| for ε ∈ {g, u^c, v^z}, with a minimum of 7 days of history. The median and MAD use only steps that are rule-clean at that level. Scores are undefined during a 21-day warm-up.
+
+**Zone-step score and flags:**
+
+```latex
+Z_t^{z} = \max_{b}\, \max\left( s_{t}^{g,b},\; s_{t}^{u,c(z),b},\; s_{t}^{v,z,b} \right), \qquad \text{flag}_t^z = \mathbb{1}[Z_t^z > \gamma], \quad \gamma = Q_{0.995}\{Z_t^z : (t, z) \text{ rule-negative}\} \tag{29}
+```
+
+**Residual-hierarchy test** (D40). For each southern dead or fill item, take the arg max over {max s^g, max s^u (item cities), max s^v (item zones)} over its span (raw band). Compare it with the structural level: multi-city → g; ≥ 90 % of one city → u; one zone → v.
+
+A zone-step is rule-negative if two conditions hold:
+- its zone has no rule state within ±53 steps (half the support of the widest band);
+- the system has no multi-zone rule state within ±53 steps.
+
+**Detector-only candidates** (D44): flag runs of ≥ 3 steps (gaps ≤ 1) that do not overlap a rule zone-run of the same zone extended by ±53 steps, grouped across zones by start within 10 min. They are described as follows (not typed):
+- partial drop: mean ρ < 0.7 and minimum ρ < 0.5;
+- surge: mean ρ > 1.4;
+- other.
+
+**Baseline residual:** statsmodels STL (period 1 day, non-robust, D49). **Residual diagnostics:** statsmodels Ljung–Box at lags 1 and 144, and lag-1 autocorrelation of clean residuals.
+
+## 7. End model and fusion (`src/end_model.py`, NB3)
+
+**Items:**
+- rule items (dead and fill; targets q from the label model);
+- normal windows (target N; D45);
+- detector-only candidates (unlabelled).
+
+Clock and transfer items keep their label-model q (D46). The classes are EVENT_CLASSES = {A1, A2, A3, G1, G2, G3, G4, N}.
+
+**Features φ_i**, computed identically for every item from its span [s, e) and zone set:
+
+| Group | Features |
+|---|---|
+| Structure | duration, n_zones, n_cities, frac_zones, multi-city |
+| States (zone-step shares) | exact zero, dead, held, interpolated, missing, flat (Δx = 0) |
+| ρ dynamics | zone-mean ρ: mean, minimum and standard deviation during the item; mean over 30 min before (pre) and after (post); maximum over 60 min after (post-peak) |
+| Calendar | start hour (raw, sin, cos), weekday, weekend |
+| Adjacency | preceded by a fill run ending at s; followed by a fill run starting at e (any zone) |
+| Episode context | number of items in the episode, episode contains a multi-zone fill, episode contains a multi-city dead item, episode duration |
+| Detector | max and mean of the raw-band s^g, s^u (item cities) and s^v (item zones); one-hot of the top level; maximum score in each of W1–W4 and V4; maximum nowcast zone score |
+
+**Learners** (eq. 12, D47). The soft-label loss L(φ) = −(1/n) Σ_i Σ_y q_i(y) log f_φ(y | φ_i) is implemented two ways:
+- LightGBM multiclass on rows (φ_i, y) weighted by q_i(y), keeping rows with q_i(y) > 10⁻³;
+- a 2-layer MLP trained directly on the soft cross-entropy.
+
+All rule items and normal windows are predicted out of fold (GroupKFold, 5 folds, groups = episode). Detector-only candidates are predicted by the model trained on all labelled items.
+
+**Fusion** (eq. 16): p_i(y) ∝ 𝟙[y ∈ 𝒴(i)] q_i(y)^β f_i(y)^{1−β}, with β = 0.5 until NB4. The end model abstains (p = q) on items whose label-model class has less than 3 items of training mass (D50). Detector-only candidates use a uniform q, so p follows f.
+
+**Evaluation without ground truth:**
+- out-of-fold agreement of arg max f with arg max q on rule items, overall and per class;
+- the share of normal windows predicted N;
+- soft cross-entropy;
+- ablations: without detector features, without episode features, detector features only, the MLP;
+- the list of rule items whose fused label differs from the label model.

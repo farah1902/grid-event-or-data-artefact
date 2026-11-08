@@ -106,3 +106,61 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
   - The `gh` binary is not on the bash PATH.
 - nbconvert prints debugger warnings about frozen modules; they are harmless.
 - The pandas FutureWarning on `fillna` downcasting in `label_model.applicability` was removed when the R14 domain switched to spring-forward dates.
+
+## Session 3 — 2026-11-08 — NB3: multi-scale residual detector and end model
+
+**User requests:**
+1. "Go for the NB3, the multi-scale residual detector and the end model."
+2. Mid-session: "please use lightgbm, pywt, statsmodels; I will install everything for you".
+3. Later: "you can give me the notebook and I will run it in Colab".
+
+**Environment:**
+- Installed lightgbm 4.7.0, PyWavelets 1.8.0 and statsmodels 0.15.0 locally with pip.
+- **LightGBM crashed** with an access violation in `LGBM_DatasetSetField` on the real features.
+  - Toy data worked, and every single parameter (and the full set) worked in isolation. The crash was intermittent and survived contiguous float64 arrays and a fixed thread count.
+  - Decision (D39): an automatic fallback to scikit-learn's HistGradientBoosting for the whole call, with the backend printed. The Colab LightGBM run is the reference.
+  - Robust STL (statsmodels) on 15 × 88,890 steps did not finish within 10 min, so non-robust STL is used (D49).
+
+**Prototype (before the notebook):**
+- Forecast vs nowcast MAE on clean steps: 0.0285 vs 0.0287. The neighbours' current values add nothing.
+- MODWT energy check: x 3980.7, ours 3981.6, `pywt.swt` 3980.1.
+
+**NB3, first full run (12.9 min, fallback backend):**
+- γ = 103.8, recall G3 39 %, G4 29 %.
+- The detector-only gallery showed method artefacts:
+  - a score of 9,014 in the first week (empty baseline);
+  - flags 8–10 h after real disturbances on normal data, because causal wavelet bands smear events forward.
+- The hierarchy-test hypothesis (D40: the nowcast absorbs logger artefacts) was **not** confirmed: g is 227.9 (nowcast) vs 222.6 (forecast) for C06.
+- Fusion turned the singleton G2 item into G3.
+
+**Fixes:**
+1. Phase-aligned MODWT bands, using group delays measured from impulse responses (4, 11, 25, 53, 43 steps; they match the analytical LA(8) shifts) (D42).
+2. A 21-day warm-up and a 7-day minimum for the robust windows (D43).
+3. γ's negative set excludes zone-steps within ±53 steps of a rule state in the same zone, or of a multi-zone rule state in the system (D43).
+4. Symmetric ±53-step exclusion for detector-only candidates (D44).
+5. End-model abstention on low-support classes in fusion (D50).
+
+**Second run:** it failed in the hierarchy cell because `np.nanargmax` hit all-NaN scores for warm-up items. Fixed by leaving warm-up items out of the test (11 items, including the G2 candidate).
+
+**Third run (12.9 min), results:**
+- γ = 37.2.
+- Recall: G3 94 %, G4 95 %, A1 3/3, A2 67 %, A3 52 %.
+- Hierarchy by kind: dead g 3/3, dead v 96 %, fill g 1/6, fill u 33 %.
+- 311 detector-only candidates: 151 other, 140 surges, 20 partial drops. The end model calls 301 of them N, i.e. untyped.
+- End model: 96.8 % out-of-fold agreement with the label model; 100 % of normal windows → N.
+- Fusion changes 4 labels.
+- Findings F28–F34; decisions D39–D50.
+
+**Documentation updated:**
+- decisions D39–D50 (D40 rewritten with the result; D42–D44 rewritten after the fixes);
+- findings F28–F34;
+- methods §6–7 (eq. 27–29);
+- results_summary §8;
+- data_dictionary (detector_v1, end_model_v1);
+- figures_and_tables (Fig 8, E16–E19);
+- paper_handoff (status, corrections #30–35, contribution 3, RQ3, threats, claims, next steps);
+- CLAUDE.md, README, requirements.txt.
+
+**For the next agent or session:**
+- When the user returns the Colab outputs (`results/detector_v1/`, `results/end_model_v1/`, NB3 figures, the executed notebook), replace the numbers in results_summary §8, F28–F34 and paper_handoff, and note the backend change here.
+- Then NB4 (injection).

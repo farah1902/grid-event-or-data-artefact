@@ -175,6 +175,73 @@ Other files:
 | `robustness.csv` | test (drop family, or prior/init), setting, rules_removed, changed (share of all items whose label changes), changed_dead, changed_fill, changed_clock, changed_transfer |
 | `summary.json` | headline counts used in the docs |
 
+## Detector — `results/detector_v1/` (from `src/detector.py`, NB3)
+
+| File | Columns / content |
+|---|---|
+| `predictor_metrics.csv` | system, residual (forecast, nowcast, expected (rho_hat = 1), STL), period (all, Jul 2023 +), MAE, median_abs, RMSE of ρ on rule-clean steps |
+| `ljung_box.csv` | zone, n (clean steps), acf_lag1, lb_stat_1, lb_stat_144 (statsmodels Ljung–Box Q), residual |
+| `hierarchy_consistency.csv` | residual; share of items whose top-scoring level matches the expected level, overall and per expected level |
+| `hierarchy_consistency_by_kind.csv` | residual, kind (dead or fill), level, n, correct (share) |
+| `detector_recall_of_rule_items.csv` | system, label (label model), items, detected (share with Z > γ in the item), median_score |
+| `detector_only_nature.csv` | system, nature, n, median_h, median_rho, n_multizone |
+
+**`detector_items.csv`** — one row per detector-only candidate.
+
+| Column | Meaning |
+|---|---|
+| item_id | `X###` |
+| start, end, duration_h | |
+| zones, n_zones, cities, n_cities | |
+| max_score | max Z over the candidate |
+| system, kind | kind = detector |
+| nature | partial drop, surge or other |
+| rho_mean, rho_min | |
+
+## End model — `results/end_model_v1/` (from `src/end_model.py`, NB3)
+
+**`normal_windows.csv`** — item_id `N###`, system, kind = normal, start, end, zones, n_zones, cities, n_cities, duration_h.
+
+**`item_features.csv`** — one row per rule item (D/F), normal window (N) and detector candidate (X). Columns: item_id, system, source (rule, normal or detector), plus the features in the table.
+
+| Feature | Meaning |
+|---|---|
+| duration_h, n_zones, n_cities, frac_zones, multi_city | structure |
+| share_zero, share_dead, share_hold, share_interp, share_missing | zone-step state shares |
+| share_flat | share with Δx = 0 |
+| rho_mean, rho_min, rho_std | zone-mean ρ during the item |
+| pre_rho, post_rho | 30 min before / after |
+| post_peak | max over 60 min after |
+| start_hour, start_sin, start_cos, weekday, weekend | calendar |
+| preceded_by_fill, followed_by_fill | fill adjacency |
+| ep_n_items, ep_has_multizone_fill, ep_has_multicity_dead, ep_duration_h | episode context; 1, 0, 0 and own duration outside episodes |
+| det_g_max, det_g_mean, det_u_max, det_u_mean, det_v_max, det_v_mean | raw-band level scores |
+| det_top_g, det_top_u, det_top_v | one-hot of the top level |
+| det_W1_max … det_W4_max, det_V4_max | band maxima over all levels |
+| det_nb_max | nowcast zone score |
+
+**`end_model_metrics.csv`**:
+
+| Column | Meaning |
+|---|---|
+| variant | |
+| agree_rule_items | OOF arg max vs label-model arg max |
+| normal_windows_as_N | |
+| soft_CE_rule, soft_CE_normal | soft cross-entropy |
+| agree_A1 … agree_N | per label-model class |
+
+**`p_type.csv`** — final probabilistic labels for event items (the guide's `p_type`). Columns:
+- item_id;
+- source (rule, normal or detector);
+- q_{class}: the label-model q; NaN for detector candidates;
+- f_{class}: the end model, out of fold for rule and normal items;
+- p_{class}: fused, eq. 16;
+- label_q, label_f, label_p, confidence_p.
+
+The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label N means that no typed class fits** (F32).
+
+**`summary.json`** — headline numbers of the run (backend, γ, MAEs, hierarchy consistency, end-model agreement, fused changes, recall, nature counts, runtime).
+
 ## Figure-side tables — `results/figures/`
 
 | File | Content |

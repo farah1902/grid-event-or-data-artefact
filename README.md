@@ -25,11 +25,14 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 │   ├── rules_v0.py                          # rule engine v0 (pandas + numpy only)
 │   ├── rules_v1.py                          # rule engine v1: 19 rules voting on items (see below)
 │   ├── label_model.py                       # constrained Dawid–Skene label model (+ guide-style baseline)
+│   ├── detector.py                          # LightGBM nowcasts, phase-aligned MODWT, residual hierarchy g/u/v, level scores
+│   ├── end_model.py                         # detector-only candidates, normal windows, item features, end model, fusion
 │   └── viz.py                               # shared plotting style + stacked-zone plot
 ├── notebooks/
 │   ├── NB1_evidence_figures.ipynb           # evidence figures (executed, outputs included)
 │   ├── NB1b_rules_v1.ipynb                  # rule engine v1: votes, diagnostics, key events (executed)
-│   └── NB2_label_model.ipynb                # label model: probabilistic labels, recovery, robustness (executed)
+│   ├── NB2_label_model.ipynb                # label model: probabilistic labels, recovery, robustness (executed)
+│   └── NB3_detector_end_model.ipynb         # detector + residual hierarchy + end model + fusion (run on Colab with LightGBM)
 ├── tools/make_nb*.py                        # generators that write the notebooks
 └── results/
     ├── event_catalogue_v0/                  # rule engine v0 outputs
@@ -49,6 +52,8 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
     │   ├── episodes_labelled.csv            # episodes as label sequences, e.g. A2 → A1
     │   ├── rule_params.csv                  # learned propensity a / false-positive rate b per rule
     │   └── recovery_*, robustness.csv, ...  # diagnostics
+    ├── detector_v1/                         # predictor metrics, hierarchy test, recall, detector-only candidates
+    ├── end_model_v1/                        # item features, normal windows, end-model metrics, p_type.csv (fused labels)
     └── figures/                             # all figures (png + pdf) + clock_offsets.csv, interp_runs.csv
 ```
 
@@ -83,7 +88,13 @@ python src/rules_v1.py "data/raw/Data Morocco.xlsx" results/catalogue_v1
 jupyter nbconvert --to notebook --execute --inplace notebooks/NB1_evidence_figures.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/NB1b_rules_v1.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/NB2_label_model.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/NB3_detector_end_model.ipynb   # ~13 min
 ```
+
+**NB3 on Colab (reference run, LightGBM).** LightGBM crashes on the author's Windows machine, and NB3 then falls back to scikit-learn automatically.
+1. Copy the whole repository folder to Google Drive as `MyDrive/grid-event-or-data-artefact/`.
+2. Open `notebooks/NB3_detector_end_model.ipynb` in Colab and choose *Runtime → Run all*. The first cell installs `lightgbm`, `PyWavelets` and `statsmodels` and mounts Drive.
+3. The run writes `results/detector_v1/`, `results/end_model_v1/` and the NB3 figures into the Drive copy. Bring those folders and the executed notebook back into the repository and commit them.
 
 **Google Colab:** copy or clone the repo to `MyDrive/grid-event-or-data-artefact/`, open `notebooks/NB1_evidence_figures.ipynb` and run all cells. The first cell mounts Drive and installs `openpyxl`.
 
@@ -111,6 +122,11 @@ jupyter nbconvert --to notebook --execute --inplace notebooks/NB2_label_model.ip
 | `E13_label_confidence` | Posterior confidence per type and entropy per item kind (NB2) |
 | `E14_key_event_posteriors` | Full posterior q(y) for the key events (NB2) |
 | `E15_label_robustness` | Label changes when rule families or priors change (NB2) |
+| `fig8_residual_hierarchy` | Residual hierarchy: a logger zero fill moves the region part g, a feeder outage only the zone part v (NB3) |
+| `E16_predictor_example` | Out-of-sample prediction of ρ, one normal week (NB3) |
+| `E17_detector_only_candidates` | Anomalies the detector finds and no rule covers, over time (NB3) |
+| `E18_detector_only_gallery` | Detector-only candidates: partial drops, surges, short system-wide disturbances (NB3) |
+| `E19_end_model` | End model vs label model, ablations, labels of detector-only candidates (NB3) |
 
 Roles and caveats for each figure: [docs/figures_and_tables.md](docs/figures_and_tables.md).
 
@@ -128,6 +144,9 @@ Roles and caveats for each figure: [docs/figures_and_tables.md](docs/figures_and
 - **R15 needs a fit-quality guard.** Without it, δ* fires on Ramadan dates and on noisy Marrakech dates. With the guard, it fires on Oct 2022 (L, B, F), Oct 2023 (L, B) and Boujdour on 31 Mar 2024 (+60 min, the European spring-forward date and the C12 date).
 - **The guide's label model cannot work on these rules.** Each rule emits a single label, so P(vote | class, fired) = 1 and the votes carry no information. The unconstrained Dawid–Skene is also not identifiable on sparse votes (63 % restart agreement). A constrained, level-gated one-coin model is stable (100 %) and recovers its parameters: accuracy 0.922 vs 0.682, ECE 0.033 vs 0.276 on synthetic votes.
 - **Restoration overshoot is uninformative.** R5's learned log(a/b) is 0.12, against 1.8–4.8 for the other rules.
+- **The residual hierarchy localises outages, not fills** (NB3). Multi-city dead items peak at the region level 3/3 and single-zone dead items at the zone level 96 %, but multi-zone fills mostly don't (the region level for 1 of 6 multi-city fills): holds and linear fills drift zone by zone. Rules and detector are complementary.
+- **The guide's graph nowcast adds nothing** (NB3). Neighbours' current values don't improve clean-data prediction (MAE 0.0287 vs 0.0285) and don't hide logger artefacts either.
+- **The detector finds anomalies outside the typology** (NB3). There are 311 detector-only candidates: partial outages just above the dead threshold, sub-30-min system-wide disturbances, and sustained surges. They are evidence for an ε sweep and for typology extensions.
 - **Artefacts dominate anomalous time** (provisional). In the south there are 2,605 artefact zone-hours against 294 grid-event zone-hours. Counting every zero as an outage would overstate outage time about 4.2×.
 
 ## Status
@@ -136,7 +155,7 @@ Roles and caveats for each figure: [docs/figures_and_tables.md](docs/figures_and
 - [x] NB1 evidence figures
 - [x] Rules v1 (R3–R6, R11, R12, R15 + interpolation family R19–R21)
 - [x] NB2 label model (constrained Dawid–Skene, recovery, robustness, labelled catalogue)
-- [ ] NB3 multi-scale graph detector + end model
+- [x] NB3 detector + residual hierarchy + end model + fusion (local fallback run; Colab LightGBM run = reference)
 - [ ] NB4 injection benchmark · NB5 downstream forecasting · NB6 Tetouan transfer
 
 ## Data

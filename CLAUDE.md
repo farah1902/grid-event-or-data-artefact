@@ -24,13 +24,18 @@ src/rules_v0.py               rule engine v0 (frozen baseline; reproduces result
 src/rules_v1.py               rule engine v1: items, 19 rules, votes, episodes
 src/label_model.py            Dawid–Skene label model (constrained one-coin variant + guide's full variant)
 src/viz.py                    shared plotting style and stacked-zone plot
+src/detector.py               predictors (LightGBM, sklearn fallback), phase-aligned MODWT, residual hierarchy, level scores
+src/end_model.py              detector-only candidates, normal windows, item features, soft-label end model, fusion
 notebooks/NB1_evidence_figures.ipynb   Fig 1, 3, 4, 5, E1–E8 (executed)
 notebooks/NB1b_rules_v1.ipynb          rule engine v1 diagnostics, Fig 7, E9–E11 (executed)
 notebooks/NB2_label_model.ipynb        label model, E12–E15 (executed)
+notebooks/NB3_detector_end_model.ipynb detector + end model, Fig 8, E16–E19 (executed locally with the sklearn fallback; Colab run = reference)
 tools/make_nb*.py             generators that write the notebooks (see "Notebooks" below)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary
 results/labels_v1/            label-model outputs (q.csv = probabilistic labels)
+results/detector_v1/          detector metrics, hierarchy test, recall, detector-only candidates
+results/end_model_v1/         item features, normal windows, end-model metrics, p_type.csv (fused labels)
 results/figures/              all figures (png + pdf) and small csv tables
 _local_archive/               git-ignored scratch (duplicates, zips, old copies). Not part of the project
 ```
@@ -70,8 +75,13 @@ cd notebooks
 python -m jupyter nbconvert --to notebook --execute --inplace NB1_evidence_figures.ipynb   # ~2 min
 python -m jupyter nbconvert --to notebook --execute --inplace NB1b_rules_v1.ipynb         # ~1 min
 python -m jupyter nbconvert --to notebook --execute --inplace NB2_label_model.ipynb       # ~1.5 min
+python -m jupyter nbconvert --to notebook --execute --inplace NB3_detector_end_model.ipynb # ~13 min
 ```
 Notebooks resolve `ROOT` from the repo root or from `notebooks/`. On Colab they expect the repo copied to `MyDrive/grid-event-or-data-artefact/`.
+
+## LightGBM on the author's Windows machine
+
+LightGBM 4.7.0 crashes there (access violation in `LGBM_DatasetSetField`). `detector.predict_rho(backend="auto")` falls back to scikit-learn's HistGradientBoosting and prints the backend; NB3 then uses the same backend for the end model. **Run NB3 on Colab for the reference LightGBM results** (D39).
 
 ## Notebooks
 
@@ -84,7 +94,7 @@ Editing the `.ipynb` directly also works, but the generator then goes stale. If 
 ## What comes next (roadmap)
 
 See `docs/paper_handoff.md` § "What is still missing". In short:
-- **NB3:** multi-scale graph detector + end model + fusion.
+- **NB3:** done locally with the fallback backend; replace its numbers with the Colab LightGBM run when the user provides it.
 - **NB4:** injection benchmark and baselines. This is the only place accuracy against known types can be measured.
 - **NB5:** downstream forecasting.
 - **NB6:** Tetouan transfer.

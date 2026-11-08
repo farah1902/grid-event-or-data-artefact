@@ -218,3 +218,98 @@ Confidence levels:
   - C01: G4 → A3 → A3 → G3.
   - C02, C04, C07: G3 → A3 (outage, then synthetic ramp).
 - **Evidence:** `results/labels_v1/episodes_labelled.csv`.
+
+---
+
+## D. Detector and end model (NB3, 2026-11-08)
+
+**Backend caveat for every number in this section:** LightGBM crashed in the local Windows environment, so the run that produced these numbers used scikit-learn's HistGradientBoosting fallback (D39). The Colab run with LightGBM is the reference. Numbers may shift slightly when it replaces this run; update this section then.
+
+### F28 — The predictors are accurate on clean data — *solid*
+- **Out-of-sample MAE of ρ on rule-clean steps:**
+
+| System | Forecast | Nowcast | STL | ρ̂ = 1 (expected value) |
+|---|---|---|---|---|
+| South | 0.0285 | 0.0287 | 0.0594 | 0.1835 |
+| Marrakech | 0.102 | 0.102 | n/a | 0.276 |
+
+- The south second fold (Jul 2023 +) has MAE 0.0276, so there is no degradation across the temporal split.
+- **Residual autocorrelation** (lag-1, median over zones): forecast 0.19, nowcast 0.20 (statsmodels Ljung–Box Q at lag 144: about 9,000 and 12,000). Some structure is left, which a better predictor could remove.
+- **Evidence:** `results/detector_v1/predictor_metrics.csv`, `ljung_box.csv`, E16.
+
+### F29 — The guide's graph nowcast neither helps nor hurts on real data — *solid (measurement), strong (interpretation)*
+- **No gain on normal data:** adding every other zone's current ρ (guide eq. 13) leaves the MAE essentially unchanged (0.0287 vs 0.0285).
+- **No absorption of logger artefacts:** the concern behind D40 was that the nowcast would "explain away" logger artefacts. It does not on the real data: the region score g during C06 is 227.9 with the nowcast vs 222.6 with the forecast (C09: 240.3 vs 230.0).
+- **Hierarchy consistency:** nowcast 0.752, forecast 0.738, STL 0.699 (206 southern items outside the warm-up). The nowcast/forecast difference is about 3 items.
+- **Why:** trees trained only on rule-clean steps never see all zones dropping together, so an all-zone drop is out of distribution and gets a near-normal prediction. **For shared anomalies the rules do not flag**, which is the detector's purpose, the nowcast could still absorb them. This is untested on real data; NB4 must inject unflagged multi-zone events and compare.
+- **Choice:** forecast as the main residual (D40). It is equal within noise, simpler, and does not depend on shared shocks being masked during training.
+
+### F30 — The residual hierarchy localises outages, not fills — *solid*
+- **Share of items whose top-scoring level matches their structural level** (forecast residual, raw band; nowcast and STL in brackets):
+
+| Item kind | Expected level | n | Forecast | Nowcast | STL |
+|---|---|---|---|---|---|
+| dead | g (multi-city) | 3 | 1.00 | 1.00 | 1.00 |
+| dead | v (one zone) | 71 | 0.958 | 0.958 | 0.915 |
+| fill | g | 6 | 0.167 | 0.167 | 0.167 |
+| fill | u | 40 | 0.325 | 0.350 | 0.125 |
+| fill | v | 86 | 0.779 | 0.802 | 0.814 |
+
+- **Mechanism:** a dead event is a coherent amplitude shock (every affected zone goes to about −1), so the median across zones carries it to the right level. A hold or linear fill makes each zone drift away from its *own* expected path by a different amount and sign, so the shared part (median) is small and the zone part dominates.
+- **Paper:** the guide's claim "an artefact on the logger moves the region part" holds for **zero-fill** artefacts (C06, C09, C12: g scores 187–230; Fig 8) but **not for fill artefacts**. Fill artefacts are identified by the rules (holds, collinearity), not by the residual hierarchy. That makes the rules and the detector complementary. Say so.
+- **Evidence:** `results/detector_v1/hierarchy_consistency.csv`, `hierarchy_consistency_by_kind.csv`, Fig 8.
+
+### F31 — Multi-scale scoring needs phase alignment and a warm-up; then the detector finds most outages — *solid*
+- **First version** (causal MODWT bands, negative set = "not masked"):
+  - γ = 103.8;
+  - the top detector-only candidates were artefacts of the method: flags 8–10 h after real disturbances on normal data (causal band smear), and a score of 9,014 in the first week (empty baseline);
+  - recall of G3/G4 items was only 39 % / 29 %.
+- **After phase alignment** (measured group delays W1–W4 = 4, 11, 25, 53 steps, V4 = 43, matching the analytical LA(8) shifts), a 21-day warm-up and a negative set away from rule events (D42–D43):
+  - γ = 37.2 in the south and 20.0 in Marrakech;
+  - southern recall of rule items: A1 3/3, G3 94 %, G4 95 %, A2 67 %, A3 52 %, the 3 vote-less fills 3/3. The G2 item falls in the warm-up.
+- **Marrakech is weak:** recall G3 14 %, G4 8 %, A3 0. Its predictor MAE is 0.10 (whole kW, a small zone), and its 48 dead items are mostly noise-floor runs (F15).
+- **Cost of the warm-up:** 11 southern items (14 Sep – 5 Oct 2022) have no detector score, including the only G2 candidate.
+- **Evidence:** `results/detector_v1/detector_recall_of_rule_items.csv`, research log.
+
+### F32 — The detector finds anomalies outside the typology — *strong*
+- **Numbers:** 311 detector-only candidates (305 south, 6 Marrakech). 299 are single-zone; median duration 1.5 h (10–90 %: 0.5–5.5 h).
+- **Descriptive bins:** 151 "other", 140 surges (mean ρ > 1.4), 20 partial drops (mean ρ < 0.7 and minimum ρ < 0.5).
+- **Examples (E18):**
+  - **Near-dead runs the dead definition misses:** F1, 17 Dec 2022, ρ ≈ 0.06 for 6.3 h (just above ε = 0.05); B1, 29 Oct 2022, ρ ≈ 0.13 for 4.5 h; L3, 14 Nov 2023, ρ ≈ 0.07–0.1 for about 4 h.
+  - **Dead runs shorter than the 3-step minimum:** F3 (8 Jun 2023), L2 (11 Mar 2024).
+  - **A system-wide disturbance shorter than 30 min:** 5 Feb 2024 09:50, all 15 zones flagged; F1 hits zero for one step and B1/B2 dip.
+  - **Half-load periods:** L4, 1–2 Nov 2023, ρ ≈ 0.5 for 22 h.
+  - **Sustained surges:** L2 at about 1.8× expected for days (1–4 Nov 2023, three candidates); L4 (Dec 2023, Jan 2024); B3 (Apr 2023); B2 (Jul and Dec 2023).
+  - **A rectangular plateau** at the ρ clip (B2, 13 Jul 2023, 3 h).
+- **End-model label of the 311 candidates:** N 301, A3 9, A2 1. The end model is trained only on typed classes and normal windows, so "N" here means **no typed class fits**. These are untyped anomalies, not normal behaviour.
+- **Paper:**
+  1. Coverage beyond the rules is real but mostly *outside* the typology.
+  2. **The dead threshold ε and the 3-step minimum matter.** Several partial drops are near-misses of the dead definition (guide ablation 6: ε ∈ {0.02, 0.05, 0.1}).
+  3. Candidate typology extensions:
+     - **partial outage** (0.05 < ρ < 0.5);
+     - **short interruption** (< 30 min, system-wide);
+     - **unconserved level shift / surge**. The L2 surge in Nov 2023 has no matching drop, so it is not a G5 transfer under R16.
+- **Evidence:** `results/detector_v1/detector_items.csv`, `detector_only_nature.csv`, E17, E18.
+
+### F33 — The end model reproduces the label model; detector and episode features add no agreement on real data — *solid*
+- **Out of fold by episode, GBDT with all 43 features:**
+  - 96.8 % agreement with the label model's arg max on the 281 rule items;
+  - 100 % of the 300 normal windows predicted N;
+  - per class: A1 3/3, A2 57/57, A3 95/95, G3 50/53, G4 67/69, G2 0/1 (a singleton cannot be learned out of fold);
+  - the 3 vote-less fills → A3, not N.
+- **Ablations:**
+  - without detector features: 96.8 % (normal windows 99.7 %);
+  - without episode features: 96.8 %;
+  - detector features only: 51.6 %;
+  - MLP with all features: 90.4 %.
+- **Meaning:**
+  - The targets q are functions of rule features, so on real data the end model mostly re-learns the rules. Detector features cannot raise agreement with rule-derived targets. Their value must be shown on injected data (NB4), where rules miss or misfire.
+  - Episode features did **not** fix F25: the C12 tail item on L1 is still G4 (f = G4, p = 0.93).
+- **Evidence:** `results/end_model_v1/end_model_metrics.csv`, E19.
+
+### F34 — Fusion changes 4 rule labels — *strong*
+- β = 0.5, with end-model abstention on the low-support classes A1, G1 and G2 (D50; 4 items affected). 4 of 281 rule labels change:
+  - L3, 24 Dec 2023 05:50 (R5, R6, R9): G3 → G4 (p = 0.56);
+  - three vote-less single-zone linear fills (L2/L3 on 24 Dec 2023, L1 on 6 Apr 2024): N (q ≈ 0.52) → A3 (p = 0.97–0.98). A straight line is a fill even when the neighbours are too quiet for R20's 0.8 threshold. This is a sensible correction of a rule threshold by the end model.
+- **Without D50:** the only G2 item (26 Sep 2022) became G3 (0.82). That was purely an artefact of out-of-fold prediction for a singleton class.
+- **Evidence:** `results/end_model_v1/p_type.csv`.
