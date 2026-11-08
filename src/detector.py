@@ -142,15 +142,26 @@ def predict_rho(P, kind="forecast", seed=0, backend="auto"):
             print(f"LightGBM failed ({ex}); falling back to sklearn HistGradientBoosting")
             P["backend"] = "sklearn"
             return predict_rho(P, kind, seed, "sklearn")
+    models = fit_rho_models(P, kind, seed, backend)
+    return apply_rho_models(P, models, kind)
+
+
+def _features(P, z, kind, cal):
+    X = own_features(P, z, cal)
+    if kind == "nowcast":
+        for z2 in P["rho"].columns:
+            if z2 != z:
+                X[f"nb_{z2}"] = P["rho"][z2]
+    return X
+
+
+def fit_rho_models(P, kind="forecast", seed=0, backend="lightgbm"):
+    """Fit the cross-fitted per-zone models: {(zone, train_fold): model}; train_fold True = trained on t >= SPLIT."""
     cal = calendar(P["rho"].index)
-    out = pd.DataFrame(index=P["rho"].index, columns=P["rho"].columns, dtype=float)
     fold = P["rho"].index >= SPLIT
+    models = {}
     for z in P["rho"].columns:
-        X = own_features(P, z, cal)
-        if kind == "nowcast":
-            for z2 in P["rho"].columns:
-                if z2 != z:
-                    X[f"nb_{z2}"] = P["rho"][z2]
+        X = _features(P, z, kind, cal)
         y = P["rho"][z]
         ok = ~P["mask"][z] & y.notna()
         for tr_fold in (False, True):
@@ -161,10 +172,24 @@ def predict_rho(P, kind="forecast", seed=0, backend="auto"):
             # (access violation in LGBM_DatasetSetField) when handed temporary pandas objects
             Xtr = np.ascontiguousarray(X[tr].to_numpy(dtype=np.float64))
             ytr = np.ascontiguousarray(y[tr].to_numpy(dtype=np.float64))
-            model = _model(seed, backend).fit(Xtr, ytr)
+            models[(z, tr_fold)] = _model(seed, backend).fit(Xtr, ytr)
+    return models
+
+
+def apply_rho_models(P, models, kind="forecast"):
+    """Out-of-sample predictions: each fold is predicted by the model trained on the other fold. P may be a panel
+    built from different (e.g. injected) data than the one the models were fitted on (NB4)."""
+    cal = calendar(P["rho"].index)
+    out = pd.DataFrame(index=P["rho"].index, columns=P["rho"].columns, dtype=float)
+    fold = P["rho"].index >= SPLIT
+    for z in P["rho"].columns:
+        X = _features(P, z, kind, cal)
+        for tr_fold in (False, True):
+            if (z, tr_fold) not in models:
+                continue
             te = (fold != tr_fold)
             Xte = np.ascontiguousarray(X[te].to_numpy(dtype=np.float64))
-            out.loc[te, z] = model.predict(Xte)
+            out.loc[te, z] = models[(z, tr_fold)].predict(Xte)
     return out
 
 
@@ -315,16 +340,31 @@ def runs_of(mask, max_gap=1, min_len=3):
 
 
 # ------------------------------------------------------------------ classical baseline and residual diagnostics
-def stl_residual(P, period=None, robust=False):
+def stl_residual(P, period=None, robust=False, jumps=False, n_jobs=1):
     """Baseline residual (statsmodels STL): rho minus trend and daily seasonal component, per zone.
-    Masked and missing steps are filled with 1 (= expected) before decomposition. Non-causal (two-sided)."""
+    Masked and missing steps are filled with 1 (= expected) before decomposition. Non-causal (two-sided).
+    jumps=True evaluates the trend and low-pass smoothers every ceil(window/10) points and interpolates, as R's stl
+    does by default (about 10x faster; used by the NB4 benchmark). n_jobs > 1 fits zones in parallel."""
     from statsmodels.tsa.seasonal import STL
     period = period or P["per_day"]
-    out = {}
-    for z in P["rho"].columns:
-        y = P["rho"][z].where(~P["mask"][z]).fillna(1.0)
-        fit = STL(y.to_numpy(), period=period, robust=robust).fit()
-        out[z] = P["rho"][z] - (fit.trend + fit.seasonal)
+
+    def one(z):
+        y = P["rho"][z].where(~P["mask"][z]).fillna(1.0).to_numpy()
+        kw = {}
+        if jumps:
+            low_pass = period + 1 if period % 2 == 0 else period + 2
+            trend = int(np.ceil(1.5 * period / (1 - 1.5 / 7)))
+            trend += (trend % 2 == 0)
+            kw = dict(low_pass=low_pass, trend=trend, trend_jump=int(np.ceil(trend / 10)), low_pass_jump=int(np.ceil(low_pass / 10)))
+        fit = STL(y, period=period, robust=robust, **kw).fit()
+        return z, fit.trend + fit.seasonal
+    zones = list(P["rho"].columns)
+    if n_jobs != 1:
+        from joblib import Parallel, delayed
+        res = dict(Parallel(n_jobs=n_jobs)(delayed(one)(z) for z in zones))
+    else:
+        res = dict(one(z) for z in zones)
+    out = {z: P["rho"][z] - res[z] for z in zones}
     return pd.DataFrame(out, index=P["rho"].index)
 
 

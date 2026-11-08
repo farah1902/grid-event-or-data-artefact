@@ -383,3 +383,77 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - 2026-11-08, Colab, LightGBM 4.6.0, code a9ec65a, commit 21e6695: exposed F35;
   - 2026-11-08, local, LightGBM 4.6.0, with D51: **the reference run**, numbers in `results_summary.md` §8.
 - `summary.json` now records `lightgbm_version` and `colab`.
+
+### D53 — The learned graph: a TCN-GAT nowcaster (guide eq. 13 as written) [NB4, 2026-11-08]
+- **Request:** the author asked for the guide's graph model in NB4, "to add value to the work" (2026-11-08), in addition to NB3's LightGBM (D39).
+- **Model** (`src/graph_model.py`):
+  - nodes = the 15 southern zones;
+  - a causal TCN shared by all zones on each zone's past ρ and rule mask: 6 residual blocks, kernel 3, dilations 1–32, 32 channels, receptive field 253 steps (about 42 h);
+  - a 2-head graph-attention layer over the **current** ρ of the zone's neighbours (leave-one-zone-out: the zone's own current value is never an input). Masked neighbours are excluded from the attention;
+  - neighbours: every zone of the same city, plus the top-k = 4 zones of *other* cities by cosine similarity of trainable 16-d node embeddings (GDN-style, recomputed at each forward pass), as the guide specifies;
+  - head: an MLP on the TCN state, the attention message, the node embedding, calendar features (D48) and the zone's own value 1 day and 7 days earlier.
+- **Training:**
+  - masked Huber loss (δ = 0.1, as LightGBM's), AdamW (lr 2e-3, weight decay 1e-4), cosine schedule, up to 40 epochs, early stopping (patience 6) on the last 15 % of each training fold;
+  - two-fold temporal cross-fitting at 2023-07-01, exactly like D41.
+  - The TCN is fully convolutional, so it runs over contiguous chunks (warm-up = receptive field, then 256 targets). Predictions are independent of chunk boundaries (checked: max difference 1.2e-7).
+- **Ablation:** the same network without the graph (`graph=False`) = the TCN analogue of the LightGBM forecast.
+- **Scope:** south only. Marrakech has 2 zones in one city, so a graph is trivial there; it keeps LightGBM.
+
+### D54 — Injection protocol and evaluation scope [NB4]
+- **Where:** a clean region of zone-steps that are:
+  - farther than ±53 steps (D43's spill) from any real rule state of the same zone, and from any real multi-zone state;
+  - farther than ±53 steps from NB3's detector-only candidates;
+  - past the 35-day burn-in (14-day expected value + 21-day warm-up);
+  - not within a day of a clock-change date.
+- **What** (`src/inject.py`): the guide's types with observed signatures:
+  - A1: exact zeros in 2–3 whole cities;
+  - A2: holds or straight-line fills, per zone 50/50 (F01), on 2+ zones; whole-city patterns are followed by an A1 with probability 0.5 (the C05 → C06 and C12 compounds);
+  - A3: a single-zone hold or linear fill, 1–6 h;
+  - G1: 2 cities at a noise floor x̂·U(0, 0.03) with 0–30 % exact zeros, a 20–90 min linear ramp and a decaying overshoot ω ~ U(1.1, 1.5);
+  - G2: one city, as G1, 20 min – 6 h;
+  - G3: one zone, any hour, 1–48 h;
+  - G4: one zone, start 06:00–11:59, 70 % weekends, 1–6 h, 10–30 min ramp, no overshoot.
+  - Durations are log-uniform in the ranges above. G3 is capped at 48 h and A1 at 24 h (guide: up to 5 d / 48 h) to keep enough events per type.
+  - **Plus two untyped cases the findings require:**
+    - U_SHOCK: 2–3 whole cities × U(0.5, 0.8) for 0.5–4 h. No rule fires, so this tests forecast vs nowcast (F29).
+    - U_PARTIAL: one zone × U(0.10, 0.45) for 1–8 h, above ε (F32).
+  - **Not injected:** A4 clock errors (the rules are calendar-gated) and G5 transfers (weeks long; day-level items outside the end model, D46).
+- **How much:** events are placed round-robin over the 9 types until the injected zone-steps reach the target share (1, 3, 7 %) of clean zone-steps. Each event blocks its zones for ±12 h, and multi-city events block all zones for ±3 h. The seed is (rate × 1000, seed).
+- **Evaluation scope:**
+  - a predicted event counts only if it touches the clean region or an injected span; predictions entirely near real anomalies are ignored, because their truth is unknown;
+  - **two matching rules**, both reported:
+    - *guide eq. 17* (the headline F1): a match is a time overlap with the injected span, including its restoration tail;
+    - *zone-strict*: also at least one shared zone. Per-type recall and the attribution matching always use the zone-strict rule.
+  - **Why both:** in the end-to-end test (3 %, seed 0), 31 of the 34 in-scope detector predictions that missed every injected event under the zone rule overlapped an injected event in time, and covered whole *other* cities. When most cities drop together, the region median g follows them, so the unaffected city stands out at the city level u. This is a property of the median hierarchy, not a false alarm in time. Only 3 predictions were false alarms under both rules.
+  - the test period is Jul 2023 – May 2024; the training period is used only for β.
+- **Predictors are not retrained on injected data.** They were fitted on the real data with cross-fitting, so each half of an injected series is predicted by models trained on the other half of the *real* series and has never seen an injected event. The label model and the end model are refitted on every injected dataset, as in the real pipeline.
+
+### D55 — One TCN-GAT on ρ, not one network per MODWT band [guide deviation]
+- **Guide eq. 13:** one TCN-GAT per MODWT band of ρ, with learned band weights α.
+- **Decision:** one network predicts ρ. The residual is then decomposed with the same phase-aligned MODWT as LightGBM's (D42), and the band scores are combined by the maximum (D43).
+- **Why:** this is the same deviation as D42, for the same reasons: five networks per system for no gain in interpretability, and the comparison with LightGBM stays clean, because only the predictor changes. α would need injected validation data for tuning, which the max over bands does not.
+
+### D56 — β tuning and the D50 abstention on injected data [NB4]
+- β ∈ {0, 0.1, …, 1} is chosen per rate by macro-F1 on the injected events of the **training period** (pooled over seeds) and frozen for the test period. Ties go to the value nearest 0.5.
+- On injected data, A1, G1 and G2 are no longer rare, so fusion is reported both with D50's abstention (the real-data setting) and without it.
+- Temperature scaling is not applied. ECE is reported as is, for q, f and p.
+
+### D57 — Baselines that are not run [NB4]
+- **Run:**
+  - the rule engine alone;
+  - STL + MAD (robust z of the STL residual, same window as eq. 15);
+  - Isolation Forest and LOF (scikit-learn; per zone-step features ρ, Δρ, ρ − ρ one day earlier, 1-h mean and std; fit on 50,000 / 10,000 rule-negative zone-steps);
+  - majority vote as a labeler;
+  - our own ablations: no hierarchy, single scale, no graph, nowcast.
+- **Not run:**
+  - Matrix Profile: O(n²) per zone on 88,890 steps;
+  - USAD, TranAD, Anomaly Transformer and TimesNet: deep reconstruction and forecasting baselines that need the authors' code and a training budget per seed;
+  - GDN and MTAD-GAT: the closest graph baselines. The TCN-GAT itself uses GDN's learned top-k graph, so the graph idea is tested, but not the authors' implementations;
+  - Snorkel: an extra dependency (guide correction #10).
+- Say so in the paper. They can be added on the same injected datasets later, because the runs are reproducible from (rate, seed).
+
+### D58 — NB4 run protocol: cached, resumable, Colab GPU [NB4]
+- Each (rate, seed) run writes its truth, detection, AUC and event tables to `results/benchmark_v1/runs/` as soon as it finishes; a rerun skips finished runs.
+- The trained predictors are saved in `results/benchmark_v1/models/` (git-ignored, because the LightGBM pickle is large).
+- `QUICK = True` runs 1 rate × 2 seeds with 2-epoch networks (written to `results/benchmark_quick/`) to test the notebook.
+- The rule-family ablation of the label model runs at 3 % only. The threshold sweep (rules + label model only) runs at 3 % on 3 seeds.

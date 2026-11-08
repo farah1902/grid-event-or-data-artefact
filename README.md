@@ -27,12 +27,16 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 │   ├── label_model.py                       # constrained Dawid–Skene label model (+ guide-style baseline)
 │   ├── detector.py                          # LightGBM nowcasts, phase-aligned MODWT, residual hierarchy g/u/v, level scores
 │   ├── end_model.py                         # detector-only candidates, normal windows, item features, end model, fusion
+│   ├── graph_model.py                       # TCN-GAT nowcaster with a learned graph (guide eq. 13), NB4
+│   ├── inject.py                            # injection of observed anomaly signatures, NB4
+│   ├── benchmark.py                         # rerun the pipeline on injected data, baselines, metrics (eq. 17-18), NB4
 │   └── viz.py                               # shared plotting style + stacked-zone plot
 ├── notebooks/
 │   ├── NB1_evidence_figures.ipynb           # evidence figures (executed, outputs included)
 │   ├── NB1b_rules_v1.ipynb                  # rule engine v1: votes, diagnostics, key events (executed)
 │   ├── NB2_label_model.ipynb                # label model: probabilistic labels, recovery, robustness (executed)
-│   └── NB3_detector_end_model.ipynb         # detector + residual hierarchy + end model + fusion (executed, LightGBM 4.6.0)
+│   ├── NB3_detector_end_model.ipynb         # detector + residual hierarchy + end model + fusion (executed, LightGBM 4.6.0)
+│   └── NB4_benchmark.ipynb                  # TCN-GAT + injection benchmark, Tables 5-7, Figs 9-11 (run on Colab, GPU)
 ├── tools/make_nb*.py                        # generators that write the notebooks
 └── results/
     ├── event_catalogue_v0/                  # rule engine v0 outputs
@@ -54,6 +58,7 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
     │   └── recovery_*, robustness.csv, ...  # diagnostics
     ├── detector_v1/                         # predictor metrics, hierarchy test, recall, detector-only candidates
     ├── end_model_v1/                        # item features, normal windows, end-model metrics, p_type.csv (fused labels)
+    ├── benchmark_v1/                        # NB4: tables 5-7, per-run results in runs/, predictor comparison, learned graph
     └── figures/                             # all figures (png + pdf) + clock_offsets.csv, interp_runs.csv
 ```
 
@@ -159,7 +164,8 @@ Roles and caveats for each figure: [docs/figures_and_tables.md](docs/figures_and
 - [x] Rules v1 (R3–R6, R11, R12, R15 + interpolation family R19–R21)
 - [x] NB2 label model (constrained Dawid–Skene, recovery, robustness, labelled catalogue)
 - [x] NB3 detector + residual hierarchy + end model + fusion (LightGBM 4.6.0; structural-zero fix D51)
-- [ ] NB4 injection benchmark · NB5 downstream forecasting · NB6 Tetouan transfer
+- [ ] NB4 TCN-GAT + injection benchmark (notebook written and tested; full run on Colab GPU)
+- [ ] NB5 downstream forecasting · NB6 Tetouan transfer
 
 ## Data
 

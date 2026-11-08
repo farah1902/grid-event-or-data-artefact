@@ -246,6 +246,7 @@ b_{rl} = \frac{\beta_1 + \sum_i n_i \mathbb{1}[o_{ir} = l]}{\beta_1 + \beta_0 + 
   - the mean of the last 6 steps and the median of the previous day (both masked);
   - calendar (D48).
 - *Nowcast features* (guide eq. 13): the forecast features plus the current ρ of every other zone of the system.
+  - **Paper text (requested by the author, 2026-11-08):** this nowcast is a fully connected "graph" with no learned edges: every other zone's current value is a plain input to the tree model. It adds nothing (clean-data MAE 0.0292 vs 0.0288 for the forecast), so it is used only as a comparison and as an end-model feature, not as the main residual (D40, F29). The learned graph model of the guide (TCN-GAT) is evaluated separately in NB4.
 
 ```latex
 e_t^{z} = \rho_t^{z} - \hat\rho_t^{z} \tag{27}

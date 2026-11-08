@@ -249,3 +249,30 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 |---|---|
 | `clock_offsets.csv` | date, event, city, delta_star_min, corr_at_0, corr_best (NB1; calendar dates only) |
 | `interp_runs.csv` | NB1's interpolation runs (≥ 6 points everywhere, before the v1 priority rules): city, zone, start, end, points, slope_per_step, group |
+
+## Benchmark — `results/benchmark_v1/` (from `src/benchmark.py`, `src/inject.py`, `src/graph_model.py`, NB4)
+
+| File | Content |
+|---|---|
+| `predictor_comparison.csv` | predictor (LGB forecast, LGB nowcast, TCN without graph, TCN-GAT), period (all, Jul 2023 +), MAE, median_abs, RMSE of ρ on rule-clean real steps |
+| `hierarchy_consistency_by_predictor.csv` | NB3's residual-hierarchy test per predictor: predictor, kind, level, n, correct |
+| `learned_cross_city_edges.csv` | TCN-GAT cross-city edges: to (receiving zone), from (sending zone), mean attention on clean steps |
+| `table5_detection.csv` | rate, method, F1, precision, recall, AUC_PR (mean ± sd over seeds, test period), start_err_min (median) |
+| `table5_wilcoxon.csv` | rate, best baseline, ours vs baseline F1, Wilcoxon signed-rank p over seeds |
+| `detection_recall_by_type.csv` | mean recall per injected type, per rate and method (test period) |
+| `beta_tuning_train_period.csv` | rate, beta, abstain, attribution scores on training-period events |
+| `table6_attribution.csv` | rate, labeler, macro_F1, accuracy, ECE, Brier (mean ± sd), per-class F1 (test period) |
+| `end_to_end.csv` | rate, seed, share of typed events detected, end-to-end accuracy (missed = wrong) |
+| `fig10_confusion_fused.csv` | injected type × fused label counts (3 %, test, pooled seeds) |
+| `table7a_pipeline.csv`, `table7b_detector.csv`, `table7c_rule_families.csv`, `table7d_threshold_sensitivity.csv` | ablations (Table 7) |
+| `hard_negatives.csv` | detector, day type (ordinary weekday, weekend, Ramadan, national holiday, Eid), rule-negative zone-steps, flag rate, ratio to ordinary weekdays (real data) |
+| `summary.json` | headline numbers, device, versions, rates, seeds, tuned β, runtime |
+| `models/` | trained predictors (git-ignored): `lightgbm_models.pkl`, `tcn.pt`, `tcn_gat.pt` and training histories |
+
+**`runs/`** — one set of files per injected dataset, tag `r{rate %}_s{seed}` (e.g. `r03_s00`):
+- `_truth.csv`: injected events with event_id (`I####`), type (A1–A3, G1–G4, U_SHOCK, U_PARTIAL), start, end (core span, exclusive), end_affected (end of the restoration tail), duration_h, mechanism (zero, hold, linear, floor, x-factor), zone_steps, omega (overshoot), ramp_min, zones, n_zones, cities, n_cities, family, pattern (zone, zones, city, cities) and episode (`J####` for an A2 → A1 compound);
+- `_detection.csv`: method, period, gamma, n_pred, n_true, precision, recall, f1, start_err_min, end_err_min, recall_{type};
+- `_auc.csv`: method, period, auc_pr (step-wise average precision);
+- `_events.csv`: one row per injected event: type, period, detected, the matched predicted item (item_id, source rule/detector), its feasible set, majority-vote label, q_/f_/fn_ distributions over the 8 event classes (fn = end model without detector features) and, at 3 %, `lm_without_{family}` labels;
+- `_info.json`: runtime, number of rule items and detector-only candidates, γ of the main detector;
+- `sens_s{seed}_{config}_det.csv` / `_lab.csv`: threshold sensitivity (rule-only detection; label-model labels of typed events).

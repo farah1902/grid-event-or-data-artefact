@@ -237,3 +237,32 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Generator note:** `tools/make_nb3_detector_end_model.py` changed (flush cell and summary keys). The notebook was regenerated and executed from it, so they match. The D51 docstring in `src/detector.py` was edited after the run (text only).
 
 **For the next agent or session:** NB4 (injection). Use the injection additions in paper_handoff §8. Add one for F35: a multi-zone event in Boujdour (3 zones) to check the zone-level scale after D51.
+
+## Session 5 — 2026-11-08 — Paper note on the nowcast; NB4 written (TCN-GAT + injection benchmark)
+
+**User requests:**
+1. "Are we already implementing the graph? yes or no." Answer: no. NB3's nowcast feeds every other zone's current value to LightGBM as plain features (a fully connected "graph" with no learned edges), and NB3's hierarchy is a fixed median tree.
+2. Add to the paper: the nowcast is a fully connected "graph" with no learned edges; it adds nothing (MAE 0.0292 vs 0.0288), so it is only a comparison and a feature, not the main residual. → `paper_handoff.md` ("Text the author asked to include") and `methods.md` §6.
+3. "For NB4, add the TCN-GAT (to add value to our work) and the injection benchmark. Don't skip the graph." Put NB4 on Drive; the author runs it on Colab.
+
+**Code:**
+- `src/rules_v1.py`: `build()` split into `build_from_data(raw, data)` so the rule engine can run on injected series. Output unchanged (items identical to catalogue_v1).
+- `src/detector.py`:
+  - `predict_rho` split into `fit_rho_models` / `apply_rho_models`, so models fitted on the real data can predict injected data. Predictions are identical to before (checked against the pickled LightGBM 4.6.0 forecast);
+  - `stl_residual(jumps=True, n_jobs)`: R-style smoother jumps, 183 s → 3 s, residual correlation 0.9999 with the default. NB3 still uses the default.
+- New `src/graph_model.py` (D53, D55): the TCN-GAT and its no-graph ablation.
+  - The first version computed the TCN once per 1-day window and was far too slow on CPU (> 10 min for 2 small epochs). It was rewritten fully convolutional over contiguous chunks; outputs are chunk-independent (max diff 1.2e-7) and an epoch takes about 15 s on CPU.
+  - A softmax over all-masked neighbours gave NaN; it was fixed with a large negative logit plus explicit zeroing.
+- New `src/inject.py` (D54) and `src/benchmark.py` (pipeline rerun, baselines, metrics, threshold sensitivity).
+- New `tools/make_nb4_benchmark.py` → `notebooks/NB4_benchmark.ipynb` (resumable, D58) and `tools/sync_drive.py` (repo ↔ Drive by MD5).
+
+**Local checks:**
+- **TCN-GAT and TCN fully trained on CPU** (40 epochs max, patience 6; stopped at 29–36 epochs, about 17 min per model). Clean-data MAE on the real data: TCN-GAT 0.0294, TCN without graph 0.0299, LightGBM forecast 0.0288. The learned graph helps the TCN a little, and LightGBM stays slightly ahead. The models are saved in `results/benchmark_v1/models/` (`tcn_gat.pt`, `tcn.pt` in git; the 73 MB LightGBM pickle is git-ignored and copied to Drive only). NB4 loads them, so Colab does not retrain.
+- **One injected dataset end to end** (3 %, seed 0, tiny TCNs; mechanics test, not results):
+  - 244 events (26–29 per type), 3.03 % of clean zone-steps;
+  - all stages run; 729 s, of which STL took 462 s under CPU contention, hence the jumps;
+  - every typed event was detected;
+  - attribution macro-F1 ≈ 0.91; the main confusions are G3 → G4 and A1 → G1;
+  - dropping the interpolation rule family lowers label-model accuracy 0.91 → 0.64;
+  - unflagged shared shocks: forecast raw 0.18 vs nowcast raw 0.06 recall (the F29 concern appears on injected data).
+  - **These numbers are from one seed and are not citable.** The Colab run produces the real ones.

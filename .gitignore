@@ -17,3 +17,7 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# NB4 trained predictors (large LightGBM pickle; retrained or reloaded by the notebook)
+results/benchmark_v1/models/*.pkl
+results/benchmark_quick/

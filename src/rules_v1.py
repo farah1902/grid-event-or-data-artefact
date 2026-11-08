@@ -476,6 +476,12 @@ def rule_summary(items, votes):
 def build(path):
     raw = load(path)
     data = {c: regularise(c, df) for c, df in raw.items()}
+    return build_from_data(raw, data)
+
+
+def build_from_data(raw, data):
+    """Everything after loading: used by build() and by the injection benchmark (NB4), which edits `data`.
+    raw is only used for the clock items (duplicate and missing stamps)."""
     exp = {c: d.apply(lambda s, c=c: expected(s, c)) for c, d in data.items()}
     masks = state_masks(data, exp)
     zr = zone_runs(data, masks)
@@ -501,7 +507,7 @@ def build(path):
     votes.insert(0, "item_id", items.item_id)
     summary = rule_summary(items, votes.set_index("item_id"))
     return dict(items=items, votes=votes, zone_runs=zr.drop(columns=["a", "b"]), rule_summary=summary,
-                data=data, exp=exp, masks=masks)
+                data=data, exp=exp, masks=masks, raw=raw)
 
 
 def main(path, out):

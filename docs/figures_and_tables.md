@@ -48,6 +48,10 @@ All NB3 figures come from the reference run (LightGBM 4.6.0, structural-zero fix
 | `E17_detector_only_candidates` | NB3 | Detector-only candidates over time (score, zones) and start hours | supp | F32 |
 | `E18_detector_only_gallery` | NB3 | Top-scoring candidates per nature (partial drop, surge, other) | **main candidate** | Shows near-dead runs above ε, a sub-30-min system-wide disturbance and sustained surges (F32) |
 | `E19_end_model` | NB3 | (a) label model vs out-of-fold end model on rule items; (b) agreement per ablation variant; (c) end-model labels of detector candidates | supp | F33 |
+| `E20_learned_graph` | NB4 | TCN-GAT graph: edges (same city + 4 learned cross-city neighbours per zone) and mean attention on clean steps | supp (main candidate if the graph helps) | D53 |
+| `E21_injected_signatures` | NB4 | One injected event per type over the original series (grey) | supp | D54 |
+| `fig9_detection` | NB4 | Event F1 and step AUC-PR per method at 1/3/7 %, test period, mean ± sd over seeds | **main** (guide Fig 9; dot plot instead of PR curves, because curves need stored scores) | Table 5 |
+| `fig10_11_attribution` | NB4 | (a) confusion of injected type vs fused label, 3 %, test; (b) reliability of q, f and p | **main** (guide Figs 10 and 11) | Table 6 |
 
 Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) should now show the residual hierarchy feeding the end model and the detector-only candidate stream.
 
@@ -63,15 +67,15 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
 | Fig 6 (framework diagram) | **to draw** | Update: item kinds (dead, fill, clock, transfer), episodes, constrained label model (D28–D34) |
 | Fig 7 (rule coverage, overlap, conflict) | done | `fig7_rule_diagnostics` |
 | Fig 8 (residual hierarchy g, u, v) | done | `fig8_residual_hierarchy` (NB3) |
-| Fig 9 (detection PR curves) | pending | NB4 |
-| Fig 10 (attribution confusion matrix) | pending | NB4 |
-| Fig 11 (reliability diagram) | pending | NB4. NB2 has the synthetic-recovery ECE only |
+| Fig 9 (detection PR curves) | NB4 written, awaiting the Colab run | `fig9_detection` (dot plot of F1 and AUC-PR) |
+| Fig 10 (attribution confusion matrix) | NB4 written, awaiting the Colab run | `fig10_11_attribution` (a) |
+| Fig 11 (reliability diagram) | NB4 written, awaiting the Colab run | `fig10_11_attribution` (b); NB2 has the synthetic-recovery ECE |
 | Fig 12 (downstream MASE, outage-hours error) | pending | NB5 |
 | Table 1 (data inventory) | done | `docs/results_summary.md` §1 |
 | Table 2 (typology and signatures) | to update | The guide's table plus the linear-fill signatures (F01) |
 | Table 3 (labelling rules) | done | `docs/methods.md` §4 |
 | Table 4 (event catalogue) | draft done | `docs/results_summary.md` §7; full list in `results/labels_v1/q.csv` and `episodes_labelled.csv` |
-| Table 5–7 (detection, attribution, ablations) | pending | NB4 |
+| Table 5–7 (detection, attribution, ablations) | NB4 written, awaiting the Colab run | `results/benchmark_v1/table5*`, `table6*`, `table7*` |
 | Table 8 (forecasting) | pending | NB5 |
 | Table 9 (Tetouan) | pending | NB6 |
 

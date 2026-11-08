@@ -10,7 +10,8 @@ claim points to a finding (F…) in `docs/findings.md` or a decision (D…) in `
   - rule engine v1 (19 rules);
   - the label model (constrained Dawid–Skene);
   - **the detector and end model (NB3)**, reference run with LightGBM 4.6.0 and the structural-zero fix (D51, D52). An independent Colab run exposed a scale-collapse bug in the zone-level score (F35); it is fixed, and the hierarchy numbers below are the corrected ones.
-- Not done: the injection benchmark (NB4), downstream forecasting (NB5), the Tetouan transfer (NB6) and the final figures (NB7).
+- **NB4 written and tested, awaiting the author's Colab run:** the learned-graph TCN-GAT (guide eq. 13 as written; D53) and the injection benchmark (D54–D58). Its results go into results_summary §9 and new findings.
+- Not done: downstream forecasting (NB5), the Tetouan transfer (NB6) and the final figures (NB7).
 
 ## 1. The paper in one paragraph (current evidence)
 
@@ -65,6 +66,10 @@ NB4 and NB5).
 8. **(Pending)** downstream: forecasting error and outage statistics, naive vs typed cleaning (NB5). F26 is the preview.
 9. **(Pending)** Tetouan transfer (NB6).
 10. **Threats and limitations** (§6 below).
+
+### Text the author asked to include in the paper
+
+- **On the graph nowcast (Methods, detector; 2026-11-08):** "The nowcast of eq. 13 is a fully connected 'graph' with no learned edges: the current value of every other zone enters the tree model as a plain feature. It adds nothing (clean-data MAE 0.0292 vs 0.0288 for the forecast residual), so it is used only as a comparison and as an end-model feature, not as the main residual." Sources: D40, F29, results_summary §8. The learned-graph model (TCN-GAT, guide eq. 13 as written) is evaluated in NB4; report its result next to this sentence.
 
 ## 3. Corrections to the guide (continuing the guide's own table, #1–13)
 
@@ -158,7 +163,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | Notebook | Content | Will provide |
 |---|---|---|
 | NB3 | **Done** (LightGBM 4.6.0 reference run with the structural-zero fix): residual hierarchy, Fig 8, detector-only candidates, end model, fusion | contribution 3 |
-| NB4 | Injection of observed signatures at 1/3/7 %, including **linear fills** and **synthetic restoration ramps**; baselines; metrics (eq. 17–18); ablations including the new interpolation family and the label-model priors | Tables 5–7, Figs 9–11; first real validation |
+| NB4 | **Written and tested; awaiting the Colab run.** TCN-GAT with a learned graph (D53); injection of observed signatures at 1/3/7 % × 10 seeds, including linear fills, compound fill → zero, unflagged multi-zone shocks and partial outages (D54); baselines (rules, STL + MAD, Isolation Forest, LOF, majority vote; D57); metrics (eq. 17–18); ablations (pipeline, rule families, hierarchy, scale, graph, nowcast, ε / hold / τ) and hard negatives | Tables 5–7, Figs 9–11, E20–E21; first real validation |
 | NB5 | Forecasting with S0–S3 cleaning, DM test, outage-hours check | Table 8, Fig 12; confirms or refutes F26 |
 | NB6 | Tetouan transfer with frozen rules | Table 9 |
 | NB7 | Final figures (basemap, typology diagram, framework diagram) | Figs 1, 2, 6 |
