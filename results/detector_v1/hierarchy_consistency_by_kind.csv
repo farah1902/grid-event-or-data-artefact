@@ -2,13 +2,13 @@ residual,kind,level,n,correct
 forecast,dead,g,3,1.0
 forecast,dead,v,71,0.958
 forecast,fill,g,6,0.167
-forecast,fill,u,40,0.325
-forecast,fill,v,86,0.779
+forecast,fill,u,40,0.35
+forecast,fill,v,86,0.849
 nowcast,dead,g,3,1.0
 nowcast,dead,v,71,0.958
 nowcast,fill,g,6,0.167
-nowcast,fill,u,40,0.35
-nowcast,fill,v,86,0.802
+nowcast,fill,u,40,0.375
+nowcast,fill,v,86,0.884
 STL,dead,g,3,1.0
 STL,dead,v,71,0.915
 STL,fill,g,6,0.167

@@ -1,70 +1,70 @@
 {
-  "backend": "sklearn",
+  "backend": "lightgbm",
   "main_residual": "forecast",
   "gamma": {
-    "south": 37.242,
-    "Marrakech": 20.008
+    "south": 33.348,
+    "Marrakech": 16.882
   },
   "predictor_MAE": {
-    "south | forecast": 0.0285,
-    "south | nowcast": 0.0287,
+    "south | forecast": 0.0288,
+    "south | nowcast": 0.0292,
     "south | expected (rho_hat = 1)": 0.1835,
     "south | STL": 0.0594,
-    "Marrakech | forecast": 0.102,
-    "Marrakech | nowcast": 0.1019,
+    "Marrakech | forecast": 0.1076,
+    "Marrakech | nowcast": 0.1077,
     "Marrakech | expected (rho_hat = 1)": 0.2755
   },
   "hierarchy_consistency": {
-    "forecast": 0.738,
-    "nowcast": 0.752,
+    "forecast": 0.772,
+    "nowcast": 0.791,
     "STL": 0.699
   },
-  "detector_only_candidates": 311,
+  "detector_only_candidates": 323,
   "normal_windows": 300,
   "end_model": {
     "GBDT, all features": {
-      "agree_rule_items": 0.968,
+      "agree_rule_items": 0.957,
       "normal_windows_as_N": 1.0
     },
     "GBDT, no detector features": {
-      "agree_rule_items": 0.968,
-      "normal_windows_as_N": 0.997
+      "agree_rule_items": 0.954,
+      "normal_windows_as_N": 1.0
     },
     "GBDT, no episode features": {
-      "agree_rule_items": 0.968,
+      "agree_rule_items": 0.95,
       "normal_windows_as_N": 1.0
     },
     "GBDT, detector features only": {
-      "agree_rule_items": 0.516,
-      "normal_windows_as_N": 0.967
+      "agree_rule_items": 0.548,
+      "normal_windows_as_N": 0.97
     },
     "MLP, all features": {
-      "agree_rule_items": 0.904,
-      "normal_windows_as_N": 0.993
+      "agree_rule_items": 0.925,
+      "normal_windows_as_N": 1.0
     }
   },
-  "fused_changes": 4,
+  "fused_changes": 5,
   "low_support_classes": [
     "A1",
     "G1",
     "G2"
   ],
   "detector_only_nature": {
-    "other": 151,
+    "other": 156,
     "surge": 140,
-    "partial drop": 20
+    "partial drop": 27
   },
   "detector_recall": {
     "Marrakech | A3": 0.0,
-    "Marrakech | G3": 0.143,
+    "Marrakech | G3": 0.086,
     "Marrakech | G4": 0.077,
     "south | A1": 1.0,
-    "south | A2": 0.667,
-    "south | A3": 0.523,
+    "south | A2": 0.737,
+    "south | A3": 0.511,
     "south | G2": 0.0,
     "south | G3": 0.944,
     "south | G4": 0.946,
     "south | N": 1.0
   },
-  "runtime_min": 12.9
+  "runtime_min": 11.1
 }
