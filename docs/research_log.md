@@ -266,3 +266,28 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
   - dropping the interpolation rule family lowers label-model accuracy 0.91 → 0.64;
   - unflagged shared shocks: forecast raw 0.18 vs nowcast raw 0.06 recall (the F29 concern appears on injected data).
   - **These numbers are from one seed and are not citable.** The Colab run produces the real ones.
+
+## Session 6 — 2026-11-08 — Pre-run check of NB4 on Drive
+
+**User request:** before running NB4 on Colab, check that everything it needs is on Drive. Confirm whether the work has a multi-scale graph-based anomaly detector and a multi-scale graph residual detector.
+
+**Drive check:**
+- `tools/sync_drive.py --dry-run`: 140 files, all identical by MD5. This includes the data xlsx, `src/`, the catalogue and detector inputs, NB4 and the three model files.
+- Drive for desktop's local metadata database (copied to scratch and read; not modified) gives every key file a cloud id with the right size, and has 0 pending operations. The upload to Google Drive is complete, including the 73 MB LightGBM pickle.
+- `tcn.pt` and `tcn_gat.pt` load with `weights_only=True`, so torch ≥ 2.6 on Colab can read them.
+
+**Changes:**
+- NB4 generator: the LightGBM pickle is loaded in a `try` block with a forecast smoke test, and refit if either fails (D58).
+- The notebook was regenerated, and its first three cells (setup, panel, model loading) were run locally: OK. Before the edit, the generator output matched the notebook exactly.
+- `tcn.pt` and `tcn_gat.pt`: the stored training config said `epochs=30, patience=4` because the models were saved without the training config. The histories show the real values, `epochs=40, patience=6`: each fold stops exactly 6 epochs after its best validation epoch, at 28–35 epochs. Only the stored config was corrected; the weights were checked bit-identical.
+
+**Answer on the graph detector:**
+- The two names describe one component, run in NB4 as the variant `TCN-GAT, hierarchy, multi-scale`:
+  1. residual e = ρ − TCN-GAT prediction (learned graph: same-city edges plus learned top-4 cross-city edges, 2-head attention; D53);
+  2. phase-aligned MODWT bands;
+  3. region/city/zone median hierarchy per band;
+  4. robust scores, then the max over bands and levels;
+  5. γ threshold.
+- Its ablations are `TCN-GAT (raw, hierarchy)` (single scale) and `TCN, no graph (raw, hierarchy)` (no graph).
+- The main pipeline (end model, fusion, attribution in Table 6) still uses the LightGBM-forecast multi-scale detector. The graph detector is compared on detection (Table 5, recall by type, Table 7 ablations, hard negatives), not on attribution.
+

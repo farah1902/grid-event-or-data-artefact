@@ -96,9 +96,15 @@ cells.append(M(r"""## 2. Predictors trained once on the real data
 
 All four are cross-fitted in two temporal folds and trained on rule-clean steps only. During the benchmark they only *predict* the injected series: each half is predicted by models trained on the other half of the real data, so they have never seen an injected event."""))
 cells.append(C(r"""f = MODELS / "lightgbm_models.pkl"
+LGB = None
 if f.exists():
-    LGB = pickle.load(open(f, "rb")); print("LightGBM models loaded from", f)
-else:
+    try:   # pickled locally with numpy 1.26 / scikit-learn 1.5 / LightGBM 4.6.0; refit if this environment cannot read it
+        LGB = pickle.load(open(f, "rb")); print("LightGBM models loaded from", f)
+        assert set(LGB) == {"forecast", "nowcast"}
+        _ = D.apply_rho_models(P, LGB["forecast"], "forecast")     # smoke test: the loaded models must predict
+    except Exception as e:
+        print("could not use the saved LightGBM models (", type(e).__name__, e, "): refitting"); LGB = None
+if LGB is None:
     t = time.time()
     LGB = {k: D.fit_rho_models(P, k, backend="lightgbm") for k in ("forecast", "nowcast")}
     pickle.dump(LGB, open(f, "wb")); print(f"LightGBM fitted in {time.time() - t:.0f} s")

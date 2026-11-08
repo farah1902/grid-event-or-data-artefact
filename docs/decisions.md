@@ -454,6 +454,9 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 
 ### D58 — NB4 run protocol: cached, resumable, Colab GPU [NB4]
 - Each (rate, seed) run writes its truth, detection, AUC and event tables to `results/benchmark_v1/runs/` as soon as it finishes; a rerun skips finished runs.
-- The trained predictors are saved in `results/benchmark_v1/models/` (git-ignored, because the LightGBM pickle is large).
+- The trained predictors are saved in `results/benchmark_v1/models/`. `tcn.pt` and `tcn_gat.pt` are in git; `lightgbm_models.pkl` (73 MB) is git-ignored and lives on Drive.
+- Colab has newer numpy, scikit-learn and torch than the machine that saved the models (numpy 1.26.4, scikit-learn 1.5.1, torch 2.2.0).
+  - The `.pt` files hold only dicts, tensors and scalars, so they load under torch's strict `weights_only=True` default (torch ≥ 2.6). This was checked.
+  - NB4 loads the LightGBM pickle in a `try` block and smoke-tests a forecast. If either fails, it refits LightGBM (4.6.0, as pinned) instead of crashing, and prints why.
 - `QUICK = True` runs 1 rate × 2 seeds with 2-epoch networks (written to `results/benchmark_quick/`) to test the notebook.
 - The rule-family ablation of the label model runs at 3 % only. The threshold sweep (rules + label model only) runs at 3 % on 3 seeds.
