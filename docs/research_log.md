@@ -291,3 +291,50 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 - Its ablations are `TCN-GAT (raw, hierarchy)` (single scale) and `TCN, no graph (raw, hierarchy)` (no graph).
 - The main pipeline (end model, fusion, attribution in Table 6) still uses the LightGBM-forecast multi-scale detector. The graph detector is compared on detection (Table 5, recall by type, Table 7 ablations, hard negatives), not on attribution.
 
+
+## Session 6 (continued) — 2026-11-08/09 — The graph detector becomes the main detector; NB4's evaluation made fair
+
+**User request:** "I want to present it [the multi-scale graph residual detector] as the main detector in the paper, and also make it more powerful than any other model. If LightGBM is the best, keep it and do a best benchmark, but always keep the graph at the top."
+
+**What was done:**
+1. **Development study 1** (`scratchpad`, NB3 event formation, seeds 100–104):
+   - LightGBM-MS beat every graph design: TCN-GAT-MS, the mean of the two predictions, level splits (g from LightGBM, u/v from the graph) and score ensembles.
+   - This exposed **F36**: the scoring area excluded NB3's LightGBM candidates, which hid only LightGBM's false alarms.
+   - Rerun with a rule-based area: LightGBM 0.681, mean 0.672, TCN-GAT 0.649.
+2. **Hybrids (D59):** `graph_model` got a `base=` input (LightGBM forecast + learned correction; the attention also reads the neighbours' current LightGBM residuals).
+   - Trained on CPU: 338 s (graph) and 475 s (no graph).
+   - Both end at LightGBM's MAE, 0.02879, with flat validation loss (**F37**). The mean of LightGBM and TCN-GAT has MAE 0.02821.
+   - The old TCN-GAT still loads with an identical MAE (0.02945).
+3. **Benchmark refactor** (`src/benchmark.py`):
+   - variant table (`VARIANTS`), `Benchmark(main=, settings=)`, `predictions()`, `raw_scores()`;
+   - `pipeline()` runs the whole method on any dataset, including the real one; `run()` = `pipeline()` + metrics;
+   - event formation per detector (`smooth_score`, `gamma_of(q)`, `max_gap`); ablations inherit the main detector's setting;
+   - `set_background()` adds the `*_bgx` metrics;
+   - rows with NB3's event formation for TCN-GAT and LightGBM.
+   - Checked end to end on one injected dataset (298 s on a busy CPU).
+4. **`tools/dev_select_detector.py` (D60):** a grid over w, q and gap for the main candidates and the baselines, on seeds 100–104.
+   - The first grid (18 settings) had its optimum on the upper edge, so it was extended twice, to 48 settings.
+   - Final: TCN-GAT 0.786 alone (24, 99.9, 12) vs LightGBM 0.759 (24, 99.8, 6); TCN-GAT wins all 10 cells.
+   - Full method: 0.863 vs 0.849. **Main detector = TCN-GAT, hierarchy, multi-scale (D61)**, chosen by the rule fixed in the tool before the extensions.
+   - Rules alone 0.888 (**F40**). STL has the best step-wise AUC-PR (**F39**).
+   - On the first grid LightGBM had led; the ranking changed only once larger settings were allowed, for every detector alike (**F38**).
+5. **NB4 generator:**
+   - main detector and settings read from `dev_selection.json`; rule-based scoring area;
+   - the four graph models trained or loaded (hybrids with `base=PF`); predictor comparison with the hybrids and the mean;
+   - E20 shows the TCN-GAT graph, and the edges of both graph models are saved;
+   - graph detectors right after the main detector in Tables 5 and 7b and in Fig 9; Wilcoxon tests of the main detector against every other detector;
+   - Table 5 also gives F1 with own background excluded and the real-data alarms;
+   - new §8b: the real data through the whole method with the main detector → `results/main_detector/` (compared with NB3);
+   - hard negatives use each detector's own event formation;
+   - QUICK mode writes §8b into `results/benchmark_quick/`.
+6. **Docs:** D54 marked corrected; D59–D61; F36–F40; results_summary (NB3 marked superseded for the south; new §8b); methods §6.1 (eq. 29′); paper_handoff (status, text for the paper, contribution 3, RQ3, threats 16–18, claims not to make).
+   - A LaTeX block in methods §6.1 was first written through a non-raw Python string (`\t`, `\f`, `\r` were turned into control characters); it was repaired.
+
+**Honest reading for the paper:**
+- The graph detector wins on event detection after fair tuning, because its excursions fragment less once smoothed.
+- It does not improve prediction (F37) or step-wise ranking (F39).
+- Under strict counting it does not raise the rules' event F1 (F40).
+- The NB4 test seeds decide the final numbers.
+- **NB4 QUICK test of the new notebook** (local, 2 datasets at 3 %, 2-epoch networks, so its detector numbers are not meaningful): every cell runs.
+  - It found a fusion bug (D56): detector-only items were labelled A1. It is fixed in `benchmark.fused`.
+  - The QUICK copy had been generated before §8b's QUICK output folder was fixed, so it wrote into `results/main_detector/`. That folder was deleted; the Colab run will create it.

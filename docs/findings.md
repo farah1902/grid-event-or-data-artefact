@@ -323,3 +323,69 @@ Confidence levels:
 - **Consequences:** γ fell (33.3 → 25.5, LightGBM), the zone level stopped "winning" by inflation (F30), and the detector-only list lost its spurious Boujdour entries (323 → 290 candidates; 42 multi-zone instead of 18).
 - **Paper:** this is worth one sentence in the method (eq. 15) and one in the limitations: a median hierarchy over few zones needs its scale estimated on informative steps only. It also shows why an independent rerun with another backend was worth doing.
 - **Evidence:** `results/detector_v1/structural_zeros.csv` (`tools/diag_structural_zeros.py`), commit 21e6695 (the Colab run before the fix).
+
+## E. NB4 development: the graph detector and a fair evaluation (2026-11-09)
+
+All numbers in this section are from the **development datasets** (seeds 100–104: three at 3 %, one at 1 %, one at 7 %; both periods pooled). They choose the design and are not test results. The test results are NB4's (seeds 0–9). Evidence: `results/benchmark_v1/dev/` and `dev_selection.json` (`tools/dev_select_detector.py`).
+
+### F36 — NB4's first scoring area favoured the LightGBM detector — *solid* (protocol bug found and fixed)
+- **Mechanism:** D54 excluded NB3's real-data detector candidates from the clean region where predictions are scored. Those candidates came from the LightGBM detector, so LightGBM's own false alarms on the real series were never counted, while those of every other detector (TCN-GAT, STL, Isolation Forest, LOF) were.
+- **Size** (NB3 event formation, 5 development datasets):
+  - LightGBM F1 0.850 (precision 0.941) under the old area, against 0.681 (0.626) under the rule-based area;
+  - TCN-GAT 0.772 (0.770) against 0.649 (0.568).
+  - The gap between the two shrank from 0.078 to 0.032.
+- **Fix (D60):** the scoring area is rule-based, the same for every detector.
+- **Paper:** report only the corrected protocol. If needed, one sentence in the methods: the scoring area must not depend on any compared detector.
+
+### F37 — A learned correction on top of LightGBM adds nothing; averaging LightGBM and TCN-GAT helps a little — *solid*
+- **Hybrids (D59):** LightGBM + learned-graph correction, and the same without the graph.
+  - Both end at exactly LightGBM's real-data MAE: 0.02879 for all three.
+  - Their validation loss is flat from the first epoch in both folds (0.000767 and 0.00109): the correction learned on the earlier months does not carry over, so early stopping keeps it near zero.
+- **The plain average of LightGBM and TCN-GAT is the most accurate predictor** (MAE 0.02821). The TCN-GAT itself scores 0.02945 and the TCN 0.02986. The average of LightGBM and the no-graph TCN scores 0.02840, so the graph contributes part of the gain.
+- **Paper:** the graph cannot improve LightGBM's point forecast, which is consistent with F27/the nowcast note (MAE 0.0292 vs 0.0288). Its value must come from detection, not prediction.
+
+### F38 — Event formation matters more than the predictor, and it reverses the ranking — *solid*
+- **Grid:** score smoothing w ∈ {1, 3, 6, 12, 24, 48} steps (centred moving average), threshold percentile q ∈ {99.0, 99.5, 99.8, 99.9, 99.95, 99.98} and merge gap ∈ {1, 3, 6, 12}, 48 settings in total. It was extended twice because the optimum sat on its edge; the final optima are inside the grid, and the top settings lie within 0.001 F1 of each other.
+- **Detector alone, F1 at NB3's setting (w 1, q 99.5, gap 1) → at its best setting:**
+  - LightGBM 0.681 → 0.759 (24, 99.8, 6);
+  - TCN-GAT 0.649 → **0.786** (24, 99.9, 12);
+  - average 0.672 → 0.771 (48, 99.8, 12);
+  - STL + MAD 0.591 → 0.717 (24, 99.8, 12);
+  - LOF 0.464 → 0.648 (24, 99.8, 12);
+  - Isolation Forest 0.384 → 0.473 (3, 99.5, 3).
+- **Why:** the 99.5th percentile with no smoothing breaks every residual excursion into many short events, which are scored as false alarms. A 4-hour smoothing, a stricter threshold and a wider merge gap cut the real-data alarms of the south system: LightGBM 283 → 58, TCN-GAT 444 → 70, STL 475 → 86, LOF 858 → 148.
+  - The graph residual fragments most, so it gains most.
+- **Price:** short shocks. Unflagged-shock (U_SHOCK) recall alone falls from 0.609 to 0.104 for TCN-GAT and from 0.439 to 0.119 for LightGBM; STL keeps 0.159. NB4 reports both event formations (the "NB3 event formation" rows).
+- **Paper:** event formation is part of the detector and must be tuned for every compared method on separate data. Comparing detectors at one fixed threshold rule would have ranked them differently.
+
+### F39 — The TCN-GAT graph detector is the best detector on the development data — *strong* (test pending)
+- **Detector alone, at each detector's best setting:**
+
+  | Detector | F1 | Precision | Recall | Real-data alarms |
+  |---|---|---|---|---|
+  | **TCN-GAT, hierarchy, multi-scale** | **0.786** | **0.866** | **0.729** | 70 |
+  | average of LightGBM and TCN-GAT | 0.771 | 0.861 | 0.703 | 44 |
+  | LightGBM forecast | 0.759 | 0.828 | 0.710 | 58 |
+  | LightGBM + learned-graph correction | 0.760 | 0.826 | 0.714 | 56 |
+  | STL + MAD | 0.717 | 0.846 | 0.628 | 86 |
+  | LOF | 0.648 | 0.726 | 0.621 | 148 |
+  | Isolation Forest | 0.473 | 0.412 | 0.599 | 416 |
+
+- **Consistency:** TCN-GAT beats LightGBM in all 10 dataset × period cells, by 0.014 to 0.042.
+- **With the rules (the method's use):** F1 0.863 vs 0.849 (LightGBM) and 0.854 (average). The zone-strict F1 is 0.769 vs 0.755.
+- **Selection (D61):** the TCN-GAT multi-scale graph residual detector is the main detector. LightGBM and the hybrids become ablations.
+- **Step-wise AUC-PR does not follow** (threshold-free, w = 1):
+  - STL + MAD 0.785, LightGBM 0.649, average 0.582, TCN-GAT 0.553.
+  - Forecasters that see the recent past catch up after an event starts, so mainly its edges score high, while the STL residual stays large throughout. The graph detector is best at finding events, not at covering every anomalous step.
+- **Paper:** the graph contribution is event detection with fewer fragmented false alarms, not prediction accuracy (F37) and not step coverage. State all three.
+
+### F40 — Under strict counting, no detector improves the rules' event F1 on the rules' own typology — *solid*
+- **Rules alone:** F1 0.888, precision 1.000, recall 0.798, zone-strict F1 0.874.
+  - Their precision is 1 by construction: real rule states are outside the scoring area, and the rules fire on every injected zero, hold and linear fill.
+- **Rules + detector:**
+  - best F1 0.872 (TCN-GAT at the setting that maximises the full method);
+  - 0.863 at the selected setting.
+  - The detector adds 3–4 points of recall (untyped events and missed outages) and costs 8–10 points of precision.
+- **Why:** every real-data detector alarm in rule-clean time counts as a false alarm. About half of NB3's real-data candidates were surges or partial drops (F32), so this counting is pessimistic.
+- **Remedy:** NB4 also reports F1 with each method's own real-data detections excluded (D60). This is the same treatment the rule states give the rules.
+- **Paper:** do not claim that the detector raises event F1 over the rules. Claim that it finds what the rules cannot (untyped events), at a stated false-alarm cost on the real series, and that it feeds the end model.

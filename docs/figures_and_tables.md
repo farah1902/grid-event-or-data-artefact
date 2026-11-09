@@ -48,7 +48,7 @@ All NB3 figures come from the reference run (LightGBM 4.6.0, structural-zero fix
 | `E17_detector_only_candidates` | NB3 | Detector-only candidates over time (score, zones) and start hours | supp | F32 |
 | `E18_detector_only_gallery` | NB3 | Top-scoring candidates per nature (partial drop, surge, other) | **main candidate** | Shows near-dead runs above ε, a sub-30-min system-wide disturbance and sustained surges (F32) |
 | `E19_end_model` | NB3 | (a) label model vs out-of-fold end model on rule items; (b) agreement per ablation variant; (c) end-model labels of detector candidates | supp | F33 |
-| `E20_learned_graph` | NB4 | TCN-GAT graph: edges (same city + 4 learned cross-city neighbours per zone) and mean attention on clean steps | supp (main candidate if the graph helps) | D53 |
+| `E20_learned_graph` | NB4 | TCN-GAT graph (the graph inside the main detector, D61): edges (same city + 4 learned cross-city neighbours per zone) and mean attention on clean steps | **main** (the main detector's learned graph) | D53, D61 |
 | `E21_injected_signatures` | NB4 | One injected event per type over the original series (grey) | supp | D54 |
 | `fig9_detection` | NB4 | Event F1 and step AUC-PR per method at 1/3/7 %, test period, mean ± sd over seeds | **main** (guide Fig 9; dot plot instead of PR curves, because curves need stored scores) | Table 5 |
 | `fig10_11_attribution` | NB4 | (a) confusion of injected type vs fused label, 3 %, test; (b) reliability of q, f and p | **main** (guide Figs 10 and 11) | Table 6 |

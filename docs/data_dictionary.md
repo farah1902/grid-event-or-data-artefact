@@ -254,11 +254,12 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 
 | File | Content |
 |---|---|
-| `predictor_comparison.csv` | predictor (LGB forecast, LGB nowcast, TCN without graph, TCN-GAT), period (all, Jul 2023 +), MAE, median_abs, RMSE of ρ on rule-clean real steps |
+| `predictor_comparison.csv` | predictor (LGB forecast, LGB nowcast, TCN without graph, TCN-GAT, LightGBM + TCN correction, LightGBM + learned-graph correction, mean of LightGBM and TCN-GAT), period (all, Jul 2023 +), MAE, median_abs, RMSE of ρ on rule-clean real steps |
 | `hierarchy_consistency_by_predictor.csv` | NB3's residual-hierarchy test per predictor: predictor, kind, level, n, correct |
-| `learned_cross_city_edges.csv` | TCN-GAT cross-city edges: to (receiving zone), from (sending zone), mean attention on clean steps |
-| `table5_detection.csv` | rate, method, F1, precision, recall, AUC_PR (mean ± sd over seeds, test period), start_err_min (median) |
-| `table5_wilcoxon.csv` | rate, best baseline, ours vs baseline F1, Wilcoxon signed-rank p over seeds |
+| `learned_cross_city_edges.csv` | cross-city edges of the graph model shown in E20 (TCN-GAT): to (receiving zone), from (sending zone), mean attention on clean steps |
+| `learned_cross_city_edges_tcn_gat.csv`, `learned_cross_city_edges_lgb_gat.csv` | the same for the TCN-GAT and for the graph hybrid (D59) |
+| `table5_detection.csv` | rate, method, F1, precision, recall, F1_zone_strict, AUC_PR (mean ± sd over seeds, test period), F1_own_background_excluded (D60), real_data_alarms (detections on the uninjected series), start_err_min (median) |
+| `table5_wilcoxon.csv` | rate, comparison (ours vs best baseline; main detector vs each other detector), F1 of both, Wilcoxon signed-rank p over seeds |
 | `detection_recall_by_type.csv` | mean recall per injected type, per rate and method (test period) |
 | `beta_tuning_train_period.csv` | rate, beta, abstain, attribution scores on training-period events |
 | `table6_attribution.csv` | rate, labeler, macro_F1, accuracy, ECE, Brier (mean ± sd), per-class F1 (test period) |
@@ -267,12 +268,26 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 | `table7a_pipeline.csv`, `table7b_detector.csv`, `table7c_rule_families.csv`, `table7d_threshold_sensitivity.csv` | ablations (Table 7) |
 | `hard_negatives.csv` | detector, day type (ordinary weekday, weekend, Ramadan, national holiday, Eid), rule-negative zone-steps, flag rate, ratio to ordinary weekdays (real data) |
 | `summary.json` | headline numbers, device, versions, rates, seeds, tuned β, runtime |
-| `models/` | trained predictors (git-ignored): `lightgbm_models.pkl`, `tcn.pt`, `tcn_gat.pt` and training histories |
+| `models/` | trained predictors: `lightgbm_models.pkl` (git-ignored, on Drive), `tcn.pt`, `tcn_gat.pt`, `hybrid_tcn.pt`, `hybrid_gat.pt` (D59) and their training histories |
+| `dev_selection.json` | development selection (D60, D61; `tools/dev_select_detector.py`): main detector, event formation {detector: w, q, gap}, development datasets, grid, rules-only F1, main candidates with their F1 |
+| `dev/dev_detection_grid.csv` | development detection per dataset tag, detector, w, q, gap, what (alone, rules + detector), period: n_pred, n_true, precision, recall, f1, precision_zone, recall_zone, f1_zone, recall_U_SHOCK, recall_U_PARTIAL, n_det_only |
+| `dev/dev_auc.csv` | development step-wise AUC-PR per tag, detector, smoothing w, period |
+| `dev/dev_rules_only.csv` | the rules alone on the development datasets |
+| `dev/real_candidates_by_setting.csv` | detector-only candidates on the real series per detector and setting (false-alarm budget) |
+| `dev/dev_best_settings.csv`, `dev/dev_main_candidates.csv` | the chosen setting per detector (with F1 at NB3's setting and real-data alarms) and the ranking of the main candidates |
 
 **`runs/`** — one set of files per injected dataset, tag `r{rate %}_s{seed}` (e.g. `r03_s00`):
 - `_truth.csv`: injected events with event_id (`I####`), type (A1–A3, G1–G4, U_SHOCK, U_PARTIAL), start, end (core span, exclusive), end_affected (end of the restoration tail), duration_h, mechanism (zero, hold, linear, floor, x-factor), zone_steps, omega (overshoot), ramp_min, zones, n_zones, cities, n_cities, family, pattern (zone, zones, city, cities) and episode (`J####` for an A2 → A1 compound);
-- `_detection.csv`: method, period, gamma, n_pred, n_true, precision, recall, f1, start_err_min, end_err_min, recall_{type};
+- `_detection.csv`: method, period, gamma, n_pred, n_true, precision, recall, f1, precision_zone, recall_zone, f1_zone, start_err_min, end_err_min, recall_{type}, and with own real-data detections excluded n_pred_bgx, precision_bgx, recall_bgx, f1_bgx, f1_zone_bgx (D60);
 - `_auc.csv`: method, period, auc_pr (step-wise average precision);
 - `_events.csv`: one row per injected event: type, period, detected, the matched predicted item (item_id, source rule/detector), its feasible set, majority-vote label, q_/f_/fn_ distributions over the 8 event classes (fn = end model without detector features) and, at 3 %, `lm_without_{family}` labels;
 - `_info.json`: runtime, number of rule items and detector-only candidates, γ of the main detector;
 - `sens_s{seed}_{config}_det.csv` / `_lab.csv`: threshold sensitivity (rule-only detection; label-model labels of typed events).
+
+## Main detector on the real data — `results/main_detector/` (NB4 §8b, D61)
+
+| File | Content |
+|---|---|
+| `detector_items_south.csv` | detector-only candidates of the main detector (TCN-GAT graph detector, tuned event formation) on the real south series: item_id `X###`, system, start, end, zones, n_zones, cities, n_cities, max_score, kind, duration_h |
+| `p_type_south.csv` | every south rule item and detector-only candidate: q_ (label model), f_ (end model), fn_ (end model without detector features), p_ (fused, β tuned at 3 %, D50 abstention) over the 8 event classes, and label |
+| `summary.json` | main detector, setting, γ, β, number of candidates (and NB3's), candidates shared with NB3, rule labels changed relative to NB3's p_type, label counts of the candidates |

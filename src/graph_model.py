@@ -11,7 +11,12 @@ Masked neighbours (rule-flagged or missing at t) are excluded from the attention
 the attention message, the node embedding, calendar features and the zone's own value 1 day and 7 days earlier.
 
 `graph=False` is the ablation without a graph: the TCN on the zone's own past only, the analogue of the LightGBM
-forecast. Training uses the masked Huber loss (delta 0.1) and the same two-fold temporal cross-fitting as the
+forecast.
+
+Hybrid (D59; `base=` in fit/apply): the network also receives a base forecast (NB3's cross-fitted LightGBM forecast)
+and outputs base + a learned correction. The last layer starts at zero, so training starts from the base exactly, and
+the graph attention also reads each neighbour's current base residual. On the real data the correction does not
+generalise to the validation months, with or without the graph: both hybrids end at LightGBM's MAE (F38). Training uses the masked Huber loss (delta 0.1) and the same two-fold temporal cross-fitting as the
 LightGBM predictors (D41), so every prediction is out of sample. The decomposition (eq. 14-16) is unchanged: the
 residual e = rho - rho_hat goes through the same phase-aligned MODWT, hierarchy and level scores (D42, D43, D51).
 
@@ -47,13 +52,17 @@ def calendar_matrix(index):
     return c[CAL_COLS].to_numpy(dtype=np.float32)
 
 
-def panel_arrays(P):
-    """Inputs from a panel: value (masked or missing -> 1 = expected), mask flag, target and its validity."""
+def panel_arrays(P, base=None):
+    """Inputs from a panel: value (masked or missing -> 1 = expected), mask flag, target and its validity.
+    base: optional frame like P["rho"] with a base forecast (the LightGBM forecast for the hybrid; D59)."""
     rho = P["rho"].to_numpy(dtype=np.float32)
     bad = P["mask"].to_numpy() | np.isnan(rho)
     x = np.where(bad, 1.0, rho).astype(np.float32)
-    return dict(x=x, m=bad.astype(np.float32), y=np.nan_to_num(rho, nan=0.0).astype(np.float32),
-                valid=(~bad).astype(np.float32), cal=calendar_matrix(P["rho"].index))
+    arr = dict(x=x, m=bad.astype(np.float32), y=np.nan_to_num(rho, nan=0.0).astype(np.float32),
+               valid=(~bad).astype(np.float32), cal=calendar_matrix(P["rho"].index))
+    if base is not None:
+        arr["base"] = np.nan_to_num(base.reindex_like(P["rho"]).to_numpy(dtype=np.float32), nan=1.0)
+    return arr
 
 
 class CausalBlock(nn.Module):
@@ -73,9 +82,9 @@ class CausalBlock(nn.Module):
 
 class TCNGAT(nn.Module):
     def __init__(self, n_nodes, city_idx, n_cal, graph=True, ch=32, emb=16, k_cross=4, heads=2,
-                 dilations=(1, 2, 4, 8, 16, 32), kernel=3, dropout=0.1):
+                 dilations=(1, 2, 4, 8, 16, 32), kernel=3, dropout=0.1, use_base=False):
         super().__init__()
-        self.Z, self.graph, self.k_cross, self.heads = n_nodes, graph, k_cross, heads
+        self.Z, self.graph, self.k_cross, self.heads, self.use_base = n_nodes, graph, k_cross, heads, use_base
         self.rf = 1 + 2 * (kernel - 1) * sum(dilations)                                 # receptive field (steps)
         city = torch.as_tensor(city_idx)
         self.register_buffer("same_city", (city[:, None] == city[None, :]) & ~torch.eye(n_nodes, dtype=torch.bool))
@@ -86,12 +95,15 @@ class TCNGAT(nn.Module):
             layers.append(CausalBlock(cin, ch, kernel, d, dropout)); cin = ch
         self.tcn = nn.Sequential(*layers)
         if graph:
+            nc = 3 if use_base else 2      # hybrid: neighbours also send their current base-forecast residual
             self.q = nn.Linear(ch + emb, heads * ch)
-            self.k = nn.Linear(ch + emb + 2, heads * ch)
-            self.v = nn.Linear(ch + 2, heads * ch)
+            self.k = nn.Linear(ch + emb + nc, heads * ch)
+            self.v = nn.Linear(ch + nc, heads * ch)
             self.att = nn.Parameter(torch.randn(heads, 2 * ch) * 0.1)
-        head_in = ch + emb + n_cal + 2 * len(LAGS) + (heads * ch if graph else 0)
+        head_in = ch + emb + n_cal + 2 * len(LAGS) + (heads * ch if graph else 0) + (1 if use_base else 0)
         self.head = nn.Sequential(nn.Linear(head_in, 64), nn.ReLU(), nn.Dropout(dropout), nn.Linear(64, 1))
+        if use_base:                       # hybrid: start from the base forecast exactly (zero correction)
+            nn.init.zeros_(self.head[-1].weight); nn.init.zeros_(self.head[-1].bias)
 
     def adjacency(self):
         """Allowed edges i <- j: same city, plus the top-k most similar zones of other cities (GDN-style)."""
@@ -106,18 +118,24 @@ class TCNGAT(nn.Module):
         N, Z, _, L = xm.shape
         return self.tcn(xm.reshape(N * Z, 2, L)).reshape(N, Z, -1, L)
 
-    def step(self, h, cur, lags, cal, return_attention=False):
+    def step(self, h, cur, lags, cal, return_attention=False, base=None):
         """h: (B, Z, ch) TCN state from inputs up to t-1; cur: (B, Z, 2) current value and mask of every zone;
-        lags: (B, Z, 4) own value and mask 1 day and 7 days earlier; cal: (B, n_cal)."""
+        lags: (B, Z, 4) own value and mask 1 day and 7 days earlier; cal: (B, n_cal);
+        base: (B, Z) base forecast at t (hybrid only): the output is base + a learned correction."""
         B, Z, C = h.shape
         emb = self.emb.weight.unsqueeze(0).expand(B, -1, -1)
         parts = [h, emb, cal.unsqueeze(1).expand(-1, Z, -1), lags]
+        if self.use_base:
+            parts.append(base.unsqueeze(-1))
         alpha = None
         if self.graph:
             H = self.heads
+            cin = cur
+            if self.use_base:                                                            # residual of neighbour j now
+                cin = torch.cat([cur, ((cur[..., 0] - base) * (1 - cur[..., 1])).unsqueeze(-1)], -1)
             q = self.q(torch.cat([h, emb], -1)).view(B, Z, H, C)
-            k = self.k(torch.cat([h, emb, cur], -1)).view(B, Z, H, C)
-            v = self.v(torch.cat([h, cur], -1)).view(B, Z, H, C)
+            k = self.k(torch.cat([h, emb, cin], -1)).view(B, Z, H, C)
+            v = self.v(torch.cat([h, cin], -1)).view(B, Z, H, C)
             sq = (q * self.att[:, :C]).sum(-1)                                           # (B, Z, H)
             sk = (k * self.att[:, C:]).sum(-1)
             logits = F.leaky_relu(sq.unsqueeze(2) + sk.unsqueeze(1), 0.2)                # (B, Zi, Zj, H)
@@ -126,6 +144,8 @@ class TCNGAT(nn.Module):
             alpha = torch.softmax(logits, dim=2) * allowed.unsqueeze(-1).float()         # no usable neighbour -> 0
             parts.append(torch.einsum("bijh,bjhc->bihc", alpha, v).reshape(B, Z, H * C))
         out = self.head(torch.cat(parts, -1)).squeeze(-1)                                 # (B, Z)
+        if self.use_base:
+            out = base + out
         return (out, alpha) if return_attention else out
 
 
@@ -135,6 +155,7 @@ class Chunks:
         self.rf, self.dev = rf, device
         for k in ("x", "m", "y", "valid", "cal"):
             setattr(self, k, torch.as_tensor(arr[k], device=device))
+        self.base = torch.as_tensor(arr["base"], device=device) if "base" in arr else None
         self.T, self.Z = self.x.shape
 
     def gather(self, a, idx, fill):
@@ -156,7 +177,8 @@ class Chunks:
         for Lg in LAGS:
             lag += [self.gather(self.x, tf - Lg, 1.0), self.gather(self.m, tf - Lg, 1.0)]
         return dict(xm=xm, t=tf, cur=cur, lags=torch.stack(lag, -1), cal=self.gather(self.cal, tf, 0.0),
-                    y=self.gather(self.y, tf, 0.0), valid=self.gather(self.valid, tf, 0.0))
+                    y=self.gather(self.y, tf, 0.0), valid=self.gather(self.valid, tf, 0.0),
+                    base=self.gather(self.base, tf, 1.0) if self.base is not None else None)
 
 
 def run_chunks(model, b, C):
@@ -179,14 +201,14 @@ DEFAULT_CFG = dict(ch=32, emb=16, k_cross=4, lr=2e-3, wd=1e-4, chunk=256, chunks
 
 def _make_model(n_nodes, city_idx, graph, cfg, device):
     return TCNGAT(n_nodes, city_idx, len(CAL_COLS), graph=graph, ch=cfg["ch"], emb=cfg["emb"],
-                  k_cross=cfg["k_cross"]).to(device)
+                  k_cross=cfg["k_cross"], use_base=cfg.get("use_base", False)).to(device)
 
 
 def _loss_over(model, ck, starts, C, weight_mask):
     tot, n = 0.0, 0.0
     for i in range(0, len(starts), 32):
         b = ck(starts[i:i + 32], C)
-        pred = model.step(run_chunks(model, b, C), b["cur"], b["lags"], b["cal"])
+        pred = model.step(run_chunks(model, b, C), b["cur"], b["lags"], b["cal"], base=b["base"])
         w = b["valid"] * ck.gather(weight_mask, b["t"], 0.0).unsqueeze(1)
         tot += float((huber(pred - b["y"]) * w).sum()); n += float(w.sum())
     return tot / max(n, 1.0)
@@ -213,7 +235,7 @@ def _train_one(arr, train_mask, val_mask, city_idx, graph, cfg, device, seed, lo
         for _ in range(n_batches):
             starts = rng.choice(tr_idx, size=NB)                                       # chunk starts inside the fold
             b = ck(starts, C)
-            pred = model.step(run_chunks(model, b, C), b["cur"], b["lags"], b["cal"])
+            pred = model.step(run_chunks(model, b, C), b["cur"], b["lags"], b["cal"], base=b["base"])
             w = b["valid"] * ck.gather(tr_w, b["t"], 0.0).unsqueeze(1)
             loss = (huber(pred - b["y"]) * w).sum() / w.sum().clamp(min=1)
             opt.zero_grad(); loss.backward(); nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
@@ -239,12 +261,13 @@ def _city_idx(P):
     return [cities.index(P["city"][z]) for z in P["rho"].columns]
 
 
-def fit_graph_models(P, graph=True, cfg=None, device=None, seed=0, log=True):
+def fit_graph_models(P, graph=True, cfg=None, device=None, seed=0, log=True, base=None):
     """Two-fold cross-fitted TCN(-GAT) models: {train_fold: model} (train_fold True = trained on t >= SPLIT),
-    plus the training history. Early stopping on the last 15 % of each training fold."""
-    cfg = {**DEFAULT_CFG, **(cfg or {})}
+    plus the training history. Early stopping on the last 15 % of each training fold.
+    base: out-of-sample base forecast (the cross-fitted LightGBM forecast) -> hybrid model (D59)."""
+    cfg = {**DEFAULT_CFG, **(cfg or {}), "use_base": base is not None}
     device = device or default_device()
-    arr = panel_arrays(P)
+    arr = panel_arrays(P, base)
     fold = (P["rho"].index >= SPLIT)
     has_target = arr["valid"].sum(axis=1) > 0
     models, hist = {}, []
@@ -263,9 +286,12 @@ def fit_graph_models(P, graph=True, cfg=None, device=None, seed=0, log=True):
 
 
 @torch.no_grad()
-def apply_graph_models(P, models, chunk=512):
-    """Out-of-sample rho_hat: each fold predicted by the model trained on the other fold (P may be injected data)."""
-    arr = panel_arrays(P)
+def apply_graph_models(P, models, chunk=512, base=None):
+    """Out-of-sample rho_hat: each fold predicted by the model trained on the other fold (P may be injected data).
+    base: the base forecast on the same panel (required by hybrid models)."""
+    if any(m.use_base for m in models.values()) and base is None:
+        raise ValueError("hybrid graph model: pass base= (the LightGBM forecast on this panel)")
+    arr = panel_arrays(P, base)
     fold = (P["rho"].index >= SPLIT)
     out = np.full(arr["x"].shape, np.nan, dtype=np.float64)
     for tr_fold, m in models.items():
@@ -275,7 +301,7 @@ def apply_graph_models(P, models, chunk=512):
         starts = np.arange(idx.min(), idx.max() + 1, chunk)
         for i in range(0, len(starts), 16):
             b = ck(starts[i:i + 16], chunk)
-            pred = m.step(run_chunks(m, b, chunk), b["cur"], b["lags"], b["cal"]).cpu().numpy()
+            pred = m.step(run_chunks(m, b, chunk), b["cur"], b["lags"], b["cal"], base=b["base"]).cpu().numpy()
             t = b["t"].cpu().numpy()
             keep = (t < len(fold)) & np.isin(t, idx)
             out[t[keep]] = pred[keep]
@@ -283,10 +309,10 @@ def apply_graph_models(P, models, chunk=512):
 
 
 @torch.no_grad()
-def learned_graph(P, models, n_chunks=40, chunk=256, seed=0):
+def learned_graph(P, models, n_chunks=40, chunk=256, seed=0, base=None):
     """Edges and mean attention of each graph model, averaged over clean target steps and heads.
     Returns {train_fold: (adjacency DataFrame (bool, row i <- column j), attention DataFrame)}."""
-    arr = panel_arrays(P)
+    arr = panel_arrays(P, base)
     zones = list(P["rho"].columns)
     fold = (P["rho"].index >= SPLIT)
     rng = np.random.default_rng(seed)
@@ -302,7 +328,7 @@ def learned_graph(P, models, n_chunks=40, chunk=256, seed=0):
         clean = torch.as_tensor(arr["m"].sum(axis=1) == 0, device=dev)
         for i in range(0, len(starts), 8):
             b = ck(starts[i:i + 8], chunk)
-            _, a = m.step(run_chunks(m, b, chunk), b["cur"], b["lags"], b["cal"], return_attention=True)
+            _, a = m.step(run_chunks(m, b, chunk), b["cur"], b["lags"], b["cal"], return_attention=True, base=b["base"])
             keep = clean[b["t"].clamp(max=len(fold) - 1)]
             acc += a.mean(-1)[keep].sum(0); n += int(keep.sum())
         out[tr_fold] = (pd.DataFrame(m.adjacency().cpu().numpy(), index=zones, columns=zones),
@@ -311,7 +337,8 @@ def learned_graph(P, models, n_chunks=40, chunk=256, seed=0):
 
 
 def save_models(models, path, cfg=None):
-    torch.save({"cfg": {**DEFAULT_CFG, **(cfg or {})},
+    m0 = next(iter(models.values()))
+    torch.save({"cfg": {**DEFAULT_CFG, **(cfg or {}), "use_base": bool(m0.use_base)},
                 "models": {str(k): {"state": m.state_dict(), "graph": m.graph} for k, m in models.items()}}, path)
 
 

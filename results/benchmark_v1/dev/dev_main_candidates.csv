@@ -1,0 +1,5 @@
+detector,w,q,gap,f1_full,f1_zone_full,f1_alone
+"TCN-GAT, hierarchy, multi-scale",24,99.9,12,0.8627311812600451,0.768550006575105,0.785781840580698
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.8,12,0.8537303126779403,0.7575927407821841,0.7706895202203694
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.8,6,0.8495557312593875,0.7555615308922656,0.7596374951648162
+"LightGBM forecast, hierarchy, multi-scale",24,99.8,6,0.8491336685112806,0.7548909791806333,0.7588637907889234

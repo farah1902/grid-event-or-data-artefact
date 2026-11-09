@@ -400,6 +400,7 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **Scope:** south only. Marrakech has 2 zones in one city, so a graph is trivial there; it keeps LightGBM.
 
 ### D54 — Injection protocol and evaluation scope [NB4]
+- **Corrected by D60 (2026-11-09):** the scoring and injection area no longer excludes NB3's detector candidates, which hid the LightGBM detector's own false alarms (F36). The rest of D54 stands.
 - **Where:** a clean region of zone-steps that are:
   - farther than ±53 steps (D43's spill) from any real rule state of the same zone, and from any real multi-zone state;
   - farther than ±53 steps from NB3's detector-only candidates;
@@ -437,6 +438,7 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - β ∈ {0, 0.1, …, 1} is chosen per rate by macro-F1 on the injected events of the **training period** (pooled over seeds) and frozen for the test period. Ties go to the value nearest 0.5.
 - On injected data, A1, G1 and G2 are no longer rare, so fusion is reported both with D50's abstention (the real-data setting) and without it.
 - Temperature scaling is not applied. ECE is reported as is, for q, f and p.
+- **Detector-only items are fused without abstention (bug fix, 2026-11-09).** Their q is uniform, so its arg max is the first class (A1), a low-support class. `benchmark.fused` therefore abstained and returned the uniform q: every detector-only item was labelled A1. NB3 fused them without abstention, and `fused` now does the same (abstention applies to rule items only). This was found in the NB4 QUICK test: all 54 real-data candidates were A1 before the fix; after it, N 48, A3 5, G4 1. It affects the injected events matched to detector items (7 of 368 detected typed events in the QUICK runs).
 
 ### D57 — Baselines that are not run [NB4]
 - **Run:**
@@ -460,3 +462,46 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - NB4 loads the LightGBM pickle in a `try` block and smoke-tests a forecast. If either fails, it refits LightGBM (4.6.0, as pinned) instead of crashing, and prints why.
 - `QUICK = True` runs 1 rate × 2 seeds with 2-epoch networks (written to `results/benchmark_quick/`) to test the notebook.
 - The rule-family ablation of the label model runs at 3 % only. The threshold sweep (rules + label model only) runs at 3 % on 3 seeds.
+
+### D59 — Hybrid predictor: LightGBM forecast + learned correction (graph or no graph) [NB4] — kept as ablation
+- **What:** `graph_model.TCNGAT(use_base=True)`, `fit_graph_models(..., base=PF)`.
+  - The network receives the cross-fitted LightGBM forecast PF and outputs PF + a learned correction. The last layer is zero-initialised, so training starts from PF exactly.
+  - The graph attention also reads each neighbour's current residual ρ_j − PF_j.
+  - Same training as D53: masked Huber loss, two folds, early stopping, 40 epochs, patience 6.
+  - Ablation: the same without the graph (LightGBM + TCN correction).
+  - Models: `results/benchmark_v1/models/hybrid_gat.pt`, `hybrid_tcn.pt`.
+- **Why:** the author asked for the graph to be the main detector and the strongest model, "keeping LightGBM if it is the best". A correction on top of the best predictor is the natural way to keep LightGBM and add the graph.
+- **Outcome (F37):** the correction does not generalise; both hybrids end at LightGBM's MAE (0.02879). They stay in NB4 as ablations: no correction vs learned correction, with and without graph.
+- **Code:** `src/graph_model.py`, `src/benchmark.py` (`VARIANTS`).
+
+### D60 — Fair evaluation: rule-based scoring area, per-detector event formation, two views of precision [NB4] **[corrects D54]**
+- **Scoring area:** `clean_region(P, None)`: rule states, multi-zone states, burn-in and clock days only. NB3's detector candidates are no longer excluded, because that hid the LightGBM detector's own false alarms and nobody else's (F36). Injection uses the same region.
+- **Event formation is part of each detector:**
+  - score smoothing w (centred moving average of the zone score);
+  - threshold γ at the q-th percentile of rule-negative zone-steps;
+  - merge gap (`detector_items(max_gap)`);
+  - minimum run of 3 steps, as in NB3.
+  - NB3's choice was w = 1, q = 99.5, gap = 1.
+  - **Tuned detectors:** the main candidates (TCN-GAT, LightGBM, their average, the graph hybrid) and the baselines (STL + MAD, Isolation Forest, LOF). Each gets the setting with its best mean event F1 alone on the development datasets.
+  - **Ablations** (single scale, flat, the no-graph hybrid, raw-band predictor variants) inherit the main detector's setting, so they change one thing only.
+  - NB4 also reports TCN-GAT and LightGBM with NB3's setting (`... (NB3 event formation)`), because tuning trades short shocks for precision (F38).
+- **Development datasets:** seeds 100–104 (3 % × 3, 1 %, 7 %) from the same injector. The benchmark seeds 0–9 are never used for any choice.
+- **Two views of precision:**
+  - **primary:** every alarm counts (conservative; the criterion of the development selection, so that noisy settings cannot win);
+  - **`*_bgx`:** each method's own detections on the uninjected series are not scored (`Benchmark.set_background`). This is the treatment the rule states already give the rules.
+  - Table 5 also gives each method's number of real-data alarms.
+- **Code:** `src/benchmark.py` (`clean_region`, `smooth_score`, `gamma_of(q)`, `Benchmark.setting`, `set_background`), `tools/dev_select_detector.py`.
+
+### D61 — Main detector: the TCN-GAT multi-scale graph residual detector [NB4] **[changes NB3's main detector for the south]**
+- **Choice:** `TCN-GAT, hierarchy, multi-scale` with w = 24 (4 h), q = 99.9, gap = 12.
+  - Pipeline: TCN-GAT residual (D53) → phase-aligned MODWT bands (D42) → region/city/zone median hierarchy (D51) → robust scores, max over bands and levels (D43) → event formation (D60).
+- **Selection rule (fixed before looking):** the main detector is the candidate with the best mean F1 of the full method (rules + its detector-only candidates) at its own tuned setting, on the development datasets. TCN-GAT 0.863, average 0.854, graph hybrid 0.850, LightGBM 0.849 (F39). It is also the best alone: 0.786 vs 0.759, in all 10 cells.
+- **Consequences:**
+  - NB4's end model, fusion, attribution tables and the real-data catalogue (`results/main_detector/`, NB4 §8b) use the graph detector.
+  - Marrakech (2 zones, one city: nothing for a graph to learn) keeps NB3's LightGBM detector.
+  - NB3's south numbers (γ 25.5, 290 candidates) describe the LightGBM detector at NB3's event formation and are superseded by NB4 §8b for the paper's catalogue.
+- **The author's request:** "present the graph as the main detector and make it more powerful than any other model; if LightGBM is the best, keep it and do a best benchmark, but always keep the graph in the top".
+  - The graph detector won the development selection, so it is the main one.
+  - LightGBM had the same tuning budget; nothing was tuned for the graph alone.
+  - In every table the graph detectors come right after the main detector.
+- **Caveats for the paper:** F37 (no prediction gain), F39 (lower step-wise AUC-PR than STL and LightGBM) and F40 (no event-F1 gain over the rules under strict counting).

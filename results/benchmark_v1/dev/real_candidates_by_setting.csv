@@ -1,0 +1,337 @@
+detector,w,q,gap,n_real_candidates
+"LightGBM + learned-graph correction, hierarchy, multi-scale",1,99.0,1,633
+"LightGBM + learned-graph correction, hierarchy, multi-scale",1,99.0,3,611
+"LightGBM + learned-graph correction, hierarchy, multi-scale",1,99.5,1,298
+"LightGBM + learned-graph correction, hierarchy, multi-scale",1,99.5,3,299
+"LightGBM + learned-graph correction, hierarchy, multi-scale",1,99.8,1,112
+"LightGBM + learned-graph correction, hierarchy, multi-scale",1,99.8,3,106
+"LightGBM + learned-graph correction, hierarchy, multi-scale",3,99.0,1,717
+"LightGBM + learned-graph correction, hierarchy, multi-scale",3,99.0,3,667
+"LightGBM + learned-graph correction, hierarchy, multi-scale",3,99.5,1,338
+"LightGBM + learned-graph correction, hierarchy, multi-scale",3,99.5,3,321
+"LightGBM + learned-graph correction, hierarchy, multi-scale",3,99.8,1,108
+"LightGBM + learned-graph correction, hierarchy, multi-scale",3,99.8,3,102
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.0,1,573
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.0,3,552
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.5,1,286
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.5,3,278
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.8,1,95
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.8,3,91
+"LightGBM forecast, hierarchy, multi-scale",1,99.0,1,624
+"LightGBM forecast, hierarchy, multi-scale",1,99.0,3,602
+"LightGBM forecast, hierarchy, multi-scale",1,99.5,1,283
+"LightGBM forecast, hierarchy, multi-scale",1,99.5,3,286
+"LightGBM forecast, hierarchy, multi-scale",1,99.8,1,112
+"LightGBM forecast, hierarchy, multi-scale",1,99.8,3,106
+"LightGBM forecast, hierarchy, multi-scale",3,99.0,1,703
+"LightGBM forecast, hierarchy, multi-scale",3,99.0,3,655
+"LightGBM forecast, hierarchy, multi-scale",3,99.5,1,310
+"LightGBM forecast, hierarchy, multi-scale",3,99.5,3,298
+"LightGBM forecast, hierarchy, multi-scale",3,99.8,1,109
+"LightGBM forecast, hierarchy, multi-scale",3,99.8,3,102
+"LightGBM forecast, hierarchy, multi-scale",6,99.0,1,566
+"LightGBM forecast, hierarchy, multi-scale",6,99.0,3,546
+"LightGBM forecast, hierarchy, multi-scale",6,99.5,1,270
+"LightGBM forecast, hierarchy, multi-scale",6,99.5,3,258
+"LightGBM forecast, hierarchy, multi-scale",6,99.8,1,96
+"LightGBM forecast, hierarchy, multi-scale",6,99.8,3,92
+"TCN-GAT, hierarchy, multi-scale",1,99.0,1,696
+"TCN-GAT, hierarchy, multi-scale",1,99.0,3,649
+"TCN-GAT, hierarchy, multi-scale",1,99.5,1,444
+"TCN-GAT, hierarchy, multi-scale",1,99.5,3,417
+"TCN-GAT, hierarchy, multi-scale",1,99.8,1,232
+"TCN-GAT, hierarchy, multi-scale",1,99.8,3,216
+"TCN-GAT, hierarchy, multi-scale",3,99.0,1,737
+"TCN-GAT, hierarchy, multi-scale",3,99.0,3,677
+"TCN-GAT, hierarchy, multi-scale",3,99.5,1,465
+"TCN-GAT, hierarchy, multi-scale",3,99.5,3,427
+"TCN-GAT, hierarchy, multi-scale",3,99.8,1,247
+"TCN-GAT, hierarchy, multi-scale",3,99.8,3,232
+"TCN-GAT, hierarchy, multi-scale",6,99.0,1,572
+"TCN-GAT, hierarchy, multi-scale",6,99.0,3,554
+"TCN-GAT, hierarchy, multi-scale",6,99.5,1,385
+"TCN-GAT, hierarchy, multi-scale",6,99.5,3,372
+"TCN-GAT, hierarchy, multi-scale",6,99.8,1,212
+"TCN-GAT, hierarchy, multi-scale",6,99.8,3,204
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,99.0,1,635
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,99.0,3,621
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,99.5,1,350
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,99.5,3,340
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,99.8,1,165
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,99.8,3,161
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,99.0,1,694
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,99.0,3,648
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,99.5,1,377
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,99.5,3,357
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,99.8,1,174
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,99.8,3,167
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.0,1,567
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.0,3,550
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.5,1,311
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.5,3,306
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.8,1,148
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.8,3,145
+STL + MAD,1,99.0,1,944
+STL + MAD,1,99.0,3,897
+STL + MAD,1,99.5,1,475
+STL + MAD,1,99.5,3,460
+STL + MAD,1,99.8,1,200
+STL + MAD,1,99.8,3,194
+STL + MAD,3,99.0,1,940
+STL + MAD,3,99.0,3,894
+STL + MAD,3,99.5,1,485
+STL + MAD,3,99.5,3,464
+STL + MAD,3,99.8,1,212
+STL + MAD,3,99.8,3,201
+STL + MAD,6,99.0,1,829
+STL + MAD,6,99.0,3,813
+STL + MAD,6,99.5,1,432
+STL + MAD,6,99.5,3,428
+STL + MAD,6,99.8,1,180
+STL + MAD,6,99.8,3,178
+Isolation Forest,1,99.0,1,929
+Isolation Forest,1,99.0,3,854
+Isolation Forest,1,99.5,1,480
+Isolation Forest,1,99.5,3,480
+Isolation Forest,1,99.8,1,292
+Isolation Forest,1,99.8,3,308
+Isolation Forest,3,99.0,1,785
+Isolation Forest,3,99.0,3,703
+Isolation Forest,3,99.5,1,463
+Isolation Forest,3,99.5,3,416
+Isolation Forest,3,99.8,1,243
+Isolation Forest,3,99.8,3,215
+Isolation Forest,6,99.0,1,583
+Isolation Forest,6,99.0,3,537
+Isolation Forest,6,99.5,1,353
+Isolation Forest,6,99.5,3,337
+Isolation Forest,6,99.8,1,159
+Isolation Forest,6,99.8,3,157
+LOF,1,99.0,1,1809
+LOF,1,99.0,3,1902
+LOF,1,99.5,1,858
+LOF,1,99.5,3,903
+LOF,1,99.8,1,317
+LOF,1,99.8,3,341
+LOF,3,99.0,1,1956
+LOF,3,99.0,3,1910
+LOF,3,99.5,1,961
+LOF,3,99.5,3,942
+LOF,3,99.8,1,387
+LOF,3,99.8,3,379
+LOF,6,99.0,1,1748
+LOF,6,99.0,3,1727
+LOF,6,99.5,1,934
+LOF,6,99.5,3,915
+LOF,6,99.8,1,401
+LOF,6,99.8,3,399
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.8,6,86
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.9,3,45
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.9,6,45
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.95,3,30
+"LightGBM + learned-graph correction, hierarchy, multi-scale",6,99.95,6,30
+"LightGBM + learned-graph correction, hierarchy, multi-scale",12,99.8,3,70
+"LightGBM + learned-graph correction, hierarchy, multi-scale",12,99.8,6,70
+"LightGBM + learned-graph correction, hierarchy, multi-scale",12,99.9,3,38
+"LightGBM + learned-graph correction, hierarchy, multi-scale",12,99.9,6,38
+"LightGBM + learned-graph correction, hierarchy, multi-scale",12,99.95,3,27
+"LightGBM + learned-graph correction, hierarchy, multi-scale",12,99.95,6,27
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.8,3,58
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.8,6,56
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.9,3,26
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.9,6,25
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.95,3,20
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.95,6,20
+"LightGBM forecast, hierarchy, multi-scale",6,99.8,6,87
+"LightGBM forecast, hierarchy, multi-scale",6,99.9,3,45
+"LightGBM forecast, hierarchy, multi-scale",6,99.9,6,45
+"LightGBM forecast, hierarchy, multi-scale",6,99.95,3,30
+"LightGBM forecast, hierarchy, multi-scale",6,99.95,6,30
+"LightGBM forecast, hierarchy, multi-scale",12,99.8,3,72
+"LightGBM forecast, hierarchy, multi-scale",12,99.8,6,71
+"LightGBM forecast, hierarchy, multi-scale",12,99.9,3,39
+"LightGBM forecast, hierarchy, multi-scale",12,99.9,6,39
+"LightGBM forecast, hierarchy, multi-scale",12,99.95,3,26
+"LightGBM forecast, hierarchy, multi-scale",12,99.95,6,26
+"LightGBM forecast, hierarchy, multi-scale",24,99.8,3,59
+"LightGBM forecast, hierarchy, multi-scale",24,99.8,6,58
+"LightGBM forecast, hierarchy, multi-scale",24,99.9,3,25
+"LightGBM forecast, hierarchy, multi-scale",24,99.9,6,24
+"LightGBM forecast, hierarchy, multi-scale",24,99.95,3,19
+"LightGBM forecast, hierarchy, multi-scale",24,99.95,6,19
+"TCN-GAT, hierarchy, multi-scale",6,99.8,6,191
+"TCN-GAT, hierarchy, multi-scale",6,99.9,3,124
+"TCN-GAT, hierarchy, multi-scale",6,99.9,6,114
+"TCN-GAT, hierarchy, multi-scale",6,99.95,3,79
+"TCN-GAT, hierarchy, multi-scale",6,99.95,6,72
+"TCN-GAT, hierarchy, multi-scale",12,99.8,3,148
+"TCN-GAT, hierarchy, multi-scale",12,99.8,6,147
+"TCN-GAT, hierarchy, multi-scale",12,99.9,3,96
+"TCN-GAT, hierarchy, multi-scale",12,99.9,6,95
+"TCN-GAT, hierarchy, multi-scale",12,99.95,3,53
+"TCN-GAT, hierarchy, multi-scale",12,99.95,6,51
+"TCN-GAT, hierarchy, multi-scale",24,99.8,3,116
+"TCN-GAT, hierarchy, multi-scale",24,99.8,6,115
+"TCN-GAT, hierarchy, multi-scale",24,99.9,3,71
+"TCN-GAT, hierarchy, multi-scale",24,99.9,6,71
+"TCN-GAT, hierarchy, multi-scale",24,99.95,3,37
+"TCN-GAT, hierarchy, multi-scale",24,99.95,6,37
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.8,6,141
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.9,3,95
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.9,6,92
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.95,3,53
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,99.95,6,51
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,99.8,3,114
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,99.8,6,113
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,99.9,3,67
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,99.9,6,64
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,99.95,3,42
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,99.95,6,42
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.8,3,73
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.8,6,71
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.9,3,43
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.9,6,41
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.95,3,35
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.95,6,35
+STL + MAD,6,99.8,6,173
+STL + MAD,6,99.9,3,99
+STL + MAD,6,99.9,6,98
+STL + MAD,6,99.95,3,63
+STL + MAD,6,99.95,6,60
+STL + MAD,12,99.8,3,133
+STL + MAD,12,99.8,6,132
+STL + MAD,12,99.9,3,79
+STL + MAD,12,99.9,6,79
+STL + MAD,12,99.95,3,53
+STL + MAD,12,99.95,6,53
+STL + MAD,24,99.8,3,89
+STL + MAD,24,99.8,6,89
+STL + MAD,24,99.9,3,54
+STL + MAD,24,99.9,6,53
+STL + MAD,24,99.95,3,27
+STL + MAD,24,99.95,6,27
+Isolation Forest,6,99.8,6,138
+Isolation Forest,6,99.9,3,123
+Isolation Forest,6,99.9,6,111
+Isolation Forest,6,99.95,3,82
+Isolation Forest,6,99.95,6,72
+Isolation Forest,12,99.8,3,96
+Isolation Forest,12,99.8,6,94
+Isolation Forest,12,99.9,3,72
+Isolation Forest,12,99.9,6,65
+Isolation Forest,12,99.95,3,54
+Isolation Forest,12,99.95,6,53
+Isolation Forest,24,99.8,3,64
+Isolation Forest,24,99.8,6,64
+Isolation Forest,24,99.9,3,44
+Isolation Forest,24,99.9,6,44
+Isolation Forest,24,99.95,3,33
+Isolation Forest,24,99.95,6,30
+LOF,6,99.8,6,390
+LOF,6,99.9,3,214
+LOF,6,99.9,6,207
+LOF,6,99.95,3,118
+LOF,6,99.95,6,117
+LOF,12,99.8,3,272
+LOF,12,99.8,6,268
+LOF,12,99.9,3,149
+LOF,12,99.9,6,149
+LOF,12,99.95,3,94
+LOF,12,99.95,6,94
+LOF,24,99.8,3,150
+LOF,24,99.8,6,150
+LOF,24,99.9,3,98
+LOF,24,99.9,6,97
+LOF,24,99.95,3,64
+LOF,24,99.95,6,63
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.8,12,56
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.9,12,25
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.95,12,20
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.98,6,12
+"LightGBM + learned-graph correction, hierarchy, multi-scale",24,99.98,12,12
+"LightGBM + learned-graph correction, hierarchy, multi-scale",48,99.8,6,25
+"LightGBM + learned-graph correction, hierarchy, multi-scale",48,99.8,12,25
+"LightGBM + learned-graph correction, hierarchy, multi-scale",48,99.9,6,12
+"LightGBM + learned-graph correction, hierarchy, multi-scale",48,99.9,12,12
+"LightGBM + learned-graph correction, hierarchy, multi-scale",48,99.95,6,12
+"LightGBM + learned-graph correction, hierarchy, multi-scale",48,99.95,12,12
+"LightGBM + learned-graph correction, hierarchy, multi-scale",48,99.98,6,7
+"LightGBM + learned-graph correction, hierarchy, multi-scale",48,99.98,12,7
+"LightGBM forecast, hierarchy, multi-scale",24,99.8,12,56
+"LightGBM forecast, hierarchy, multi-scale",24,99.9,12,24
+"LightGBM forecast, hierarchy, multi-scale",24,99.95,12,19
+"LightGBM forecast, hierarchy, multi-scale",24,99.98,6,12
+"LightGBM forecast, hierarchy, multi-scale",24,99.98,12,12
+"LightGBM forecast, hierarchy, multi-scale",48,99.8,6,26
+"LightGBM forecast, hierarchy, multi-scale",48,99.8,12,26
+"LightGBM forecast, hierarchy, multi-scale",48,99.9,6,12
+"LightGBM forecast, hierarchy, multi-scale",48,99.9,12,12
+"LightGBM forecast, hierarchy, multi-scale",48,99.95,6,13
+"LightGBM forecast, hierarchy, multi-scale",48,99.95,12,13
+"LightGBM forecast, hierarchy, multi-scale",48,99.98,6,8
+"LightGBM forecast, hierarchy, multi-scale",48,99.98,12,8
+"TCN-GAT, hierarchy, multi-scale",24,99.8,12,113
+"TCN-GAT, hierarchy, multi-scale",24,99.9,12,70
+"TCN-GAT, hierarchy, multi-scale",24,99.95,12,37
+"TCN-GAT, hierarchy, multi-scale",24,99.98,6,19
+"TCN-GAT, hierarchy, multi-scale",24,99.98,12,19
+"TCN-GAT, hierarchy, multi-scale",48,99.8,6,71
+"TCN-GAT, hierarchy, multi-scale",48,99.8,12,71
+"TCN-GAT, hierarchy, multi-scale",48,99.9,6,50
+"TCN-GAT, hierarchy, multi-scale",48,99.9,12,50
+"TCN-GAT, hierarchy, multi-scale",48,99.95,6,25
+"TCN-GAT, hierarchy, multi-scale",48,99.95,12,25
+"TCN-GAT, hierarchy, multi-scale",48,99.98,6,10
+"TCN-GAT, hierarchy, multi-scale",48,99.98,12,10
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.8,12,69
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.9,12,40
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.95,12,35
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.98,6,11
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,99.98,12,11
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.8,6,44
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.8,12,44
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.9,6,23
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.9,12,23
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.95,6,15
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.95,12,15
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.98,6,5
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,99.98,12,5
+STL + MAD,24,99.8,12,86
+STL + MAD,24,99.9,12,51
+STL + MAD,24,99.95,12,27
+STL + MAD,24,99.98,6,11
+STL + MAD,24,99.98,12,11
+STL + MAD,48,99.8,6,50
+STL + MAD,48,99.8,12,48
+STL + MAD,48,99.9,6,27
+STL + MAD,48,99.9,12,27
+STL + MAD,48,99.95,6,22
+STL + MAD,48,99.95,12,22
+STL + MAD,48,99.98,6,6
+STL + MAD,48,99.98,12,6
+Isolation Forest,24,99.8,12,62
+Isolation Forest,24,99.9,12,43
+Isolation Forest,24,99.95,12,30
+Isolation Forest,24,99.98,6,16
+Isolation Forest,24,99.98,12,13
+Isolation Forest,48,99.8,6,46
+Isolation Forest,48,99.8,12,45
+Isolation Forest,48,99.9,6,29
+Isolation Forest,48,99.9,12,29
+Isolation Forest,48,99.95,6,25
+Isolation Forest,48,99.95,12,24
+Isolation Forest,48,99.98,6,9
+Isolation Forest,48,99.98,12,9
+LOF,24,99.8,12,148
+LOF,24,99.9,12,96
+LOF,24,99.95,12,60
+LOF,24,99.98,6,30
+LOF,24,99.98,12,30
+LOF,48,99.8,6,94
+LOF,48,99.8,12,92
+LOF,48,99.9,6,50
+LOF,48,99.9,12,48
+LOF,48,99.95,6,37
+LOF,48,99.95,12,35
+LOF,48,99.98,6,16
+LOF,48,99.98,12,16

@@ -8,12 +8,13 @@ cells.append(M(r"""# NB4 · Learned graph (TCN-GAT) and injection benchmark
 
 Guide sections "Detector: multi-scale graph model" (eq. 13), "Synthetic injection protocol", "Metrics" (eq. 17–18) and "Baselines, ablations and generalisation". This is the first place where accuracy against **known** types can be measured.
 
-**Part A: the learned graph (guide eq. 13 as written).**
+**Part A: the graph detector (guide eq. 13).**
 - **TCN-GAT** for the 15 southern zones: a causal temporal convolutional network on each zone's past, plus graph attention over the *current* ρ of its neighbours (leave-one-zone-out).
 - Same-city zones are neighbours. Cross-city edges are **learned** (GDN-style node embeddings, top-k = 4 by cosine similarity).
-- Ablation: the same TCN without the graph.
-- Both are trained with the masked Huber loss and the same two-fold temporal cross-fitting as NB3's LightGBM.
-- They are compared with LightGBM on clean-data error and on the residual-hierarchy test of NB3.
+- **Hybrid (D59): LightGBM + learned-graph correction.** The same network receives NB3's LightGBM forecast and learns a correction to it. The graph attention reads each neighbour's current value *and* its current LightGBM residual. The output is the forecast plus the correction, and the correction starts at zero.
+- Ablations: the TCN without the graph, the hybrid without the graph (LightGBM + TCN correction), and the plain average of LightGBM and TCN-GAT.
+- All networks are trained with the masked Huber loss and the same two-fold temporal cross-fitting as NB3's LightGBM. They are compared on clean-data error and on NB3's residual-hierarchy test.
+- **The main detector and every detector's event formation** (score smoothing, threshold percentile, merge gap) are chosen on separate development datasets (seeds 100–104) by `tools/dev_select_detector.py` (D60). The choice is stored in `results/benchmark_v1/dev_selection.json`. The benchmark seeds 0–9 are never used for any choice.
 
 **Part B: injection benchmark.**
 - Observed signatures are injected into clean zone-time only, at **1 %, 3 % and 7 %**, over **10 seeds**: A1–A3 and G1–G4, plus two untyped cases required by F29 (an unflagged multi-zone shock) and F32 (a partial outage).
@@ -30,9 +31,11 @@ Guide sections "Detector: multi-scale graph model" (eq. 13), "Synthetic injectio
 1. *Runtime → Change runtime type → T4 GPU*.
 2. *Run all*.
 
-Every injected dataset is saved to `results/benchmark_v1/runs/` as soon as it finishes. If Colab disconnects, *Run all* again: finished runs are skipped. Expect about 4–6 min per injected dataset (30 datasets at the default settings), plus about 10 min of TCN-GAT training on a GPU. Set `QUICK = True` for a 10-minute test run.
+Every injected dataset is saved to `results/benchmark_v1/runs/` as soon as it finishes. If Colab disconnects, *Run all* again: finished runs are skipped. Expect about 6–8 min per injected dataset on Colab (30 datasets at the default settings), plus about 15 min for the real data and the threshold sweep, plus about 20 min of network training on a GPU if the models in `results/benchmark_v1/models/` are missing. Set `QUICK = True` for a 10-minute test run.
 
-**Decisions:** D53 (TCN-GAT), D54 (injection protocol and evaluation scope), D55 (one network on ρ, not per band), D56 (β tuning and abstention on injected data), D57 (baselines not run), D58 (rerun and caching protocol)."""))
+- **Scoring area:** the rule-based clean region, the same for every detector (D60). Excluding NB3's detector candidates would hide the false alarms of one detector only.
+
+**Decisions:** D53 (TCN-GAT), D54 (injection protocol and evaluation scope), D55 (one network on ρ, not per band), D56 (β tuning and abstention on injected data), D57 (baselines not run), D58 (rerun and caching protocol), D59 (hybrid), D60 (development selection, event formation, scoring area)."""))
 
 cells.append(C(r"""import sys, subprocess, json, time, pickle, os
 from pathlib import Path
@@ -63,7 +66,7 @@ QUICK = False                       # True: one rate, two seeds, short TCN train
 if QUICK:
     RATES, SEEDS, SENS_SEEDS = [0.03], [0, 1], [0]
 TCN_CFG = dict(epochs=40, patience=6) if not QUICK else dict(epochs=2, max_batches=10)
-BASELINES = ("STL + MAD", "Isolation Forest", "LOF")
+BASELINES = B.BASELINES
 
 XLSX = ROOT / "data" / "raw" / "Data Morocco.xlsx"
 OUT = ROOT / "results" / ("benchmark_v1" if not QUICK else "benchmark_quick")
@@ -71,20 +74,25 @@ RUNS, MODELS = OUT / "runs", OUT / "models"
 for d in (RUNS, MODELS): d.mkdir(parents=True, exist_ok=True)
 FIG = ROOT / "results" / "figures" if not QUICK else OUT / "figures"     # QUICK figures never overwrite the real ones
 FIG.mkdir(parents=True, exist_ok=True)
+SEL_FILE = ROOT / "results" / "benchmark_v1" / "dev_selection.json"     # tools/dev_select_detector.py (D60)
+if SEL_FILE.exists():
+    SEL = json.loads(SEL_FILE.read_text()); MAIN, SETTINGS = SEL["main"], SEL["settings"]
+else:
+    SEL, MAIN, SETTINGS = None, B.V_HYB, {}
+    print("WARNING: no dev_selection.json (run tools/dev_select_detector.py): hybrid main detector, NB3 event formation")
+print("main detector:", MAIN); print("event formation (w, q, gap):", SETTINGS)
 DEVICE = G.default_device()
 pd.set_option("display.width", 220); pd.set_option("display.max_columns", 40); pd.set_option("display.max_colwidth", 60)
 print("ROOT =", ROOT, "| device", DEVICE, "| lightgbm", lightgbm.__version__, "| torch", torch.__version__, "| QUICK", QUICK)
 T0 = time.time()"""))
 
-cells.append(M("## 1. Real data, NB3's detector-only candidates and the clean region (where injection is allowed)"))
+cells.append(M("## 1. Real data and the clean region (where injection is allowed and predictions are scored)"))
 cells.append(C(r"""res = R1.build(XLSX)
 items = res["items"]
 cat = pd.read_csv(ROOT / "results" / "catalogue_v1" / "items.csv", parse_dates=["start", "end"])
 assert (items.item_id.values == cat.item_id.values).all(), "rule engine output differs from catalogue_v1"
 P = D.build_panel(res["data"], res["exp"], res["masks"], "south")
-det_real = pd.read_csv(ROOT / "results" / "detector_v1" / "detector_items.csv", parse_dates=["start", "end"])
-det_real = det_real[det_real.system == "south"]
-CLEAN = B.clean_region(P, det_real)
+CLEAN = B.clean_region(P, None)      # rule-based: the same scoring area for every detector (D60)
 fold = P["rho"].index >= D.SPLIT
 print(f"south panel {P['rho'].shape}; clean share of zone-steps: all {CLEAN.to_numpy().mean():.3f}, "
       f"train {CLEAN.to_numpy()[~fold].mean():.3f}, test {CLEAN.to_numpy()[fold].mean():.3f}")"""))
@@ -93,8 +101,9 @@ cells.append(M(r"""## 2. Predictors trained once on the real data
 
 - **LightGBM forecast and nowcast** (NB3, D39–D41).
 - **TCN** (no graph) and **TCN-GAT** (learned graph, guide eq. 13; D53).
+- **Hybrids** on the LightGBM forecast (D59): **LightGBM + learned-graph correction** and its no-graph ablation **LightGBM + TCN correction**.
 
-All four are cross-fitted in two temporal folds and trained on rule-clean steps only. During the benchmark they only *predict* the injected series: each half is predicted by models trained on the other half of the real data, so they have never seen an injected event."""))
+All are cross-fitted in two temporal folds and trained on rule-clean steps only. During the benchmark they only *predict* the injected series: each half is predicted by models trained on the other half of the real data, so they have never seen an injected event."""))
 cells.append(C(r"""f = MODELS / "lightgbm_models.pkl"
 LGB = None
 if f.exists():
@@ -109,14 +118,16 @@ if LGB is None:
     LGB = {k: D.fit_rho_models(P, k, backend="lightgbm") for k in ("forecast", "nowcast")}
     pickle.dump(LGB, open(f, "wb")); print(f"LightGBM fitted in {time.time() - t:.0f} s")
 
+PF = D.apply_rho_models(P, LGB["forecast"], "forecast")          # base of the hybrids
 GM, HIST = {}, []
-for name, graph in (("TCN", False), ("TCN-GAT", True)):
-    f = MODELS / f"{name.replace('-', '_').lower()}.pt"
+for name, fname, graph, hybrid in (("TCN", "tcn", False, False), ("TCN-GAT", "tcn_gat", True, False),
+                                   ("LGB + TCN", "hybrid_tcn", False, True), ("LGB + GAT", "hybrid_gat", True, True)):
+    f = MODELS / f"{fname}.pt"
     if f.exists():
         GM[name] = G.load_models(f, P, device=DEVICE); print(name, "loaded from", f)
     else:
         t = time.time()
-        GM[name], h = G.fit_graph_models(P, graph=graph, cfg=TCN_CFG, device=DEVICE, log=True)
+        GM[name], h = G.fit_graph_models(P, graph=graph, cfg=TCN_CFG, device=DEVICE, log=True, base=PF if hybrid else None)
         G.save_models(GM[name], f, TCN_CFG); h.to_csv(MODELS / f"{f.stem}_history.csv", index=False)
         print(f"{name} trained in {time.time() - t:.0f} s")
 for f in MODELS.glob("*_history.csv"):
@@ -131,10 +142,13 @@ if HIST:
         ax.set_title(f"trained on {'≥' if k else '<'} {D.SPLIT.date()}"); ax.set_xlabel("epoch"); ax.set_ylabel("masked Huber loss"); ax.legend(fontsize=7)
     fig.tight_layout(); plt.show()"""))
 
-cells.append(C(r"""PRED = {"LGB forecast": D.apply_rho_models(P, LGB["forecast"], "forecast"),
+cells.append(C(r"""PRED = {"LGB forecast": PF,
         "LGB nowcast (all zones, no learned edges)": D.apply_rho_models(P, LGB["nowcast"], "nowcast"),
         "TCN (no graph)": G.apply_graph_models(P, GM["TCN"]),
-        "TCN-GAT (learned graph)": G.apply_graph_models(P, GM["TCN-GAT"])}
+        "TCN-GAT (learned graph)": G.apply_graph_models(P, GM["TCN-GAT"]),
+        "LightGBM + TCN correction (no graph)": G.apply_graph_models(P, GM["LGB + TCN"], base=PF),
+        "LightGBM + learned-graph correction (hybrid)": G.apply_graph_models(P, GM["LGB + GAT"], base=PF)}
+PRED["mean(LightGBM, TCN-GAT)"] = (PF + PRED["TCN-GAT (learned graph)"]) / 2
 clean = ~P["mask"]
 rows = []
 for name, pr in PRED.items():
@@ -177,8 +191,15 @@ display(pred_cmp.pivot_table(index="predictor", columns="period", values="MAE"))
 display(hier_cmp.pivot_table(index=["kind", "level", "n"], columns="predictor", values="correct"))"""))
 
 cells.append(M(r"""### The learned graph
-Rows are receiving zones and columns are sending zones. Grey cells are edges the model can use: same city, plus the 4 learned cross-city neighbours. The colour shows the mean attention weight on clean steps, averaged over both folds and both heads."""))
-cells.append(C(r"""LG = G.learned_graph(P, GM["TCN-GAT"])
+Rows are receiving zones and columns are sending zones. Grey cells are edges the model can use: same city, plus the 4 learned cross-city neighbours. The colour shows the mean attention weight on clean steps, averaged over both folds and both heads. The figure shows the graph of the TCN-GAT. The hybrid's correction stays close to zero (D59), so its attention is not interpretable; its cross-city edges are saved too."""))
+cells.append(C(r"""LGS = {"TCN-GAT": G.learned_graph(P, GM["TCN-GAT"]), "LGB + GAT": G.learned_graph(P, GM["LGB + GAT"], base=PF)}
+GNAME = "TCN-GAT"
+for k, lg in LGS.items():
+    a_ = sum(a.astype(int) for a, _ in lg.values()); t_ = sum(t for _, t in lg.values()) / len(lg)
+    e_ = [(i, j, float(t_.loc[i, j])) for i in t_.index for j in t_.columns if a_.loc[i, j] > 0 and P["city"][i] != P["city"][j]]
+    pd.DataFrame(e_, columns=["to", "from", "attention"]).sort_values("attention", ascending=False).to_csv(
+        OUT / f"learned_cross_city_edges_{k.replace(' + ', '_').replace('-', '_').lower()}.csv", index=False)
+LG = LGS[GNAME]
 zones = list(P["rho"].columns)
 adj = sum(a.astype(int) for a, _ in LG.values()); att = sum(t for _, t in LG.values()) / len(LG)
 fig, axs = plt.subplots(1, 2, figsize=(12, 5), gridspec_kw=dict(width_ratios=[1, 1.15]))
@@ -226,7 +247,11 @@ fig.tight_layout(); savefig(fig, FIG, "E21_injected_signatures"); plt.show()""")
 
 cells.append(M(r"""## 4. Benchmark runs (resumable)
 For each rate and seed: inject, rerun the whole pipeline, score. Results go to `runs/` immediately."""))
-cells.append(C(r"""bench = B.Benchmark(res["raw"], P, det_real, LGB, GM, gb_backend="lightgbm", log=False)
+cells.append(C(r"""bench = B.Benchmark(res["raw"], P, None, LGB, GM, gb_backend="lightgbm", log=False, main=MAIN, settings=SETTINGS)
+t = time.time(); REAL = bench.pipeline(res["data"], seed=0, baselines=BASELINES)      # the uninjected data (also used in §8b and §9)
+bench.set_background(REAL)
+print(f"real data through the whole method: {time.time() - t:.0f} s; detector-only candidates of the main detector: {len(REAL['det_only'])}")
+REAL_ALARMS = {k: len(d) for k, d in REAL["DET"].items()}
 todo = [(r, s) for r in RATES for s in SEEDS]
 t_start = time.time(); done = 0
 for k, (rate, seed) in enumerate(todo):
@@ -263,11 +288,14 @@ def ms(x):
 cells.append(M(r"""## 5. Detection (Table 5, Fig 9)
 - Test period (Jul 2023 – May 2024), mean ± standard deviation over seeds.
 - **F1 follows the guide's eq. 17:** a predicted event counts if it overlaps an injected event in time, including the restoration tail.
+- **Every alarm counts (primary, conservative):** a detection in rule-clean time that matches no injected event is a false alarm, even if it is a real but unlabelled anomaly of the series (about half of NB3's real-data candidates were surges or partial drops). The development selection used this F1, so noisy settings cannot win.
+- **F1_own_background_excluded:** the same, but each method's own detections on the uninjected series are not scored, exactly as real rule states are not scored for the rules (D60). `real_data_alarms` gives the number of detections on the uninjected series, so noise stays visible.
 - **F1_zone_strict** also requires a shared zone. The two differ mainly because a multi-city event shifts the region median g, which makes the *unaffected* city look anomalous at the city level. Per-type recall is zone-strict.
-- Wilcoxon signed-rank test over seeds: ours vs the best baseline."""))
-cells.append(C(r"""ORDER = ["ours (rules + detector)", "rules only (rule engine v1)", B.MAIN, "TCN-GAT, hierarchy, multi-scale", "single scale (raw band)",
-         "no hierarchy (flat residual)", "LGB nowcast (raw, hierarchy)", "TCN, no graph (raw, hierarchy)", "TCN-GAT (raw, hierarchy)",
-         "STL + MAD", "Isolation Forest", "LOF"]
+- Wilcoxon signed-rank test over seeds: ours vs the best baseline, and the main detector vs each other detector variant (alone).
+- Every tuned detector (main candidates and baselines) uses the event formation chosen for it on the development seeds (D60). Ablations use the main detector's."""))
+cells.append(C(r"""DETECTORS = [MAIN] + [v for v in (B.V_GAT, B.V_MEAN, B.V_HYB, B.V_HYB_NOG, B.V_LGB) if v != MAIN]   # graph detectors right after the main one
+ORDER = ["ours (rules + detector)", "rules only (rule engine v1)"] + DETECTORS + [B.V_GAT_NB3, B.V_LGB_NB3, B.V_SINGLE, B.V_FLAT, B.V_NOW,
+         B.V_TCN_RAW, B.V_GAT_RAW, "STL + MAD", "Isolation Forest", "LOF"]
 BASE = ["rules only (rule engine v1)", "STL + MAD", "Isolation Forest", "LOF"]
 dt = DET[DET.period == "test"].merge(AUC[AUC.period == "test"], on=["method", "period", "rate", "seed"], how="left")
 rows = []
@@ -276,6 +304,8 @@ for rate in RATES:
     for m in [o for o in ORDER if o in set(d.method)]:
         g = d[d.method == m]
         rows.append(dict(rate=f"{rate:.0%}", method=m, F1=ms(g.f1), precision=ms(g.precision), recall=ms(g.recall), F1_zone_strict=ms(g.f1_zone), AUC_PR=ms(g.auc_pr),
+                         F1_own_background_excluded=ms(g.f1_bgx) if "f1_bgx" in g else "n/a",
+                         real_data_alarms=REAL_ALARMS.get(m, len(REAL["det_only"]) if m == "ours (rules + detector)" else np.nan),
                          start_err_min=round(g.start_err_min.median(), 0), F1_mean=g.f1.mean()))
 table5 = pd.DataFrame(rows)
 tests = []
@@ -286,12 +316,19 @@ for rate in RATES:
     a, b = a.align(b, join="inner")
     p = wilcoxon(a, b).pvalue if len(a) >= 6 and (a != b).any() else np.nan
     tests.append(dict(rate=f"{rate:.0%}", best_baseline=best, ours_F1=a.mean(), baseline_F1=b.mean(), wilcoxon_p=p, n_seeds=len(a)))
+for rate in RATES:                                   # main detector vs every other detector variant, alone
+    d = dt[dt.rate == rate]
+    for other in [v for v in DETECTORS[1:] + ["STL + MAD", "Isolation Forest", "LOF"] if v in set(d.method)]:
+        a = d[d.method == MAIN].set_index("seed").f1; b = d[d.method == other].set_index("seed").f1
+        a, b = a.align(b, join="inner")
+        p = wilcoxon(a, b).pvalue if len(a) >= 6 and (a != b).any() else np.nan
+        tests.append(dict(rate=f"{rate:.0%}", best_baseline=f"main detector vs {other}", ours_F1=a.mean(), baseline_F1=b.mean(), wilcoxon_p=p, n_seeds=len(a)))
 table5.drop(columns="F1_mean").to_csv(OUT / "table5_detection.csv", index=False)
 pd.DataFrame(tests).to_csv(OUT / "table5_wilcoxon.csv", index=False)
 display(table5.drop(columns="F1_mean")); display(pd.DataFrame(tests).round(4))
 
 rec_cols = [c for c in DET.columns if c.startswith("recall_")]
-rec = dt[dt.method.isin(["ours (rules + detector)", "rules only (rule engine v1)", B.MAIN, "TCN-GAT, hierarchy, multi-scale", "LGB nowcast (raw, hierarchy)", "single scale (raw band)"])]
+rec = dt[dt.method.isin(["ours (rules + detector)", "rules only (rule engine v1)"] + DETECTORS + [B.V_GAT_NB3, B.V_LGB_NB3, B.V_NOW, B.V_SINGLE])]
 rec_t = rec.groupby(["rate", "method"])[rec_cols].mean().round(3)
 rec_t.to_csv(OUT / "detection_recall_by_type.csv"); display(rec_t)
 
@@ -300,12 +337,12 @@ for ax, rate in zip(axs[0], RATES):
     d = dt[dt.rate == rate]; ms_ = [o for o in ORDER if o in set(d.method)]
     for i, m in enumerate(ms_):
         g = d[d.method == m]
-        col = "#C8553D" if m.startswith("ours") else ("#2F6690" if m in BASE else "#7B5EA7")
+        col = "#C8553D" if (m.startswith("ours") or m == MAIN) else ("#2F6690" if m in BASE else "#7B5EA7")
         ax.errorbar(g.f1.mean(), i, xerr=g.f1.std(ddof=1) if len(g) > 1 else 0, fmt="o", color=col, ms=5, capsize=2)
         ax.errorbar(g.auc_pr.mean(), i + 0.25, xerr=g.auc_pr.std(ddof=1) if len(g) > 1 else 0, fmt="s", color=col, mfc="white", ms=4, capsize=2)
     ax.set_yticks(range(len(ms_))); ax.set_yticklabels(ms_, fontsize=7); ax.invert_yaxis(); ax.set_xlim(0, 1)
     ax.set_title(f"{rate:.0%} contamination"); ax.set_xlabel("event F1 (●) and step AUC-PR (□)")
-fig.suptitle("Fig 9 — Detection on injected events (test period, mean ± sd over seeds; red = ours, blue = baselines, purple = ablations)", y=1.02)
+fig.suptitle("Fig 9 — Detection on injected events (test period, mean ± sd over seeds; red = ours and the main detector, blue = baselines, purple = variants and ablations)", y=1.02)
 fig.tight_layout(); savefig(fig, FIG, "fig9_detection"); plt.show()"""))
 
 cells.append(M(r"""## 6. Attribution (Table 6, Figs 10–11)
@@ -396,19 +433,20 @@ cells.append(M(r"""## 7. Ablations (Table 7)
 - **(b) Detector design** (detection on the same runs):
   - hierarchy vs flat residual;
   - multi-scale vs single scale;
-  - learned graph (TCN-GAT) vs no graph (TCN);
+  - the main detector vs: no graph in the correction (LightGBM + TCN), no correction (LightGBM only), naive average (LightGBM, TCN-GAT), graph model alone (TCN-GAT);
+  - learned graph (TCN-GAT) vs no graph (TCN), raw band;
   - LightGBM nowcast (all zones, no learned edges) vs forecast.
-  - **U_SHOCK recall** is the F29 test: does a predictor that sees neighbours explain shared shocks away?
+  - **U_SHOCK recall** is the F29 test: does a predictor that sees neighbours explain shared shocks away? Compare it at the tuned and at NB3's untuned event formation: heavy smoothing and a strict threshold trade short shocks for precision.
 - **(c) Rule families:** the label model refitted without one family at a time."""))
 cells.append(C(r"""r0 = FAMILY_ABLATION_RATE if FAMILY_ABLATION_RATE in RATES else RATES[0]
 a = att[att.rate == r0]
 pipe = ["majority vote (rules)", "label model q", "fusion, no detector features (β*)", "fusion (β*, D50 abstention)"]
 t7a = pd.DataFrame([dict(stage=s, macro_F1=ms(a[a.labeler == s].macro_f1), ECE=ms(a[a.labeler == s].ece) if s != pipe[0] else "n/a") for s in pipe])
 d = dt[dt.rate == r0]
-abl = [("hierarchy, multi-scale (ours)", B.MAIN), ("single scale (raw band)", "single scale (raw band)"),
-       ("no hierarchy (flat residual)", "no hierarchy (flat residual)"), ("LGB nowcast, raw (all zones, no learned edges)", "LGB nowcast (raw, hierarchy)"),
-       ("TCN, no graph, raw", "TCN, no graph (raw, hierarchy)"), ("TCN-GAT, learned graph, raw", "TCN-GAT (raw, hierarchy)"),
-       ("TCN-GAT, learned graph, multi-scale", "TCN-GAT, hierarchy, multi-scale")]
+abl = [(f"main detector: {MAIN}", MAIN)] + [(v, v) for v in DETECTORS[1:]] + [
+       ("TCN-GAT, NB3 event formation (untuned)", B.V_GAT_NB3), ("LightGBM, NB3 event formation (untuned)", B.V_LGB_NB3),
+       ("main detector, single scale (raw band)", B.V_SINGLE), ("main detector, no hierarchy (flat residual)", B.V_FLAT),
+       ("LGB nowcast, raw (all zones, no learned edges)", B.V_NOW), ("TCN, no graph, raw", B.V_TCN_RAW), ("TCN-GAT, learned graph, raw", B.V_GAT_RAW)]
 t7b = pd.DataFrame([dict(variant=n, F1=ms(d[d.method == m].f1), AUC_PR=ms(d[d.method == m].auc_pr),
                          recall_U_SHOCK=ms(d[d.method == m].recall_U_SHOCK), recall_U_PARTIAL=ms(d[d.method == m].recall_U_PARTIAL),
                          recall_A2=ms(d[d.method == m].recall_A2), recall_G3=ms(d[d.method == m].recall_G3)) for n, m in abl if m in set(d.method)])
@@ -452,14 +490,42 @@ for name, _ in SENS:
 table7d = pd.DataFrame(rows); table7d.to_csv(OUT / "table7d_threshold_sensitivity.csv", index=False)
 display(table7d)"""))
 
+cells.append(M(r"""## 8b. Real data with the main detector
+The whole method runs once on the real, uninjected series with the main detector (south; Marrakech keeps NB3's LightGBM detector because a graph of 2 zones has nothing to learn).
+- It writes the south detector-only candidates and the fused type distributions to `results/main_detector/`.
+- Fusion uses β tuned at 3 % (with D50 abstention).
+- The candidates and labels are compared with NB3's, which used the LightGBM detector."""))
+cells.append(C(r"""OUT_R = ROOT / "results" / "main_detector" if not QUICK else OUT / "main_detector"; OUT_R.mkdir(parents=True, exist_ok=True)
+assert (REAL["items"].item_id.values == cat.item_id.values).all()
+dreal = REAL["det_only"].copy()
+dreal.to_csv(OUT_R / "detector_items_south.csv", index=False)
+b_real = BETA[(0.03 if 0.03 in RATES else RATES[0], True)]
+pr_ = REAL["PRED"].copy()
+pt = B.fused(pr_, b_real)
+for k, c in enumerate(CL):
+    pr_[f"p_{c}"] = pt[:, k]
+pr_["label"] = np.array(CL)[pt.argmax(1)]
+pr_.to_csv(OUT_R / "p_type_south.csv", index=False)
+nb3 = pd.read_csv(ROOT / "results" / "end_model_v1" / "p_type.csv")
+nb3_det = pd.read_csv(ROOT / "results" / "detector_v1" / "detector_items.csv", parse_dates=["start", "end"])
+nb3_det = nb3_det[nb3_det.system == "south"].reset_index(drop=True)
+both = B.match_events(dreal[["start", "end", "zones"]].reset_index(drop=True), nb3_det.assign(end_affected=nb3_det.end)[["start", "end", "end_affected", "zones"]])
+rule = pr_[pr_.source == "rule"].merge(nb3[["item_id", "label_p"]].rename(columns={"label_p": "label_nb3"}), on="item_id", how="left")
+real_summary = dict(main=MAIN, setting=bench.setting(MAIN), gamma=REAL["GAM"][MAIN], beta=b_real,
+                    n_detector_only=int(len(dreal)), n_detector_only_nb3=int(len(nb3_det)),
+                    shared_with_nb3=int(both.p.nunique()) if len(both) else 0,
+                    rule_items=int(len(rule)), rule_labels_changed_vs_nb3=int((rule.label != rule.label_nb3).sum()),
+                    detector_only_label_counts=pr_[pr_.source == "detector"].label.value_counts().to_dict())
+(OUT_R / "summary.json").write_text(json.dumps(json.loads(json.dumps(real_summary, default=str)), indent=2))
+real_summary"""))
+
 cells.append(M(r"""## 9. Hard negatives on the real data
-The guide asks for false alarms on ordinary but unusual days. The table gives the detector flag rate (Z > γ) on rule-negative zone-steps of the real, uninjected data, by day type. A ratio well above 1 means the detector confuses that behaviour with anomalies."""))
+The guide asks for false alarms on ordinary but unusual days. The table gives each detector's flag rate (Z > γ, with its own event formation) on rule-negative zone-steps of the real, uninjected data, by day type. A ratio well above 1 means the detector confuses that behaviour with anomalies."""))
 cells.append(C(r"""cal = D.calendar(P["rho"].index)
 day = pd.Series(np.select([cal.eid == 1, cal.holiday == 1, cal.ramadan == 1, cal.weekend == 1], ["Eid", "national holiday", "Ramadan", "weekend"], "ordinary weekday"), index=P["rho"].index)
 hn = []
-for name, pr in [("LGB forecast (ours)", PRED["LGB forecast"]), ("TCN-GAT (learned graph)", PRED["TCN-GAT (learned graph)"])]:
-    Z = D.zone_max_score(P, D.level_scores(P, P["rho"] - pr))
-    gam = B.gamma_of(P, Z)
+for name in DETECTORS:
+    Z, gam = REAL["SCORES"][name], REAL["GAM"][name]           # real data, each detector's own event formation
     w = 2 * D.SPILL_STEPS + 1
     near = P["mask"].astype(float).rolling(w, center=True, min_periods=1).max() > 0
     neg = (~near) & Z.notna()
@@ -474,6 +540,7 @@ hn.round(4).to_csv(OUT / "hard_negatives.csv", index=False); display(hn.round(4)
 cells.append(M("## 10. Summary (copied into docs/results_summary.md §9)"))
 cells.append(C(r"""summary = dict(
     device=DEVICE, lightgbm_version=lightgbm.__version__, torch_version=torch.__version__, colab=IN_COLAB, quick=QUICK,
+    main_detector=MAIN, event_formation=SETTINGS, dev_selection=SEL["main_candidates"] if SEL else None, real_data=real_summary,
     rates=RATES, seeds=SEEDS, runs=int(len(DET.groupby(["rate", "seed"]))), injected_events=int(len(TRUTH)),
     injected_by_type=TRUTH.type.value_counts().to_dict(),
     predictor_MAE=pred_cmp[pred_cmp.period == "all"].set_index("predictor").MAE.to_dict(),

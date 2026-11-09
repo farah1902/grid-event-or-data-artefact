@@ -1,0 +1,421 @@
+tag,detector,w,period,auc_pr
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,train,0.6090836407633509
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,test,0.7472920566415451
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,train,0.6105641260553245
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,test,0.74893206109651
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,train,0.6095771967386607
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,test,0.7483487798594219
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",1,train,0.6080307578320406
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",1,test,0.7349370716319886
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",3,train,0.609582044895866
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",3,test,0.7361705815093743
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",6,train,0.6084864847339725
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",6,test,0.7353149146450315
+r03_s100,"TCN-GAT, hierarchy, multi-scale",1,train,0.5437692206496055
+r03_s100,"TCN-GAT, hierarchy, multi-scale",1,test,0.6067814715853137
+r03_s100,"TCN-GAT, hierarchy, multi-scale",3,train,0.5460251119955201
+r03_s100,"TCN-GAT, hierarchy, multi-scale",3,test,0.6100561243695579
+r03_s100,"TCN-GAT, hierarchy, multi-scale",6,train,0.5463723900756163
+r03_s100,"TCN-GAT, hierarchy, multi-scale",6,test,0.6151376806869023
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,train,0.5739402604929517
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,test,0.6336026459534227
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,train,0.5761457410328348
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,test,0.6358820965860515
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,train,0.5765097133308714
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,test,0.6385470988603077
+r03_s100,STL + MAD,1,train,0.773345589605662
+r03_s100,STL + MAD,1,test,0.8129464116215014
+r03_s100,STL + MAD,3,train,0.7709929591725218
+r03_s100,STL + MAD,3,test,0.8103128796493348
+r03_s100,STL + MAD,6,train,0.7584932290608976
+r03_s100,STL + MAD,6,test,0.7968654560251696
+r03_s100,Isolation Forest,1,train,0.2520477222572744
+r03_s100,Isolation Forest,1,test,0.2959304386756235
+r03_s100,Isolation Forest,3,train,0.2567358033155322
+r03_s100,Isolation Forest,3,test,0.3031341178555634
+r03_s100,Isolation Forest,6,train,0.2492342191045796
+r03_s100,Isolation Forest,6,test,0.2985420423354712
+r03_s100,LOF,1,train,0.4326659120824427
+r03_s100,LOF,1,test,0.4768067600348203
+r03_s100,LOF,3,train,0.4705788139391853
+r03_s100,LOF,3,test,0.5192930859133447
+r03_s100,LOF,6,train,0.5042372522434385
+r03_s100,LOF,6,test,0.5520130117763536
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,train,0.6881044579099603
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,test,0.646890809753117
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,train,0.6887979547770721
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,test,0.648335531095576
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,train,0.6875183989561229
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,test,0.6482559268014904
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",1,train,0.6952348232696487
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",1,test,0.6413889961099011
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",3,train,0.695989113428429
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",3,test,0.6429017041746034
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",6,train,0.694753337002408
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",6,test,0.6425013342452596
+r03_s101,"TCN-GAT, hierarchy, multi-scale",1,train,0.5744325214869769
+r03_s101,"TCN-GAT, hierarchy, multi-scale",1,test,0.5558082368097947
+r03_s101,"TCN-GAT, hierarchy, multi-scale",3,train,0.576307115509896
+r03_s101,"TCN-GAT, hierarchy, multi-scale",3,test,0.5585466423092283
+r03_s101,"TCN-GAT, hierarchy, multi-scale",6,train,0.5775794756902299
+r03_s101,"TCN-GAT, hierarchy, multi-scale",6,test,0.5610111221296952
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,train,0.6151011376764162
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,test,0.5661228402138232
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,train,0.6166438017714367
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,test,0.5679927741661085
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,train,0.6167819219272208
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,test,0.5686621963802154
+r03_s101,STL + MAD,1,train,0.8630386422643448
+r03_s101,STL + MAD,1,test,0.769445676184815
+r03_s101,STL + MAD,3,train,0.8635745527330079
+r03_s101,STL + MAD,3,test,0.767350959316675
+r03_s101,STL + MAD,6,train,0.8534788566410589
+r03_s101,STL + MAD,6,test,0.7548209652276151
+r03_s101,Isolation Forest,1,train,0.3258412265570096
+r03_s101,Isolation Forest,1,test,0.2434929382224999
+r03_s101,Isolation Forest,3,train,0.3266406421690067
+r03_s101,Isolation Forest,3,test,0.2458481089310659
+r03_s101,Isolation Forest,6,train,0.3211123006197834
+r03_s101,Isolation Forest,6,test,0.2386312220109729
+r03_s101,LOF,1,train,0.6492019350400594
+r03_s101,LOF,1,test,0.498934539517495
+r03_s101,LOF,3,train,0.6764021753057127
+r03_s101,LOF,3,test,0.5286325203602432
+r03_s101,LOF,6,train,0.704107102232097
+r03_s101,LOF,6,test,0.5491010322950417
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,train,0.6381708707750133
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,test,0.6785851745590328
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,train,0.6387442688218399
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,test,0.6812426393381172
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,train,0.6352708340833003
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,test,0.6813586028582568
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",1,train,0.6367064027255115
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",1,test,0.676245037859687
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",3,train,0.6372200978621669
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",3,test,0.6788686193852362
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",6,train,0.6336055698989215
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",6,test,0.6789057728324317
+r03_s102,"TCN-GAT, hierarchy, multi-scale",1,train,0.5198721026213701
+r03_s102,"TCN-GAT, hierarchy, multi-scale",1,test,0.574183810223084
+r03_s102,"TCN-GAT, hierarchy, multi-scale",3,train,0.522290136485317
+r03_s102,"TCN-GAT, hierarchy, multi-scale",3,test,0.5796242838838259
+r03_s102,"TCN-GAT, hierarchy, multi-scale",6,train,0.5246640921205413
+r03_s102,"TCN-GAT, hierarchy, multi-scale",6,test,0.5848653564087423
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,train,0.5672884436406974
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,test,0.6186619331001909
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,train,0.5691350593384454
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,test,0.6228217775605772
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,train,0.5700252423878411
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,test,0.6262175286023901
+r03_s102,STL + MAD,1,train,0.7921362163111603
+r03_s102,STL + MAD,1,test,0.7725976138520549
+r03_s102,STL + MAD,3,train,0.7882760142702192
+r03_s102,STL + MAD,3,test,0.76819157602115
+r03_s102,STL + MAD,6,train,0.7697661353759
+r03_s102,STL + MAD,6,test,0.7520922056269236
+r03_s102,Isolation Forest,1,train,0.2804663467817717
+r03_s102,Isolation Forest,1,test,0.2531417281610114
+r03_s102,Isolation Forest,3,train,0.2832451004471211
+r03_s102,Isolation Forest,3,test,0.2561736097196577
+r03_s102,Isolation Forest,6,train,0.2690913209446343
+r03_s102,Isolation Forest,6,test,0.247386634134234
+r03_s102,LOF,1,train,0.4351589132593172
+r03_s102,LOF,1,test,0.4342335819294564
+r03_s102,LOF,3,train,0.4786858909705076
+r03_s102,LOF,3,test,0.4855131555059621
+r03_s102,LOF,6,train,0.523713916126214
+r03_s102,LOF,6,test,0.5386300361147386
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,train,0.5942707218417084
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,test,0.5544321337265222
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,train,0.5954228916399174
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,test,0.5558601926604685
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,train,0.5926637829581214
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,test,0.5558022308212847
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",1,train,0.6063057422444256
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",1,test,0.5845695355364605
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",3,train,0.6078285415162493
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",3,test,0.5857231491167169
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",6,train,0.6050323971692558
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",6,test,0.585637335074594
+r01_s103,"TCN-GAT, hierarchy, multi-scale",1,train,0.5213516262142219
+r01_s103,"TCN-GAT, hierarchy, multi-scale",1,test,0.5180157777415315
+r01_s103,"TCN-GAT, hierarchy, multi-scale",3,train,0.5247674969351886
+r01_s103,"TCN-GAT, hierarchy, multi-scale",3,test,0.5196667443085912
+r01_s103,"TCN-GAT, hierarchy, multi-scale",6,train,0.5275099492877492
+r01_s103,"TCN-GAT, hierarchy, multi-scale",6,test,0.5222872180279848
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,train,0.5502844202019749
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,test,0.5260714968635284
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,train,0.552695995344437
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,test,0.5280328591507646
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,train,0.5528114777977338
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,test,0.5300927641173271
+r01_s103,STL + MAD,1,train,0.6016507594842011
+r01_s103,STL + MAD,1,test,0.7887380972017444
+r01_s103,STL + MAD,3,train,0.6027913738813925
+r01_s103,STL + MAD,3,test,0.7896467764504631
+r01_s103,STL + MAD,6,train,0.5951934700336876
+r01_s103,STL + MAD,6,test,0.7807229396927035
+r01_s103,Isolation Forest,1,train,0.0853941929461258
+r01_s103,Isolation Forest,1,test,0.1080466067301714
+r01_s103,Isolation Forest,3,train,0.086245988939424
+r01_s103,Isolation Forest,3,test,0.1120177595947967
+r01_s103,Isolation Forest,6,train,0.0841179951621449
+r01_s103,Isolation Forest,6,test,0.1116417167065738
+r01_s103,LOF,1,train,0.2706682674814989
+r01_s103,LOF,1,test,0.4950103865184723
+r01_s103,LOF,3,train,0.3134238619306946
+r01_s103,LOF,3,test,0.5696543685210831
+r01_s103,LOF,6,train,0.3324254621107689
+r01_s103,LOF,6,test,0.5990854734370329
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,train,0.6617508360539227
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",1,test,0.6373705703935686
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,train,0.6626261630128771
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",3,test,0.6382222874692084
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,train,0.6610097506939756
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",6,test,0.6367271598250736
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",1,train,0.6638874234121994
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",1,test,0.6433544727603769
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",3,train,0.6647594635858283
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",3,test,0.644145986766934
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",6,train,0.6631020974807784
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",6,test,0.6427037940497323
+r07_s104,"TCN-GAT, hierarchy, multi-scale",1,train,0.54082268998739
+r07_s104,"TCN-GAT, hierarchy, multi-scale",1,test,0.5771124378246543
+r07_s104,"TCN-GAT, hierarchy, multi-scale",3,train,0.5422821513381335
+r07_s104,"TCN-GAT, hierarchy, multi-scale",3,test,0.5795138719553434
+r07_s104,"TCN-GAT, hierarchy, multi-scale",6,train,0.542536940532079
+r07_s104,"TCN-GAT, hierarchy, multi-scale",6,test,0.5813734099654646
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,train,0.5707065233855324
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",1,test,0.5947965004912896
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,train,0.5721663874709193
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",3,test,0.5959630248340104
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,train,0.5718890565763999
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",6,test,0.5953526931324897
+r07_s104,STL + MAD,1,train,0.8576481409347103
+r07_s104,STL + MAD,1,test,0.8162096832229351
+r07_s104,STL + MAD,3,train,0.8555106818396427
+r07_s104,STL + MAD,3,test,0.8114297143418291
+r07_s104,STL + MAD,6,train,0.8429973600536117
+r07_s104,STL + MAD,6,test,0.7956694260077527
+r07_s104,Isolation Forest,1,train,0.4464478093684004
+r07_s104,Isolation Forest,1,test,0.4020386962715244
+r07_s104,Isolation Forest,3,train,0.4505032951233844
+r07_s104,Isolation Forest,3,test,0.4050281769173761
+r07_s104,Isolation Forest,6,train,0.4429191363393072
+r07_s104,Isolation Forest,6,test,0.3951498067909635
+r07_s104,LOF,1,train,0.4258441849077951
+r07_s104,LOF,1,test,0.3424477245639211
+r07_s104,LOF,3,train,0.4703909218163587
+r07_s104,LOF,3,test,0.3788483609005222
+r07_s104,LOF,6,train,0.50854242498221
+r07_s104,LOF,6,test,0.4130537949117038
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,train,0.6064992323526912
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,test,0.7465452940056494
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,train,0.5918673626318408
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,test,0.73799256514741
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",12,train,0.605253074879918
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",12,test,0.7322754886420149
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",24,train,0.5889450799981786
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",24,test,0.7245541382187578
+r03_s100,"TCN-GAT, hierarchy, multi-scale",12,train,0.5477402993730478
+r03_s100,"TCN-GAT, hierarchy, multi-scale",12,test,0.6165663055783306
+r03_s100,"TCN-GAT, hierarchy, multi-scale",24,train,0.5409238631273335
+r03_s100,"TCN-GAT, hierarchy, multi-scale",24,test,0.6196757539938469
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,train,0.5745193180540652
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,test,0.6394464886603453
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,train,0.5620886287283517
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,test,0.6403348743728011
+r03_s100,STL + MAD,12,train,0.7406478789285411
+r03_s100,STL + MAD,12,test,0.7734189102696677
+r03_s100,STL + MAD,24,train,0.7015540231322062
+r03_s100,STL + MAD,24,test,0.721232895596841
+r03_s100,Isolation Forest,12,train,0.251366357937821
+r03_s100,Isolation Forest,12,test,0.3012841605690546
+r03_s100,Isolation Forest,24,train,0.2337848187058295
+r03_s100,Isolation Forest,24,test,0.2828530293421024
+r03_s100,LOF,12,train,0.58925194654735
+r03_s100,LOF,12,test,0.6303166831949026
+r03_s100,LOF,24,train,0.6592152052924355
+r03_s100,LOF,24,test,0.6938201449719341
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,train,0.6841607601119117
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,test,0.6468834723402609
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,train,0.6781413186397164
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,test,0.6325880919055499
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",12,train,0.6925826306389518
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",12,test,0.6415466787038344
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",24,train,0.6820202595881244
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",24,test,0.6304619890203287
+r03_s101,"TCN-GAT, hierarchy, multi-scale",12,train,0.5788978457052221
+r03_s101,"TCN-GAT, hierarchy, multi-scale",12,test,0.5632684260710128
+r03_s101,"TCN-GAT, hierarchy, multi-scale",24,train,0.5742656395184684
+r03_s101,"TCN-GAT, hierarchy, multi-scale",24,test,0.5605183042459825
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,train,0.6146541010383648
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,test,0.5682116809095723
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,train,0.6101903240208935
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,test,0.5636059382435086
+r03_s101,STL + MAD,12,train,0.8390537955344666
+r03_s101,STL + MAD,12,test,0.7359644055602726
+r03_s101,STL + MAD,24,train,0.8063042369877955
+r03_s101,STL + MAD,24,test,0.6993404868008088
+r03_s101,Isolation Forest,12,train,0.3298682905614292
+r03_s101,Isolation Forest,12,test,0.2410361809960368
+r03_s101,Isolation Forest,24,train,0.3195341406290883
+r03_s101,Isolation Forest,24,test,0.2245572341322821
+r03_s101,LOF,12,train,0.7864595171618151
+r03_s101,LOF,12,test,0.612032211442583
+r03_s101,LOF,24,train,0.8296011431121348
+r03_s101,LOF,24,test,0.6429938654147942
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,train,0.627122423702297
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,test,0.6800580324616553
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,train,0.6033115607958957
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,test,0.6738678297426692
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",12,train,0.6256186599494422
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",12,test,0.6777104757367993
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",24,train,0.5977001298572014
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",24,test,0.6720799066962401
+r03_s102,"TCN-GAT, hierarchy, multi-scale",12,train,0.5250085581216394
+r03_s102,"TCN-GAT, hierarchy, multi-scale",12,test,0.5851328464497842
+r03_s102,"TCN-GAT, hierarchy, multi-scale",24,train,0.5167291782388029
+r03_s102,"TCN-GAT, hierarchy, multi-scale",24,test,0.5818168123767158
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,train,0.5673143468528835
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,test,0.628376475037501
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,train,0.5543599819500629
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,test,0.6206169655217834
+r03_s102,STL + MAD,12,train,0.740323234786235
+r03_s102,STL + MAD,12,test,0.7248213091413737
+r03_s102,STL + MAD,24,train,0.6759560742221354
+r03_s102,STL + MAD,24,test,0.6706485971711225
+r03_s102,Isolation Forest,12,train,0.26984127846015
+r03_s102,Isolation Forest,12,test,0.246329043073569
+r03_s102,Isolation Forest,24,train,0.2431730335357328
+r03_s102,Isolation Forest,24,test,0.2250886766954801
+r03_s102,LOF,12,train,0.5825531950227794
+r03_s102,LOF,12,test,0.5898457090905281
+r03_s102,LOF,24,train,0.6309209252912549
+r03_s102,LOF,24,test,0.6237511083991061
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,train,0.5862300514361215
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,test,0.5543081240782112
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,train,0.5731229133522535
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,test,0.5479010577645331
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",12,train,0.5998747137098381
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",12,test,0.5823585538845985
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",24,train,0.5742318893411739
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",24,test,0.5735904964876776
+r01_s103,"TCN-GAT, hierarchy, multi-scale",12,train,0.5336645733575021
+r01_s103,"TCN-GAT, hierarchy, multi-scale",12,test,0.5232085748648638
+r01_s103,"TCN-GAT, hierarchy, multi-scale",24,train,0.5310907345233187
+r01_s103,"TCN-GAT, hierarchy, multi-scale",24,test,0.517138559360023
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,train,0.5543850157126139
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,test,0.5313918856772653
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,train,0.548752209477519
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,test,0.525703343409944
+r01_s103,STL + MAD,12,train,0.5887953515770579
+r01_s103,STL + MAD,12,test,0.7651330269225808
+r01_s103,STL + MAD,24,train,0.5709412879955569
+r01_s103,STL + MAD,24,test,0.7255943090837084
+r01_s103,Isolation Forest,12,train,0.0835866541360701
+r01_s103,Isolation Forest,12,test,0.111888542252006
+r01_s103,Isolation Forest,24,train,0.0736635377848644
+r01_s103,Isolation Forest,24,test,0.1031876922355813
+r01_s103,LOF,12,train,0.4017595894366543
+r01_s103,LOF,12,test,0.6806237536128551
+r01_s103,LOF,24,train,0.4996967095491234
+r01_s103,LOF,24,test,0.7905986595874793
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,train,0.6573308338864163
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",12,test,0.6319531286683684
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,train,0.6438122050388413
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",24,test,0.6174935796957328
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",12,train,0.6593291310823407
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",12,test,0.6382612207043666
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",24,train,0.6459456996820208
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",24,test,0.6226032223847977
+r07_s104,"TCN-GAT, hierarchy, multi-scale",12,train,0.5438247075975755
+r07_s104,"TCN-GAT, hierarchy, multi-scale",12,test,0.5789859640381263
+r07_s104,"TCN-GAT, hierarchy, multi-scale",24,train,0.537719778992538
+r07_s104,"TCN-GAT, hierarchy, multi-scale",24,test,0.5701761928742891
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,train,0.5693716486678584
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",12,test,0.5917086999079643
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,train,0.5617775724404879
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",24,test,0.5807649774326705
+r07_s104,STL + MAD,12,train,0.8230561608565952
+r07_s104,STL + MAD,12,test,0.770137486087604
+r07_s104,STL + MAD,24,train,0.7804015731241345
+r07_s104,STL + MAD,24,test,0.7191764033212936
+r07_s104,Isolation Forest,12,train,0.458309938838819
+r07_s104,Isolation Forest,12,test,0.4086765013945815
+r07_s104,Isolation Forest,24,train,0.4557366329103041
+r07_s104,Isolation Forest,24,test,0.3951001908617408
+r07_s104,LOF,12,train,0.5545753699838993
+r07_s104,LOF,12,test,0.4582272064724229
+r07_s104,LOF,24,train,0.5953852210514047
+r07_s104,LOF,24,test,0.4925534676253156
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,train,0.5404214130110536
+r03_s100,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,test,0.690538098448378
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",48,train,0.5367089512252395
+r03_s100,"LightGBM forecast, hierarchy, multi-scale",48,test,0.6814628939627232
+r03_s100,"TCN-GAT, hierarchy, multi-scale",48,train,0.49081329658992723
+r03_s100,"TCN-GAT, hierarchy, multi-scale",48,test,0.588623003182108
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,train,0.5146093993153701
+r03_s100,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,test,0.6049880711563915
+r03_s100,STL + MAD,48,train,0.6203147106012984
+r03_s100,STL + MAD,48,test,0.627275309720466
+r03_s100,Isolation Forest,48,train,0.18143599113432698
+r03_s100,Isolation Forest,48,test,0.22272695534026454
+r03_s100,LOF,48,train,0.6385081671606654
+r03_s100,LOF,48,test,0.6697634425025049
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,train,0.6416197659286118
+r03_s101,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,test,0.5762113307687333
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",48,train,0.6454259391152977
+r03_s101,"LightGBM forecast, hierarchy, multi-scale",48,test,0.5769337205343007
+r03_s101,"TCN-GAT, hierarchy, multi-scale",48,train,0.5426458591298451
+r03_s101,"TCN-GAT, hierarchy, multi-scale",48,test,0.5296728509783488
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,train,0.5824990681656363
+r03_s101,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,test,0.531422341934664
+r03_s101,STL + MAD,48,train,0.7323404068251893
+r03_s101,STL + MAD,48,test,0.626451024918365
+r03_s101,Isolation Forest,48,train,0.2712803270004194
+r03_s101,Isolation Forest,48,test,0.17714110838498814
+r03_s101,LOF,48,train,0.8286389873243423
+r03_s101,LOF,48,test,0.625375420197443
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,train,0.526730758339789
+r03_s102,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,test,0.6187416975089626
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",48,train,0.5196334502726733
+r03_s102,"LightGBM forecast, hierarchy, multi-scale",48,test,0.6156088367669167
+r03_s102,"TCN-GAT, hierarchy, multi-scale",48,train,0.4642979581735246
+r03_s102,"TCN-GAT, hierarchy, multi-scale",48,test,0.5476709803741974
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,train,0.49378113748370467
+r03_s102,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,test,0.5757379830823172
+r03_s102,STL + MAD,48,train,0.5656298233368033
+r03_s102,STL + MAD,48,test,0.5761935777235586
+r03_s102,Isolation Forest,48,train,0.17899058776951243
+r03_s102,Isolation Forest,48,test,0.17275389380151476
+r03_s102,LOF,48,train,0.5895229255364233
+r03_s102,LOF,48,test,0.5908060568782991
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,train,0.5379444862450227
+r01_s103,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,test,0.5210528944250992
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",48,train,0.5352049489353237
+r01_s103,"LightGBM forecast, hierarchy, multi-scale",48,test,0.5431429601997111
+r01_s103,"TCN-GAT, hierarchy, multi-scale",48,train,0.5084157415817478
+r01_s103,"TCN-GAT, hierarchy, multi-scale",48,test,0.48125363523274467
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,train,0.5207803316461567
+r01_s103,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,test,0.4893209063074979
+r01_s103,STL + MAD,48,train,0.5152654713385245
+r01_s103,STL + MAD,48,test,0.6511140570462648
+r01_s103,Isolation Forest,48,train,0.05442524311744432
+r01_s103,Isolation Forest,48,test,0.08075505084507667
+r01_s103,LOF,48,train,0.4855722052763488
+r01_s103,LOF,48,test,0.774279910814538
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,train,0.6014584309699258
+r07_s104,"LightGBM + learned-graph correction, hierarchy, multi-scale",48,test,0.5713621030583296
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",48,train,0.6042885493893675
+r07_s104,"LightGBM forecast, hierarchy, multi-scale",48,test,0.5742894653992788
+r07_s104,"TCN-GAT, hierarchy, multi-scale",48,train,0.5017599621921564
+r07_s104,"TCN-GAT, hierarchy, multi-scale",48,test,0.5309418848839175
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,train,0.531635534641342
+r07_s104,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",48,test,0.5397232571870365
+r07_s104,STL + MAD,48,train,0.6964581949901258
+r07_s104,STL + MAD,48,test,0.6354891370603679
+r07_s104,Isolation Forest,48,train,0.398432716828428
+r07_s104,Isolation Forest,48,test,0.3305532038642266
+r07_s104,LOF,48,train,0.5724198483844404
+r07_s104,LOF,48,test,0.4643218258373256

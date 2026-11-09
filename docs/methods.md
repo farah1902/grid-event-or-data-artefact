@@ -246,7 +246,7 @@ b_{rl} = \frac{\beta_1 + \sum_i n_i \mathbb{1}[o_{ir} = l]}{\beta_1 + \beta_0 + 
   - the mean of the last 6 steps and the median of the previous day (both masked);
   - calendar (D48).
 - *Nowcast features* (guide eq. 13): the forecast features plus the current ρ of every other zone of the system.
-  - **Paper text (requested by the author, 2026-11-08):** this nowcast is a fully connected "graph" with no learned edges: every other zone's current value is a plain input to the tree model. It adds nothing (clean-data MAE 0.0292 vs 0.0288 for the forecast), so it is used only as a comparison and as an end-model feature, not as the main residual (D40, F29). The learned graph model of the guide (TCN-GAT) is evaluated separately in NB4.
+  - **Paper text (requested by the author, 2026-11-08):** this nowcast is a fully connected "graph" with no learned edges: every other zone's current value is a plain input to the tree model. It adds nothing (clean-data MAE 0.0292 vs 0.0288 for the forecast), so it is used only as a comparison and as an end-model feature, not as the main residual (D40, F29). The learned graph model of the guide (TCN-GAT) is evaluated separately in NB4. There it becomes the main detector (§6.1, D61).
 
 ```latex
 e_t^{z} = \rho_t^{z} - \hat\rho_t^{z} \tag{27}
@@ -284,6 +284,50 @@ A zone-step is rule-negative if two conditions hold:
 - other.
 
 **Baseline residual:** statsmodels STL (period 1 day, non-robust, D49). **Residual diagnostics:** statsmodels Ljung–Box at lags 1 and 144, and lag-1 autocorrelation of clean residuals.
+
+### 6.1 The main detector: TCN-GAT multi-scale graph residual detector (NB4; D53, D60, D61)
+
+This replaces the LightGBM forecast as the predictor of eq. 27 for the south. Bands, hierarchy and level scores are unchanged. Marrakech keeps LightGBM.
+
+**Predictor** (`src/graph_model.py`, guide eq. 13). The nodes are the 15 southern zones.
+
+1. *Temporal encoder.* A causal temporal convolutional network, shared by all zones, reads each zone's past (ρ, with flagged steps set to 1, and the mask flag):
+   - 6 residual blocks, kernel 3, dilations 1–32, 32 channels;
+   - receptive field 253 steps (about 42 h).
+2. *Graph attention* (2 heads). Zone z attends to the *current* value and mask of its neighbours; its own current value is never an input.
+   - Masked neighbours are excluded.
+   - Neighbours are the same-city zones plus k = 4 cross-city zones. These are learned: each zone has a 16-d embedding and keeps the 4 zones of other cities with the highest cosine similarity (GDN-style, recomputed at every forward pass).
+3. *Head* (MLP). It combines the TCN state, the attention message, the node embedding, the calendar (11 features) and the zone's own value and mask 1 day and 7 days earlier.
+
+*Training:*
+- masked Huber loss (δ = 0.1), on rule-clean steps only;
+- the same two-fold cross-fitting as LightGBM;
+- AdamW (lr 2·10⁻³, weight decay 10⁻⁴, cosine schedule);
+- early stopping on the last 15 % of each fold (patience 6, at most 40 epochs);
+- chunked, fully convolutional training (warm-up = receptive field, chunks of 256 steps).
+
+**Event formation** (D60), replacing the γ of eq. 29 and D44's gap for every compared detector:
+
+```latex
+\tilde Z_t^{z} = \frac{1}{w}\sum_{k=-\lfloor w/2\rfloor}^{\lceil w/2\rceil-1} Z_{t+k}^{z}, \qquad
+\text{flag}_t^z = \mathbb{1}[\tilde Z_t^z > \gamma_q], \quad \gamma_q = Q_{q}\{\tilde Z_t^z : (t, z) \text{ rule-negative}\} \tag{29'}
+```
+
+- Flag runs of ≥ 3 steps, with gaps up to `gap` steps, form the events.
+- The main detector uses w = 24 (4 h), q = 99.9 % and gap = 12. NB3 used w = 1, q = 99.5 % and gap = 1.
+- w, q and gap are chosen per detector on separate development datasets, by the detector's own event F1 (seeds 100–104; `tools/dev_select_detector.py`). Every baseline gets the same tuning budget, and ablations inherit the main detector's setting.
+
+**Selection.** Among TCN-GAT, LightGBM, their average and the graph hybrid, the main detector is the one whose detector-only candidates best complement the rules (F1 of rules + detector on the development datasets; F39).
+
+**Ablations and alternatives evaluated in NB4:**
+- LightGBM forecast;
+- the average of LightGBM and TCN-GAT;
+- the hybrids LightGBM + learned-graph correction and LightGBM + TCN correction (D59; the correction starts at 0, and the graph also reads the neighbours' current LightGBM residuals);
+- TCN without graph;
+- the main detector at a single scale and without the hierarchy;
+- TCN-GAT and LightGBM with NB3's event formation.
+
+**Scoring area** (D60): rule-based, the same for every detector.
 
 ## 7. End model and fusion (`src/end_model.py`, NB3)
 

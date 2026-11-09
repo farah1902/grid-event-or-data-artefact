@@ -5,12 +5,17 @@ the research guide (`docs/research_guide.md`), what the paper can claim now, and
 claim points to a finding (F…) in `docs/findings.md` or a decision (D…) in `docs/decisions.md`. Every number is in
 `docs/results_summary.md`.
 
-**Status: 2026-11-08.**
+**Status: 2026-11-09.**
 - Done:
   - rule engine v1 (19 rules);
   - the label model (constrained Dawid–Skene);
   - **the detector and end model (NB3)**, reference run with LightGBM 4.6.0 and the structural-zero fix (D51, D52). An independent Colab run exposed a scale-collapse bug in the zone-level score (F35); it is fixed, and the hierarchy numbers below are the corrected ones.
-- **NB4 written and tested, awaiting the author's Colab run:** the learned-graph TCN-GAT (guide eq. 13 as written; D53) and the injection benchmark (D54–D58). Its results go into results_summary §9 and new findings.
+- **NB4 written and tested, awaiting the author's Colab run:** the learned-graph TCN-GAT (guide eq. 13 as written; D53), the hybrids (D59) and the injection benchmark (D54–D58, D60). Its results go into results_summary §9 and new findings.
+- **Main detector changed (2026-11-09, D61): the TCN-GAT multi-scale graph residual detector.**
+  - It was chosen on development datasets (seeds 100–104), with every detector and baseline tuned the same way (D60). Development F1 alone: 0.786 vs 0.759 for LightGBM, and it wins in all 10 cells (F39).
+  - LightGBM, its hybrids with a learned correction and the plain average are ablations.
+  - NB4 §8b produces the south catalogue with the main detector (`results/main_detector/`). NB3's south detector numbers describe the LightGBM detector.
+  - The NB4 evaluation protocol was also corrected: the scoring area no longer favours the LightGBM detector (F36).
 - Not done: downstream forecasting (NB5), the Tetouan transfer (NB6) and the final figures (NB7).
 
 ## 1. The paper in one paragraph (current evidence)
@@ -70,6 +75,15 @@ NB4 and NB5).
 ### Text the author asked to include in the paper
 
 - **On the graph nowcast (Methods, detector; 2026-11-08):** "The nowcast of eq. 13 is a fully connected 'graph' with no learned edges: the current value of every other zone enters the tree model as a plain feature. It adds nothing (clean-data MAE 0.0292 vs 0.0288 for the forecast residual), so it is used only as a comparison and as an end-model feature, not as the main residual." Sources: D40, F29, results_summary §8. The learned-graph model (TCN-GAT, guide eq. 13 as written) is evaluated in NB4; report its result next to this sentence.
+- **On the main detector (Methods, detector; 2026-11-09, D61):** "The main detector is a multi-scale graph residual detector.
+  - A TCN-GAT, a causal temporal convolutional network with graph attention over the zones' current values and learned cross-city edges, predicts each southern zone.
+  - Its residual is split into phase-aligned MODWT bands and into region, city and zone parts.
+  - Events are formed by smoothing, a percentile threshold and run merging, tuned on separate development data, as for every compared method."
+  - **Pair it with three honest qualifiers:**
+    - the graph does not improve the point forecast (MAE 0.0294 vs 0.0288 for LightGBM; a learned correction on LightGBM converges to zero, F37);
+    - its advantage is event detection with fewer fragmented false alarms (F38, F39), not step-wise AUC-PR, where STL + MAD and LightGBM rank higher (F39);
+    - under strict counting no detector raises the rules' event F1 on the rules' own typology (F40).
+  - Final numbers come from NB4 (test seeds 0–9).
 
 ## 3. Corrections to the guide (continuing the guide's own table, #1–13)
 
@@ -107,7 +121,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 |---|---|---|---|
 | 1 | Typology (4 artefact + 5 grid-event types) with measurable signatures | **Done and extended** (linear-fill signature) | F01–F06, methods §2 |
 | 2 | Hierarchical weak supervision without manual annotation, calibrated probabilistic labels | **Label model done.** Stability and synthetic-recovery calibration shown (ECE 0.033). Calibration against known types is pending (NB4) | F20–F24 |
-| 3 | Multi-scale residual detector split into region/city/zone parts | **Done** (LightGBM nowcasts, the guide's fallback). Hierarchy accuracy by kind: works for dead and zero-fill events (3/3, 92 %), only partly for fills. Coverage beyond the rules: 290 candidates, mostly untyped | F28–F32, F35, Fig 8, E18 |
+| 3 | Multi-scale residual detector split into region/city/zone parts | **Done, now with the learned graph as the main detector (D61):** TCN-GAT residual, multi-scale bands, region/city/zone hierarchy and tuned event formation. It is best on development event F1 (0.786 vs LightGBM 0.759, STL 0.717, LOF 0.648, Isolation Forest 0.473; F39), but not on step-wise AUC-PR. Hierarchy accuracy by kind (NB3, LightGBM residual): works for dead and zero-fill events (3/3, 92 %), only partly for fills. Test results: NB4 | F28–F32, F35–F40, Fig 8, Fig 9, E18, E20 |
 | 4 | Released typed event catalogue for UCI 1158 | Draft exists (`results/labels_v1/q.csv`, 327 items, plus episodes). Release after NB4 validation | results_summary §6–7 |
 | 5 | Type-aware cleaning improves forecasts and outage statistics | Not started (NB5). Preview: naive zero = outage overstates outage time ≈ 4.2× (provisional) | F26 |
 | 6 | Transfer test on Tetouan | Not started (NB6) | — |
@@ -120,7 +134,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 |---|---|---|
 | RQ1: can the hierarchy alone give reliable type labels? | Partly. Labels are stable and agree 98 % with majority vote. **Reliability vs truth: NB4** | F22, F23 |
 | RQ2: which signatures separate events from artefacts? | Holds and linear fills (log(a/b) 3.4–4.0) and simultaneity with fill (R1, R3, R4, R21) are strong. Exact-zero share (R6, 2.2) is moderate. **Restoration overshoot (R5, 0.12) is uninformative.** Conservation: one example | F16, results_summary §6 |
-| RQ3: does learning beat rules alone and unsupervised detectors? | On real data the end model reproduces the label model (94.7 % out of fold; 95.7 % without detector features). Detector features add no agreement with rule-derived targets, and they cannot by construction. It corrects one rule threshold (3 vote-less linear fills → A3). **The test is NB4** (injection), where rules miss or misfire | F33, F34 |
+| RQ3: does learning beat rules alone and unsupervised detectors? | On real data the end model reproduces the label model (94.7 % out of fold; 95.7 % without detector features). Detector features add no agreement with rule-derived targets, and they cannot by construction. It corrects one rule threshold (3 vote-less linear fills → A3). **Development data (F39, F40):** the graph detector beats every unsupervised detector on event F1. Under strict counting, adding it to the rules does not raise event F1 (0.863 vs 0.888): it adds recall on what the rules miss at a false-alarm cost. **Test: NB4** | F33, F34, F39, F40 |
 | RQ4: does type-aware cleaning help? | Pending (NB5). Preview F26 | F26 |
 | RQ5: transfer without re-tuning? | Pending (NB6) | — |
 | H1: acquisition failures → exact zeros or simultaneous holds; de-energised feeders → noise floor | **Supported and extended.** All 3 multi-city zero fills have η = 1.0 and come with holds or linear fills; 84 of 126 dead items have η < 0.9 and are mostly single-zone. Caveat: some noise floors are linear fills (D16) | F03, F06, F17 |
@@ -144,6 +158,9 @@ These are changes to the **guide's plan**, found by running it on the real data.
 13. **Detector-only candidates are untyped** (F32). The end model's "N" for them means "no typed class fits", not "normal".
 14. **End-model circularity:** trained on q, the end model can at most reproduce the rules on real data (F33). Its benefit has to be shown on injected data.
 15. **Median hierarchy over few zones** (Boujdour has 3): one zone is always the city median, so its zone part is exactly 0 a third of the time. Scales must be estimated on informative steps (D51, F35).
+16. **Design chosen on injected development data.** The main detector and all event-formation settings were chosen on seeds 100–104 of the same injector as the test seeds. The datasets differ, but the signature generator is the same, so the test measures performance on these signatures, not on unseen kinds of event (D60).
+17. **Strict false-alarm counting** treats every unflagged real-data alarm as false, although about half of NB3's candidates looked like real surges or partial drops (F32, F40). NB4 reports a second view (each method's own real-data detections excluded) and the real-data alarm counts.
+18. **Tuning trades short shocks for precision** (F38): with the tuned event formation, unflagged-shock recall drops from 0.61 to 0.10 for the graph detector. NB4 reports the untuned rows too.
 
 ## 7. Claims the paper must NOT make (yet)
 
@@ -157,13 +174,16 @@ These are changes to the **guide's plan**, found by running it on the real data.
 - That the residual hierarchy localises all artefacts (only zero fills and outages; F30).
 - That detector-only candidates labelled N are normal (F32).
 - That detector features improve the end model on real data (they don't change agreement; F33).
+- That the graph improves prediction accuracy (F37), or that the graph detector is best at step-wise AUC-PR (F39).
+- That the detector raises event F1 over the rules under strict counting (F40), unless NB4's test seeds show it.
+- Development-seed numbers as results: cite NB4's test seeds.
 
 ## 8. What is still missing (in roadmap order)
 
 | Notebook | Content | Will provide |
 |---|---|---|
 | NB3 | **Done** (LightGBM 4.6.0 reference run with the structural-zero fix): residual hierarchy, Fig 8, detector-only candidates, end model, fusion | contribution 3 |
-| NB4 | **Written and tested; awaiting the Colab run.** TCN-GAT with a learned graph (D53); injection of observed signatures at 1/3/7 % × 10 seeds, including linear fills, compound fill → zero, unflagged multi-zone shocks and partial outages (D54); baselines (rules, STL + MAD, Isolation Forest, LOF, majority vote; D57); metrics (eq. 17–18); ablations (pipeline, rule families, hierarchy, scale, graph, nowcast, ε / hold / τ) and hard negatives | Tables 5–7, Figs 9–11, E20–E21; first real validation |
+| NB4 | **Written and tested; awaiting the Colab run.** Main detector: TCN-GAT multi-scale graph residual detector, chosen on development seeds with every detector tuned (D60, D61; `tools/dev_select_detector.py`). TCN-GAT with a learned graph (D53), hybrids (D59); injection of observed signatures at 1/3/7 % × 10 seeds, including linear fills, compound fill → zero, unflagged multi-zone shocks and partial outages (D54); baselines (rules, STL + MAD, Isolation Forest, LOF, majority vote; D57); metrics (eq. 17–18); ablations (pipeline, rule families, hierarchy, scale, graph, nowcast, ε / hold / τ) and hard negatives | Tables 5–7, Figs 9–11, E20–E21; first real validation |
 | NB5 | Forecasting with S0–S3 cleaning, DM test, outage-hours check | Table 8, Fig 12; confirms or refutes F26 |
 | NB6 | Tetouan transfer with frozen rules | Table 9 |
 | NB7 | Final figures (basemap, typology diagram, framework diagram) | Figs 1, 2, 6 |

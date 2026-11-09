@@ -280,3 +280,37 @@ Per class (GBDT, all features): A1 3/3, A2 57/57, A3 95/95, G2 0/1 (→ G4), G3 
 - 3 of 281 rule labels change, all N → A3: the vote-less single-zone linear fills on L2 and L3 (24 Dec 2023, p = 0.979 and 0.987) and L1 (6 Apr 2024, p = 0.944).
 - Final rule-item labels (`p_type.csv`): A3 98, G4 69, A2 57, G3 53, A1 3, G2 1.
 - The C12 tail item on L1 (2 Apr 2024 06:10) stays G4 after fusion (p = 0.83); the end model alone says G3. Episode features do not resolve F25.
+
+**Superseded for the south by NB4 (D61):** the paper's main detector is now the TCN-GAT graph detector with tuned event formation. NB4 §8b writes the south catalogue it produces to `results/main_detector/`. The numbers above describe the LightGBM detector at NB3's event formation (w 1, q 99.5, gap 1). Marrakech keeps them.
+
+## 8b. NB4 development selection (`results/benchmark_v1/dev/`, `dev_selection.json`; development seeds 100–104, *not test results*)
+
+Scoring area: rule-based, the same for every detector (D60). "Every alarm counts" F1, eq. 17, both periods pooled.
+
+**Predictors, real-data MAE** (clean steps):
+- mean(LightGBM, TCN-GAT) **0.02821**
+- mean(LightGBM, TCN) 0.02840
+- LightGBM 0.02879
+- LightGBM + learned-graph correction 0.02879
+- LightGBM + TCN correction 0.02879
+- TCN-GAT 0.02945
+- TCN 0.02986
+
+**Detector alone, each at its best event formation** (w = smoothing steps, q = threshold percentile, gap = merge gap):
+
+| Detector | w, q, gap | F1 | Precision | Recall | Zone-strict F1 | U_SHOCK recall | U_PARTIAL recall | Real-data alarms | F1 at NB3's setting |
+|---|---|---|---|---|---|---|---|---|---|
+| **TCN-GAT, hierarchy, multi-scale (main)** | 24, 99.9, 12 | **0.786** | **0.866** | **0.729** | **0.755** | 0.104 | 0.236 | 70 | 0.649 |
+| mean(LightGBM, TCN-GAT) | 48, 99.8, 12 | 0.771 | 0.861 | 0.703 | 0.729 | 0.042 | 0.209 | 44 | 0.672 |
+| LightGBM + learned-graph correction | 24, 99.8, 6 | 0.760 | 0.826 | 0.714 | 0.732 | 0.124 | 0.255 | 56 | 0.683 |
+| LightGBM forecast | 24, 99.8, 6 | 0.759 | 0.828 | 0.710 | 0.731 | 0.119 | 0.262 | 58 | 0.681 |
+| STL + MAD | 24, 99.8, 12 | 0.717 | 0.846 | 0.628 | 0.680 | 0.159 | 0.328 | 86 | 0.591 |
+| LOF | 24, 99.8, 12 | 0.648 | 0.726 | 0.621 | 0.615 | 0.153 | 0.455 | 148 | 0.464 |
+| Isolation Forest | 3, 99.5, 3 | 0.473 | 0.412 | 0.599 | 0.419 | 0.050 | 0.086 | 416 | 0.384 |
+
+**Further development results:**
+- **Full method (rules + detector-only candidates) at the selected settings:** TCN-GAT 0.863, mean 0.854, hybrid 0.850, LightGBM 0.849. The rules alone score F1 0.888 (precision 1.000, recall 0.798).
+- **Real-data alarms at NB3's setting:** LightGBM 283, TCN-GAT 444, mean 350, STL 475, Isolation Forest 480, LOF 858.
+- **U_SHOCK recall at NB3's setting, detector alone:** TCN-GAT 0.609, LightGBM 0.439, STL 0.776, LOF 0.473.
+- **Step-wise AUC-PR** (no smoothing): STL + MAD 0.785, LightGBM 0.649, the hybrid 0.646, mean 0.582, TCN-GAT 0.553, LOF 0.446, Isolation Forest 0.269.
+- **Per cell:** TCN-GAT beats LightGBM alone in all 10 dataset × period cells, by 0.014 to 0.042.

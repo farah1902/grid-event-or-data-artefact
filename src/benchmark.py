@@ -4,16 +4,20 @@ For one injected dataset:
   1. rule engine v1 on the injected series (items, votes, zone runs, states);
   2. label model (constrained Dawid-Skene) and majority vote;
   3. residuals from predictors fitted once on the real data (cross-fitted, so each half of the injected series is
-     predicted by models that never saw it): LightGBM forecast and nowcast (NB3), TCN without graph and TCN-GAT;
-  4. level scores, threshold gamma (99.5th percentile on rule-negative zone-steps, as in NB3) and detections for
-     every detector variant and baseline;
+     predicted by models that never saw it): LightGBM forecast and nowcast (NB3), TCN without graph, TCN-GAT, their
+     average, and the hybrids LightGBM + TCN / learned-graph correction (D59);
+  4. level scores, event formation (score smoothing w, threshold gamma at the q-th percentile on rule-negative
+     zone-steps, merge gap; NB3: w = 1, q = 99.5, gap = 1) and detections for every detector variant and baseline.
+     The main detector and the settings of the tuned detectors come from tools/dev_select_detector.py (D60);
   5. end model (soft-label GBDT, out of fold by episode) and fusion, as in NB3;
   6. metrics against the injected truth: event-wise precision / recall / F1 (eq. 17), step-wise AUC-PR, boundary
      errors, and an event table (one row per typed injected event with every labeler's distribution) from which the
      notebook computes attribution macro-F1, ECE (eq. 18), Brier and tunes beta on the training period.
 
-Evaluation scope: only predictions that touch the clean region (where injection was allowed) or an injected event
-count. Predictions that lie entirely near real anomalies are ignored, because their truth is unknown (D54).
+Evaluation scope (D54, D60): only predictions that touch the clean region (where injection was allowed) or an injected
+event count. The clean region is rule-based, the same for every detector. Predictions that lie entirely on real rule
+states are ignored because their truth is unknown; the *_bgx metrics also ignore each method's own detections on the
+uninjected series (set_background), the same treatment for detectors as the rule states give the rules.
 """
 import time
 import numpy as np
@@ -29,13 +33,37 @@ from inject import TYPED, UNTYPED
 
 SOUTH = ["Laayoune", "Boujdour", "Foum eloued"]
 CL = EM.EVENT_CLASSES
-MAIN = "ours: LGB forecast, hierarchy, multi-scale"
+
+# ------------------------------------------------------------------ detector variants (D59, D60)
+V_HYB = "LightGBM + learned-graph correction, hierarchy, multi-scale"
+V_HYB_NOG = "LightGBM + TCN correction (no graph), hierarchy, multi-scale"
+V_LGB = "LightGBM forecast, hierarchy, multi-scale"
+V_GAT = "TCN-GAT, hierarchy, multi-scale"
+V_MEAN = "mean(LightGBM, TCN-GAT), hierarchy, multi-scale"
+V_NOW = "LGB nowcast (raw, hierarchy)"
+V_TCN_RAW = "TCN, no graph (raw, hierarchy)"
+V_GAT_RAW = "TCN-GAT (raw, hierarchy)"
+V_SINGLE = "single scale (raw band)"            # ablations of whichever detector is the main one
+V_FLAT = "no hierarchy (flat residual)"
+V_GAT_NB3 = V_GAT + " (NB3 event formation)"      # untuned rows: the effect of event formation on short shocks
+V_LGB_NB3 = V_LGB + " (NB3 event formation)"
+BASELINES = ("STL + MAD", "Isolation Forest", "LOF")
+# variant -> (predictor key, "ms" = all phase-aligned bands | "raw" = raw band); the hierarchy is always used
+VARIANTS = {V_HYB: ("LGB + GAT", "ms"), V_HYB_NOG: ("LGB + TCN", "ms"), V_LGB: ("LGB forecast", "ms"),
+            V_GAT: ("TCN-GAT", "ms"), V_MEAN: ("mean(LGB, TCN-GAT)", "ms"), V_NOW: ("LGB nowcast", "raw"),
+            V_TCN_RAW: ("TCN", "raw"), V_GAT_RAW: ("TCN-GAT", "raw")}
+MAIN_CANDIDATES = (V_HYB, V_LGB, V_GAT, V_MEAN)
+TUNED = MAIN_CANDIDATES + BASELINES                # detectors whose event formation is tuned on development seeds
+DEFAULT_SETTING = dict(w=1, q=99.5, gap=1)       # NB3: no smoothing, 99.5th percentile, merge gap of 1 step
+MAIN = V_HYB                                     # default; NB4 takes it from the development selection (D60)
 
 
 # ------------------------------------------------------------------ region and helpers
-def clean_region(P, det_items, burn_days=35, clock_dates=None):
-    """Zone-steps where injection is allowed: away from real rule states (+-SPILL), real multi-zone states, NB3
-    detector-only candidates (+-SPILL), the 35-day burn-in (14-day expected value + 21-day warm-up) and clock days."""
+def clean_region(P, det_items=None, burn_days=35, clock_dates=None):
+    """Zone-steps where injection is allowed and where predictions are scored: away from real rule states (+-SPILL),
+    real multi-zone states, the 35-day burn-in (14-day expected value + 21-day warm-up) and clock days.
+    det_items: real-data detector candidates to exclude as well (+-SPILL). NB4 passes None (D60): excluding one
+    detector's own candidates would hide that detector's false alarms and only those."""
     M = P["mask"]
     w = 2 * D.SPILL_STEPS + 1
     near_own = M.astype(float).rolling(w, center=True, min_periods=1).max() > 0
@@ -44,7 +72,7 @@ def clean_region(P, det_items, burn_days=35, clock_dates=None):
     idx = P["rho"].index
     cols = list(P["rho"].columns)
     sp = pd.Timedelta(minutes=P["step"] * D.SPILL_STEPS)
-    for r in det_items.itertuples():
+    for r in (det_items.itertuples() if det_items is not None else ()):
         a, b = idx.searchsorted(r.start - sp), idx.searchsorted(r.end + sp)
         for z in r.zones.split(","):
             if z in cols:
@@ -67,14 +95,19 @@ def flat_score(P, E):
     return pd.DataFrame(out, index=E.index)
 
 
-def gamma_of(P, Z):
-    """NB3's threshold: 99.5th percentile of Z on zone-steps away from rule states (own zone and multi-zone)."""
+def smooth_score(Z, w):
+    """Centred moving average of a zone score over w steps (w = 1: unchanged). Part of event formation (D60)."""
+    return Z if int(w) <= 1 else Z.rolling(int(w), center=True, min_periods=1).mean()
+
+
+def gamma_of(P, Z, q=99.5):
+    """NB3's threshold: q-th percentile (99.5) of Z on zone-steps away from rule states (own zone and multi-zone)."""
     w = 2 * D.SPILL_STEPS + 1
     M = P["mask"].astype(float)
     near_own = M.rolling(w, center=True, min_periods=1).max() > 0
     near_multi = (M.sum(axis=1) >= 2).astype(float).rolling(w, center=True, min_periods=1).max() > 0
     neg = (~near_own) & (~near_multi.to_numpy()[:, None]) & Z.notna()
-    return float(np.nanpercentile(Z.where(neg).to_numpy(), 99.5))
+    return float(np.nanpercentile(Z.where(neg).to_numpy(), q))
 
 
 def iso_lof_features(P):
@@ -188,23 +221,81 @@ def step_auc(score, truth_mask, scope, period_mask):
 
 # ------------------------------------------------------------------ the benchmark
 class Benchmark:
-    def __init__(self, raw, P_real, det_real, lgb_models, graph_models, gb_backend="lightgbm", log=True):
-        """raw: loaded workbook (clock items); P_real: real southern panel; det_real: NB3 detector-only candidates
-        (south); lgb_models: {'forecast': models, 'nowcast': models} from detector.fit_rho_models on the real data;
-        graph_models: {'TCN': models, 'TCN-GAT': models} from graph_model.fit_graph_models on the real data."""
+    def __init__(self, raw, P_real, det_real, lgb_models, graph_models, gb_backend="lightgbm", log=True,
+                 main=MAIN, settings=None):
+        """lgb_models: {'forecast': models, 'nowcast': models} from detector.fit_rho_models on the real data;
+        graph_models: {'TCN', 'TCN-GAT', 'LGB + TCN', 'LGB + GAT'} from graph_model.fit_graph_models (the last two
+        are hybrids on the LightGBM forecast, D59); det_real: None for the rule-based clean region (D60);
+        main: the main detector variant; settings: {variant: dict(w, q, gap)} event formation (D60)."""
         self.raw, self.lgb, self.graph, self.gbb, self.log = raw, lgb_models, graph_models, gb_backend, log
+        self.main, self.settings = main, dict(settings or {})
+        self.background = {}
         self.clean = clean_region(P_real, det_real)
         self.index = P_real["rho"].index
         self.cols = list(P_real["rho"].columns)
+
+    def set_background(self, real):
+        """Each method's predictions on the real, uninjected data (pipeline() output). In run(), injected-data
+        predictions that match one of the same method's real-data predictions (shared zone, time overlap) are also
+        scored with those removed (*_bgx metrics, D60): their truth is unknown, as for rule states."""
+        bg = {k: d[["start", "end", "zones"]].reset_index(drop=True) if len(d) else pd.DataFrame(columns=["start", "end", "zones"])
+              for k, d in real["DET"].items()}
+        do = real["det_only"]
+        bg["ours (rules + detector)"] = do[["start", "end", "zones"]].reset_index(drop=True) if len(do) else pd.DataFrame(columns=["start", "end", "zones"])
+        bg["rules only (rule engine v1)"] = pd.DataFrame(columns=["start", "end", "zones"])   # real rule items are outside the scoring area
+        self.background = bg
 
     def _t(self, msg, t0):
         if self.log:
             print(f"    {msg}: {time.time() - t0:.0f} s", flush=True)
         return time.time()
 
-    def run(self, data_inj, truth, seed=0, baselines=("STL + MAD", "Isolation Forest", "LOF"), family_ablation=False):
+    def setting(self, name):
+        """Event formation of one detector (D60): main candidates and baselines use their own tuned setting (NB3's if
+        none); every other variant is an ablation and uses the main detector's setting, so it changes one thing only."""
+        if name in self.settings and (name in TUNED or name == self.main):
+            return {**DEFAULT_SETTING, **self.settings[name]}
+        if name not in TUNED and name != self.main:
+            return self.setting(self.main)
+        return dict(DEFAULT_SETTING)
+
+    def predictions(self, P):
+        """rho_hat of every predictor on panel P (each fold by the model trained on the other fold of the real data)."""
+        pf = D.apply_rho_models(P, self.lgb["forecast"], "forecast")
+        pred = {"LGB forecast": pf, "LGB nowcast": D.apply_rho_models(P, self.lgb["nowcast"], "nowcast")}
+        for k, m in self.graph.items():
+            hybrid = any(getattr(x, "use_base", False) for x in m.values())
+            pred[k] = G.apply_graph_models(P, m, base=pf if hybrid else None)
+        if "TCN-GAT" in pred:
+            pred["mean(LGB, TCN-GAT)"] = (pf + pred["TCN-GAT"]) / 2
+        return pred
+
+    def raw_scores(self, P, pred, baselines=BASELINES, seed=0):
+        """Unsmoothed zone scores of every available variant and baseline, and the level scores by predictor."""
+        E = {k: P["rho"] - v for k, v in pred.items()}
+        main_key = VARIANTS[self.main][0]
+        LS = {}
+        for v, (k, b) in VARIANTS.items():
+            if k in E and b == "ms" and (k not in LS or len(LS[k]) == 1):
+                LS[k] = D.level_scores(P, E[k])
+        for v, (k, b) in VARIANTS.items():
+            if k in E and k not in LS:
+                LS[k] = D.level_scores(P, E[k], bands_used=["raw"])
+        Z = {v: D.zone_max_score(P, LS[k] if b == "ms" else {"raw": LS[k]["raw"]})
+             for v, (k, b) in VARIANTS.items() if k in LS}
+        Z[V_SINGLE] = D.zone_max_score(P, {"raw": LS[main_key]["raw"]})
+        Z[V_FLAT] = flat_score(P, E[main_key])
+        if "STL + MAD" in baselines:
+            Z["STL + MAD"] = flat_score(P, D.stl_residual(P, jumps=True, n_jobs=-1))
+        if "Isolation Forest" in baselines or "LOF" in baselines:
+            Z.update(iso_lof_scores(P, seed=seed, use_lof="LOF" in baselines))
+        return Z, LS
+
+    def pipeline(self, data, seed=0, baselines=BASELINES, family_ablation=False):
+        """The whole method on one dataset (injected or real): rules, label model, every detector, the main
+        detector's candidates, end model and the distribution table PRED of every predicted south item."""
         t0 = time.time(); tt = t0
-        res = R1.build_from_data(self.raw, data_inj)
+        res = R1.build_from_data(self.raw, data)
         tt = self._t("rule engine", tt)
         items = res["items"]
         votes = res["votes"].set_index("item_id")
@@ -213,48 +304,41 @@ class Benchmark:
         tt = self._t("label model", tt)
         P = D.build_panel(res["data"], res["exp"], res["masks"], "south")
         zr = res["zone_runs"]
-        E = {"LGB forecast": P["rho"] - D.apply_rho_models(P, self.lgb["forecast"], "forecast"),
-             "LGB nowcast": P["rho"] - D.apply_rho_models(P, self.lgb["nowcast"], "nowcast")}
-        for k, m in self.graph.items():
-            E[k] = P["rho"] - G.apply_graph_models(P, m)
+        pred = self.predictions(P)
         tt = self._t("predictions", tt)
-        S_main = D.level_scores(P, E["LGB forecast"])
-        S_gat = D.level_scores(P, E["TCN-GAT"]) if "TCN-GAT" in E else None
-        S_now = D.level_scores(P, E["LGB nowcast"], bands_used=["raw"])
-        SCORES = {MAIN: D.zone_max_score(P, S_main),
-                  "single scale (raw band)": D.zone_max_score(P, {"raw": S_main["raw"]}),
-                  "no hierarchy (flat residual)": flat_score(P, E["LGB forecast"]),
-                  "LGB nowcast (raw, hierarchy)": D.zone_max_score(P, S_now)}
-        if "TCN" in E:
-            SCORES["TCN, no graph (raw, hierarchy)"] = D.zone_max_score(P, D.level_scores(P, E["TCN"], bands_used=["raw"]))
-        if S_gat is not None:
-            SCORES["TCN-GAT (raw, hierarchy)"] = D.zone_max_score(P, {"raw": S_gat["raw"]})
-            SCORES["TCN-GAT, hierarchy, multi-scale"] = D.zone_max_score(P, S_gat)
-        tt = self._t("level scores", tt)
-        if "STL + MAD" in baselines:
-            SCORES["STL + MAD"] = flat_score(P, D.stl_residual(P, jumps=True, n_jobs=-1))
-        if "Isolation Forest" in baselines or "LOF" in baselines:
-            SCORES.update(iso_lof_scores(P, seed=seed, use_lof="LOF" in baselines))
-        tt = self._t("baselines", tt)
-        GAM = {k: gamma_of(P, Z) for k, Z in SCORES.items()}
+        Z0, LS = self.raw_scores(P, pred, baselines, seed)
+        tt = self._t("level scores and baselines", tt)
+        SCORES, GAM, DET = {}, {}, {}
         empty = pd.DataFrame(columns=zr.columns)
-        DET = {k: EM.detector_items(P, Z, GAM[k], empty) for k, Z in SCORES.items()}
+        for k, z in Z0.items():
+            st = self.setting(k)
+            SCORES[k] = smooth_score(z, st["w"])
+            GAM[k] = gamma_of(P, SCORES[k], st["q"])
+            DET[k] = EM.detector_items(P, SCORES[k], GAM[k], empty, max_gap=st["gap"])
+        for k, name in ((V_GAT, V_GAT_NB3), (V_LGB, V_LGB_NB3)):    # the same scores with NB3's event formation
+            if k in Z0:
+                SCORES[name] = Z0[k]
+                GAM[name] = gamma_of(P, Z0[k], DEFAULT_SETTING["q"])
+                DET[name] = EM.detector_items(P, Z0[k], GAM[name], empty, max_gap=DEFAULT_SETTING["gap"])
+        MAIN_ = self.main
+        S_main = LS[VARIANTS[MAIN_][0]]
+        S_now_v = LS["LGB nowcast"]["raw"]["v"]
 
-        # rule items (south dead/fill) and the full method's detector-only candidates
+        # rule items (south dead/fill) and the main detector's detector-only candidates
         ev = items[(items.system == "south") & items.kind.isin(["dead", "fill"])].reset_index(drop=True)
-        det_only = EM.detector_items(P, SCORES[MAIN], GAM[MAIN], zr)
+        det_only = EM.detector_items(P, SCORES[MAIN_], GAM[MAIN_], zr, max_gap=self.setting(MAIN_)["gap"])
         if len(det_only):
             det_only.insert(0, "item_id", [f"X{i:03d}" for i in range(len(det_only))])
 
         # end model and fusion, exactly as NB3 (south only)
         rng = np.random.default_rng(seed)
-        busy = P["mask"] | (SCORES[MAIN] > GAM[MAIN]) | P["rho"].isna()
+        busy = P["mask"] | (SCORES[MAIN_] > GAM[MAIN_]) | P["rho"].isna()
         pats = np.where(ev.n_cities >= 2, "all", np.where(ev.n_zones >= 2, "city", "zone"))
         nw = EM.normal_windows(P, busy, 250, rng, ev.duration_h.clip(upper=48).to_numpy(), pats)
         nw.insert(0, "item_id", [f"N{i:03d}" for i in range(len(nw))])
         epi = EM.episode_info(items)
         parts = [p for p in (ev, nw, det_only) if len(p)]
-        feat = pd.concat([EM.item_features(P, S_main, S_now["raw"]["v"], p, zr, epi) for p in parts], ignore_index=True)
+        feat = pd.concat([EM.item_features(P, S_main, S_now_v, p, zr, epi) for p in parts], ignore_index=True)
         feat["source"] = feat.item_id.str[0].map({"D": "rule", "F": "rule", "N": "normal", "X": "detector"})
         DET_COLS = [c for c in feat.columns if c.startswith("det_")]
         EP_COLS = ["ep_n_items", "ep_has_multizone_fill", "ep_has_multicity_dead", "ep_duration_h", "preceded_by_fill", "followed_by_fill"]
@@ -305,6 +389,15 @@ class Benchmark:
                 qf.index = items.item_id.values
                 fam_q[fam] = qf
             tt = self._t("family ablation", tt)
+        return dict(items=items, P=P, zr=zr, ev=ev, det_only=det_only, SCORES=SCORES, GAM=GAM, DET=DET, PRED=PRED,
+                    fam_q=fam_q, pred=pred, feat=feat, seconds=time.time() - t0)
+
+    def run(self, data_inj, truth, seed=0, baselines=BASELINES, family_ablation=False):
+        """pipeline() on one injected dataset, then every metric against the injected truth."""
+        t0 = time.time()
+        o = self.pipeline(data_inj, seed, baselines, family_ablation)
+        P, ev, det_only, SCORES, GAM, DET, PRED, fam_q = (o[k] for k in ("P", "ev", "det_only", "SCORES", "GAM", "DET", "PRED", "fam_q"))
+        MAIN_ = self.main
 
         # ---------------------------------------------------------------- metrics
         fold = (self.index >= D.SPLIT)
@@ -320,11 +413,18 @@ class Benchmark:
         det_rows = []
         for pname, pm in periods.items():
             for k, pr in methods.items():
-                det_rows.append(dict(method=k, period=pname, gamma=GAM.get(k, np.nan),
-                                     **detection_metrics(pr.reset_index(drop=True), truth, scope, self.index, self.cols, pm)))
+                pr = pr.reset_index(drop=True)
+                row = dict(method=k, period=pname, gamma=GAM.get(k, np.nan),
+                           **detection_metrics(pr, truth, scope, self.index, self.cols, pm))
+                bg = self.background.get(k)
+                if bg is not None:          # D60: each method's own detections on the uninjected data are not scored
+                    hit = match_events(pr, bg.assign(end_affected=bg.end), need_zone=True) if len(pr) and len(bg) else pd.DataFrame(columns=["p"])
+                    m2 = detection_metrics(pr.drop(index=set(hit.p)).reset_index(drop=True), truth, scope, self.index, self.cols, pm)
+                    row.update(n_pred_bgx=m2["n_pred"], precision_bgx=m2["precision"], recall_bgx=m2["recall"], f1_bgx=m2["f1"], f1_zone_bgx=m2["f1_zone"])
+                det_rows.append(row)
         rule_step = P["mask"].to_numpy().astype(float)
         auc_scores = {**{k: Z.to_numpy() for k, Z in SCORES.items()}, "rules only (rule engine v1)": rule_step,
-                      "ours (rules + detector)": np.where(rule_step > 0, 1e12, SCORES[MAIN].to_numpy())}
+                      "ours (rules + detector)": np.where(rule_step > 0, 1e12, SCORES[MAIN_].to_numpy())}
         auc_rows = [dict(method=k, period=pname, auc_pr=step_auc(s, tmask, scope, pm))
                     for pname, pm in periods.items() for k, s in auc_scores.items()]
 
@@ -360,7 +460,7 @@ class Benchmark:
         if len(det_only):
             fp = fp.merge(det_only[["item_id", "max_score"]], on="item_id", how="left")
         info = dict(seconds=time.time() - t0, n_rule_items=len(ev), n_detector_only=len(det_only),
-                    gamma_main=GAM[MAIN], n_truth=len(truth))
+                    gamma_main=GAM[MAIN_], main=MAIN_, n_truth=len(truth))
         return dict(detection=pd.DataFrame(det_rows), auc=pd.DataFrame(auc_rows), events=events, pred=fp, info=info)
 
 
@@ -372,7 +472,12 @@ def fused(events, beta, abstain_low=("A1", "G1", "G2"), f_prefix="f_"):
     q = events[[f"q_{c}" for c in CL]].to_numpy(float)
     f = events[[f"{f_prefix}{c}" for c in CL]].to_numpy(float)
     feas = np.array([[c in str(s).split(",") for c in CL] for s in events.feasible])
-    p = EM.fuse(q, f, feas, beta=beta, abstain=np.isin(np.array(CL)[q.argmax(1)], list(abstain_low)))
+    abstain = np.isin(np.array(CL)[q.argmax(1)], list(abstain_low))
+    if "source" in events:
+        # detector-only items carry a uniform q (the label model has no vote on them), whose arg max is just the first
+        # class (A1): abstaining there would return that uniform q. As in NB3, they are fused without abstention.
+        abstain &= (events["source"] == "rule").to_numpy()
+    p = EM.fuse(q, f, feas, beta=beta, abstain=abstain)
     return p
 
 

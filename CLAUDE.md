@@ -26,9 +26,9 @@ src/label_model.py            Dawid–Skene label model (constrained one-coin va
 src/viz.py                    shared plotting style and stacked-zone plot
 src/detector.py               predictors (LightGBM, sklearn fallback), phase-aligned MODWT, residual hierarchy, level scores (structural zeros excluded, D51)
 src/end_model.py              detector-only candidates, normal windows, item features, soft-label end model, fusion
-src/graph_model.py            TCN-GAT nowcaster with a learned graph (guide eq. 13; D53), chunked training, learned-graph export
+src/graph_model.py            TCN-GAT with a learned graph (guide eq. 13; D53) = the main detector's predictor (D61); hybrids on the LightGBM forecast (base=, D59)
 src/inject.py                 injection of observed signatures into clean zone-time (D54)
-src/benchmark.py              rerun of the whole pipeline on injected data, baselines, metrics, threshold sensitivity
+src/benchmark.py              variants (VARIANTS), event formation per detector (D60), pipeline() on any dataset, run() on injected data, baselines, metrics
 notebooks/NB1_evidence_figures.ipynb   Fig 1, 3, 4, 5, E1–E8 (executed)
 notebooks/NB1b_rules_v1.ipynb          rule engine v1 diagnostics, Fig 7, E9–E11 (executed)
 notebooks/NB2_label_model.ipynb        label model, E12–E15 (executed)
@@ -36,12 +36,14 @@ notebooks/NB3_detector_end_model.ipynb detector + end model, Fig 8, E16–E19 (e
 notebooks/NB4_benchmark.ipynb          TCN-GAT + injection benchmark, Tables 5–7, Figs 9–11, E20–E21 (run on Colab with a GPU; resumable)
 tools/make_nb*.py             generators that write the notebooks (see "Notebooks" below)
 tools/diag_structural_zeros.py diagnostic behind F35/D51 (writes results/detector_v1/structural_zeros.csv)
+tools/dev_select_detector.py  development selection (seeds 100-104): event formation per detector + the main detector -> results/benchmark_v1/dev_selection.json (D60, D61)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary
 results/labels_v1/            label-model outputs (q.csv = probabilistic labels)
 results/detector_v1/          detector metrics, hierarchy test, recall, detector-only candidates
 results/end_model_v1/         item features, normal windows, end-model metrics, p_type.csv (fused labels)
-results/benchmark_v1/         NB4 outputs; runs/ = one set of files per (rate, seed); models/ is git-ignored
+results/benchmark_v1/         NB4 outputs; runs/ = one set of files per (rate, seed); models/ (the LightGBM pickle is git-ignored, on Drive); dev/ + dev_selection.json
+results/main_detector/        NB4 §8b: south catalogue of the main (graph) detector, supersedes NB3's south detector outputs
 results/figures/              all figures (png + pdf) and small csv tables
 _local_archive/               git-ignored scratch (duplicates, zips, old copies). Not part of the project
 ```
@@ -82,6 +84,7 @@ python -m jupyter nbconvert --to notebook --execute --inplace NB1_evidence_figur
 python -m jupyter nbconvert --to notebook --execute --inplace NB1b_rules_v1.ipynb         # ~1 min
 python -m jupyter nbconvert --to notebook --execute --inplace NB2_label_model.ipynb       # ~1.5 min
 python -m jupyter nbconvert --to notebook --execute --inplace NB3_detector_end_model.ipynb # ~13 min
+python tools/dev_select_detector.py            # before NB4: development selection, ~35 min (+ --extend for the extended grid)
 # NB4: run on Colab (GPU), 2-3 h, resumable; locally the same command works (~2.5 h on 8 cores)
 ```
 Sync the repo to the Drive copy before a Colab run, and pull the outputs after it:
@@ -115,6 +118,7 @@ Editing the `.ipynb` directly also works, but the generator then goes stale. If 
 
 See `docs/paper_handoff.md` § "What is still missing". In short:
 - **NB3:** done (reference run local, LightGBM 4.6.0, with the D51 fix).
+- **Main detector (D61):** the TCN-GAT multi-scale graph residual detector with tuned event formation (w 24, q 99.9, gap 12), chosen on development seeds with every detector tuned alike (D60). LightGBM is an ablation. Read F36–F40 before writing about it.
 - **NB4:** written and tested (TCN-GAT + injection benchmark). The author runs it on Colab with a GPU; then pull `results/benchmark_v1/`, the NB4 figures and the executed notebook with `tools/sync_drive.py --pull`, and fill results_summary §9. This is the only place accuracy against known types can be measured.
 - **NB5:** downstream forecasting.
 - **NB6:** Tetouan transfer.
