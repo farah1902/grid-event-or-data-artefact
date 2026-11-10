@@ -1,0 +1,34 @@
+rate,method,recall_zone,recall_A1,recall_A2,recall_A3,recall_G1,recall_G2,recall_G3,recall_G4,recall_U_SHOCK,recall_U_PARTIAL,recall_bgx
+0.01,"LGB nowcast (raw, hierarchy)",0.55,0.96,0.618,0.0,1.0,0.685,0.905,0.804,0.0,0.05,0.548
+0.01,"LightGBM + TCN correction (no graph), hierarchy, multi-scale",0.595,1.0,0.677,0.082,1.0,0.78,0.938,0.824,0.01,0.107,0.593
+0.01,"LightGBM + learned-graph correction, hierarchy, multi-scale",0.679,1.0,0.838,0.132,1.0,1.0,0.975,0.926,0.13,0.233,0.664
+0.01,"LightGBM forecast, hierarchy, multi-scale",0.679,1.0,0.838,0.148,1.0,1.0,0.975,0.926,0.13,0.213,0.664
+0.01,"LightGBM forecast, hierarchy, multi-scale (NB3 event formation)",0.839,1.0,0.967,0.457,1.0,1.0,1.0,1.0,0.753,0.406,0.802
+0.01,"TCN-GAT, hierarchy, multi-scale",0.723,1.0,0.888,0.252,1.0,1.0,1.0,0.975,0.302,0.18,0.695
+0.01,"TCN-GAT, hierarchy, multi-scale (NB3 event formation)",0.877,1.0,0.967,0.507,1.0,1.0,1.0,1.0,0.925,0.534,0.808
+0.01,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",0.661,1.0,0.838,0.148,1.0,1.0,0.975,0.926,0.078,0.127,0.651
+0.01,ours (rules + detector),0.824,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.302,0.18,0.816
+0.01,rules only (rule engine v1),0.76,1.0,1.0,1.0,1.0,0.9,1.0,1.0,0.0,0.0,0.76
+0.01,single scale (raw band),0.712,1.0,0.93,0.302,1.0,1.0,1.0,1.0,0.142,0.148,0.686
+0.03,"LGB nowcast (raw, hierarchy)",0.575,0.975,0.58,0.071,1.0,0.788,0.831,0.726,0.0,0.066,0.587
+0.03,"LightGBM + TCN correction (no graph), hierarchy, multi-scale",0.629,0.992,0.608,0.147,1.0,0.894,0.896,0.841,0.023,0.133,0.644
+0.03,"LightGBM + learned-graph correction, hierarchy, multi-scale",0.692,1.0,0.731,0.208,1.0,0.973,0.947,0.915,0.169,0.162,0.699
+0.03,"LightGBM forecast, hierarchy, multi-scale",0.691,1.0,0.725,0.215,1.0,0.973,0.947,0.915,0.163,0.162,0.696
+0.03,"LightGBM forecast, hierarchy, multi-scale (NB3 event formation)",0.801,1.0,0.855,0.36,1.0,1.0,1.0,1.0,0.591,0.32,0.775
+0.03,"TCN-GAT, hierarchy, multi-scale",0.73,1.0,0.788,0.289,1.0,0.994,1.0,1.0,0.212,0.207,0.729
+0.03,"TCN-GAT, hierarchy, multi-scale (NB3 event formation)",0.838,1.0,0.862,0.437,1.0,1.0,1.0,1.0,0.774,0.395,0.79
+0.03,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",0.672,1.0,0.736,0.177,1.0,0.955,0.939,0.925,0.038,0.163,0.682
+0.03,ours (rules + detector),0.825,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.212,0.207,0.828
+0.03,rules only (rule engine v1),0.773,1.0,1.0,1.0,1.0,0.929,1.0,1.0,0.0,0.02,0.785
+0.03,single scale (raw band),0.727,1.0,0.82,0.312,1.0,1.0,1.0,1.0,0.111,0.231,0.728
+0.07,"LGB nowcast (raw, hierarchy)",0.577,0.94,0.535,0.069,1.0,0.828,0.792,0.78,0.015,0.103,0.625
+0.07,"LightGBM + TCN correction (no graph), hierarchy, multi-scale",0.609,0.959,0.573,0.119,1.0,0.872,0.832,0.844,0.018,0.14,0.658
+0.07,"LightGBM + learned-graph correction, hierarchy, multi-scale",0.668,0.988,0.65,0.187,1.0,0.975,0.906,0.938,0.045,0.204,0.709
+0.07,"LightGBM forecast, hierarchy, multi-scale",0.668,0.988,0.648,0.184,1.0,0.975,0.908,0.938,0.045,0.205,0.71
+0.07,"LightGBM forecast, hierarchy, multi-scale (NB3 event formation)",0.733,0.997,0.766,0.28,1.0,1.0,0.982,0.991,0.192,0.287,0.734
+0.07,"TCN-GAT, hierarchy, multi-scale",0.706,0.997,0.726,0.255,1.0,0.998,0.997,0.987,0.058,0.22,0.736
+0.07,"TCN-GAT, hierarchy, multi-scale (NB3 event formation)",0.746,0.997,0.768,0.292,1.0,1.0,1.0,0.997,0.285,0.283,0.73
+0.07,"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",0.672,0.993,0.675,0.195,1.0,0.966,0.912,0.96,0.028,0.196,0.725
+0.07,ours (rules + detector),0.816,1.0,1.0,1.0,1.0,0.998,1.0,1.0,0.052,0.22,0.832
+0.07,rules only (rule engine v1),0.78,1.0,1.0,1.0,1.0,0.939,1.0,1.0,0.0,0.0,0.812
+0.07,single scale (raw band),0.72,0.997,0.782,0.314,1.0,1.0,0.994,1.0,0.053,0.236,0.747

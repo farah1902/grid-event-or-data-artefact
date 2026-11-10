@@ -40,6 +40,7 @@ V_HYB_NOG = "LightGBM + TCN correction (no graph), hierarchy, multi-scale"
 V_LGB = "LightGBM forecast, hierarchy, multi-scale"
 V_GAT = "TCN-GAT, hierarchy, multi-scale"
 V_MEAN = "mean(LightGBM, TCN-GAT), hierarchy, multi-scale"
+V_TCN_MS = "TCN, no graph, hierarchy, multi-scale"   # no-graph ablation of the main detector (added after NB4, D62)
 V_NOW = "LGB nowcast (raw, hierarchy)"
 V_TCN_RAW = "TCN, no graph (raw, hierarchy)"
 V_GAT_RAW = "TCN-GAT (raw, hierarchy)"
@@ -50,7 +51,7 @@ V_LGB_NB3 = V_LGB + " (NB3 event formation)"
 BASELINES = ("STL + MAD", "Isolation Forest", "LOF")
 # variant -> (predictor key, "ms" = all phase-aligned bands | "raw" = raw band); the hierarchy is always used
 VARIANTS = {V_HYB: ("LGB + GAT", "ms"), V_HYB_NOG: ("LGB + TCN", "ms"), V_LGB: ("LGB forecast", "ms"),
-            V_GAT: ("TCN-GAT", "ms"), V_MEAN: ("mean(LGB, TCN-GAT)", "ms"), V_NOW: ("LGB nowcast", "raw"),
+            V_GAT: ("TCN-GAT", "ms"), V_MEAN: ("mean(LGB, TCN-GAT)", "ms"), V_TCN_MS: ("TCN", "ms"), V_NOW: ("LGB nowcast", "raw"),
             V_TCN_RAW: ("TCN", "raw"), V_GAT_RAW: ("TCN-GAT", "raw")}
 MAIN_CANDIDATES = (V_HYB, V_LGB, V_GAT, V_MEAN)
 TUNED = MAIN_CANDIDATES + BASELINES                # detectors whose event formation is tuned on development seeds

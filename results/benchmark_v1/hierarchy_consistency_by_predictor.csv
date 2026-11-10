@@ -1,0 +1,43 @@
+predictor,kind,level,n,correct
+LGB forecast,dead,g,3,1.0
+LGB forecast,dead,v,71,0.915
+LGB forecast,fill,g,6,0.167
+LGB forecast,fill,u,40,0.55
+LGB forecast,fill,v,86,0.651
+LGB forecast,all,all,206,0.714
+"LGB nowcast (all zones, no learned edges)",dead,g,3,1.0
+"LGB nowcast (all zones, no learned edges)",dead,v,71,0.915
+"LGB nowcast (all zones, no learned edges)",fill,g,6,0.167
+"LGB nowcast (all zones, no learned edges)",fill,u,40,0.45
+"LGB nowcast (all zones, no learned edges)",fill,v,86,0.651
+"LGB nowcast (all zones, no learned edges)",all,all,206,0.694
+TCN (no graph),dead,g,3,0.667
+TCN (no graph),dead,v,71,0.915
+TCN (no graph),fill,g,6,0.167
+TCN (no graph),fill,u,40,0.6
+TCN (no graph),fill,v,86,0.767
+TCN (no graph),all,all,206,0.767
+TCN-GAT (learned graph),dead,g,3,0.667
+TCN-GAT (learned graph),dead,v,71,0.915
+TCN-GAT (learned graph),fill,g,6,0.333
+TCN-GAT (learned graph),fill,u,40,0.475
+TCN-GAT (learned graph),fill,v,86,0.733
+TCN-GAT (learned graph),all,all,206,0.733
+LightGBM + TCN correction (no graph),dead,g,3,1.0
+LightGBM + TCN correction (no graph),dead,v,71,0.915
+LightGBM + TCN correction (no graph),fill,g,6,0.167
+LightGBM + TCN correction (no graph),fill,u,40,0.5
+LightGBM + TCN correction (no graph),fill,v,86,0.616
+LightGBM + TCN correction (no graph),all,all,206,0.689
+LightGBM + learned-graph correction (hybrid),dead,g,3,1.0
+LightGBM + learned-graph correction (hybrid),dead,v,71,0.915
+LightGBM + learned-graph correction (hybrid),fill,g,6,0.167
+LightGBM + learned-graph correction (hybrid),fill,u,40,0.525
+LightGBM + learned-graph correction (hybrid),fill,v,86,0.651
+LightGBM + learned-graph correction (hybrid),all,all,206,0.709
+"mean(LightGBM, TCN-GAT)",dead,g,3,0.667
+"mean(LightGBM, TCN-GAT)",dead,v,71,0.915
+"mean(LightGBM, TCN-GAT)",fill,g,6,0.333
+"mean(LightGBM, TCN-GAT)",fill,u,40,0.55
+"mean(LightGBM, TCN-GAT)",fill,v,86,0.651
+"mean(LightGBM, TCN-GAT)",all,all,206,0.714

@@ -1,0 +1,55 @@
+{
+  "development": {
+    "own_setting_tcn": {
+      "w": 48,
+      "q": 99.9,
+      "gap": 12
+    },
+    "f1_alone_tcn_own": 0.7944982089761223,
+    "f1_alone_tcn_at_main_setting": 0.7859951827701904,
+    "main_best_setting_recomputed": {
+      "w": 24,
+      "q": 99.9,
+      "gap": 12
+    },
+    "f1_alone_main_recomputed": 0.785781840580698,
+    "f1_alone_main_dev_selection": 0.7858
+  },
+  "real_data_alarms": {
+    "TCN-GAT, hierarchy, multi-scale": 191,
+    "TCN, no graph, hierarchy, multi-scale": 202,
+    "TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 170
+  },
+  "reproduction": {
+    "max_abs_diff_f1": 0.0,
+    "mean_abs_diff_f1": 0.0,
+    "max_abs_diff_f1_bgx": 0.0,
+    "identical_runs": 30,
+    "runs": 30
+  },
+  "device": "cpu",
+  "torch_version": "2.2.0+cpu",
+  "seconds": 2285,
+  "test_f1": {
+    "1% | TCN-GAT, hierarchy, multi-scale": "0.644 \u00b1 0.067",
+    "1% | TCN, no graph, hierarchy, multi-scale": "0.671 \u00b1 0.048",
+    "1% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": "0.707 \u00b1 0.040",
+    "3% | TCN-GAT, hierarchy, multi-scale": "0.813 \u00b1 0.020",
+    "3% | TCN, no graph, hierarchy, multi-scale": "0.817 \u00b1 0.020",
+    "3% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": "0.801 \u00b1 0.019",
+    "7% | TCN-GAT, hierarchy, multi-scale": "0.854 \u00b1 0.011",
+    "7% | TCN, no graph, hierarchy, multi-scale": "0.857 \u00b1 0.009",
+    "7% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": "0.861 \u00b1 0.012"
+  },
+  "test_f1_bgx": {
+    "1% | TCN-GAT, hierarchy, multi-scale": "0.817 \u00b1 0.036",
+    "1% | TCN, no graph, hierarchy, multi-scale": "0.826 \u00b1 0.041",
+    "1% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": "0.823 \u00b1 0.040",
+    "3% | TCN-GAT, hierarchy, multi-scale": "0.842 \u00b1 0.022",
+    "3% | TCN, no graph, hierarchy, multi-scale": "0.847 \u00b1 0.024",
+    "3% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": "0.829 \u00b1 0.016",
+    "7% | TCN-GAT, hierarchy, multi-scale": "0.848 \u00b1 0.014",
+    "7% | TCN, no graph, hierarchy, multi-scale": "0.852 \u00b1 0.012",
+    "7% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": "0.856 \u00b1 0.014"
+  }
+}

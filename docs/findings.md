@@ -200,7 +200,7 @@ Confidence levels:
 - D053 and D115 → G3 although a linear fill precedes them.
 - **Fix candidates:** an episode-context rule (a dead item linked to a multi-zone fill in the same episode → A1), or the end model (NB3) with episode features. Not done yet.
 
-### F26 — Anomalous time is dominated by artefacts — *provisional*
+### F26 — Anomalous time is dominated by artefacts — *provisional* (**measured exactly in F51: 4.15×; on injected data the typed count is far closer to the truth than the naive one, F52**)
 - **Southern system, all labelled items, zone-hours ≈ item duration × zones (upper-bound approximation):**
   - artefacts 2,604.6 zone-h;
   - grid events 294.0 zone-h (G2 4.1, G3 208.3, G4 81.5);
@@ -389,3 +389,271 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 - **Why:** every real-data detector alarm in rule-clean time counts as a false alarm. About half of NB3's real-data candidates were surges or partial drops (F32), so this counting is pessimistic.
 - **Remedy:** NB4 also reports F1 with each method's own real-data detections excluded (D60). This is the same treatment the rule states give the rules.
 - **Paper:** do not claim that the detector raises event F1 over the rules. Claim that it finds what the rules cannot (untyped events), at a stated false-alarm cost on the real series, and that it feeds the end model.
+
+## F. NB4 test results: the injection benchmark (Colab run, 2026-11-09)
+
+**Evidence:** `results/benchmark_v1/` (`summary.json`, `table5_*.csv`, `table6_attribution.csv`, `table7*.csv`, `runs/`), `results/main_detector/`, `results/benchmark_v1/graph_ablation/` (F42), Figs 9–11, E20, E21.
+- **Datasets:** test seeds 0–9 at 1 %, 3 % and 7 % of clean zone-time: 30 datasets, 8,526 injected events.
+- **Scope:** all numbers are **test period** (Jul 2023 – May 2024), mean ± standard deviation over the 10 seeds, unless stated otherwise.
+- **Run:** Colab GPU, LightGBM 4.6.0, torch 2.14.1. The models were loaded, not retrained. The run resumed once after a disconnect; all 30 run files were written on 9 Nov between 21:04 and 23:22, from the code synced at 01:09.
+- **Event F1 (eq. 17):** a time overlap with an injected event, including its restoration tail; every alarm counts unless stated otherwise.
+
+### F41 — The graph detector is the best detector on the test seeds at 3 % and 7 %, and tied with the model-based detectors at 1 % — *solid*
+- **Detector alone, each at its development-tuned event formation:**
+
+  | Detector | 1 % | 3 % | 7 % |
+  |---|---|---|---|
+  | **TCN-GAT, hierarchy, multi-scale (main)** | 0.644 ± 0.067 | **0.813 ± 0.020** | **0.854 ± 0.011** |
+  | mean(LightGBM, TCN-GAT) | **0.655 ± 0.050** | 0.773 ± 0.024 | 0.843 ± 0.015 |
+  | LightGBM + learned-graph correction | 0.627 ± 0.051 | 0.765 ± 0.024 | 0.827 ± 0.017 |
+  | LightGBM + TCN correction (no graph) | 0.645 ± 0.038 | 0.752 ± 0.026 | 0.790 ± 0.021 |
+  | LightGBM forecast | 0.623 ± 0.055 | 0.765 ± 0.022 | 0.827 ± 0.015 |
+  | STL + MAD | 0.625 ± 0.043 | 0.734 ± 0.026 | 0.771 ± 0.024 |
+  | LOF | 0.570 ± 0.035 | 0.720 ± 0.029 | 0.698 ± 0.108 |
+  | Isolation Forest | 0.211 ± 0.078 | 0.462 ± 0.043 | 0.605 ± 0.099 |
+
+- **Wilcoxon signed-rank over the 10 seeds** (`table5_wilcoxon.csv`):
+  - **3 %:** the main detector beats every other detector, p = 0.002 for each.
+  - **7 %:** it beats every other detector: p = 0.020 against the average, 0.004 against the graph hybrid and 0.002 against the rest.
+  - **1 %:** it is not distinguishable from the average (p = 0.56), the hybrids (0.32, 1.0), LightGBM (0.16) or STL + MAD (0.49). It beats LOF (0.010) and Isolation Forest (0.002).
+- **Precision and recall of the main detector:** precision 0.583 / 0.892 / 0.976, recall 0.730 / 0.748 / 0.759 at 1 / 3 / 7 %. At 1 % its precision is low because its real-data alarms weigh against few injected events. With its own background excluded (D60), its F1 is 0.817 / 0.842 / 0.848.
+- **Development → test:** development F1 alone was 0.786 (rates pooled; F39). The ranking generalised: on the development data the main detector beat LightGBM in 10 of 10 cells, and on the test data it beats it at all three rates (significantly at 3 % and 7 %).
+- **Step-wise AUC-PR does not follow (F39 confirmed):** main 0.547 / 0.598 / 0.565, LightGBM 0.592 / 0.678 / 0.633, STL + MAD 0.577 / 0.721 / 0.723.
+- **Real-data alarms of the detector alone** (south, including alarms on real rule states; `real_data_alarms` in Table 5): main 191, average 131, graph hybrid 150, LightGBM 152, no-graph hybrid 93, STL 178, LOF 263, Isolation Forest 457. With NB3's event formation: TCN-GAT 639, LightGBM 454.
+  - **Two definitions, do not mix them:** the development tables count the 70 detector-only candidates, which exclude alarms that overlap real rule items; Table 5 counts all 191.
+- **Paper:** "The graph detector is the best of the eight detectors at 3 % and 7 % contamination (p ≤ 0.02 against each, 10 seeds) and statistically tied with the other model-based detectors at 1 %." Do not say "best at every rate".
+
+### F42 — The learned graph adds no detection skill: the same detector without the graph is as good or slightly better — *solid*
+- **Ablation** (D62, `results/benchmark_v1/graph_ablation/`): the TCN residual without graph attention, through the same MODWT bands, hierarchy and event formation (`TCN, no graph, hierarchy, multi-scale`), on the NB4 datasets.
+- **Reproduction:** the main detector recomputed on CPU (torch 2.2) gives exactly the Colab GPU rows: F1 and F1 with background excluded identical in 30/30 runs; 191 real-data alarms. The add-on is therefore directly comparable with Table 5.
+- **Development seeds** (the selection data, never shown to the selection because the row did not exist):
+  - no-graph F1 alone 0.786 at the main setting, against 0.786 for the TCN-GAT;
+  - 0.794 at its own tuned setting (w 48, q 99.9, gap 12);
+  - full method 0.866 vs 0.863;
+  - the own-tuned no-graph detector beats the TCN-GAT in 7 of 10 cells.
+- **Test seeds, test period** (mean over 10 seeds):
+
+  | Detector | Setting | F1 1 % | F1 3 % | F1 7 % | Own background excluded | AUC-PR | Real-data alarms | Onset error (min) |
+  |---|---|---|---|---|---|---|---|---|
+  | TCN-GAT (main) | 24, 99.9, 12 | 0.644 | 0.813 | 0.854 | 0.817 / 0.842 / 0.848 | 0.547 / 0.598 / 0.565 | 191 | 168 / 165 / 140 |
+  | TCN, no graph | 24, 99.9, 12 | **0.671** | **0.817** | **0.857** | **0.826 / 0.847 / 0.852** | 0.540 / 0.598 / 0.568 | 202 | 158 / 150 / 135 |
+  | TCN, no graph, own tuning | 48, 99.9, 12 | **0.707** | 0.801 | **0.861** | 0.823 / 0.829 / 0.856 | 0.505 / 0.574 / 0.532 | 170 | 238 / 240 / 230 |
+
+- **Wilcoxon, 10 seeds** (`wilcoxon_graph_ablation.csv`):
+  - **Same setting (the ablation proper):**
+    - F1: no graph better at 1 % (p = 0.037; the graph wins 2 of 10 seeds), no significant difference at 3 % (p = 0.13) and 7 % (p = 0.064);
+    - background excluded: no graph better at 7 % (p = 0.021), no difference at 1 % and 3 %;
+    - AUC-PR equal (p ≥ 0.49).
+  - **Own tuning:** no graph better at 1 % (p = 0.004) and 7 % (p = 0.027), worse at 3 % (p = 0.020); AUC-PR lower at every rate.
+- **Interpretation:**
+  - The main detector's advantage over LightGBM and the baselines (F41) comes from the TCN residual combined with multi-scale scoring and tuned event formation, not from graph attention. The neural residuals fragment less after smoothing than the LightGBM residual (F38).
+  - This is consistent with F37: the graph does not improve prediction either. Its MAE is slightly lower than the TCN's (0.0294 vs 0.0299), but that does not carry over to detection.
+  - The no-graph TCN residual also localises rule items slightly better (0.767 vs 0.733, F43).
+- **What the graph does give:** an interpretable dependency map (E20; Boujdour reads most from Laâyoune and Foum El Oued), and part of the ensemble gain in F37 (MAE of the average with LightGBM 0.0282 with the graph, 0.0284 without).
+- **Paper:**
+  - Do not claim that the learned graph improves detection.
+  - Accurate statement: "a multi-scale neural residual detector; adding learned graph attention over the zones' current values neither helps nor hurts detection (the no-graph ablation is equal or slightly better at every rate), so the graph's contribution is interpretability, not accuracy."
+  - The main detector was selected (D61) before this row existed, and the test seeds are spent (D63). Switching the main detector to the no-graph TCN on this evidence would be a choice made on the test data. The framing is the author's decision (paper_handoff §1, contribution 3).
+
+### F43 — Multi-scale scoring helps at low contamination; the region/city/zone hierarchy does not help detection — *solid*
+- **Setup:** ablations of the main detector, each at the main detector's event formation (w 24, q 99.9, gap 12; D60), so that only one component changes.
+- **Single scale (raw band only):** F1 0.595 / 0.772 / 0.853, against the main detector's 0.644 / 0.813 / 0.854. The MODWT bands add 0.04–0.05 F1 at 1 % and 3 % and nothing at 7 %.
+- **No hierarchy (flat robust z of the zone residual, raw band):**
+  - F1 0.675 / 0.796 / 0.856: higher than the main detector at 1 % and 7 % and lower at 3 %;
+  - AUC-PR 0.736 / 0.811 / 0.791, much higher than the main detector's 0.547 / 0.598 / 0.565;
+  - start error 82 / 90 / 80 min against 168 / 165 / 140 min.
+- **Why:** the zone score is the maximum over the region, city and zone parts (eq. 14). A multi-zone event shifts the region or city median, so the zones it did not touch also score high at those levels. This adds false zone-steps (lower AUC-PR) and time-only matches (F44). The hierarchy's value is in **placing** an event at the right level (F30: dead items 92 % at the zone and 3/3 at the region), not in detecting it.
+- **Localisation by predictor** (real rule items at the expected level, `hierarchy_consistency_by_predictor.csv`, 206 items):
+
+  | Predictor | All items | Multi-city dead at the region | Single-zone dead at the zone | Fills at the zone |
+  |---|---|---|---|---|
+  | TCN (no graph) | **0.767** | 2/3 | 0.915 | 0.767 |
+  | TCN-GAT | 0.733 | 2/3 | 0.915 | 0.733 |
+  | LightGBM forecast | 0.714 | **3/3** | 0.915 | 0.651 |
+  | average of LightGBM and TCN-GAT | 0.714 | 2/3 | 0.915 | 0.651 |
+
+  The neural residuals localise fills better. LightGBM's residual is the only one that places all three multi-city dead items at the region.
+- **Caveat:** the flat variant was not tuned on the development data, and adopting it now would be a choice made on the test seeds (D63).
+- **Paper:**
+  - "multi-scale bands help at low contamination; the hierarchy is a localisation device, not a detection gain";
+  - report the flat row next to the main one;
+  - do not claim that the hierarchy improves detection.
+
+### F44 — Adding the graph detector to the rules: worse at 1 %, equal at 3 %, better at 7 % under strict counting; better at every rate with each method's real-data background excluded; worse at every rate under zone-strict matching — *solid*
+- **Event F1, ours (rules + detector-only candidates) vs rules alone** (Wilcoxon over 10 seeds):
+
+  | Rate | Ours, strict | Rules | p | Ours, own background excluded | p | Ours, zone-strict | Rules, zone-strict |
+  |---|---|---|---|---|---|---|---|
+  | 1 % | 0.721 | **0.863** | 0.002 | **0.896** (10/10 seeds) | 0.002 | 0.628 | **0.863** |
+  | 3 % | 0.876 | 0.879 | 0.63 | **0.905** (10/10) | 0.002 | 0.778 | **0.872** |
+  | 7 % | **0.906** (10/10) | 0.896 | 0.002 | **0.908** (10/10) | 0.002 | 0.811 | **0.876** |
+
+- **Recall** rises at every rate: 0.824 vs 0.760, 0.834 vs 0.785 and 0.839 vs 0.812 (10/10 seeds each). The gain comes from:
+  - unflagged events: U_SHOCK recall 0 → 0.30 / 0.21 / 0.05 and U_PARTIAL 0 → 0.18 / 0.21 / 0.22;
+  - city outages the rules miss: G2 recall 0.90 / 0.93 / 0.94 → 1.00 / 1.00 / 0.998.
+- **Precision falls:** 0.646 / 0.921 / 0.984 against 1.000 for the rules.
+  - At 1 %, ours predicts 66.8 events per test period against 40.8 injected. About 26 of them are the real-data background: with it removed, ours predicts 40.9.
+- **Zone-strict view: the detector-only candidates mostly flag the wrong zones** (test period, in scope; `runs/*_pred.csv`):
+  - only 8 % / 18 % / 18 % share a zone with an injected event;
+  - 25 % / 58 % / 75 % overlap an injected event in time on other zones;
+  - the rest (66 % / 24 % / 7 %) overlap nothing, mostly the real-data background.
+  - **Why:** the rule items already cover the affected zones, so the detector items left over are the unaffected zones lifted by the region or city part of the score (F43). Under eq. 17 these time-only overlaps count as hits; under zone-strict matching they are false alarms. Even with the background excluded, zone-strict F1 stays below the rules: 0.814 / 0.813 / 0.815 vs 0.863 / 0.872 / 0.876.
+- **Paper:**
+  - The detector adds recall the rules cannot have (untyped events, missed city outages).
+  - Whether this raises event F1 depends on how unflagged real-data alarms are counted and on the contamination rate.
+  - Report all three views.
+  - Do not claim a general F1 gain over the rules.
+  - A natural fix links detector-only candidates that co-occur with a rule item in the same city or region to that episode instead of reporting them as new events. It has to be developed on development seeds and tested on fresh seeds (D63).
+
+### F45 — The tuned event formation trades short shocks and onset timing for precision — *solid*
+- **Unflagged-shock recall** (U_SHOCK, zone-strict) of the main detector: 0.302 / 0.212 / 0.058 tuned, against 0.925 / 0.774 / 0.285 at NB3's event formation (w 1, q 99.5, gap 1). The NB3 setting's F1 is 0.365 / 0.670 / 0.835 because of fragmented alarms: 639 on the real data, against 191 tuned.
+- **Median onset error** of zone-matched detections: main 168 / 165 / 140 min, LightGBM 110 / 118 / 100, STL + MAD 70 / 70 / 60, LOF 20 / 28 / 45, Isolation Forest 10. The 4-hour smoothing window and the 12-step merge gap blur onsets.
+- **Typed events, recall of the detector alone** (`detection_recall_by_type.csv`):
+  - main detector: A1 0.997–1.000, G1 1.000, G2–G4 0.975–1.000;
+  - LightGBM: G2–G4 0.908–1.000.
+  - Short single-zone fills (A3) are the hardest typed class for the detectors: 0.25–0.29 for the main detector, 0.15–0.22 for LightGBM. The rules catch them all.
+- **Paper:** the detector is for finding sustained events. Event timing comes from the rules where they fire. For detector-only items, report onsets as approximate (± about 3 h).
+
+### F46 — On injected signatures, the label model does not beat majority vote; fusion matches both; the end model alone is worse — *solid*
+- **Attribution macro-F1** over the typed events detected by the full method (test period):
+
+  | Labeller | 1 % | 3 % | 7 % |
+  |---|---|---|---|
+  | majority vote (rules) | 0.940 | **0.921** | **0.913** |
+  | label model q | 0.934 | 0.914 | 0.900 |
+  | end model f, no detector features | 0.875 | 0.899 | 0.898 |
+  | end model f, all features | 0.845 | 0.874 | 0.902 |
+  | fusion (β*, D50 abstention) | **0.944** | 0.919 | 0.906 |
+  | fusion (β*, no abstention) | 0.936 | 0.920 | 0.910 |
+
+  The differences between majority vote, label model and fusion are within one standard deviation (0.015–0.055).
+- **Detector features do not help the end model** at 1 % and 3 % (0.845 vs 0.875, 0.874 vs 0.899) and barely at 7 % (0.902 vs 0.898), consistent with F33 on real data.
+- **Calibration:**
+  - Mean per-seed ECE: label model 0.068 / 0.089 / 0.099, fusion 0.074 / 0.090 / 0.100, end model 0.107 / 0.078 / 0.061.
+  - Pooled over the seeds at 3 % (Fig 11): 0.074, 0.078 and 0.062.
+  - Majority vote gives no probabilities.
+- **End to end** (typed test events detected and correctly typed): 0.945 / 0.907 / 0.896. The full method detects practically every typed event (detected share 1.000 / 1.000 / 0.9996).
+- **β\*** (tuned on the train period): 0.7 / 0.6 / 0.6 with abstention.
+- **Paper:**
+  - The label model's contribution is calibrated probabilities and stability on sparse real-data votes (F21–F24), not higher accuracy than majority vote on clean injected signatures, where the rules rarely conflict.
+  - Report majority vote as a strong baseline.
+  - Contribution 2 ("calibrated probabilistic labels") holds; "more accurate than voting" does not.
+
+### F47 — Multi-city zero-fill gaps are read as regional outages, through the simultaneity rules — *solid*
+- **Fig 10 (3 %, test, fused):**
+  - A1 is the weakest class (F1 0.789): 105 of 160 correct, 44 → G1, 6 → G2, 5 → N.
+  - Other errors: G3 → G4 15 of 123, and G2 → N 11 of 137. The G2 cases are the city outages the rules miss: the detector finds them, but as detector-only items they are labelled N (F44).
+  - G1 133/133 and G4 126/126 are perfect.
+- **Mechanism** (3 %, all periods, 271 detected A1 events; label-model arg max):
+  - multi-city zero gaps go to G1 69 times out of 228 (2 cities 40/128, 3 cities 29/100);
+  - zero fills after a city-wide fill, in one city, go to G2 13 times out of 25.
+  - The injected G1 drops to a floor level; the injected A1 drops exactly to zero across several cities at once, and the simultaneity family votes "regional".
+- **Rule-family ablation** (Table 7c, 3 %, test, label model macro-F1): all families 0.914. Without simultaneity **0.941**, without city 0.922, conservation 0.915, single-zone 0.915, restoration 0.902, hold 0.893, calendar 0.778, interpolation 0.724.
+  - Without simultaneity, A1 accuracy rises from 0.697 to 0.834, G1 stays at 1.000, and overall accuracy goes from 0.904 to 0.925.
+  - Interpolation and calendar are the most valuable families.
+- **Caveat:** on the real data, multi-city zero fills come with holds or linear fills (F03), which the rules use. The injected A1 copies the zero part only. So the confusion is partly a property of the injector.
+- **Paper:**
+  - Report it as the main attribution error: exact simultaneous zeros across cities are ambiguous between a logger gap and a regional outage when nothing else is known.
+  - It argues for the exact-zero share (R6) and the fill context outweighing simultaneity.
+  - Re-weighting the families on these results would be tuning on the test seeds (D63).
+
+### F48 — The rules and the label model are robust to their thresholds, except the hold length and a tight ε — *solid*
+- **Setup:** Table 7d, 3 %, seeds 0–2, test period, one threshold changed at a time.
+- **Rules F1:**
+  - baseline 0.891; ε 0.02 0.880, ε 0.10 0.881, hold 12 0.880, τ 0 or 20 min 0.891;
+  - **hold 4: 0.765**, with unchanged recall. Four-step holds also fire on short real freezes (F09) inside the scoring area, so precision drops.
+- **Label model macro-F1:**
+  - baseline 0.906; ε 0.10 0.915, hold 4 0.906, hold 12 0.885, τ 0.904–0.905;
+  - **ε 0.02: 0.819**.
+- **ε and partial outages:** U_PARTIAL recall of the rules rises from 0.042 to 0.162 at ε 0.10, confirming F32: partial outages sit just above the dead threshold.
+- **Paper:** the thresholds chosen on the real data (D15, D18) are not on a cliff edge, except that a hold minimum below 6 steps would admit the daily freeze.
+
+### F49 — Hard negatives: the graph detector flags weekends and Eid more often, LightGBM flags Ramadan — *solid (measurement)*
+- **Setup:** real data; flag rate of the detector alone per day type, divided by the ordinary-weekday rate (`hard_negatives.csv`).
+- **Main detector** (ordinary weekday 0.0011): weekend 1.70×, Eid 2.56×, national holiday 0.99×, Ramadan 0.73×.
+- **LightGBM** (ordinary weekday 0.0018): weekend 1.17×, Ramadan 2.15×, Eid 0.34×, holidays 0.
+- **Ordinary-weekday flag rate:** the main detector's is about 40 % lower than LightGBM's.
+- **Why:** not examined. Both predictors receive calendar inputs, the TCN-GAT through its calendar features and LightGBM through explicit calendar columns.
+- **Paper:**
+  - One sentence in the hard-negative analysis.
+  - Eid and weekends are where the graph detector's alarms concentrate.
+  - Few days are involved (Eid: 11,280 zone-steps), so treat the ratios as indicative.
+
+### F50 — The real-data catalogue with the main detector: 70 detector-only candidates, the rule labels unchanged — *solid*
+- **Setup:** NB4 §8b (`results/main_detector/`): the south data through the whole method with the main detector. γ = 24.87, β = 0.6.
+- **Candidates:** 70 detector-only candidates, against 283 for NB3's south detector; 66 of the 70 overlap an NB3 candidate.
+  - **Shape:** 61 single-zone, 7 two-zone, 1 three-zone and 1 spanning all 15 zones.
+  - **Where:** Laâyoune 51, Boujdour 13, Foum El Oued 5, all three cities 1.
+  - **Duration:** median 3.4 h (IQR 2.2–5.0).
+  - **When:** 49 in the test period, 21 in the train period.
+  - **By NB3's nature class:** other 41, surge 17, partial drop 8, not in NB3 4.
+- **Fused labels of the candidates:** N 58, A3 7, G4 3, A2 1, A1 1. N still means "no typed class fits" (F32).
+- **Rule items (226 in the south):** one label changes against NB3. The 6 Aug 2023 07:00–13:30 dead item on B2 moves from G3 to G4 (p 0.556 vs 0.443), a borderline case.
+  - South rule-item labels: A3 91, G4 57, A2 57, G3 17, A1 3, G2 1.
+- **Paper:**
+  - The catalogue's typed part does not depend on the detector.
+  - The untyped part shrinks four-fold with the tuned graph detector.
+  - Cite the main-detector numbers for the south and NB3's for Marrakech (D61).
+
+## G. NB5: does type-aware cleaning matter? (2026-11-10)
+
+**Evidence:** `results/downstream_v1/` (`table8_forecasting.csv`, `table8_dm.csv`, `outage_real.csv`, `outage_injected.csv`, `injected/`, `summary.json`), Fig 12, `notebooks/NB5_downstream.ipynb`. Design: D64–D66.
+- **Scope:** southern system.
+- **Test period:** 1 Jan – 24 May 2024.
+- **Strategies:** S0 raw, S1 naive interpolation, S2 typed, S3 oracle (injected data only).
+- **Injected datasets:** NB4's 3 % seeds 0–2 and 7 % seed 0.
+
+### F51 — Counting every dead state as an outage overstates southern outage time 4.15-fold on the real data — *solid (measurement); interpretation rests on the labels*
+- **Dead states inside qualifying rule runs:**
+  - naive count ("every dead state is an outage"): **1,220.5 zone-hours in 117 runs**;
+  - typed count (dead steps of items labelled G): **294.0 zone-hours in 79 runs**;
+  - ratio 4.15.
+- This is the exact version of F26's approximation (4.2×). F26 is confirmed.
+- **Dead zone-hours by item label:** A1 926.5, G3 201.8, G4 88.0, G2 4.2. A2 and A3 contribute none, because fills are not dead.
+- **By city, naive vs typed zone-hours:** Foum El Oued 728.7 vs 220.0, Laâyoune 252.0 vs 52.2, Boujdour 239.8 vs 21.8.
+- **Paper:** the utility-facing headline. On the injected data, where the truth is known, the typed count is far closer to it than the naive count (F52). The real-data ratio inherits the label uncertainty: the attribution accuracy on injected data is 0.90–0.94 (F46).
+
+### F52 — On injected data, typed outage statistics remove most of the naive overcount but still overcount, because of the A1 → G1 confusion — *solid*
+- **Outage zone-hours inside NB4's scoring area**, relative to the injected truth (G1–G4 core spans):
+
+  | Dataset | Truth (zone-h) | Naive, every dead state (S0) | Typed, label model (S2) | Interpolated away (S1) |
+  |---|---|---|---|---|
+  | 3 %, seed 0 | 2,478.8 | 1.49× | 1.14× | 0 |
+  | 3 %, seed 1 | 1,595.8 | 2.39× | 1.76× | 0 |
+  | 3 %, seed 2 | 2,346.3 | 1.77× | 1.29× | 0 |
+  | 7 %, seed 0 | 4,503.8 | 1.90× | 1.25× | 0 |
+  | mean | | **1.89×** | **1.36×** | 0 |
+
+- **Outage counts (runs):** at 3 %, truth 405.7, naive 727.7, typed 535.0; at 7 %, 999, 1,819 and 1,296.
+- **Typed outage zone-steps:** recall 0.997–0.999, precision 0.567–0.872. The typed count misses almost no true outage time; its excess is artefact time labelled G, mainly multi-city zero gaps read as regional outages (F47).
+- **S1 erases every outage:** a forecaster-oriented cleaning that interpolates everything reports no outage time at all.
+- **Paper:** typed cleaning cuts the outage-time error from +89 % to +36 % on average. The remaining error is a measured, named confusion. Do not claim "correct outage statistics" (the guide's expected effect); claim "much closer to the truth than naive counting, with a known residual bias".
+
+### F53 — Typed cleaning gives the best LightGBM forecasts on real and injected data; the gain sits after anomalies and comes close to the oracle — *solid*
+- **Real data, MASE, S0 / S1 / S2** (Diebold–Mariano p for S1 vs S2 and S0 vs S2):
+
+  | Horizon | After an anomaly (24,744 zone-steps) | DM p | All test steps (305,257) | DM p |
+  |---|---|---|---|---|
+  | 1 h | 0.656 / 0.661 / **0.613** | < 0.0001 / 0.0001 | 0.654 / 0.657 / 0.654 | 0.019 / 0.86 |
+  | 1 day | 1.501 / 1.233 / **1.061** | 0.22 / 0.23 | 1.140 / 1.115 / **1.102** | 0.25 / 0.21 |
+
+  - After an anomaly, the day-ahead MAE falls from 10.53 A (S0) and 9.63 A (S1) to 8.89 A (S2): −29 % and −14 % in MASE.
+  - The day-ahead gain is large but not significant on the real data: a few multi-zone events carry it, so the HAC variance is large.
+- **Injected data, MASE, mean of 4 datasets, S0 / S1 / S2 / S3:**
+  - after an anomaly: 1 h 0.708 / 0.640 / 0.625 / 0.618; 1 day 1.293 / 1.107 / 1.056 / 1.046;
+  - all test steps: 1 h 0.652 / 0.622 / 0.613 / 0.608; 1 day 1.170 / 1.069 / 1.043 / 1.039.
+  - **S2 vs S0:** S2 is significantly better (DM p < 0.05) in 4 of 4 datasets for every horizon and subset.
+  - **S2 vs S1:** 4/4 at 1 h on all steps, 3/4 at 1 h after an anomaly, 2/4 at 1 day. S1 is never significantly better.
+  - **S2 vs the oracle:** S2 closes 62–86 % of the gap between S1 and S3. The oracle is significantly better than S2 in 0–3 of 4 datasets.
+- **Paper:**
+  - "Type-aware cleaning improves day-ahead forecasts after anomalies by 14 % (MASE) over naive interpolation on the real data, and comes within about 1 % of an oracle on injected data (MASE 1.056 vs 1.046)."
+  - Report the 'all steps' rows too: over the whole test period the effect is small (≤ 3 %), because anomalies are rare.
+
+### F54 — The typed advantage needs a forecaster that reads the event indicator: a model-free forecaster prefers erasing outages — *solid*
+- **Naive reference** (persistence at 1 h, seasonal naive at 1 day), injected data, MASE S0 / S1 / S2 / S3:
+  - 1 h, all steps: 0.913 / **0.881** / 0.891 / 0.882;
+  - 1 day, all steps: 1.401 / **1.155** / 1.236 / 1.199.
+  - S1 is significantly better than S2 in 4/4 datasets at 1 h and 2/4 at 1 day. S0 is worst throughout.
+- **On the real data, where grid events are few,** the naive reference still prefers S2: 1 day after an anomaly 2.220 / 1.553 / **1.278**.
+- **Why:** S2 keeps grid events in the history. Persistence and seasonal naive copy an outage forward into the next hour or day, while LightGBM reads the event indicator and discounts it. S1 removes outages from the history, which helps a naive forecast, but it also removes them from the outage statistics (F52).
+- **Paper:** the guide's expected effect ("S2: best error and correct outage statistics") holds for an indicator-aware forecaster. With a forecaster that cannot use the indicator, there is a trade-off between forecast error (S1) and outage statistics (S2). This is an argument for passing the typed labels to the forecaster, not just cleaning with them.

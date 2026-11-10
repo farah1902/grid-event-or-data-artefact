@@ -1,0 +1,26 @@
+detector,day_type,zone_steps,flag_rate,ratio_to_ordinary
+"TCN-GAT, hierarchy, multi-scale",ordinary weekday,746257,0.0011,1.0
+"TCN-GAT, hierarchy, multi-scale",weekend,288425,0.0019,1.704
+"TCN-GAT, hierarchy, multi-scale",Ramadan,116548,0.0008,0.7287
+"TCN-GAT, hierarchy, multi-scale",national holiday,29970,0.0011,0.9948
+"TCN-GAT, hierarchy, multi-scale",Eid,11280,0.0028,2.563
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",ordinary weekday,746425,0.002,1.0
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",weekend,288425,0.0025,1.2808
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",Ramadan,116548,0.0027,1.3453
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",national holiday,29970,0.0,0.0
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",Eid,11280,0.0027,1.3945
+"LightGBM + learned-graph correction, hierarchy, multi-scale",ordinary weekday,746257,0.0018,1.0
+"LightGBM + learned-graph correction, hierarchy, multi-scale",weekend,288425,0.0021,1.1578
+"LightGBM + learned-graph correction, hierarchy, multi-scale",Ramadan,116548,0.0041,2.2875
+"LightGBM + learned-graph correction, hierarchy, multi-scale",national holiday,29970,0.0,0.0
+"LightGBM + learned-graph correction, hierarchy, multi-scale",Eid,11280,0.0007,0.3915
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",ordinary weekday,746257,0.0011,1.0
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",weekend,288425,0.0013,1.2441
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",Ramadan,116548,0.0002,0.1662
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",national holiday,29970,0.0,0.0
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",Eid,11280,0.0,0.0
+"LightGBM forecast, hierarchy, multi-scale",ordinary weekday,746257,0.0018,1.0
+"LightGBM forecast, hierarchy, multi-scale",weekend,288425,0.0021,1.1749
+"LightGBM forecast, hierarchy, multi-scale",Ramadan,116548,0.0039,2.15
+"LightGBM forecast, hierarchy, multi-scale",national holiday,29970,0.0,0.0
+"LightGBM forecast, hierarchy, multi-scale",Eid,11280,0.0006,0.3403

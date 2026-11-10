@@ -284,6 +284,17 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 - `_info.json`: runtime, number of rule items and detector-only candidates, γ of the main detector;
 - `sens_s{seed}_{config}_det.csv` / `_lab.csv`: threshold sensitivity (rule-only detection; label-model labels of typed events).
 
+**`graph_ablation/`**: the no-graph ablation of the main detector, computed after the NB4 run by `tools/graph_ablation.py` (D62) on the same datasets:
+- `dev_detection_grid.csv`: development seeds 100–104, detectors `TCN-GAT, hierarchy, multi-scale` and `TCN, no graph, hierarchy, multi-scale`, the 48 settings. Same columns as `dev/dev_detection_grid.csv`.
+- `runs/r{rate}_s{seed}_detection.csv` and `test_detection.csv` (all runs). Columns:
+  - method: the main detector recomputed; the no-graph TCN at the main setting; the no-graph TCN at its own tuned setting `(own tuned event formation)`;
+  - period, gamma, w, q, gap, rate, seed;
+  - the `_detection.csv` metrics of `runs/`, the `*_bgx` metrics and `auc_pr`.
+- `table_graph_ablation.csv`: rate, method, setting, F1, precision, recall, F1_zone_strict, AUC_PR, F1_own_background_excluded, real_data_alarms, recall_U_SHOCK, recall_U_PARTIAL, start_err_min. Test period, mean ± sd over seeds.
+- `wilcoxon_graph_ablation.csv`: rate, comparison, metric (f1, f1_bgx, auc_pr), means, main_wins, ties, Wilcoxon p, n_seeds.
+- `reproduction_main_detector.csv`: the main detector's test F1 recomputed here (CPU) against the stored NB4 row (Colab GPU), per rate and seed.
+- `summary.json`: development result (own setting of the no-graph TCN, its F1, the main detector's recomputed best setting), real-data alarms, reproduction statistics, test F1 per rate and method.
+
 ## Main detector on the real data — `results/main_detector/` (NB4 §8b, D61)
 
 | File | Content |
@@ -291,3 +302,18 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 | `detector_items_south.csv` | detector-only candidates of the main detector (TCN-GAT graph detector, tuned event formation) on the real south series: item_id `X###`, system, start, end, zones, n_zones, cities, n_cities, max_score, kind, duration_h |
 | `p_type_south.csv` | every south rule item and detector-only candidate: q_ (label model), f_ (end model), fn_ (end model without detector features), p_ (fused, β tuned at 3 %, D50 abstention) over the 8 event classes, and label |
 | `summary.json` | main detector, setting, γ, β, number of candidates (and NB3's), candidates shared with NB3, rule labels changed relative to NB3's p_type, label counts of the candidates |
+
+## Downstream test — `results/downstream_v1/` (from `src/downstream.py`, NB5; D64–D66)
+
+| File | Content |
+|---|---|
+| `outage_real.csv` | per south zone: naive_zone_hours and naive_outages (every flagged dead state), typed_zone_hours and typed_outages (dead steps of G-labelled items), artefact_dead_zone_hours and artefact_dead_runs (dead steps of A-labelled items), city |
+| `forecast_real.csv` | strategy (S0, S1, S2), model (LightGBM, naive), horizon (1 h, 1 day), subset (all; after anomaly (2 days)), n_train (training rows), n (scored zone-steps), MAE, RMSE (A), MASE, sMAPE (%) |
+| `loss_real.pkl` | per-time-step summed scaled absolute loss per (strategy, model, horizon, subset), for the DM tests |
+| `dm_real.csv` | model, horizon, subset, comparison (S1 vs S2, S0 vs S2), mean_loss_diff (> 0: second better), share_steps_second_better, n_steps, DM, p (two-sided) |
+| `injected/r{rate}_s{seed}_forecast.csv`, `_dm.csv` | the same on one injected dataset, with S3 (oracle) and the S2 vs S3 comparison; rate, seed |
+| `injected/r{rate}_s{seed}_outage.csv` | strategy (truth (S3), naive (S0), interpolated away (S1), typed (S2)), zone_hours, outages (runs ≥ 3 steps), typed_precision_zone_steps, typed_recall_zone_steps, rate, seed |
+| `table8_forecasting.csv` | mean MAE, RMSE, MASE, sMAPE by data (real, injected), model, horizon, subset, strategy |
+| `table8_dm.csv` | every DM test (real and per injected dataset) |
+| `outage_injected.csv` | mean outage zone-hours and counts by rate and strategy |
+| `summary.json` | real-data outage totals and ratio, dead zone-hours by label, real-data forecast scores and DM tests, injected outage means and ratios to truth, runtime |

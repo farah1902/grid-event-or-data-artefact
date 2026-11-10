@@ -1,0 +1,22 @@
+{
+  "main": "TCN-GAT, hierarchy, multi-scale",
+  "setting": {
+    "w": 24,
+    "q": 99.9,
+    "gap": 12
+  },
+  "gamma": 24.865847193977203,
+  "beta": 0.6,
+  "n_detector_only": 70,
+  "n_detector_only_nb3": 283,
+  "shared_with_nb3": 66,
+  "rule_items": 226,
+  "rule_labels_changed_vs_nb3": 1,
+  "detector_only_label_counts": {
+    "N": 58,
+    "A3": 7,
+    "G4": 3,
+    "A2": 1,
+    "A1": 1
+  }
+}

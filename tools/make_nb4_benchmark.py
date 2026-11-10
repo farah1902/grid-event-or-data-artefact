@@ -294,7 +294,7 @@ cells.append(M(r"""## 5. Detection (Table 5, Fig 9)
 - Wilcoxon signed-rank test over seeds: ours vs the best baseline, and the main detector vs each other detector variant (alone).
 - Every tuned detector (main candidates and baselines) uses the event formation chosen for it on the development seeds (D60). Ablations use the main detector's."""))
 cells.append(C(r"""DETECTORS = [MAIN] + [v for v in (B.V_GAT, B.V_MEAN, B.V_HYB, B.V_HYB_NOG, B.V_LGB) if v != MAIN]   # graph detectors right after the main one
-ORDER = ["ours (rules + detector)", "rules only (rule engine v1)"] + DETECTORS + [B.V_GAT_NB3, B.V_LGB_NB3, B.V_SINGLE, B.V_FLAT, B.V_NOW,
+ORDER = ["ours (rules + detector)", "rules only (rule engine v1)"] + DETECTORS + [B.V_GAT_NB3, B.V_LGB_NB3, B.V_SINGLE, B.V_FLAT, B.V_TCN_MS, B.V_NOW,
          B.V_TCN_RAW, B.V_GAT_RAW, "STL + MAD", "Isolation Forest", "LOF"]
 BASE = ["rules only (rule engine v1)", "STL + MAD", "Isolation Forest", "LOF"]
 dt = DET[DET.period == "test"].merge(AUC[AUC.period == "test"], on=["method", "period", "rate", "seed"], how="left")
@@ -446,6 +446,7 @@ d = dt[dt.rate == r0]
 abl = [(f"main detector: {MAIN}", MAIN)] + [(v, v) for v in DETECTORS[1:]] + [
        ("TCN-GAT, NB3 event formation (untuned)", B.V_GAT_NB3), ("LightGBM, NB3 event formation (untuned)", B.V_LGB_NB3),
        ("main detector, single scale (raw band)", B.V_SINGLE), ("main detector, no hierarchy (flat residual)", B.V_FLAT),
+       ("main detector without the graph (TCN, hierarchy, multi-scale; D62)", B.V_TCN_MS),
        ("LGB nowcast, raw (all zones, no learned edges)", B.V_NOW), ("TCN, no graph, raw", B.V_TCN_RAW), ("TCN-GAT, learned graph, raw", B.V_GAT_RAW)]
 t7b = pd.DataFrame([dict(variant=n, F1=ms(d[d.method == m].f1), AUC_PR=ms(d[d.method == m].auc_pr),
                          recall_U_SHOCK=ms(d[d.method == m].recall_U_SHOCK), recall_U_PARTIAL=ms(d[d.method == m].recall_U_PARTIAL),

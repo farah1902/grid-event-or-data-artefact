@@ -1,0 +1,25 @@
+rate,best_baseline,ours_F1,baseline_F1,wilcoxon_p,n_seeds
+1%,rules only (rule engine v1),0.7209249355645632,0.8631429090727096,0.001953125,10
+3%,rules only (rule engine v1),0.8755434011003022,0.8794113651132879,0.625,10
+7%,rules only (rule engine v1),0.9056654455399249,0.8958960732555928,0.001953125,10
+1%,"main detector vs mean(LightGBM, TCN-GAT), hierarchy, multi-scale",0.643815249135257,0.6549027285377378,0.556640625,10
+1%,"main detector vs LightGBM + learned-graph correction, hierarchy, multi-scale",0.643815249135257,0.627268858965168,0.322265625,10
+1%,"main detector vs LightGBM + TCN correction (no graph), hierarchy, multi-scale",0.643815249135257,0.6449277470684336,1.0,10
+1%,"main detector vs LightGBM forecast, hierarchy, multi-scale",0.643815249135257,0.6229706477326934,0.16015625,10
+1%,main detector vs STL + MAD,0.643815249135257,0.6248693928053446,0.4921875,10
+1%,main detector vs Isolation Forest,0.643815249135257,0.2106959132933187,0.001953125,10
+1%,main detector vs LOF,0.643815249135257,0.5695712248847429,0.009765625,10
+3%,"main detector vs mean(LightGBM, TCN-GAT), hierarchy, multi-scale",0.8130975901204472,0.7732626785630777,0.001953125,10
+3%,"main detector vs LightGBM + learned-graph correction, hierarchy, multi-scale",0.8130975901204472,0.7652718830369346,0.001953125,10
+3%,"main detector vs LightGBM + TCN correction (no graph), hierarchy, multi-scale",0.8130975901204472,0.7516000023710323,0.001953125,10
+3%,"main detector vs LightGBM forecast, hierarchy, multi-scale",0.8130975901204472,0.764697118799283,0.001953125,10
+3%,main detector vs STL + MAD,0.8130975901204472,0.7344597268317961,0.001953125,10
+3%,main detector vs Isolation Forest,0.8130975901204472,0.46189737092999883,0.001953125,10
+3%,main detector vs LOF,0.8130975901204472,0.7197816936170615,0.001953125,10
+7%,"main detector vs mean(LightGBM, TCN-GAT), hierarchy, multi-scale",0.853994705324831,0.8429413967043967,0.01953125,10
+7%,"main detector vs LightGBM + learned-graph correction, hierarchy, multi-scale",0.853994705324831,0.8272244394064104,0.00390625,10
+7%,"main detector vs LightGBM + TCN correction (no graph), hierarchy, multi-scale",0.853994705324831,0.7900626573340322,0.001953125,10
+7%,"main detector vs LightGBM forecast, hierarchy, multi-scale",0.853994705324831,0.826766691227151,0.001953125,10
+7%,main detector vs STL + MAD,0.853994705324831,0.7712581329678619,0.001953125,10
+7%,main detector vs Isolation Forest,0.853994705324831,0.6053362255353923,0.001953125,10
+7%,main detector vs LOF,0.853994705324831,0.697553800723665,0.001953125,10

@@ -1,0 +1,3 @@
+period,n_pred,n_true,precision,recall,f1,precision_zone,recall_zone,f1_zone,start_err_min,end_err_min,recall_A1,recall_A2,recall_A3,recall_G1,recall_G2,recall_G3,recall_G4,recall_U_SHOCK,recall_U_PARTIAL
+train,61,81,1.0,0.7654320987654321,0.8671328671328672,1.0,0.7530864197530864,0.8591549295774648,0.0,0.0,1.0,1.0,0.9,1.0,0.8571428571428571,1.0,1.0,0.0,0.0
+test,85,108,1.0,0.7870370370370371,0.8808290155440415,1.0,0.7870370370370371,0.8808290155440415,0.0,0.0,1.0,1.0,0.8,1.0,1.0,1.0,1.0,0.0,0.125

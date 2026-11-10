@@ -338,3 +338,49 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 - **NB4 QUICK test of the new notebook** (local, 2 datasets at 3 %, 2-epoch networks, so its detector numbers are not meaningful): every cell runs.
   - It found a fusion bug (D56): detector-only items were labelled A1. It is fixed in `benchmark.fused`.
   - The QUICK copy had been generated before §8b's QUICK output folder was fixed, so it wrote into `results/main_detector/`. That folder was deleted; the Colab run will create it.
+
+## Session 7 — 2026-11-10 — NB4 results pulled and analysed; no-graph ablation; NB5 written
+
+**User request:** "ok done, check, analyze and continue ur work please" (after the NB4 Colab run).
+
+**Check of the Colab run:**
+- All 30 benchmark runs and the 21 threshold-sensitivity runs are on Drive. So are every table, `summary.json`, `results/main_detector/`, Figs 9–11, E20, E21 and the executed notebook (saved 23:45).
+- All run files were written on 9 Nov, 21:04–23:22, after the 01:09 code sync. Every `_info.json` names the TCN-GAT main detector.
+- Colab disconnected once and resumed (the run cell only logs r07_s02–s09).
+- The models were loaded, not retrained: the predictor MAEs equal the local ones.
+- No errors or stderr output in the executed notebook.
+- Pulled with `tools/sync_drive.py --pull results/benchmark_v1 results/main_detector results/figures notebooks/NB4_benchmark.ipynb`.
+
+**Analysis (findings F41, F43–F50; numbers in results_summary §9):**
+- **The graph detector is the best detector at 3 % and 7 %** (p ≤ 0.02 against each of the seven others) and tied at 1 % (F41). The development ranking generalised.
+- **Rules + detector vs rules alone** depends on how alarms are counted and on the rate (F44). Strict: worse at 1 %, equal at 3 %, better at 7 %. Own background excluded: better at every rate, 10/10 seeds. Zone-strict: worse at every rate.
+  - New measurement from `runs/*_pred.csv`: 25–75 % of the in-scope detector-only candidates overlap an injected event in time but on other zones. This is spill-over through the region and city parts of the score.
+- **Ablations (F43):** multi-scale helps at 1 % and 3 %. The flat residual matches or beats the hierarchy on event F1 at 1 % and 7 % and on AUC-PR everywhere. The hierarchy is a localisation device, not a detection gain.
+- **Tuning costs short shocks and onset timing** (F45): U_SHOCK 0.21 vs 0.77 at 3 %; median onset error 140–168 min.
+- **Attribution (F46):** the label model does not beat majority vote on injected data, and fusion matches both. The end model alone is worse, and detector features do not help it.
+- **Multi-city zero gaps → G1** through the simultaneity family (F47). Without that family, A1 accuracy rises from 0.697 to 0.834.
+- **Threshold sensitivity, hard negatives, real-data catalogue:** F48, F49, F50.
+- **Interpretation pitfalls found and documented:**
+  - Table 5's `real_data_alarms` (191 for the main detector) counts all detector alarms, whereas the development tables counted the 70 detector-only candidates.
+  - Fig 11's ECE is pooled over seeds; Table 6 gives the per-seed mean.
+  - The 11 G2 → N cases in Fig 10 are the city outages the rules miss: the detector finds them, but labels them N.
+
+**NB5 (downstream test), written and executed locally:**
+- **Code:** `src/downstream.py` (masks, cleaning S0–S3, global LightGBM direct forecaster, naive reference, MASE, DM test, outage statistics) and `tools/make_nb5_downstream.py` → `notebooks/NB5_downstream.ipynb`. Decisions D64–D66.
+- **Runtime:** 17.5 min on CPU (about 20 s per LightGBM fit). Outputs are cached in `results/downstream_v1/`, so a re-execution only redraws.
+- **Bugs met while building it:**
+  1. a helper named `rows` was shadowed by a local list (renamed `rowmask`);
+  2. the first Diebold–Mariano loss averaged the zones within each time step, which reversed the sign of the day-ahead LightGBM difference relative to the pooled MASE. It now sums over zones (D66);
+  3. the naive reference used a one-day lag at both horizons. It now uses persistence at 1 h.
+  - Fig 12 was first drawn with truncated y-axes and the "all steps" subset for the real data. It now uses the after-anomaly subset in both panels, with axes from 0 and value labels.
+- **Results:** F51–F54, results_summary §10. F26 was confirmed exactly: 4.15×.
+
+**No-graph ablation of the main detector (D62, F42):**
+- **The gap:** NB4 compared the TCN-GAT with a no-graph TCN only on the raw band. `benchmark.V_TCN_MS` was added to `VARIANTS` and to the NB4 generator. The executed NB4 notebook was **not** regenerated, so that the Colab outputs stay intact; the generator is now one row ahead of it.
+- **The computation:** `tools/graph_ablation.py` computes the row on the NB4 datasets (regenerated from their seeds and asserted equal to `runs/*_truth.csv`).
+  - A first run crashed after the development phase: `detector_items` needs zone-run columns on its empty frame. It was fixed and resumed from the cached development grid.
+  - Runtime: about 8 min for development and about 45 s per test dataset on CPU, longer while NB5 ran in parallel.
+- **Reproduction:** the CPU recomputation equals the Colab GPU rows in 30/30 runs.
+- **Result:** without the graph, the detector is equal or slightly better on the development data (0.794 vs 0.786 at its own setting) and on the test seeds (0.671 / 0.817 / 0.857 vs 0.644 / 0.813 / 0.854 at the same setting; significant at 1 %).
+  - The main detector's advantage comes from the neural residual and event formation, not from the graph.
+  - Per D63 the main detector is unchanged. The framing is left to the author (paper_handoff, "open decision").

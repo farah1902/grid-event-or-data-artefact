@@ -1,0 +1,57 @@
+data,model,horizon,subset,strategy,MAE,RMSE,MASE,sMAPE
+injected,LightGBM,1 day,after anomaly (2 days),S0,8.8632,14.4278,1.2931,14.9531
+injected,LightGBM,1 day,after anomaly (2 days),S1,8.0548,13.0803,1.1071,13.5171
+injected,LightGBM,1 day,after anomaly (2 days),S2,7.7602,12.6664,1.0562,13.253
+injected,LightGBM,1 day,after anomaly (2 days),S3,7.6907,12.4805,1.0456,13.163
+injected,LightGBM,1 day,all,S0,8.4288,13.7014,1.1697,14.4142
+injected,LightGBM,1 day,all,S1,8.0045,13.1022,1.0694,13.7144
+injected,LightGBM,1 day,all,S2,7.8637,12.9812,1.0432,13.5696
+injected,LightGBM,1 day,all,S3,7.8368,12.9022,1.0389,13.5424
+injected,LightGBM,1 h,after anomaly (2 days),S0,4.3107,8.7476,0.7084,7.2871
+injected,LightGBM,1 h,after anomaly (2 days),S1,3.85,6.4758,0.64,6.2384
+injected,LightGBM,1 h,after anomaly (2 days),S2,3.7615,6.3198,0.625,6.1793
+injected,LightGBM,1 h,after anomaly (2 days),S3,3.6944,6.1669,0.6179,6.0838
+injected,LightGBM,1 h,all,S0,3.9468,7.3232,0.6518,6.6871
+injected,LightGBM,1 h,all,S1,3.74,6.3611,0.6219,6.2279
+injected,LightGBM,1 h,all,S2,3.6974,6.28,0.6134,6.1973
+injected,LightGBM,1 h,all,S3,3.6459,6.1665,0.6081,6.1154
+injected,naive,1 day,after anomaly (2 days),S0,13.6012,28.2981,2.0027,30.0059
+injected,naive,1 day,after anomaly (2 days),S1,9.5025,17.5168,1.3311,16.1058
+injected,naive,1 day,after anomaly (2 days),S2,10.9051,22.3457,1.5499,22.3042
+injected,naive,1 day,after anomaly (2 days),S3,10.2932,20.6195,1.4579,20.5975
+injected,naive,1 day,all,S0,10.1568,20.5123,1.4008,19.9525
+injected,naive,1 day,all,S1,8.6333,15.5584,1.1553,14.8533
+injected,naive,1 day,all,S2,9.161,17.6756,1.2355,17.1126
+injected,naive,1 day,all,S3,8.9101,16.839,1.1987,16.4205
+injected,naive,1 h,after anomaly (2 days),S0,6.6437,12.7058,0.9994,10.1905
+injected,naive,1 h,after anomaly (2 days),S1,6.1013,10.0939,0.9128,8.6244
+injected,naive,1 h,after anomaly (2 days),S2,6.2734,10.9062,0.9403,9.1336
+injected,naive,1 h,after anomaly (2 days),S3,6.1243,10.1588,0.9164,8.6841
+injected,naive,1 h,all,S0,6.1403,10.9597,0.9133,9.1615
+injected,naive,1 h,all,S1,5.9342,9.8892,0.8807,8.5713
+injected,naive,1 h,all,S2,5.9981,10.2084,0.8907,8.7548
+injected,naive,1 h,all,S3,5.9427,9.9146,0.8819,8.5919
+real,LightGBM,1 day,after anomaly (2 days),S0,10.5328,18.7311,1.5014,17.7006
+real,LightGBM,1 day,after anomaly (2 days),S1,9.6283,16.7583,1.2334,15.0808
+real,LightGBM,1 day,after anomaly (2 days),S2,8.8914,15.3035,1.0608,14.5508
+real,LightGBM,1 day,all,S0,7.8578,13.0652,1.1396,13.6869
+real,LightGBM,1 day,all,S1,7.7694,12.8383,1.1153,13.4378
+real,LightGBM,1 day,all,S2,7.7145,12.6919,1.1016,13.3989
+real,LightGBM,1 h,after anomaly (2 days),S0,4.2619,8.1914,0.6561,6.9767
+real,LightGBM,1 h,after anomaly (2 days),S1,4.2123,7.9188,0.6612,6.8012
+real,LightGBM,1 h,after anomaly (2 days),S2,3.9051,6.8908,0.613,6.4931
+real,LightGBM,1 h,all,S0,3.6185,6.1283,0.654,6.135
+real,LightGBM,1 h,all,S1,3.6174,6.1088,0.6567,6.1197
+real,LightGBM,1 h,all,S2,3.5888,6.0082,0.6538,6.0994
+real,naive,1 day,after anomaly (2 days),S0,14.522,29.6037,2.2201,31.0821
+real,naive,1 day,after anomaly (2 days),S1,11.079,21.5835,1.553,17.877
+real,naive,1 day,after anomaly (2 days),S2,9.524,17.9414,1.278,16.274
+real,naive,1 day,all,S0,8.4338,15.5934,1.2184,15.1105
+real,naive,1 day,all,S1,8.1549,14.4867,1.1644,14.0404
+real,naive,1 day,all,S2,8.0286,14.0785,1.142,13.9101
+real,naive,1 h,after anomaly (2 days),S0,6.8084,13.4301,1.0813,9.8516
+real,naive,1 h,after anomaly (2 days),S1,6.657,12.5144,1.0594,9.3671
+real,naive,1 h,after anomaly (2 days),S2,6.6187,11.4212,1.0519,9.5273
+real,naive,1 h,all,S0,5.8574,9.8687,0.9508,8.5523
+real,naive,1 h,all,S1,5.8443,9.7696,0.9489,8.5117
+real,naive,1 h,all,S2,5.842,9.6615,0.9484,8.5261

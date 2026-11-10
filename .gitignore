@@ -21,3 +21,6 @@ desktop.ini
 # NB4 trained predictors (large LightGBM pickle; retrained or reloaded by the notebook)
 results/benchmark_v1/models/*.pkl
 results/benchmark_quick/
+
+# NB5 per-step loss cache (35 MB; recomputed by the notebook if missing, results are in dm_real.csv)
+results/downstream_v1/loss_real.pkl

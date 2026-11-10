@@ -1,0 +1,35 @@
+method,period,auc_pr
+"LightGBM + learned-graph correction, hierarchy, multi-scale",train,0.62827988192516
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",train,0.6281203221698392
+"LightGBM forecast, hierarchy, multi-scale",train,0.6307747476701531
+"TCN-GAT, hierarchy, multi-scale",train,0.5739636424812737
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",train,0.5498292077958238
+"LGB nowcast (raw, hierarchy)",train,0.6563290314934596
+"TCN, no graph (raw, hierarchy)",train,0.6280261881346181
+"TCN-GAT (raw, hierarchy)",train,0.6381171050864093
+single scale (raw band),train,0.6381171050864093
+no hierarchy (flat residual),train,0.8225833815538793
+STL + MAD,train,0.728940853727413
+Isolation Forest,train,0.35575400268180085
+LOF,train,0.5823478931138795
+"TCN-GAT, hierarchy, multi-scale (NB3 event formation)",train,0.5843137819727213
+"LightGBM forecast, hierarchy, multi-scale (NB3 event formation)",train,0.6547449899663779
+rules only (rule engine v1),train,0.8900098663001448
+ours (rules + detector),train,0.9262275099457511
+"LightGBM + learned-graph correction, hierarchy, multi-scale",test,0.6622535356041181
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",test,0.6573402388175471
+"LightGBM forecast, hierarchy, multi-scale",test,0.6597815773746042
+"TCN-GAT, hierarchy, multi-scale",test,0.6008003325858919
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",test,0.5812002633830112
+"LGB nowcast (raw, hierarchy)",test,0.6901203823351078
+"TCN, no graph (raw, hierarchy)",test,0.6648143935654647
+"TCN-GAT (raw, hierarchy)",test,0.6359680885212081
+single scale (raw band),test,0.6359680885212081
+no hierarchy (flat residual),test,0.8188377571028219
+STL + MAD,test,0.7396652080576499
+Isolation Forest,test,0.34126400126574935
+LOF,test,0.555743223021012
+"TCN-GAT, hierarchy, multi-scale (NB3 event formation)",test,0.6068895425179983
+"LightGBM forecast, hierarchy, multi-scale (NB3 event formation)",test,0.680056489602217
+rules only (rule engine v1),test,0.9106243670647758
+ours (rules + detector),test,0.9434206820552767

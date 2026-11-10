@@ -1,0 +1,35 @@
+method,period,auc_pr
+"LightGBM + learned-graph correction, hierarchy, multi-scale",train,0.7226977284527878
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",train,0.7258542423044204
+"LightGBM forecast, hierarchy, multi-scale",train,0.7229840790528156
+"TCN-GAT, hierarchy, multi-scale",train,0.5867607515324997
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",train,0.6089886094857871
+"LGB nowcast (raw, hierarchy)",train,0.7465720044687723
+"TCN, no graph (raw, hierarchy)",train,0.6941241785767728
+"TCN-GAT (raw, hierarchy)",train,0.6510264574066078
+single scale (raw band),train,0.6510264574066078
+no hierarchy (flat residual),train,0.8058586563646107
+STL + MAD,train,0.6639689171691029
+Isolation Forest,train,0.18096654845746576
+LOF,train,0.5500874737775466
+"TCN-GAT, hierarchy, multi-scale (NB3 event formation)",train,0.5872678256151167
+"LightGBM forecast, hierarchy, multi-scale (NB3 event formation)",train,0.7358276384623906
+rules only (rule engine v1),train,0.9262839165897474
+ours (rules + detector),train,0.9531520882377438
+"LightGBM + learned-graph correction, hierarchy, multi-scale",test,0.7421757987987873
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",test,0.7264396857886494
+"LightGBM forecast, hierarchy, multi-scale",test,0.7210545265344358
+"TCN-GAT, hierarchy, multi-scale",test,0.6338559993847682
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",test,0.6334586430342243
+"LGB nowcast (raw, hierarchy)",test,0.7634952711438149
+"TCN, no graph (raw, hierarchy)",test,0.7446808008323555
+"TCN-GAT (raw, hierarchy)",test,0.6621726581228312
+single scale (raw band),test,0.6621726581228312
+no hierarchy (flat residual),test,0.8515522089292622
+STL + MAD,test,0.7562757008821777
+Isolation Forest,test,0.2614444851382566
+LOF,test,0.6741570730430518
+"TCN-GAT, hierarchy, multi-scale (NB3 event formation)",test,0.6308507809995187
+"LightGBM forecast, hierarchy, multi-scale (NB3 event formation)",test,0.729063557118337
+rules only (rule engine v1),test,0.9406098007807251
+ours (rules + detector),test,0.9636122165372748

@@ -505,3 +505,72 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - LightGBM had the same tuning budget; nothing was tuned for the graph alone.
   - In every table the graph detectors come right after the main detector.
 - **Caveats for the paper:** F37 (no prediction gain), F39 (lower step-wise AUC-PR than STL and LightGBM) and F40 (no event-F1 gain over the rules under strict counting).
+
+### D62 — The no-graph ablation of the main detector, added after the NB4 run [NB4 add-on]
+- **Gap:** NB4 compared the TCN-GAT with a TCN without the graph only on the raw band (`TCN, no graph (raw, hierarchy)`). The row that isolates the graph inside the main detector was missing. It is the TCN residual through the same MODWT bands, hierarchy and event formation (`TCN, no graph, hierarchy, multi-scale`).
+- **Fix:**
+  - `benchmark.V_TCN_MS` was added to `VARIANTS`, so that a future NB4 run includes it. Adding it does not change the raw-band row, because the multi-scale level scores contain the raw band unchanged.
+  - `tools/graph_ablation.py` computes it on exactly the NB4 datasets. The injected data are regenerated from the same seeds, and the script asserts that they equal `runs/*_truth.csv`.
+- **Three rows**, scored as `Benchmark.run` (both precision views, zone-strict F1, step AUC-PR, per-type recall):
+  1. **the main detector, recomputed here:** a reproduction check of the Colab rows (CPU and torch 2.2 here, GPU and torch 2.14 on Colab);
+  2. **the no-graph TCN at the main detector's event formation:** the ablation in the sense of D60, one thing changed;
+  3. **the no-graph TCN at its own event formation:** tuned on development seeds 100–104 over the same 48 settings by the same criterion, so it is not handicapped by a setting chosen for the graph.
+- **Not rerun:** the end model and attribution, because the main detector does not change.
+- **Output:** `results/benchmark_v1/graph_ablation/`.
+- **Outcome (F42):** the CPU recomputation matches the Colab rows exactly. Without the graph the detector is equal or slightly better: F1 0.671 / 0.817 / 0.857 vs 0.644 / 0.813 / 0.854, significant at 1 %. The main detector is **not** changed (D63); the paper framing is the author's decision.
+
+### D63 — The test seeds are spent: no design change is made from NB4's test results [NB4]
+- **Rule:** seeds 0–9 have been looked at. Several results suggest changes:
+  - the flat residual (F43);
+  - dropping or down-weighting the simultaneity family (F47);
+  - linking detector-only candidates to co-occurring rule items (F44).
+- **These are reported, not adopted.** Adopting any of them now would select the design on the test data.
+- **If a change is wanted:**
+  1. develop it on the development seeds (100–104), with the protocol of D60;
+  2. evaluate it once on **fresh** test seeds (20–29; 10–19 are reserved as a spare);
+  3. report it as a post-hoc revision next to the original result.
+- **The injector is the same for every seed set**, so threat 16 of the handoff applies in full.
+
+### D64 — NB5 cleaning strategies as implemented [NB5]
+- **Scope:** the southern system (15 zones). Marrakech is a separate 30-min kW system with a different detector (D61) and almost no grid events (F15), so it is left out.
+- **Flagged zone-steps:** dead, hold or linear-fill states inside a qualifying rule zone run (`zone_runs`, D13 thresholds). Only these are cleaned. Isolated short states are left as recorded under every strategy.
+- **S1 naive:** every flagged run is linearly interpolated between its edges, artefacts and grid events alike.
+- **S2 typed:**
+  - flagged steps of items labelled A1–A3 are imputed with x̂ (eq. 1), multiplied by a ratio that moves linearly from the left-edge to the right-edge ratio x / x̂. Each edge ratio is the median of up to 3 valid neighbours within 6 h, so the imputation joins the series at both ends (guide "Imputation for artefacts");
+  - flagged steps of items labelled G* are kept, marked by an event indicator (feature), and excluded from the training loss;
+  - where an artefact item and a grid item overlap, the artefact wins (the fill part of a compound episode).
+- **Left as recorded:** items labelled N, clock and transfer items, and detector-only candidates.
+  - **[guide deviation]** A4 stamps are not re-aligned: timestamps stay as recorded (D11), and the clock items are excluded from scoring instead.
+- **Labels:**
+  - real data: the fused labels of the main-detector catalogue (`results/main_detector/p_type_south.csv`, NB4 §8b);
+  - injected data: the label model's arg max, which matches fusion there (F46).
+- **S3 oracle (injected data only):** S2's masks outside the injected spans, plus the true types inside them. Injected A1–A3 core spans are imputed. Injected G1–G4, U_SHOCK and U_PARTIAL spans, restoration tails included, are kept with the indicator.
+- **Code:** `src/downstream.py` (`clean`, `typed_masks`, `run_mask`).
+
+### D65 — NB5 forecasters: global LightGBM direct forecaster and a naive reference; no deep model [NB5] **[guide deviation]**
+- **LightGBM:**
+  - one global model per horizon (1 h = 6 steps, 1 day = 144 steps) over the 15 zones, on each zone's series divided by its median on normal pre-test steps;
+  - features at the origin t: lags 0, 1, 2, 5, 11; mean of the last hour and the last day; the same time of day as the target 1, 2 and 7 days earlier; the event indicator now and in the last day (zero for S0 and S1); the target-time calendar (time of day, day of week, weekend, Ramadan, Eid, holiday); zone id;
+  - L2 loss, 500 trees, learning rate 0.05, 63 leaves, seed 0;
+  - every step is an origin (rolling origin, direct forecasting).
+- **Naive reference:** persistence at 1 h (the cleaned series 1 h earlier) and seasonal naive at 1 day (one day earlier). It is model-free, so a strategy effect on it cannot be a training artefact.
+- **Not run:** PatchTST or N-BEATS (guide). The guide wants a deep model to show that the effect does not depend on the architecture. The naive reference serves that purpose at no cost, in line with the author's light-dependency preference. A neural forecaster can be added later on Colab.
+- **Training period:** from day 35 (burn-in) to 31 Dec 2023. **Test period:** 1 Jan – 24 May 2024 (guide).
+
+### D66 — NB5 scoring and the injected datasets [NB5]
+- **Scored zone-steps (guide):** those that every strategy treats as normal: no flagged state, no rule item of any kind, no detector-only candidate and a recorded value. On injected data, scoring also requires NB4's clean region and excludes every injected span, restoration tail included. The truth is then the recorded series.
+- **Subsets:**
+  - all scored test steps;
+  - **"after anomaly (2 days)":** scored steps whose zone had a flagged state in the preceding 2 days. Cleaning can only change a forecast through the history it reads, so the effect concentrates there.
+- **Metrics:** MAE and RMSE in A; MASE (eq. 19) with a per-zone seasonal-naive scale on normal training steps; sMAPE.
+- **Diebold–Mariano test (eq. 20):** on the per-time-step scaled absolute loss **summed** over the scored zones, with a Newey–West variance and Bartlett lag = the horizon (overlapping direct forecasts).
+  - **Why the sum:** it makes the mean loss difference proportional to the pooled MASE difference.
+  - A first version averaged over the zones. That weights a time step with one scored zone like one with fifteen, and it gave a loss difference of the opposite sign to the table: the S2 advantage sits in multi-zone anomalies. Comparisons: S1 vs S2, S0 vs S2 and S2 vs S3.
+- **Injected datasets:** NB4's test datasets 3 % seeds 0–2 and 7 % seed 0, regenerated and checked against the stored truth. NB5 evaluates and selects nothing on them, so D63 is respected.
+- **Outage statistics:** inside NB4's scoring area (clean region plus injected spans):
+  - **truth:** the core spans of injected G1–G4. U_PARTIAL is not counted as an outage;
+  - **naive (S0):** every flagged dead state;
+  - **S1:** none, because interpolation erases them;
+  - **typed (S2):** flagged dead states inside G-labelled items.
+  - Reported as zone-hours, number of runs (≥ 3 steps), and the zone-step precision and recall of the typed outages.
+  - On the real data, where there is no truth, the naive vs typed ratio is reported. It is the exact version of F26's 4.2×.
