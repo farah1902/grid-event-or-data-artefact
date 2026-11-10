@@ -574,3 +574,18 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - **typed (S2):** flagged dead states inside G-labelled items.
   - Reported as zone-hours, number of runs (≥ 3 steps), and the zone-step precision and recall of the typed outages.
   - On the real data, where there is no truth, the naive vs typed ratio is reported. It is the exact version of F26's 4.2×.
+
+### D67 — Paper framing: the main detector keeps its name; the learned graph is presented as an ablation [author's decision, 2026-11-10]
+- **Choice:**
+  - The main detector stays the TCN-GAT multi-scale residual detector selected in D61. It is first in every table.
+  - The learned graph is presented and analysed **as an ablation**: graph attention on vs off, everything else equal (D62). This is a highlighted part of the evaluation, not the source of the claimed gain.
+- **The author's words:** "let's take ur recommendation, but we should highlight that we add the graph (as an ablation) no problem, to make our research more riche, but make sure that the graph is an ablation".
+- **Why:**
+  - F42 shows that removing the graph leaves detection equal or slightly better.
+  - Switching the main detector would be a choice made on the spent test seeds (D63).
+  - Presenting the graph as an ablation keeps the evaluation complete and honest. It also adds a result the field cares about: whether a learned graph helps on few-zone feeder systems.
+- **Wording for the paper:**
+  - "multi-scale neural residual detector (TCN-GAT)";
+  - the graph component is "evaluated by ablation";
+  - its contribution is "interpretability (learned cross-city dependencies, E20), not detection accuracy".
+- **Where:** Table 7e and Fig 9b (`tools/ablation_summary.py`; the graph ablation is shaded and listed first), methods §6.2, paper_handoff §2 and §4.

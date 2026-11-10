@@ -1,0 +1,25 @@
+rate,ablation,group,F1,dF1,dF1_sd,p,main_wins,F1_bgx,AUC_PR
+1%,"main detector (TCN-GAT, multi-scale, hierarchy, tuned)",main,0.644 ± 0.067,0.0,0.0,,,0.817,0.547
+1%,"− learned graph (TCN residual), same event formation",graph,0.671 ± 0.048,0.027,0.0326,0.037109375,2.0,0.826,0.54
+1%,"− learned graph, its own tuned event formation",graph,0.707 ± 0.040,0.063,0.0447,0.00390625,1.0,0.823,0.505
+1%,"− learned graph and − multi-scale (TCN, raw band)",other,0.612 ± 0.053,-0.0316,0.0369,0.02734375,8.0,0.825,0.591
+1%,− multi-scale (raw band only),other,0.595 ± 0.046,-0.0484,0.0357,0.00390625,9.0,0.789,0.566
+1%,− hierarchy (flat residual),other,0.675 ± 0.040,0.0312,0.0629,0.16015625,3.0,0.823,0.736
+1%,LightGBM predictor instead of TCN-GAT (own tuning),other,0.623 ± 0.055,-0.0208,0.049,0.16015625,7.0,0.793,0.592
+1%,− tuned event formation (NB3 setting),other,0.365 ± 0.063,-0.2787,0.0401,0.001953125,10.0,0.805,0.541
+3%,"main detector (TCN-GAT, multi-scale, hierarchy, tuned)",main,0.813 ± 0.020,0.0,0.0,,,0.842,0.598
+3%,"− learned graph (TCN residual), same event formation",graph,0.817 ± 0.020,0.004,0.0076,0.130859375,3.0,0.847,0.598
+3%,"− learned graph, its own tuned event formation",graph,0.801 ± 0.019,-0.0119,0.0142,0.01953125,9.0,0.829,0.574
+3%,"− learned graph and − multi-scale (TCN, raw band)",other,0.775 ± 0.021,-0.0378,0.0162,0.001953125,10.0,0.842,0.668
+3%,− multi-scale (raw band only),other,0.772 ± 0.017,-0.0412,0.0148,0.001953125,10.0,0.834,0.626
+3%,− hierarchy (flat residual),other,0.796 ± 0.014,-0.0173,0.0184,0.013671875,9.0,0.841,0.811
+3%,LightGBM predictor instead of TCN-GAT (own tuning),other,0.765 ± 0.022,-0.0484,0.0222,0.001953125,10.0,0.817,0.678
+3%,− tuned event formation (NB3 setting),other,0.670 ± 0.040,-0.1434,0.0386,0.001953125,10.0,0.812,0.595
+7%,"main detector (TCN-GAT, multi-scale, hierarchy, tuned)",main,0.854 ± 0.011,0.0,0.0,,,0.848,0.565
+7%,"− learned graph (TCN residual), same event formation",graph,0.857 ± 0.009,0.0029,0.0039,0.064453125,3.0,0.852,0.568
+7%,"− learned graph, its own tuned event formation",graph,0.861 ± 0.012,0.0066,0.0069,0.02734375,2.0,0.856,0.532
+7%,"− learned graph and − multi-scale (TCN, raw band)",other,0.864 ± 0.010,0.01,0.0066,0.00390625,1.0,0.862,0.634
+7%,− multi-scale (raw band only),other,0.853 ± 0.011,-0.0005,0.0074,0.845703125,5.0,0.853,0.598
+7%,− hierarchy (flat residual),other,0.856 ± 0.011,0.0022,0.0078,0.375,4.0,0.862,0.791
+7%,LightGBM predictor instead of TCN-GAT (own tuning),other,0.827 ± 0.015,-0.0272,0.0139,0.001953125,10.0,0.83,0.633
+7%,− tuned event formation (NB3 setting),other,0.835 ± 0.010,-0.0185,0.0053,0.001953125,10.0,0.828,0.572

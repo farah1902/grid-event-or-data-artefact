@@ -2,14 +2,105 @@
 
 *Hierarchical weak supervision for anomaly attribution in multi-city feeder telemetry.*
 
-Utilities often clean feeder telemetry without knowing what the anomalies are: zeros and flat lines get deleted or interpolated whether they record a real outage or a data failure. This project uses the grid's own hierarchy (zone → city → region → data logger) to tell **grid events** (keep and flag) from **data artefacts** (impute), with no manual labels. The output is a typed, probabilistic event catalogue for the UCI Morocco smart-meter dataset (id 1158).
+Utilities often clean feeder telemetry without knowing what the anomalies are. Zeros and flat lines get deleted or interpolated whether they record a real outage or a data failure. This project uses the grid's own hierarchy (zone → city → region → data logger) to tell **grid events** (keep and flag) from **data artefacts** (impute), with no manual labels.
 
-**Documentation:** start with [docs/README.md](docs/README.md).
+The output is a typed, probabilistic event catalogue for the UCI Morocco smart-meter dataset (id 1158). The catalogue is evaluated on injected events and on a downstream forecasting task.
+
+**Status (2026-11-10):**
+- Done: rule engine, label model, detector, end model, injection benchmark (NB4) and downstream test (NB5).
+- Remaining: the Tetouan transfer test (NB6) and the final figures (NB7).
+
+## The method in one picture
+
+```
+raw feeder series (15 southern zones, 10 min; 2 Marrakech zones, 30 min)
+  │
+  ├─ per-step states: exact zero / noise floor / hold / straight-line fill
+  │      → typed items (dead, fill, clock, transfer) linked into episodes
+  │
+  ├─ 19 labelling rules vote on items (simultaneity, hold, interpolation, restoration,
+  │      city/zone, calendar/clock, conservation)
+  │      → constrained Dawid–Skene label model → calibrated q(y) over A1–A4, G1–G5, N
+  │
+  ├─ main detector: multi-scale neural residual detector (TCN-GAT)
+  │      TCN-GAT forecast residual → phase-aligned MODWT bands → region / city / zone parts
+  │      → robust scores → tuned event formation → anomalies no rule covers
+  │      (the learned graph is analysed as an ablation: on vs off)
+  │
+  ├─ end model on item features + fusion with q → typed, probabilistic catalogue
+  │
+  └─ downstream: typed cleaning (impute artefacts, keep and flag grid events) for
+         forecasting and outage statistics
+```
+
+Labels: A1 zero-fill gap, A2 simultaneous fill, A3 single-zone fill, A4 clock error; G1 regional outage, G2 city outage, G3 unplanned feeder outage, G4 planned work, G5 load transfer; N normal.
+
+## Main results
+
+All numbers are in [docs/results_summary.md](docs/results_summary.md) and the findings register [docs/findings.md](docs/findings.md) (F-numbers below).
+
+**Real data (southern system).**
+- **Most of the anomalous time is artefact, not outage.** Counting every dead state as an outage gives 1,220.5 zone-hours; the grid-event labels give 294.0. Naive counting therefore overstates outage time **4.15×** (F51).
+- **The large "outages" are compound logger failures:** holds and straight-line fills that turn into exact zeros (C05/C06, C12). No clean regional outage survives (F02, F03, F07).
+- **About one in five dead runs restores through a synthetic straight line** (F05).
+
+**Injection benchmark** (NB4: 30 test datasets at 1 / 3 / 7 % contamination, 8,526 injected events, test period Jul 2023 – May 2024).
+
+| Detector (each with its own event formation tuned on separate development datasets) | Event F1 1 % | 3 % | 7 % |
+|---|---|---|---|
+| **Main detector: multi-scale neural residual detector (TCN-GAT)** | 0.644 | **0.813** | **0.854** |
+| mean(LightGBM, TCN-GAT) | **0.655** | 0.773 | 0.843 |
+| LightGBM forecast residual | 0.623 | 0.765 | 0.827 |
+| STL + MAD | 0.625 | 0.734 | 0.771 |
+| LOF | 0.570 | 0.720 | 0.698 |
+| Isolation Forest | 0.211 | 0.462 | 0.605 |
+
+- **Detection:** the main detector is best at 3 % and 7 % (paired Wilcoxon p ≤ 0.02 against each of the other seven detectors) and tied with the model-based detectors at 1 % (F41).
+- **The learned graph is an ablation** (Table 7e, Fig 9b; F42, D67). Removing graph attention leaves event F1 equal or slightly higher: 0.671 / 0.817 / 0.857 without the graph, against 0.644 / 0.813 / 0.854 with it.
+  - The detection gain comes from the neural residual, the multi-scale bands (+0.04–0.05 F1 at 1 % and 3 %) and the tuned event formation (+0.14–0.28 F1 at 1 % and 3 %, +0.02 at 7 %; F43, F45).
+  - The graph contributes an interpretable map of cross-city dependencies (E20): Boujdour reads most from Laâyoune.
+- **Rules + detector:**
+  - recall rises at every rate (0.824 / 0.834 / 0.839 vs 0.760 / 0.785 / 0.812 for the rules alone);
+  - event F1 rises only at 7 % under strict counting, and at every rate when each method's own real-data alarms are not counted (0.896 / 0.905 / 0.908 vs 0.863 / 0.879 / 0.896; F44).
+- **Attribution:**
+  - macro-F1 0.944 / 0.919 / 0.906 after fusion, calibrated (ECE 0.07–0.10), but no better than a majority vote of the rules on these signatures (F46);
+  - the main error is multi-city zero gaps read as regional outages (F47);
+  - end-to-end accuracy (detected and correctly typed): 0.945 / 0.907 / 0.896.
+
+**Downstream test** (NB5: test period 1 Jan – 24 May 2024).
+- **Outage statistics on injected data:** the typed count is **1.36×** the true outage time, naive counting **1.89×**, and naive interpolation erases every outage (F52).
+- **Forecasts:** typed cleaning gives the best LightGBM forecasts after anomalies.
+  - Real data, day-ahead MASE: 1.061 typed, 1.233 interpolate-everything, 1.501 raw.
+  - Injected data: within about 1 % of an oracle that knows the true types (F53).
+  - Over the whole test period the gain is ≤ 3 %. It needs a forecaster that reads the grid-event indicator; a naive forecaster prefers interpolating everything (F54).
+
+Limitations and claims the paper must not make: [docs/paper_handoff.md](docs/paper_handoff.md) §6–7.
+
+## Main figures
+
+| Figure | File (`results/figures/`) | Source |
+|---|---|---|
+| Compound logger failure, Jan 2023 (all 15 zones) | `fig3_C05_C06_jan2023` | NB1 |
+| L1/L2 held while the other zones are zero-filled, Mar–Apr 2024 | `fig4_C12_mar2024` | NB1 |
+| Rule coverage, overlap and conflict | `fig7_rule_diagnostics` | NB1b |
+| Residual hierarchy: a logger fault moves the region part, a feeder outage the zone part | `fig8_residual_hierarchy` | NB3 |
+| Detection: event F1 and step AUC-PR of every method | `fig9_detection` | NB4 |
+| **Ablations of the main detector (the learned graph first)** | `fig9b_ablations` | `tools/ablation_summary.py` |
+| Attribution confusion and reliability | `fig10_11_attribution` | NB4 |
+| Downstream: forecast error by cleaning strategy, outage-hours error | `fig12_downstream` | NB5 |
+| The graph learned by the TCN-GAT | `E20_learned_graph` | NB4 |
+
+Every figure, with its role and caveats: [docs/figures_and_tables.md](docs/figures_and_tables.md).
+
+## Documentation
+
+Start with [docs/README.md](docs/README.md).
 - To write the paper: [docs/paper_handoff.md](docs/paper_handoff.md).
 - Every number: [docs/results_summary.md](docs/results_summary.md).
-- Every design choice: [docs/decisions.md](docs/decisions.md).
-- Every finding: [docs/findings.md](docs/findings.md).
-- The original plan (equations 1–20, typology, roadmap): [docs/research_guide.md](docs/research_guide.md). Several parts were corrected later; see paper_handoff §3.
+- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D67).
+- Every finding: [docs/findings.md](docs/findings.md) (F01–F54).
+- The method as implemented, with equations: [docs/methods.md](docs/methods.md).
+- The original plan: [docs/research_guide.md](docs/research_guide.md). Several parts were corrected; see paper_handoff §3.
 
 Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 
@@ -17,54 +108,61 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 
 ```
 ├── data/raw/
-│   ├── Data Morocco.xlsx                    # UCI 1158: Laâyoune, Boujdour, Foum El Oued (10 min, A), Marrakech (30 min, kW)
+│   ├── Data Morocco.xlsx                     # UCI 1158: Laâyoune, Boujdour, Foum El Oued (10 min, A), Marrakech (30 min, kW)
 │   └── tetouan/Tetuan City power consumption.csv   # transfer-test dataset (UCI Tetouan, 2017, 10 min)
-├── CLAUDE.md                                # instructions for agents working in the repo
-├── docs/                                    # research guide + full documentation (see docs/README.md)
+├── docs/                                     # full documentation (see docs/README.md)
 ├── src/
-│   ├── rules_v0.py                          # rule engine v0 (pandas + numpy only)
-│   ├── rules_v1.py                          # rule engine v1: 19 rules voting on items (see below)
-│   ├── label_model.py                       # constrained Dawid–Skene label model (+ guide-style baseline)
-│   ├── detector.py                          # LightGBM nowcasts, phase-aligned MODWT, residual hierarchy g/u/v, level scores
-│   ├── end_model.py                         # detector-only candidates, normal windows, item features, end model, fusion
-│   ├── graph_model.py                       # TCN-GAT nowcaster with a learned graph (guide eq. 13), NB4
-│   ├── inject.py                            # injection of observed anomaly signatures, NB4
-│   ├── benchmark.py                         # rerun the pipeline on injected data, baselines, metrics (eq. 17-18), NB4
-│   └── viz.py                               # shared plotting style + stacked-zone plot
-├── notebooks/
-│   ├── NB1_evidence_figures.ipynb           # evidence figures (executed, outputs included)
-│   ├── NB1b_rules_v1.ipynb                  # rule engine v1: votes, diagnostics, key events (executed)
-│   ├── NB2_label_model.ipynb                # label model: probabilistic labels, recovery, robustness (executed)
-│   ├── NB3_detector_end_model.ipynb         # detector + residual hierarchy + end model + fusion (executed, LightGBM 4.6.0)
-│   └── NB4_benchmark.ipynb                  # TCN-GAT + injection benchmark, Tables 5-7, Figs 9-11 (run on Colab, GPU)
-├── tools/make_nb*.py                        # generators that write the notebooks
+│   ├── rules_v0.py, rules_v1.py              # rule engines (v1: 19 rules voting on items, episodes)
+│   ├── label_model.py                        # constrained Dawid–Skene label model
+│   ├── detector.py                           # predictors, phase-aligned MODWT, residual hierarchy, level scores
+│   ├── graph_model.py                        # TCN-GAT with a learned graph (and its no-graph TCN ablation)
+│   ├── end_model.py                          # detector-only candidates, item features, end model, fusion
+│   ├── inject.py                             # injection of observed anomaly signatures
+│   ├── benchmark.py                          # whole pipeline on any dataset, detector variants, metrics
+│   ├── downstream.py                         # cleaning strategies S0–S3, forecasters, MASE / DM test, outage statistics
+│   └── viz.py                                # shared plotting style
+├── notebooks/                                # NB1, NB1b, NB2, NB3, NB4 (Colab GPU run), NB5, all executed
+├── tools/
+│   ├── make_nb*.py                           # notebook generators
+│   ├── dev_select_detector.py                # development selection of the main detector and event formation (D60, D61)
+│   ├── graph_ablation.py                     # learned-graph ablation on the NB4 datasets (D62)
+│   ├── ablation_summary.py                   # Table 7e + Fig 9b (D67)
+│   └── sync_drive.py                         # repo ↔ Google Drive copy for Colab runs
 └── results/
-    ├── event_catalogue_v0/                  # rule engine v0 outputs
-    │   ├── zero_events.csv                  # 72 dead-feeder events + features + provisional type
-    │   ├── stuck_runs.csv                   # 220 runs of ≥ 6 identical non-zero values
-    │   ├── transfers.csv                    # load-transfer candidates (conservation index κ)
-    │   └── timestamp_audit.csv              # duplicate / missing / out-of-order stamps
-    ├── catalogue_v1/                        # rule engine v1 outputs (input to the NB2 label model)
-    │   ├── items.csv                        # 327 items (126 dead, 155 fill, 33 clock, 13 transfer) + features + votes
-    │   ├── votes.csv                        # item × rule label matrix (empty = abstain)
-    │   ├── zone_runs.csv                    # per-zone dead / hold / interpolation runs behind the items
-    │   ├── rule_summary.csv                 # coverage, overlap, conflict per rule
-    │   ├── key_events_v1.csv                # guide catalogue IDs (C01–C12) → v1 items and episodes
-    │   └── episodes_compound.csv            # linked items, e.g. hold → zero fill
-    ├── labels_v1/                           # label-model outputs
-    │   ├── q.csv                            # probabilistic catalogue: q(y) per item, label, confidence
-    │   ├── episodes_labelled.csv            # episodes as label sequences, e.g. A2 → A1
-    │   ├── rule_params.csv                  # learned propensity a / false-positive rate b per rule
-    │   └── recovery_*, robustness.csv, ...  # diagnostics
-    ├── detector_v1/                         # predictor metrics, hierarchy test, recall, detector-only candidates
-    ├── end_model_v1/                        # item features, normal windows, end-model metrics, p_type.csv (fused labels)
-    ├── benchmark_v1/                        # NB4: tables 5-7, per-run results in runs/, predictor comparison, learned graph
-    └── figures/                             # all figures (png + pdf) + clock_offsets.csv, interp_runs.csv
+    ├── event_catalogue_v0/, catalogue_v1/    # rule engine outputs (items, votes, zone runs, episodes)
+    ├── labels_v1/                            # label model: q.csv = probabilistic catalogue
+    ├── detector_v1/, end_model_v1/           # NB3 (LightGBM detector; Marrakech catalogue)
+    ├── main_detector/                        # south catalogue with the main detector (NB4 §8b)
+    ├── benchmark_v1/                         # NB4: Tables 5–7, 7e, runs/, dev/, graph_ablation/, models/
+    ├── downstream_v1/                        # NB5: Table 8, outage statistics, injected/
+    └── figures/                              # all figures (png + pdf)
 ```
+
+## Reproduce
+
+```bash
+pip install -r requirements.txt        # LightGBM is pinned to 4.6.0 (4.7.0 crashes on the author's Windows machine)
+
+python src/rules_v0.py "data/raw/Data Morocco.xlsx" results/event_catalogue_v0     # ~20 s
+python src/rules_v1.py "data/raw/Data Morocco.xlsx" results/catalogue_v1           # ~30 s
+cd notebooks
+python -m jupyter nbconvert --to notebook --execute --inplace NB1_evidence_figures.ipynb    # ~2 min
+python -m jupyter nbconvert --to notebook --execute --inplace NB1b_rules_v1.ipynb          # ~1 min
+python -m jupyter nbconvert --to notebook --execute --inplace NB2_label_model.ipynb        # ~1.5 min
+python -m jupyter nbconvert --to notebook --execute --inplace NB3_detector_end_model.ipynb  # ~13 min
+cd ..
+python tools/dev_select_detector.py && python tools/dev_select_detector.py --extend       # development selection, ~1 h
+# NB4: run on Colab with a GPU (resumable; 1-3 h), or locally (~2.5 h on 8 cores)
+python tools/graph_ablation.py         # learned-graph ablation on the NB4 datasets, ~30 min on CPU
+python tools/ablation_summary.py       # Table 7e + Fig 9b, seconds
+cd notebooks && python -m jupyter nbconvert --to notebook --execute --inplace NB5_downstream.ipynb   # ~18 min
+```
+
+**Colab:** copy the repository to `MyDrive/grid-event-or-data-artefact/` (`python tools/sync_drive.py "G:/My Drive/grid-event-or-data-artefact"`) and open the notebook there. The first cell installs the dependencies and mounts Drive. The last cell flushes Drive; then save the notebook (Ctrl+S) and pull the outputs back with `sync_drive.py --pull`.
 
 ## Rule engine v1
 
-The items voted on are **dead** events (x = 0 or ≤ 5 % of expected), **fill** events (held values or straight-line interpolation), **clock** dates and **transfer** days. Items that share boundaries are linked into **episodes**, for example C12 = hold → zero fill.
+The rules vote on **dead** items (x = 0 or ≤ 5 % of expected), **fill** items (held values or straight-line interpolation), **clock** dates and **transfer** days. Items that share boundaries are linked into **episodes**: for example, C12 is hold → zero fill.
 
 | Family | Rules | Labels |
 |---|---|---|
@@ -76,98 +174,13 @@ The items voted on are **dead** events (x = 0 or ≤ 5 % of expected), **fill** 
 | Calendar / clock | R10 maintenance window, R13 duplicate stamps, R14 missing hour, R15 profile shift | G4, A4, A4, A4 |
 | Conservation | R16 conserved transfer | G5 |
 
-The rules are allowed to conflict, and NB2's Dawid–Skene label model resolves the conflicts. R17/R18 (external records) are not implemented. Deviations from the guide are listed at the top of `NB1b_rules_v1.ipynb`.
+The rules may conflict; the label model resolves the conflicts. R17/R18 (external records) are not implemented. On injected data, interpolation and calendar are the most valuable families (F47).
 
-## Quick start
+## Findings beyond the original plan
 
-```bash
-pip install -r requirements.txt
-
-# 1. Rule engine v0 -> event catalogue (reproduces results/event_catalogue_v0 exactly)
-python src/rules_v0.py "data/raw/Data Morocco.xlsx" results/event_catalogue_v0
-
-# 2. Rule engine v1 -> results/catalogue_v1 (about 30 s)
-python src/rules_v1.py "data/raw/Data Morocco.xlsx" results/catalogue_v1
-
-# 3. Notebooks -> results/figures
-jupyter nbconvert --to notebook --execute --inplace notebooks/NB1_evidence_figures.ipynb
-jupyter nbconvert --to notebook --execute --inplace notebooks/NB1b_rules_v1.ipynb
-jupyter nbconvert --to notebook --execute --inplace notebooks/NB2_label_model.ipynb
-jupyter nbconvert --to notebook --execute --inplace notebooks/NB3_detector_end_model.ipynb   # ~13 min
-```
-
-**LightGBM version.** Use `lightgbm==4.6.0` (pinned). 4.7.0 crashes on the author's Windows machine; NB3 would then fall back to scikit-learn and record `backend: sklearn` in `summary.json`.
-
-**NB3 on Colab (optional).**
-1. Copy the whole repository folder to Google Drive as `MyDrive/grid-event-or-data-artefact/`.
-2. Open `notebooks/NB3_detector_end_model.ipynb` in Colab and choose *Runtime → Run all*. The first cell installs `lightgbm`, `PyWavelets` and `statsmodels` and mounts Drive.
-3. The last cell flushes Drive (`drive.flush_and_unmount()`); then press Ctrl+S so the executed notebook is saved to Drive.
-4. The run writes `results/detector_v1/`, `results/end_model_v1/` and the NB3 figures into the Drive copy. Bring those folders and the executed notebook back into the repository and commit them.
-
-**Google Colab:** copy or clone the repo to `MyDrive/grid-event-or-data-artefact/`, open `notebooks/NB1_evidence_figures.ipynb` and run all cells. The first cell mounts Drive and installs `openpyxl`.
-
-## Figures (NB1)
-
-| File | Content |
-|---|---|
-| `fig1_map_coverage` | Cities (schematic) + per-zone state bars: held, linearly interpolated, exact zero, noise floor, missing |
-| `fig3_C05_C06_jan2023` | 25–29 Jan 2023: simultaneous holds, then zero fill across all 15 southern zones |
-| `fig4_C12_mar2024` | 31 Mar – 2 Apr 2024: L1/L2 held for 43 h while the other zones are zero-filled |
-| `fig5_clock_2022-10-30`, `figS_clock_*` | Clock offset δ* (eq. 9) at each clock-change date |
-| `E1_C09_jul2023`, `E1b_C09_stack` | 16 Jul 2023: B and F zeros next to linearly interpolated Laâyoune |
-| `E2_C11_transfer` | Boujdour zone 1 → zone 2 load transfer, κ = 0.07 |
-| `E3_single_zone_timing` | Single-zone events cluster in a 06:00–11:00 maintenance window |
-| `E4_signatures` | Exact-zero share η, restoration ratio r, overshoot π, ramp time τ by type |
-| `E5_single_zone_gallery` | Single-zone outages C01, C02, C04, C07 |
-| `E6_catalogue_timeline` | Every v0 event on one timeline |
-| `E7_FoumElOued_structural` | Foum El Oued level decline (−50 %) and midday/evening ratio |
-| `E8_Marrakech_timestamps` | Marrakech midnight rows out of order |
-| `fig7_rule_diagnostics` | v1 rule coverage, overlap and conflict (NB1b) |
-| `E9_vote_matrix` | v1 votes on every multi-zone, clock and transfer item (NB1b) |
-| `E10_C01_relabelled` | C01: zeros → straight-line fill → zeros, not a noise floor (NB1b) |
-| `E11_short_simultaneous_freezes` | Daily 08:00 short freezes across all Laâyoune zones until Apr 2023 (NB1b) |
-| `E12_label_model_rules` | Learned rule propensity a vs false-positive rate b, evidence log(a/b) (NB2) |
-| `E13_label_confidence` | Posterior confidence per type and entropy per item kind (NB2) |
-| `E14_key_event_posteriors` | Full posterior q(y) for the key events (NB2) |
-| `E15_label_robustness` | Label changes when rule families or priors change (NB2) |
-| `fig8_residual_hierarchy` | Residual hierarchy: a logger zero fill moves the region part g, a feeder outage only the zone part v (NB3) |
-| `E16_predictor_example` | Out-of-sample prediction of ρ, one normal week (NB3) |
-| `E17_detector_only_candidates` | Anomalies the detector finds and no rule covers, over time (NB3) |
-| `E18_detector_only_gallery` | Detector-only candidates: partial drops, surges, short system-wide disturbances (NB3) |
-| `E19_end_model` | End model vs label model, ablations, labels of detector-only candidates (NB3) |
-
-Roles and caveats for each figure: [docs/figures_and_tables.md](docs/figures_and_tables.md).
-
-## Findings beyond the guide (full register: docs/findings.md)
-
-- **Linear-interpolation artefact.** 275 runs (102 groups, 48 spanning ≥ 2 zones at once) where the series is a perfect straight line, with a constant first difference. Rule engine v0 doesn't detect it, because R2 only catches identical values.
-- **C05 (Jan 2023)** involves all 15 zones: F1–F3 and F5–F7 are interpolated over the same span as the F4 hold.
-- **C09 (16 Jul 2023)** is probably an artefact rather than a regional outage. Laâyoune was linearly interpolated while B and F read exact zeros.
-- **Clock-offset sign.** The notebook reports δ* = −60 min for Oct 2022, meaning the same behaviour is stamped 60 min earlier after the change. The guide's "+60" is the same offset with the opposite sign convention.
-- **Synthetic restoration ramps.** 25 of 117 southern dead runs (21 %), including C02, C04 and C07, return through a straight-line fill. v1 measures restoration after that ramp. C02's "slow return" (r = 0.22 in v0) becomes r = 1.01 with no ramp.
-- **C01 is not a noise-floor outage.** It is zeros, then a 7 h perfectly straight line at ≤ 5 % of expected, then zeros.
-- **No clean regional outage remains.** R7 fires on 0 items: every multi-city dead event comes with hold or linear-fill evidence. G1 will have to be learned from injected events.
-- **Daily logger freeze.** Laâyoune had 218 freezes of 3–5 points across ≥ 2 zones at once (120 starting in the 08:00 hour, one per day on 186 days), which stop in Apr 2023.
-- **Morning overlap.** Most multi-zone linear fills start 08:00–10:30, inside R10's 06–11 h "planned work" window. Some G4 candidates may be data-side maintenance.
-- **R15 needs a fit-quality guard.** Without it, δ* fires on Ramadan dates and on noisy Marrakech dates. With the guard, it fires on Oct 2022 (L, B, F), Oct 2023 (L, B) and Boujdour on 31 Mar 2024 (+60 min, the European spring-forward date and the C12 date).
-- **The guide's label model cannot work on these rules.** Each rule emits a single label, so P(vote | class, fired) = 1 and the votes carry no information. The unconstrained Dawid–Skene is also not identifiable on sparse votes (63 % restart agreement). A constrained, level-gated one-coin model is stable (100 %) and recovers its parameters: accuracy 0.922 vs 0.682, ECE 0.033 vs 0.276 on synthetic votes.
-- **Restoration overshoot is uninformative.** R5's learned log(a/b) is 0.12, against 1.8–4.8 for the other rules.
-- **The residual hierarchy localises outages, not fills** (NB3). Multi-city dead items peak at the region level 3/3 and single-zone dead items at the zone level 92 %, but fills only partly (the region level for 1 of 6 multi-city fills, the city level for 55 % of city-wide fills): holds and linear fills drift zone by zone. Rules and detector are complementary.
-- **The guide's graph nowcast adds nothing** (NB3). Neighbours' current values don't improve clean-data prediction (MAE 0.0292 vs 0.0288) and don't hide logger artefacts either.
-- **The detector finds anomalies outside the typology** (NB3). There are 290 detector-only candidates: partial outages just above the dead threshold, sub-30-min system-wide disturbances, and sustained surges. They are evidence for an ε sweep and for typology extensions.
-- **Artefacts dominate anomalous time** (provisional). In the south there are 2,605 artefact zone-hours against 294 grid-event zone-hours. Counting every zero as an outage would overstate outage time about 4.2×.
-
-## Status
-
-- [x] Rule engine v0 + provisional catalogue
-- [x] NB1 evidence figures
-- [x] Rules v1 (R3–R6, R11, R12, R15 + interpolation family R19–R21)
-- [x] NB2 label model (constrained Dawid–Skene, recovery, robustness, labelled catalogue)
-- [x] NB3 detector + residual hierarchy + end model + fusion (LightGBM 4.6.0; structural-zero fix D51)
-- [ ] NB4 TCN-GAT + injection benchmark (notebook written and tested; full run on Colab GPU)
-- [ ] NB5 downstream forecasting · NB6 Tetouan transfer
-
-## Data
-
-- Bensalah, M. & Hair, A. (2025). *High-Resolution Load Dataset from Smart Meters Across Various Cities in Morocco*. UCI ML Repository, [DOI 10.24432/C5FC8R](https://doi.org/10.24432/C5FC8R) (CC BY 4.0).
-- Salam, A. & El Hibaoui, A. (2018). *Power consumption of Tetouan city*. UCI ML Repository (CC BY 4.0).
+- **Straight-line interpolation** is the most common fill mechanism (275 runs, 48 spanning ≥ 2 zones at once). It is invisible to hold detection (F01).
+- **C05 (Jan 2023)** involves all 15 zones. **C09 (16 Jul 2023)** is an artefact, not a regional outage: Laâyoune was linearly interpolated while Boujdour and Foum El Oued read exact zeros (F02, F03).
+- **Synthetic restoration ramps:** 21 % of southern dead runs return through a straight-line fill, so restoration dynamics are not trustworthy evidence (F05).
+- **Daily logger freeze:** Laâyoune had 218 short multi-zone freezes, most at 08:00, until Apr 2023 (F09).
+- **The guide's Dawid–Skene model is not identifiable** on sparse single-label rule votes. A constrained, level-gated variant is stable (F20–F22).
+- **Fair detector comparison:** event formation (smoothing, threshold, merge gap) changes detector rankings more than the predictor does. It must be tuned for every compared method on separate data (F38).

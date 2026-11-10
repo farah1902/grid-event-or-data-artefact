@@ -384,3 +384,21 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 - **Result:** without the graph, the detector is equal or slightly better on the development data (0.794 vs 0.786 at its own setting) and on the test seeds (0.671 / 0.817 / 0.857 vs 0.644 / 0.813 / 0.854 at the same setting; significant at 1 %).
   - The main detector's advantage comes from the neural residual and event formation, not from the graph.
   - Per D63 the main detector is unchanged. The framing is left to the author (paper_handoff, "open decision").
+
+**Framing of the graph, and the repository update (same session, after the user's reply):**
+- **User request:** "let's take ur recommendation, but we should highlight that we add the graph (as an ablation) no problem, to make our research more riche, but make sure that the graph is an ablation (u can do ur best); also before moving to the NB6, update the github repo (readme and others) for all this final results (based on NB4 and 5)".
+- **D67:** the main detector keeps its name (TCN-GAT, D61), and the learned graph is presented as an ablation (graph on vs off).
+- **`tools/ablation_summary.py` (new):** builds Table 7e (`results/benchmark_v1/table7e_ablations_main_detector.csv`) and Fig 9b (`fig9b_ablations`) from the stored per-run files. It covers every ablation of the main detector at the three rates, with paired Wilcoxon tests, the graph ablation first and shaded.
+  - The figure's palette (project red and purple) was checked with the dataviz validator: all checks pass.
+  - Label collisions with the zero line were fixed in two passes.
+- **Paired tests that refine F43:** the flat-residual ablation is not different from the main detector at 1 % and 7 % (p = 0.16, 0.38) and significantly worse at 3 % (p = 0.014). F43 was corrected: the hierarchy does not hurt detection, and it helps at 3 %.
+- **Docs updated:**
+  - methods §6.2 (the graph ablation) and §8 (downstream test);
+  - findings F42 (resolved) and F43 (paired tests); results_summary §9.2c;
+  - paper_handoff (framing decided, storyline item 6);
+  - figures_and_tables, data_dictionary, docs/README (register ranges), CLAUDE.md.
+- **Root README rewritten for the final state:**
+  - method overview;
+  - main results of the real data, NB4 (with the graph as an ablation) and NB5;
+  - main figures, repository layout and the reproduce order (including `graph_ablation.py`, `ablation_summary.py` and NB5).
+- **Tooling note:** a long bash heredoc failed again ("unexpected EOF"), so the README was written with the file tool. Multi-line doc edits use a small script that tries both line endings, because the docs mix CRLF and LF.

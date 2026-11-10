@@ -52,6 +52,7 @@ All NB3 figures come from the reference run (LightGBM 4.6.0, structural-zero fix
 | `E21_injected_signatures` | NB4 | One injected event per type over the original series (grey) | supp | D54 |
 | `fig9_detection` | NB4 | Event F1 and step AUC-PR per method at 1/3/7 %, test period, mean ± sd over seeds | **main** (guide Fig 9; dot plot instead of PR curves, because curves need stored scores) | Table 5 |
 | `fig10_11_attribution` | NB4 | (a) confusion of injected type vs fused label, 3 %, test; (b) reliability of q, f and p | **main** (guide Figs 10 and 11) | Table 6 |
+| `fig9b_ablations` | `tools/ablation_summary.py` | Ablations of the main detector at 1/3/7 %: ΔF1 vs main (mean ± sd of per-seed differences), filled = Wilcoxon p < 0.05, learned-graph ablation shaded and first | **main** (the graph presented as an ablation, D67) | Table 7e, F42, F43 |
 | `fig12_downstream` | NB5 | (a) real-data and (b) injected-data LightGBM MASE by cleaning strategy (S0–S3) at 1 h and 1 day, test steps after an anomaly; (c) outage zone-hours / injected truth per strategy | **main** (guide Fig 12) | Table 8, F51–F54 |
 
 Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) should now show the residual hierarchy feeding the end model and the detector-only candidate stream.

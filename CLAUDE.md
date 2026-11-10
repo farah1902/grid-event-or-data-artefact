@@ -40,6 +40,7 @@ tools/make_nb*.py             generators that write the notebooks (see "Notebook
 tools/diag_structural_zeros.py diagnostic behind F35/D51 (writes results/detector_v1/structural_zeros.csv)
 tools/dev_select_detector.py  development selection (seeds 100-104): event formation per detector + the main detector -> results/benchmark_v1/dev_selection.json (D60, D61)
 tools/graph_ablation.py       post-run no-graph ablation of the main detector on the NB4 datasets -> results/benchmark_v1/graph_ablation/ (D62, F42)
+tools/ablation_summary.py     Table 7e + Fig 9b: all ablations of the main detector, the learned graph first (D67; reads stored files, seconds)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary
 results/labels_v1/            label-model outputs (q.csv = probabilistic labels)
@@ -124,8 +125,8 @@ Editing the `.ipynb` directly also works, but the generator then goes stale. If 
 
 See `docs/paper_handoff.md` § "What is still missing". In short:
 - **NB3:** done (reference run local, LightGBM 4.6.0, with the D51 fix).
-- **Main detector (D61):** the TCN-GAT multi-scale graph residual detector with tuned event formation (w 24, q 99.9, gap 12), chosen on development seeds with every detector tuned alike (D60). LightGBM is an ablation. Read F36–F40 before writing about it.
+- **Main detector (D61):** the TCN-GAT multi-scale residual detector with tuned event formation (w 24, q 99.9, gap 12), chosen on development seeds with every detector tuned alike (D60). **Paper framing (D67, author's decision):** the learned graph is presented as an ablation (graph on/off; it adds no detection skill, F42); LightGBM is a predictor ablation. Read F36–F43 before writing about it.
 - **NB4:** done (Colab run 2026-11-09; results_summary §9, F41–F50, no-graph ablation F42/D62). **The test seeds 0–9 are spent (D63):** do not change the design based on them.
-- **NB5:** downstream forecasting (`src/downstream.py`, `tools/make_nb5_downstream.py`).
+- **NB5:** done (`src/downstream.py`, `tools/make_nb5_downstream.py`; results_summary §10, F51–F54).
 - **NB6:** Tetouan transfer.
 - **NB7:** final figures.

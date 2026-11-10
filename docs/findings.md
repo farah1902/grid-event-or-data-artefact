@@ -453,13 +453,14 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 - **Paper:**
   - Do not claim that the learned graph improves detection.
   - Accurate statement: "a multi-scale neural residual detector; adding learned graph attention over the zones' current values neither helps nor hurts detection (the no-graph ablation is equal or slightly better at every rate), so the graph's contribution is interpretability, not accuracy."
-  - The main detector was selected (D61) before this row existed, and the test seeds are spent (D63). Switching the main detector to the no-graph TCN on this evidence would be a choice made on the test data. The framing is the author's decision (paper_handoff §1, contribution 3).
+  - The main detector was selected (D61) before this row existed, and the test seeds are spent (D63). Switching the main detector to the no-graph TCN on this evidence would be a choice made on the test data. 
+  - **Resolved (D67):** the main detector keeps its name, and the graph is presented as an ablation (Table 7e, Fig 9b, methods §6.2).
 
 ### F43 — Multi-scale scoring helps at low contamination; the region/city/zone hierarchy does not help detection — *solid*
 - **Setup:** ablations of the main detector, each at the main detector's event formation (w 24, q 99.9, gap 12; D60), so that only one component changes.
-- **Single scale (raw band only):** F1 0.595 / 0.772 / 0.853, against the main detector's 0.644 / 0.813 / 0.854. The MODWT bands add 0.04–0.05 F1 at 1 % and 3 % and nothing at 7 %.
+- **Single scale (raw band only):** F1 0.595 / 0.772 / 0.853, against the main detector's 0.644 / 0.813 / 0.854. The MODWT bands add 0.04–0.05 F1 at 1 % and 3 % (Wilcoxon p = 0.004 and 0.002) and nothing at 7 % (p = 0.85).
 - **No hierarchy (flat robust z of the zone residual, raw band):**
-  - F1 0.675 / 0.796 / 0.856: higher than the main detector at 1 % and 7 % and lower at 3 %;
+  - F1 0.675 / 0.796 / 0.856. Paired Wilcoxon against the main detector (Table 7e): not different at 1 % (p = 0.16) or 7 % (p = 0.38), significantly lower at 3 % (p = 0.014; the main detector wins 9/10 seeds);
   - AUC-PR 0.736 / 0.811 / 0.791, much higher than the main detector's 0.547 / 0.598 / 0.565;
   - start error 82 / 90 / 80 min against 168 / 165 / 140 min.
 - **Why:** the zone score is the maximum over the region, city and zone parts (eq. 14). A multi-zone event shifts the region or city median, so the zones it did not touch also score high at those levels. This adds false zone-steps (lower AUC-PR) and time-only matches (F44). The hierarchy's value is in **placing** an event at the right level (F30: dead items 92 % at the zone and 3/3 at the region), not in detecting it.
@@ -474,8 +475,12 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 
   The neural residuals localise fills better. LightGBM's residual is the only one that places all three multi-city dead items at the region.
 - **Caveat:** the flat variant was not tuned on the development data, and adopting it now would be a choice made on the test seeds (D63).
+- **Other paired tests (Table 7e):**
+  - TCN, raw band: lower at 1 % and 3 % (p = 0.027, 0.002), higher at 7 % (p = 0.004);
+  - LightGBM as the predictor: lower at 3 % and 7 % (p = 0.002), not different at 1 % (p = 0.16);
+  - NB3 event formation: lower at every rate (p = 0.002).
 - **Paper:**
-  - "multi-scale bands help at low contamination; the hierarchy is a localisation device, not a detection gain";
+  - "multi-scale bands help at low contamination; the hierarchy is a localisation device and does not hurt detection (it helps at 3 %)";
   - report the flat row next to the main one;
   - do not claim that the hierarchy improves detection.
 

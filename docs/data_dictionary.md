@@ -284,6 +284,8 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 - `_info.json`: runtime, number of rule items and detector-only candidates, γ of the main detector;
 - `sens_s{seed}_{config}_det.csv` / `_lab.csv`: threshold sensitivity (rule-only detection; label-model labels of typed events).
 
+`table7e_ablations_main_detector.csv` (`tools/ablation_summary.py`, D67): rate, ablation, group (main, graph, other), F1 (mean ± sd), dF1 and dF1_sd (per-seed difference to the main detector), p (paired Wilcoxon), main_wins (seeds where the main detector is better), F1_bgx, AUC_PR. Test period.
+
 **`graph_ablation/`**: the no-graph ablation of the main detector, computed after the NB4 run by `tools/graph_ablation.py` (D62) on the same datasets:
 - `dev_detection_grid.csv`: development seeds 100–104, detectors `TCN-GAT, hierarchy, multi-scale` and `TCN, no graph, hierarchy, multi-scale`, the 48 settings. Same columns as `dev/dev_detection_grid.csv`.
 - `runs/r{rate}_s{seed}_detection.csv` and `test_detection.csv` (all runs). Columns:

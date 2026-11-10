@@ -327,7 +327,19 @@ This replaces the LightGBM forecast as the predictor of eq. 27 for the south. Ba
 - the main detector at a single scale and without the hierarchy;
 - TCN-GAT and LightGBM with NB3's event formation.
 
-**Scoring area** (D60): rule-based, the same for every detector.
+**Scoring area** (D60): rule-based, the same for every detector.
+
+### 6.2 The learned graph as an ablation (D62, D67)
+
+The learned graph is evaluated as an **ablation of the main detector**: graph attention on or off, everything else unchanged.
+- **Without the graph:** the same TCN (encoder and head, no attention message), trained the same way (`graph=False`, D53).
+- Its residual goes through the same MODWT bands, region/city/zone hierarchy and robust scores (`benchmark.V_TCN_MS`, "TCN, no graph, hierarchy, multi-scale").
+- It is scored on the same injected datasets in two ways:
+  1. with the main detector's event formation, so that only the graph changes;
+  2. with its own event formation, tuned on the development seeds like every other detector, so that it is not handicapped by a setting chosen for the graph.
+- Paired Wilcoxon tests over the 10 seeds compare it with the main detector at each rate (Table 7e, Fig 9b; `tools/graph_ablation.py`, `tools/ablation_summary.py`).
+- **The other ablations in Table 7e:** the predictor (LightGBM instead of TCN-GAT, own tuning), the scales (raw band only), the hierarchy (flat robust z of the zone residual), graph and scales together (TCN, raw band), and the event formation (NB3's setting).
+- **Result (F42):** removing the graph leaves event F1 equal or slightly higher. The paper therefore presents the graph as an analysed component that brings interpretability (the learned cross-city edges, E20), not detection accuracy. The detection gain comes from the neural residual, the multi-scale scoring and the tuned event formation (F41–F43).
 
 ## 7. End model and fusion (`src/end_model.py`, NB3)
 
@@ -364,3 +376,34 @@ All rule items and normal windows are predicted out of fold (GroupKFold, 5 folds
 - soft cross-entropy;
 - ablations: without detector features, without episode features, detector features only, the MLP;
 - the list of rule items whose fused label differs from the label model.
+
+## 8. Downstream test (`src/downstream.py`, NB5; D64–D66)
+
+**Flagged zone-steps:** dead, hold or linear-fill states inside a qualifying rule zone run, in the southern system. Only these are changed by a cleaning strategy.
+
+| Strategy | Flagged steps of artefact items (A1–A3) | Flagged steps of grid-event items (G*) |
+|---|---|---|
+| S0 raw | kept | kept |
+| S1 naive | linear interpolation between the run's edges | linear interpolation |
+| S2 typed | x̂ (eq. 1) × a ratio moving linearly from the left-edge to the right-edge x / x̂ (median of up to 3 valid neighbours within 6 h) | kept; event indicator = 1 (a forecaster feature); excluded from the training loss |
+| S3 oracle | S2 with the injected truth inside injected spans (injected data only) | S2 with the injected truth |
+
+- Items labelled N, clock and transfer items, and detector-only candidates are left as recorded. Timestamps are not re-aligned (D11).
+
+**Forecasters:**
+- **LightGBM:** a global direct model per horizon h ∈ {6, 144} steps (1 h, 1 day), on each zone's series divided by its median on normal pre-test steps.
+  - Features at the origin t: lags 0, 1, 2, 5, 11; means over the last hour and the last day; the same time of day as the target 1, 2 and 7 days earlier; the event indicator now and over the last day; the target-time calendar; zone id.
+  - L2 loss, 500 trees, learning rate 0.05, 63 leaves. Trained from day 35 to 31 Dec 2023.
+- **Naive reference:** persistence x̂(t) = y(t − 6) at 1 h, seasonal naive x̂(t) = y(t − 144) at 1 day, on the cleaned series y.
+
+**Scoring:**
+- 1 Jan – 24 May 2024, on zone-steps that every strategy treats as normal: no flagged state, no rule item, no detector-only candidate and, on injected data, inside NB4's clean region and outside every injected span. The comparison is against the recorded values.
+- Subsets: all scored steps; steps whose zone had a flagged state in the preceding 2 days.
+- MAE and RMSE (A), MASE (eq. 19, per-zone seasonal-naive scale on normal training steps), sMAPE.
+
+**Diebold–Mariano test (eq. 20):** on the per-time-step loss L_t = Σ_z |e_{t,z}| / s_z over the scored zones, d_t = L_t(first) − L_t(second), with a Newey–West variance and Bartlett lag = h.
+
+**Outage statistics:** zone-hours and runs (≥ 3 steps) of
+- every flagged dead state (naive, what S0 reports; S1 reports none);
+- flagged dead states inside G-labelled items (typed, S2);
+- the injected G1–G4 core spans (truth), inside NB4's scoring area.

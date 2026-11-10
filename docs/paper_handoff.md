@@ -75,7 +75,7 @@ grid-event labels: a 4.15-fold overstatement (F51).
    - residual hierarchy (Fig 8): it works for outages, not for fills (F30);
    - detector-only candidates and typology gaps (F32, E18);
    - the end model reproduces the label model (F33) and corrects the threshold of one rule (F34).
-   - Then the **(pending)** injection benchmark against baselines (NB4).
+   - Then the injection benchmark (NB4): Table 5 and Fig 9 (detectors and baselines), then **Table 7e and Fig 9b, the ablations of the main detector, with the learned-graph ablation first** (D67, F42, F43). Table 6 and Figs 10–11 cover attribution.
 7. **Case studies on real data:** the catalogue (Table 4 draft in results_summary §7), C01/C09 re-reads, synthetic restoration ramps, the daily logger freeze.
 8. **Downstream (NB5):**
    - Counting every dead state as an outage overstates southern outage time 4.15× on the real data (F51). On injected data, the naive count is 1.89× the truth and the typed count 1.36×, the residual being the A1 → G1 confusion (F52).
@@ -97,7 +97,11 @@ grid-event labels: a 4.15-fold overstatement (F51).
     - its advantage is event detection with fewer fragmented false alarms (F38, F39), not step-wise AUC-PR, where STL + MAD and LightGBM rank higher (F39);
     - under strict counting no detector raises the rules' event F1 on the rules' own typology (F40).
   - **Test numbers (NB4, seeds 0–9):** F1 0.644 / 0.813 / 0.854 at 1 / 3 / 7 %, best of eight detectors at 3 % and 7 % (p ≤ 0.02), tied at 1 % (F41).
-  - **Open decision for the author:** keep "TCN-GAT" as the named main detector, with F42 reported as an ablation (the recommended option, consistent with D61 and D63), or present the detector as a "multi-scale neural residual detector" with the graph as an optional, interpretable component.
+  - **Framing decided by the author (D67, 2026-11-10):**
+    - "TCN-GAT" stays the named main detector.
+    - **The learned graph is presented as an ablation:** graph attention on vs off, everything else equal (methods §6.2, Table 7e, Fig 9b, F42).
+    - Highlight it as an analysed component that enriches the study: the learned cross-city dependencies (E20) are interpretable, while detection accuracy does not depend on the graph.
+    - The detection gain is attributed to the neural residual, the multi-scale scoring and the tuned event formation.
 
 ## 3. Corrections to the guide (continuing the guide's own table, #1–13)
 

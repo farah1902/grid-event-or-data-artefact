@@ -397,6 +397,19 @@ Scoring area: rule-based, the same for every detector (D60). "Every alarm counts
   - F1: p = 0.004 (1/10), 0.020 (main better, 9/10), 0.027 (2/10);
   - AUC-PR: main better at every rate (p = 0.010, 0.010, 0.002).
 
+### 9.2c All ablations of the main detector (Table 7e, Fig 9b; `table7e_ablations_main_detector.csv`, `tools/ablation_summary.py`)
+ΔF1 = ablation − main detector, mean over 10 seeds; p = paired Wilcoxon; test period. The main detector scores 0.644 / 0.813 / 0.854.
+
+| Ablation | ΔF1 1 % (p) | ΔF1 3 % (p) | ΔF1 7 % (p) |
+|---|---|---|---|
+| **− learned graph (TCN residual), same event formation** | **+0.027 (0.037)** | +0.004 (0.13) | +0.003 (0.064) |
+| **− learned graph, own tuned event formation** | **+0.063 (0.004)** | −0.012 (0.020) | +0.007 (0.027) |
+| − learned graph and − multi-scale (TCN, raw band) | −0.032 (0.027) | −0.038 (0.002) | +0.010 (0.004) |
+| − multi-scale (raw band only) | −0.048 (0.004) | −0.041 (0.002) | −0.001 (0.85) |
+| − hierarchy (flat residual) | +0.031 (0.16) | −0.017 (0.014) | +0.002 (0.38) |
+| LightGBM predictor instead of TCN-GAT (own tuning) | −0.021 (0.16) | −0.048 (0.002) | −0.027 (0.002) |
+| − tuned event formation (NB3 setting) | −0.279 (0.002) | −0.143 (0.002) | −0.018 (0.002) |
+
 ### 9.3 Recall by type (`detection_recall_by_type.csv`, zone-strict, test period)
 - **Rules only:** A1, A2, A3, G1, G3, G4 1.000; G2 0.900 / 0.929 / 0.939; U_SHOCK 0, U_PARTIAL 0 / 0.020 / 0.
 - **Ours:** every typed class 1.000 (G2 0.998 at 7 %); U_SHOCK 0.302 / 0.212 / 0.052; U_PARTIAL 0.180 / 0.207 / 0.220.
