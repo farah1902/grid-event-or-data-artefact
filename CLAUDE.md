@@ -14,6 +14,7 @@ The author is an EHTP PhD student. Code runs locally on Windows and on Google Co
 6. `docs/methods.md`: the method exactly as implemented, in paper-ready form.
 7. `docs/research_log.md`: chronological log of all work sessions.
 8. `docs/data_dictionary.md` (every output file and column) and `docs/figures_and_tables.md` (every figure, its source and its paper role).
+9. `docs/transfer_protocol.md`: the Tetouan transfer. Every component is marked frozen, re-estimated, adapted or engineering. Keep it complete if the transfer code changes.
 
 ## Repository map
 
@@ -42,6 +43,7 @@ tools/make_nb*.py             generators that write the notebooks (see "Notebook
 tools/diag_structural_zeros.py diagnostic behind F35/D51 (writes results/detector_v1/structural_zeros.csv)
 tools/dev_select_detector.py  development selection (seeds 100-104): event formation per detector + the main detector -> results/benchmark_v1/dev_selection.json (D60, D61)
 tools/graph_ablation.py       post-run no-graph ablation of the main detector on the NB4 datasets -> results/benchmark_v1/graph_ablation/ (D62, F42)
+tools/make_transfer_diagram.py Fig 14: the Tetouan transfer protocol diagram (D71; reads results/transfer_tetouan/summary.json)
 tools/ablation_summary.py     Table 7e + Fig 9b: all ablations of the main detector, the learned graph first (D67; reads stored files, seconds)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary

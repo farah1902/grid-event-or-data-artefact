@@ -75,6 +75,10 @@ All numbers are in [docs/results_summary.md](docs/results_summary.md) and the fi
   - Over the whole test period the gain is ≤ 3 %. It needs a forecaster that reads the grid-event indicator; a naive forecaster prefers interpolating everything (F54).
 
 **Transfer to another city without re-tuning** (NB6: UCI Tetouan, 3 zones, 2017; rules, label model and event formation frozen from Morocco; 30 injected datasets).
+
+![Fig 14 — the transfer protocol: frozen from Morocco, re-estimated from Tetouan's unlabelled series, single-city adaptations, results](results/figures/fig14_transfer_protocol.png)
+
+Every component of the transfer is classified as frozen, re-estimated from unlabelled data, adapted for a single city, or engineering, with values, code location, regression checks and a chronology showing that nothing was tuned on Tetouan: [docs/transfer_protocol.md](docs/transfer_protocol.md).
 - **No false alarms from the rules:** on a full clean year of real data, the frozen rules raise zero false items. The main detector raises 7 alarms in 36 zone-months, the fewest of the seven detectors (F55).
 - **Detection:** the full method reaches event F1 **0.945 / 0.919 / 0.890** at 1 / 3 / 7 % with precision **0.98–1.00**, and beats the rules alone at every rate (10/10 seeds, p = 0.002). Every typed event class is recalled at 0.99–1.00 (F56).
 
@@ -105,6 +109,7 @@ Limitations and claims the paper must not make: [docs/paper_handoff.md](docs/pap
 | Attribution confusion and reliability | `fig10_11_attribution` | NB4 |
 | Downstream: forecast error by cleaning strategy, outage-hours error | `fig12_downstream` | NB5 |
 | Transfer to Tetouan: detection of every method, attribution confusion | `fig13_tetouan` | NB6 |
+| **Transfer protocol: frozen, re-estimated, adapted, results** | `fig14_transfer_protocol` | `tools/make_transfer_diagram.py` |
 | The graph learned by the TCN-GAT | `E20_learned_graph` | NB4 |
 
 Every figure, with its role and caveats: [docs/figures_and_tables.md](docs/figures_and_tables.md).
@@ -114,7 +119,8 @@ Every figure, with its role and caveats: [docs/figures_and_tables.md](docs/figur
 Start with [docs/README.md](docs/README.md).
 - To write the paper: [docs/paper_handoff.md](docs/paper_handoff.md).
 - Every number: [docs/results_summary.md](docs/results_summary.md).
-- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D70).
+- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D71).
+- The transfer to Tetouan, adaptation by adaptation: [docs/transfer_protocol.md](docs/transfer_protocol.md).
 - Every finding: [docs/findings.md](docs/findings.md) (F01–F58).
 - The method as implemented, with equations: [docs/methods.md](docs/methods.md).
 - The original plan: [docs/research_guide.md](docs/research_guide.md). Several parts were corrected; see paper_handoff §3.
@@ -145,6 +151,7 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 │   ├── dev_select_detector.py                # development selection of the main detector and event formation (D60, D61)
 │   ├── graph_ablation.py                     # learned-graph ablation on the NB4 datasets (D62)
 │   ├── ablation_summary.py                   # Table 7e + Fig 9b (D67)
+│   ├── make_transfer_diagram.py              # Fig 14: the transfer protocol diagram (D71)
 │   └── sync_drive.py                         # repo ↔ Google Drive copy for Colab runs
 └── results/
     ├── event_catalogue_v0/, catalogue_v1/    # rule engine outputs (items, votes, zone runs, episodes)

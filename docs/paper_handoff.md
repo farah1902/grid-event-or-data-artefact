@@ -82,7 +82,8 @@ grid-event labels: a 4.15-fold overstatement (F51).
    - Counting every dead state as an outage overstates southern outage time 4.15× on the real data (F51). On injected data, the naive count is 1.89× the truth and the typed count 1.36×, the residual being the A1 → G1 confusion (F52).
    - Typed cleaning gives the best LightGBM forecasts, mainly after anomalies (day-ahead MASE −14 % vs naive interpolation on the real data), and comes within about 1 % of an oracle (F53).
    - A model-free forecaster prefers erasing outages, so the typed labels should be given to the forecaster, not only used for cleaning (F54).
-9. **Tetouan transfer (NB6):**
+9. **Tetouan transfer (NB6).**
+   - Show **Fig 14** (the protocol: what is frozen, what is re-estimated from unlabelled data, what one city changes) before the results. Every adaptation is listed in `docs/transfer_protocol.md` (D71).
    - Frozen rules raise zero false items on a clean year of another city's data (F55).
    - The full method reaches F1 0.945 / 0.919 / 0.890 at precision 0.98–1.00 and beats the rules everywhere (F56).
    - On one year of 3 zones, the data-efficient LightGBM is the better stand-alone detector at 3–7 % (F57).

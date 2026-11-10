@@ -637,3 +637,23 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **Metrics:** as NB4 (eq. 17 F1, precision, recall, zone-strict F1, own-background-excluded F1, step AUC-PR, per-type recall), and Wilcoxon tests of the main detector against every other method.
 - **Attribution:** for each typed injected event, the best zone-matched rule item, labelled by the frozen label model's arg max and by majority vote. Macro-F1 is taken over the injected classes; predictions of G1 or N count as errors.
 - **Morocco vs Tetouan:** shown as context, not as a paired test (different system, period and number of zones).
+
+### D71 — One register of every transfer adaptation, and a protocol diagram [NB6] [author's request]
+- **The author's request:** "are u sure that u add every step (every move every fix every adaptation without any tuning) to the repo in this transfer step… we need to add a diagram for this step… every adaptation should be noted".
+- **Audit:** the NB6 commit diff (`git diff ede9094 5d7db4a -- src tools`) was checked line by line against D68–D70. It found details recorded nowhere, now added to the register:
+  - **Units:** Tetouan is in kW, Morocco in A, and no conversion is needed. Every threshold is relative or unit-free: hold = exact equality, linear fill = relative tolerance 1e-8·|x|, dead = 5 % of x̂, and ratio rules. The injector's floors and shocks are fractions of x̂.
+  - The weather columns are loaded but not used.
+  - **In one city,** A2 is 50 % 2–3 zones and 50 % city-wide (Morocco: 50 / 25 / 25). A city-wide A2 is followed by an A1 zero fill with p = 0.5.
+  - The baseline detectors (STL, Isolation Forest, LOF) are fitted unsupervised on each dataset, as in NB4.
+  - Timestamps are as recorded (D11).
+  - The models were trained by a prototype run of the same `Transfer.fit_predictors` call and reloaded by NB6.
+- **Chronology from file modification times** (10 Nov):
+  - library changes 21:18–21:19;
+  - real-series crash fixes and the last code change 21:25:56;
+  - generator 21:28:44;
+  - the first injected Tetouan result seen 21:30;
+  - NB6 run 21:32–21:44.
+  - Nothing was modified after 21:30, so no design choice depends on an injected Tetouan result.
+- **Outputs:**
+  - `docs/transfer_protocol.md`: every component of the pipeline marked frozen, re-estimated from unlabelled data, adapted (single city) or engineering, with values, code location, regression checks and the chronology;
+  - Fig 14, `results/figures/fig14_transfer_protocol.{png,pdf}` (`tools/make_transfer_diagram.py`, numbers read from `results/transfer_tetouan/summary.json`).

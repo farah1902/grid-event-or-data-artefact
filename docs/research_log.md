@@ -425,3 +425,9 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 - Full method F1 0.945 / 0.919 / 0.890 at precision 0.98–1.00, above the rules alone at every rate (10/10 seeds).
 - The detector alone: main best at 1 %; LightGBM and STL better at 3–7 %, because the neural predictors are data-hungry (MAE 0.045 vs 0.011).
 - Attribution macro-F1 0.77–0.79, or 0.95–0.98 without A1. A1 → G2 in 348/417 is the single-city limit.
+
+**Transfer audit and protocol diagram** (same day, after the user asked whether every step, fix and adaptation of the transfer is in the repo, and for a diagram):
+- **Audit:** the NB6 commit diff was checked line by line against D68–D70. Six details were missing (units, unused weather columns, the single-city A2 split and compound, the per-dataset baseline fits, timestamps as recorded, the prototype training). The hold, linear-fill and injector code was re-read to confirm that the kW-vs-A switch needs no change.
+- **New `docs/transfer_protocol.md`:** the complete register, with components, values, status (frozen / re-estimated / adapted / engineering), code locations, regression checks and the chronology from file modification times. No file changed after the first injected Tetouan result.
+- **New Fig 14** (`tools/make_transfer_diagram.py`): the protocol stage by stage, with results read from `summary.json`. Layout was fixed in three passes: a stray arrow, hyphen and formula wraps, spacing.
+- D71; README embeds Fig 14 and links the register; docs index, figure register, handoff (storyline item 9) and CLAUDE.md updated.
