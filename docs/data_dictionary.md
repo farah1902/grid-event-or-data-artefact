@@ -319,3 +319,20 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 | `table8_dm.csv` | every DM test (real and per injected dataset) |
 | `outage_injected.csv` | mean outage zone-hours and counts by rate and strategy |
 | `summary.json` | real-data outage totals and ratio, dead zone-hours by label, real-data forecast scores and DM tests, injected outage means and ratios to truth, runtime |
+
+## Transfer test — `results/transfer_tetouan/` (from `src/transfer.py`, NB6; D68–D70)
+
+| File | Content |
+|---|---|
+| `real_items.csv` | items of the frozen rule engine on the real Tetouan series (frozen item schema), with the frozen label model's label and confidence and majority vote |
+| `real_alarms_by_detector.csv` | detector, its frozen event formation (w, q, gap), γ on Tetouan, real_alarms (2017), per_zone_month, alarm_zone_hours |
+| `real_alarms_main_detector.csv` | the main detector's alarms on the real series: start, end, zones, duration_h, max_score, weekday, ramadan, eid, holiday |
+| `predictor_mae.csv` | MAE of ρ on rule-clean steps for the predictors trained on Tetouan (TCN-GAT, TCN, LightGBM) |
+| `runs/r{rate}_s{seed}_truth.csv` | injected events (as `benchmark_v1/runs/*_truth.csv`; T1–T3 zones) |
+| `runs/r{rate}_s{seed}_detection.csv` | per method: gamma, n_pred, n_true, precision, recall, f1, precision_zone, recall_zone, f1_zone, start/end errors, recall_{type}, f1_bgx, precision_bgx, n_pred_bgx, f1_zone_bgx, auc_pr (whole year) |
+| `runs/r{rate}_s{seed}_attribution.csv` | per typed injected event: type, n_zones, mechanism, detected, the matched rule item, its kind, label (frozen label model), confidence, majority vote, q_ over the classes |
+| `table9_detection.csv`, `table9_wilcoxon.csv`, `table9_recall_by_type.csv`, `table9_attribution.csv` | Table 9: detection mean ± sd by rate and method; Wilcoxon main vs others; recall by type; attribution (macro-F1 and accuracy of label model and majority vote, detected share, end to end) |
+| `confusion_label_model_3pct.csv` | injected type × frozen label-model label, 3 %, detected events |
+| `morocco_vs_tetouan.csv` | F1 of the same methods on Morocco (NB4 test period) and Tetouan, and label-model macro-F1 (context, not paired) |
+| `models/` | predictors trained on Tetouan: `tcn_gat.pt`, `tcn.pt` (+ histories), `lightgbm_forecast.pkl` |
+| `summary.json` | audit, real items and labels, predictor MAE, real alarms, F1, F1 with background excluded, recall, attribution, injected counts, runtime |

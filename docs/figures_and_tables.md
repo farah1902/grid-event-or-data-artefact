@@ -53,6 +53,8 @@ All NB3 figures come from the reference run (LightGBM 4.6.0, structural-zero fix
 | `fig9_detection` | NB4 | Event F1 and step AUC-PR per method at 1/3/7 %, test period, mean ± sd over seeds | **main** (guide Fig 9; dot plot instead of PR curves, because curves need stored scores) | Table 5 |
 | `fig10_11_attribution` | NB4 | (a) confusion of injected type vs fused label, 3 %, test; (b) reliability of q, f and p | **main** (guide Figs 10 and 11) | Table 6 |
 | `fig9b_ablations` | `tools/ablation_summary.py` | Ablations of the main detector at 1/3/7 %: ΔF1 vs main (mean ± sd of per-seed differences), filled = Wilcoxon p < 0.05, learned-graph ablation shaded and first | **main** (the graph presented as an ablation, D67) | Table 7e, F42, F43 |
+| `fig13_tetouan` | NB6 | (a) event F1 of every method on Tetouan at 1/3/7 % (frozen method); (b) attribution confusion of the frozen label model, 3 % | **main** (transfer, RQ5) | Table 9, F56–F58 |
+| `E22_tetouan_series` | NB6 | Tetouan 2017: daily mean per zone, and one week at 10-min steps | supp (data description) | F55 |
 | `fig12_downstream` | NB5 | (a) real-data and (b) injected-data LightGBM MASE by cleaning strategy (S0–S3) at 1 h and 1 day, test steps after an anomaly; (c) outage zone-hours / injected truth per strategy | **main** (guide Fig 12) | Table 8, F51–F54 |
 
 Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) should now show the residual hierarchy feeding the end model and the detector-only candidate stream.
@@ -79,7 +81,7 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
 | Table 4 (event catalogue) | draft done | `docs/results_summary.md` §7; full list in `results/labels_v1/q.csv` and `episodes_labelled.csv` |
 | Table 5–7 (detection, attribution, ablations) | **done** (NB4) | `results/benchmark_v1/table5*`, `table6*`, `table7*`; plus the no-graph ablation `graph_ablation/table_graph_ablation.csv` (D62). Numbers: results_summary §9 |
 | Table 8 (forecasting) | **done** (NB5) | `results/downstream_v1/table8_forecasting.csv`, `table8_dm.csv`; results_summary §10.2 |
-| Table 9 (Tetouan) | pending | NB6 |
+| Table 9 (Tetouan) | **done** (NB6) | `results/transfer_tetouan/table9_detection.csv`, `table9_attribution.csv`, `table9_recall_by_type.csv`, `table9_wilcoxon.csv`; results_summary §11 |
 
 ## Candidate new tables
 

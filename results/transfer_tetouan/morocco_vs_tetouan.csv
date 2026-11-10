@@ -1,0 +1,19 @@
+rate,method,Morocco_F1,Tetouan_F1
+1%,ours (rules + detector),0.721 ± 0.047,0.945 ± 0.036
+1%,rules only (rule engine v1),0.863 ± 0.032,0.856 ± 0.012
+1%,"TCN-GAT, hierarchy, multi-scale",0.644 ± 0.067,0.857 ± 0.036
+1%,"LightGBM forecast, hierarchy, multi-scale",0.623 ± 0.055,0.761 ± 0.059
+1%,STL + MAD,0.625 ± 0.043,0.747 ± 0.039
+1%,attribution: label model macro-F1,0.934 ± 0.055,0.793 ± 0.064
+3%,ours (rules + detector),0.876 ± 0.008,0.919 ± 0.008
+3%,rules only (rule engine v1),0.879 ± 0.013,0.861 ± 0.010
+3%,"TCN-GAT, hierarchy, multi-scale",0.813 ± 0.020,0.793 ± 0.026
+3%,"LightGBM forecast, hierarchy, multi-scale",0.765 ± 0.022,0.868 ± 0.020
+3%,STL + MAD,0.734 ± 0.026,0.828 ± 0.022
+3%,attribution: label model macro-F1,0.914 ± 0.029,0.774 ± 0.050
+7%,ours (rules + detector),0.906 ± 0.008,0.890 ± 0.009
+7%,rules only (rule engine v1),0.896 ± 0.009,0.860 ± 0.006
+7%,"TCN-GAT, hierarchy, multi-scale",0.854 ± 0.011,0.722 ± 0.057
+7%,"LightGBM forecast, hierarchy, multi-scale",0.827 ± 0.015,0.764 ± 0.051
+7%,STL + MAD,0.771 ± 0.024,0.743 ± 0.027
+7%,attribution: label model macro-F1,0.900 ± 0.017,0.771 ± 0.018

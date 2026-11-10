@@ -589,3 +589,51 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - the graph component is "evaluated by ablation";
   - its contribution is "interpretability (learned cross-city dependencies, E20), not detection accuracy".
 - **Where:** Table 7e and Fig 9b (`tools/ablation_summary.py`; the graph ablation is shaded and listed first), methods §6.2, paper_handoff §2 and §4.
+
+### D68 — Tetouan transfer protocol: freeze every choice, re-estimate only what is learned from unlabelled data [NB6]
+- **Frozen from Morocco:**
+  - every rule threshold and the item and episode definitions (rules_v1);
+  - **the label model's parameters**: fitted on the Morocco votes as in NB2, applied to Tetouan with the new `DawidSkene.predict`, i.e. one E-step without refitting. Rule outputs never seen in Morocco would count as abstentions; none occurred;
+  - the detector architectures and training hyper-parameters (TCN-GAT main detector, its no-graph TCN ablation, LightGBM; NB4 config, 40 epochs, patience 6);
+  - each detector's event formation from `dev_selection.json`: main (24, 99.9, 12), LightGBM (24, 99.8, 6), STL + MAD and LOF (24, 99.8, 12), Isolation Forest (3, 99.5, 3); the no-graph TCN at the main setting and at its own (48, 99.9, 12);
+  - the injected signatures and the evaluation code.
+- **Re-estimated from Tetouan's unlabelled series** (guide: "only the expected-value baseline is re-estimated", extended to the other unsupervised components the method needs on any new system):
+  - x̂ (eq. 1) and the robust-score scales;
+  - the predictor weights, trained on Tetouan's rule-clean steps and cross-fitted at 1 Jul 2017 (`D.SPLIT` set by `transfer.register`);
+  - γ, as the frozen percentile q of Tetouan's own rule-negative zone-steps.
+- **Not run on Tetouan:** the end model and fusion. On injected data they do not beat the label model (F46), and the guide's three Tetouan outputs do not need them. Attribution uses the frozen label model, with majority vote as the baseline.
+- **Calendar inputs for 2017** (detector.RAMADAN, EID, MOROCCO_GMT; rules_v1.EUROPE_DST, MOROCCO_DST):
+  - Ramadan 27 May – 25 Jun 2017; Eid al-Fitr 26–27 Jun and Eid al-Adha 1–2 Sep 2017;
+  - Moroccan summer time 26 Mar – 29 Oct 2017, suspended 21 May – 2 Jul;
+  - EU clock changes 26 Mar and 29 Oct 2017.
+  - These are inputs, not tuned values. Religious dates can differ by a day (as for 2023–24).
+- **Code:** `src/transfer.py`, `tools/make_nb6_tetouan.py` → `notebooks/NB6_tetouan.ipynb`, outputs in `results/transfer_tetouan/`.
+
+### D69 — Single-city system: what changes, and the code made general for it [NB6]
+- **Consequences of one city with 3 zones:**
+  - the city and region parts of the hierarchy coincide (u = 0, as for Marrakech), so a zone's score is max(region, zone);
+  - the TCN-GAT graph has only the 3 same-city edges (no learned cross-city edge);
+  - R1 (multi-city zero) and R7 (regional outage) cannot fire;
+  - G1 cannot be told from G2 and is not injected;
+  - injected A1 (exact zeros) and U_SHOCK become city-wide events, and A2 uses 2–3 zones or the whole city.
+- **Code made general, with no change to Morocco** (verified: catalogue_v1 items, votes and zone runs reproduced exactly; the label model's `predict` on Morocco votes equals its fitted q, max difference 0.0; the injector regenerates NB4's r03_s00 truth; TCN-GAT MAE 0.0294):
+  - `rules_v1.zone_runs` returns typed empty columns;
+  - `clock_items` accepts a perfect timeline;
+  - `build_from_data` skips empty item kinds. A clean series has no dead or fill item, so the engine had never been run on one;
+  - `inject.Injector`: single-city patterns and `sample(types=...)`;
+  - `graph_model`: reads `detector.SPLIT` at call time, and top-k is clamped to the number of zones;
+  - `detector.build_panel` selects the cities of any named system; Tetouan is registered with code "T" and a 10-min step.
+  - `transfer.analyse_rules` aligns the item table with the frozen catalogue schema, because a clean series has only clock items.
+
+### D70 — Tetouan evaluation [NB6]
+- **Real data:**
+  - items and labels found by the frozen rules and label model, i.e. the false alarms and the type distribution;
+  - each detector's alarms in 2017, per zone-month, with day type (weekday, Ramadan, Eid, holiday).
+- **Injected data:**
+  - 1 %, 3 % and 7 % × seeds 0–9: fresh datasets, since no Tetouan seed was used before;
+  - types A1, A2, A3, G2, G3, G4, U_SHOCK and U_PARTIAL;
+  - scoring area: Tetouan's clean region plus the injected spans;
+  - metrics over the whole year after the burn-in: nothing is selected on Tetouan, and the cross-fitting keeps every prediction out of sample.
+- **Metrics:** as NB4 (eq. 17 F1, precision, recall, zone-strict F1, own-background-excluded F1, step AUC-PR, per-type recall), and Wilcoxon tests of the main detector against every other method.
+- **Attribution:** for each typed injected event, the best zone-matched rule item, labelled by the frozen label model's arg max and by majority vote. Macro-F1 is taken over the injected classes; predictions of G1 or N count as errors.
+- **Morocco vs Tetouan:** shown as context, not as a paired test (different system, period and number of zones).

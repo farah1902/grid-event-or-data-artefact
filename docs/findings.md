@@ -662,3 +662,78 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 - **On the real data, where grid events are few,** the naive reference still prefers S2: 1 day after an anomaly 2.220 / 1.553 / **1.278**.
 - **Why:** S2 keeps grid events in the history. Persistence and seasonal naive copy an outage forward into the next hour or day, while LightGBM reads the event indicator and discounts it. S1 removes outages from the history, which helps a naive forecast, but it also removes them from the outage statistics (F52).
 - **Paper:** the guide's expected effect ("S2: best error and correct outage statistics") holds for an indicator-aware forecaster. With a forecaster that cannot use the indicator, there is a trade-off between forecast error (S1) and outage statistics (S2). This is an argument for passing the typed labels to the forecaster, not just cleaning with them.
+
+## H. NB6: transfer to Tetouan without re-tuning (2026-11-10)
+
+**Evidence:** `results/transfer_tetouan/` (`summary.json`, `table9_*.csv`, `real_*.csv`, `confusion_label_model_3pct.csv`, `morocco_vs_tetouan.csv`, `runs/`), Fig 13, E22, `notebooks/NB6_tetouan.ipynb`. Design: D68–D70.
+- **Frozen:** rules, label-model parameters, detector architectures and hyper-parameters, event formation.
+- **Re-estimated from Tetouan's unlabelled series:** x̂, predictor weights, γ.
+- **Benchmark:** 30 injected datasets (1/3/7 % × seeds 0–9), 2,778 injected events. Whole year after the burn-in.
+
+### F55 — On a clean year of another city's data, the frozen rules raise zero false items — *solid*
+- **The series:** 52,416 steps (1 Jan – 30 Dec 2017). No duplicate or missing stamp, no zero, and no run of equal values longer than 3 steps.
+- **Frozen rule engine:** no zone run (dead, hold or linear fill) and so no dead or fill item.
+- **Clock days:** the only items are the 4 clock-change days (26 Mar, 21 May, 2 Jul, 29 Oct 2017), all labelled N by the frozen label model (confidence 0.969).
+  - Their profile offsets are −10, +10, −30 and 0 min, below the 50-min threshold of R15, with fit correlations 0.96–0.99.
+  - No rule output unseen in Morocco occurred.
+- **Detector alarms on the real series in 2017** (3 zones):
+  - main detector 7 (0.20 per zone-month; 26.8 alarm zone-hours);
+  - no-graph TCN 9; LightGBM 15; STL + MAD 13; LOF 11; Isolation Forest 72.
+  - The main detector's alarms fall on 20 Apr (T1, T2), 4 and 7 Jul (T1), and 28 Sep, 12 Nov and 20 Nov (T3). None is on a Ramadan, Eid or holiday date.
+  - Zone 3's level falls by about half from September, and the November alarms coincide with a short mid-November bump in that zone (E22a). This is an observation, not a validated event.
+- **Paper:** "Applied frozen to a clean year of a different city's feeders, the rule engine raised no false item. The main detector raised 7 alarms in 36 zone-months, the fewest of the seven detectors."
+
+### F56 — The full method transfers: event F1 0.945 / 0.919 / 0.890 at precision 0.98–1.00, better than the rules alone at every rate — *solid*
+
+| Method (Tetouan, frozen) | F1 1 % | F1 3 % | F1 7 % | Precision | Recall |
+|---|---|---|---|---|---|
+| **ours (rules + main detector)** | **0.945 ± 0.036** | **0.919 ± 0.008** | **0.890 ± 0.009** | 0.983 / 1.000 / 1.000 | 0.913 / 0.850 / 0.801 |
+| rules only | 0.856 ± 0.012 | 0.861 ± 0.010 | 0.860 ± 0.006 | 1.000 | 0.749 / 0.756 / 0.754 |
+
+- **Ours vs rules:** better in 10/10 seeds at every rate (Wilcoxon p = 0.002 each). Zone-strict F1 0.936 / 0.908 / 0.881 vs 0.856 / 0.857 / 0.855.
+- **Recall by type (ours):**
+  - every typed class 1.000 at 1 % and 3 %; at 7 %, G2 0.987 and the rest 1.000;
+  - U_PARTIAL 0.975 / 0.736 / 0.340 and U_SHOCK 0.308 / 0.020 / 0.000. The rules alone find neither.
+- **Why the detector now adds F1 at every rate** (unlike Morocco, F44): the clean series gives the detector almost no background (7 alarms), so its additions keep precision at 1.000 at 3 % and 7 %.
+- **Morocco vs Tetouan, ours** (context, not a paired test): 0.721 vs 0.945 at 1 %, 0.876 vs 0.919 at 3 %, 0.906 vs 0.890 at 7 %.
+- **Paper:** RQ5 answered for detection. Without re-tuning, the full method detects 80–91 % of injected events at 98–100 % precision and beats the rules alone everywhere.
+
+### F57 — Detector alone after transfer: the main detector is best at 1 %; at 3 % and 7 % the data-efficient LightGBM and STL detectors overtake it — *solid*
+- **Event F1, detector alone:**
+  - main (TCN-GAT) 0.857 / 0.793 / 0.722;
+  - LightGBM 0.761 / 0.868 / 0.764;
+  - STL + MAD 0.747 / 0.828 / 0.743;
+  - LOF 0.739 / 0.728 / 0.201;
+  - Isolation Forest 0.483 / 0.692 / 0.806.
+- **Wilcoxon** (`table9_wilcoxon.csv`):
+  - **1 %:** the main detector beats every other detector (p ≤ 0.004), except the no-graph TCN (p = 0.086).
+  - **3 %:** LightGBM (p = 0.002) and STL + MAD (p = 0.004) beat it.
+  - **7 %:** LightGBM (p = 0.006) and Isolation Forest (p = 0.002) beat it; STL + MAD is not significantly different (p = 0.21).
+- **Why — the neural predictors need more data:**
+  - Tetouan predictor MAE: LightGBM 0.0110, TCN 0.0406, TCN-GAT 0.0447; on Morocco, 0.0288, 0.0299 and 0.0294.
+  - Each Tetouan fold trains on about 22,000 steps of 3 zones (half a year), against 15 zones and about 44,000 steps per fold in Morocco.
+  - LightGBM's explicit same-time-yesterday and last-week features work with little data.
+- **The detector alone misses fills** (main detector at 3 %: A2 0.416, A3 0.009). Fills are the rules' job; in the full method every typed recall is 1.000.
+- **Graph ablation on Tetouan** (same-city edges only):
+  - without the graph, F1 changes by −0.025 / −0.008 / −0.010 (p = 0.086 / 0.33 / 0.13);
+  - with its own tuning, the no-graph TCN is worse at every rate (p ≤ 0.008).
+  - Consistent with F42: the graph neither helps nor hurts significantly.
+- **Paper:**
+  - The frozen event formation transfers: model-based detectors keep precision ≥ 0.98 at 3 % and 7 %.
+  - On one year of a 3-zone system, a data-efficient predictor is the better stand-alone detector at higher contamination.
+  - Report it honestly. The full method stays best because the rules carry the typed events and the detector only adds what they cannot see.
+
+### F58 — Attribution transfers, except for the class whose evidence is cross-city by design — *solid*
+- **Frozen label model, macro-F1 over the injected classes:** 0.793 / 0.774 / 0.771 (majority vote 0.793 / 0.781 / 0.785). The full method detects 99 % of typed events.
+- **Without A1:** macro-F1 0.978 / 0.951 / 0.949 and accuracy 0.970 / 0.940 / 0.931. This is as good as on Morocco, where all classes give 0.934 / 0.914 / 0.900.
+- **Accuracy per class (1 / 3 / 7 %):**
+  - A1 0.158 / 0.164 / 0.145;
+  - A2 0.914 / 0.862 / 0.845; A3 1.000 / 1.000 / 0.973;
+  - G2 1.000 everywhere; G3 0.944 / 0.847 / 0.877; G4 1.000 / 1.000 / 0.968.
+- **A1 → G2 in 348 of 417 detected A1 events, at confidence 0.99.**
+  - A city-wide exact-zero gap is read as a city outage, because the A1 evidence that worked in Morocco is cross-city: R1 needs zeros in several cities.
+  - The guide anticipated this ("city-level and regional rules can't fire there").
+  - The same ambiguity appears in Morocco when the zero gap is the only evidence (F47).
+- **A2 → N in 49 of 342:** two-zone fills with one zone held and the other linearly interpolated. Neither R2 (≥ 2 held zones) nor R19 (≥ 2 linear zones) fires.
+- **G3 ↔ G4 in 49 of 669:** unplanned outages placed in the 06:00–11:00 window read as planned work (R10), as in Morocco.
+- **Paper:** RQ5 answered for attribution. Five of the six injected classes transfer at 0.85–1.00 accuracy. A1 does not, and the paper must say why: in a single-city system, a logger zero gap and a city outage share every cue the rules use. A within-city cue (an exact-zero share η = 1 across all zones together with a missing restoration ramp) is future work, and would need fresh evaluation (D63).

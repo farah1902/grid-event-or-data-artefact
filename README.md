@@ -7,8 +7,8 @@ Utilities often clean feeder telemetry without knowing what the anomalies are. Z
 The output is a typed, probabilistic event catalogue for the UCI Morocco smart-meter dataset (id 1158). The catalogue is evaluated on injected events and on a downstream forecasting task.
 
 **Status (2026-11-10):**
-- Done: rule engine, label model, detector, end model, injection benchmark (NB4) and downstream test (NB5).
-- Remaining: the Tetouan transfer test (NB6) and the final figures (NB7).
+- Done: rule engine, label model, detector, end model, injection benchmark (NB4), downstream test (NB5) and transfer to Tetouan (NB6).
+- Remaining: the final figures (NB7).
 
 ## The method in one picture
 
@@ -74,6 +74,22 @@ All numbers are in [docs/results_summary.md](docs/results_summary.md) and the fi
   - Injected data: within about 1 % of an oracle that knows the true types (F53).
   - Over the whole test period the gain is ≤ 3 %. It needs a forecaster that reads the grid-event indicator; a naive forecaster prefers interpolating everything (F54).
 
+**Transfer to another city without re-tuning** (NB6: UCI Tetouan, 3 zones, 2017; rules, label model and event formation frozen from Morocco; 30 injected datasets).
+- **No false alarms from the rules:** on a full clean year of real data, the frozen rules raise zero false items. The main detector raises 7 alarms in 36 zone-months, the fewest of the seven detectors (F55).
+- **Detection:** the full method reaches event F1 **0.945 / 0.919 / 0.890** at 1 / 3 / 7 % with precision **0.98–1.00**, and beats the rules alone at every rate (10/10 seeds, p = 0.002). Every typed event class is recalled at 0.99–1.00 (F56).
+
+| Tetouan, frozen method | F1 1 % | 3 % | 7 % |
+|---|---|---|---|
+| **ours (rules + main detector)** | **0.945** | **0.919** | **0.890** |
+| rules only | 0.856 | 0.861 | 0.860 |
+| main detector alone (TCN-GAT) | 0.857 | 0.793 | 0.722 |
+| LightGBM detector alone | 0.761 | 0.868 | 0.764 |
+
+- **Detector alone:** the main detector is best at 1 %. On this small dataset (one year, 3 zones) the data-efficient LightGBM overtakes it at 3–7 % (neural MAE 0.045 vs 0.011; F57).
+- **Attribution:**
+  - five of six injected classes are typed at 0.85–1.00 accuracy (macro-F1 without A1 0.95–0.98);
+  - city-wide zero gaps (A1) are read as city outages, because the logger-gap evidence is cross-city by design and a single-city system has no second city (F58).
+
 Limitations and claims the paper must not make: [docs/paper_handoff.md](docs/paper_handoff.md) §6–7.
 
 ## Main figures
@@ -88,6 +104,7 @@ Limitations and claims the paper must not make: [docs/paper_handoff.md](docs/pap
 | **Ablations of the main detector (the learned graph first)** | `fig9b_ablations` | `tools/ablation_summary.py` |
 | Attribution confusion and reliability | `fig10_11_attribution` | NB4 |
 | Downstream: forecast error by cleaning strategy, outage-hours error | `fig12_downstream` | NB5 |
+| Transfer to Tetouan: detection of every method, attribution confusion | `fig13_tetouan` | NB6 |
 | The graph learned by the TCN-GAT | `E20_learned_graph` | NB4 |
 
 Every figure, with its role and caveats: [docs/figures_and_tables.md](docs/figures_and_tables.md).
@@ -97,8 +114,8 @@ Every figure, with its role and caveats: [docs/figures_and_tables.md](docs/figur
 Start with [docs/README.md](docs/README.md).
 - To write the paper: [docs/paper_handoff.md](docs/paper_handoff.md).
 - Every number: [docs/results_summary.md](docs/results_summary.md).
-- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D67).
-- Every finding: [docs/findings.md](docs/findings.md) (F01–F54).
+- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D70).
+- Every finding: [docs/findings.md](docs/findings.md) (F01–F58).
 - The method as implemented, with equations: [docs/methods.md](docs/methods.md).
 - The original plan: [docs/research_guide.md](docs/research_guide.md). Several parts were corrected; see paper_handoff §3.
 
@@ -120,8 +137,9 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 │   ├── inject.py                             # injection of observed anomaly signatures
 │   ├── benchmark.py                          # whole pipeline on any dataset, detector variants, metrics
 │   ├── downstream.py                         # cleaning strategies S0–S3, forecasters, MASE / DM test, outage statistics
+│   ├── transfer.py                           # transfer test: a new system with the method frozen (Tetouan)
 │   └── viz.py                                # shared plotting style
-├── notebooks/                                # NB1, NB1b, NB2, NB3, NB4 (Colab GPU run), NB5, all executed
+├── notebooks/                                # NB1, NB1b, NB2, NB3, NB4 (Colab GPU run), NB5, NB6, all executed
 ├── tools/
 │   ├── make_nb*.py                           # notebook generators
 │   ├── dev_select_detector.py                # development selection of the main detector and event formation (D60, D61)
@@ -135,6 +153,7 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
     ├── main_detector/                        # south catalogue with the main detector (NB4 §8b)
     ├── benchmark_v1/                         # NB4: Tables 5–7, 7e, runs/, dev/, graph_ablation/, models/
     ├── downstream_v1/                        # NB5: Table 8, outage statistics, injected/
+    ├── transfer_tetouan/                     # NB6: Table 9, real-series items and alarms, runs/, models trained on Tetouan
     └── figures/                              # all figures (png + pdf)
 ```
 
@@ -156,6 +175,7 @@ python tools/dev_select_detector.py && python tools/dev_select_detector.py --ext
 python tools/graph_ablation.py         # learned-graph ablation on the NB4 datasets, ~30 min on CPU
 python tools/ablation_summary.py       # Table 7e + Fig 9b, seconds
 cd notebooks && python -m jupyter nbconvert --to notebook --execute --inplace NB5_downstream.ipynb   # ~18 min
+python -m jupyter nbconvert --to notebook --execute --inplace NB6_tetouan.ipynb                     # ~15 min (Tetouan transfer)
 ```
 
 **Colab:** copy the repository to `MyDrive/grid-event-or-data-artefact/` (`python tools/sync_drive.py "G:/My Drive/grid-event-or-data-artefact"`) and open the notebook there. The first cell installs the dependencies and mounts Drive. The last cell flushes Drive; then save the notebook (Ctrl+S) and pull the outputs back with `sync_drive.py --pull`.

@@ -548,3 +548,72 @@ All families 0.914 ± 0.029. Without:
   - S1 is never significantly better than S2.
   - S2 closes 62–86 % of the S1-to-S3 gap.
 - **Injected data, naive reference:** S1 is significantly better than S2 in 4/4 datasets at 1 h and 2/4 at 1 day (F54).
+
+## 11. NB6 transfer to Tetouan (`results/transfer_tetouan/`; frozen method; 2017; whole year after the burn-in)
+
+**Setup:**
+- UCI Tetouan: 3 zones of one city (T1–T3), 52,416 steps, kW.
+- Frozen: rules, label model (fitted on Morocco, applied by `predict`), detector hyper-parameters and event formation from `dev_selection.json` (D68).
+- Predictors trained on Tetouan, cross-fitted at 1 Jul 2017. Training on CPU: TCN-GAT 73 s, TCN 33 s.
+- 30 injected datasets (1/3/7 % × seeds 0–9): 2,778 events (A1 418, A2 342, G3 340, U_SHOCK 338, U_PARTIAL 338, A3 337, G2 336, G4 329). G1 is not injected (D69).
+- Clean region 0.871 of zone-steps. Runtime 13.1 min.
+
+### 11.1 Real series (`real_items.csv`, `real_alarms_by_detector.csv`, `real_alarms_main_detector.csv`)
+- **Audit:** 0 duplicate or missing stamps, 0 zeros, longest run of equal values 3 steps.
+- **Rules:** 0 zone runs, 0 dead or fill items. 4 clock items (26 Mar, 21 May, 2 Jul, 29 Oct 2017), all labelled N (0.969); δ* −10, +10, −30, 0 min.
+- **Detector alarms in 2017** (detector: count, per zone-month, γ):
+  - main (TCN-GAT): 7, 0.20, γ 16.04;
+  - no-graph TCN: 9, 0.25;
+  - no-graph TCN with its own tuning: 7, 0.20;
+  - LightGBM: 15, 0.42, γ 43.41;
+  - STL + MAD: 13, 0.36;
+  - LOF: 11, 0.31;
+  - Isolation Forest: 72, 2.01.
+- **Predictor MAE (ρ, rule-clean steps):** LightGBM 0.0110, TCN 0.0406, TCN-GAT 0.0447.
+
+### 11.2 Detection (Table 9; `table9_detection.csv`, `table9_wilcoxon.csv`, `table9_recall_by_type.csv`)
+
+| Method | F1 1 % | F1 3 % | F1 7 % | Precision | Recall | Zone-strict F1 | Own background excluded | AUC-PR |
+|---|---|---|---|---|---|---|---|---|
+| **ours (rules + main detector)** | **0.945 ± 0.036** | **0.919 ± 0.008** | **0.890 ± 0.009** | 0.983 / 1.000 / 1.000 | 0.913 / 0.850 / 0.801 | 0.936 / 0.908 / 0.881 | 0.952 / 0.917 / 0.888 | 0.951 / 0.954 / 0.950 |
+| rules only | 0.856 ± 0.012 | 0.861 ± 0.010 | 0.860 ± 0.006 | 1.000 | 0.749 / 0.756 / 0.754 | 0.856 / 0.857 / 0.855 | 0.856 / 0.861 / 0.860 | 0.882 / 0.887 / 0.883 |
+| TCN-GAT (main detector) | **0.857 ± 0.036** | 0.793 ± 0.026 | 0.722 ± 0.057 | 0.982 / 1.000 / 1.000 | 0.763 / 0.657 / 0.568 | 0.840 / 0.776 / 0.704 | 0.860 / 0.792 / 0.721 | 0.751 / 0.657 / 0.688 |
+| TCN, no graph (graph ablation) | 0.832 ± 0.028 | 0.785 ± 0.025 | 0.712 ± 0.028 | 0.994 / 1.000 / 1.000 | 0.717 / 0.646 / 0.553 | 0.832 / 0.777 / 0.700 | 0.826 / 0.783 / 0.711 | 0.515 / 0.569 / 0.607 |
+| TCN, no graph, own tuning | 0.799 ± 0.036 | 0.759 ± 0.026 | 0.663 ± 0.058 | 0.988 / 1.000 / 0.999 | 0.672 / 0.612 / 0.498 | 0.799 / 0.753 / 0.650 | 0.795 / 0.755 / 0.662 | 0.496 / 0.548 / 0.583 |
+| LightGBM forecast | 0.761 ± 0.059 | **0.868 ± 0.020** | 0.764 ± 0.051 | 0.746 / 0.977 / 0.998 | 0.785 / 0.782 / 0.621 | 0.753 / 0.864 / 0.752 | 0.868 / 0.871 / 0.760 | 0.839 / 0.815 / 0.831 |
+| STL + MAD | 0.747 ± 0.039 | 0.828 ± 0.022 | 0.743 ± 0.027 | 0.774 / 0.968 / 0.998 | 0.724 / 0.724 / 0.592 | 0.747 / 0.826 / 0.732 | 0.815 / 0.836 / 0.739 | 0.800 / 0.775 / 0.805 |
+| Isolation Forest | 0.483 ± 0.070 | 0.692 ± 0.036 | **0.806 ± 0.016** | 0.348 / 0.608 / 0.902 | 0.812 / 0.806 / 0.731 | 0.475 / 0.685 / 0.800 | 0.820 / 0.858 / 0.830 | 0.424 / 0.542 / 0.661 |
+| LOF | 0.739 ± 0.060 | 0.728 ± 0.101 | 0.201 ± 0.065 | 0.755 / 0.897 / 0.704 | 0.729 / 0.617 / 0.119 | 0.739 / 0.726 / 0.188 | 0.785 / 0.733 / 0.200 | 0.660 / 0.585 / 0.285 |
+
+- **Ours vs rules:** 10/10 seeds at every rate, Wilcoxon p = 0.002 (each). Predicted events per dataset, ours / rules / injected: 25.7 / 20.3 / 27.1 at 1 %; 61.6 / 52.8 / 70.5 at 3 %; 145.3 / 134.0 / 180.2 at 7 %.
+- **Main detector vs others, Wilcoxon p:**
+  - **1 %:** main better than every detector, p ≤ 0.004; vs the no-graph TCN, p = 0.086.
+  - **3 %:** LightGBM better (p = 0.002), STL + MAD better (p = 0.004); main better than Isolation Forest (p = 0.002) and the own-tuned no-graph TCN (p = 0.008); vs the no-graph TCN p = 0.33, vs LOF p = 0.064.
+  - **7 %:** LightGBM better (p = 0.006), Isolation Forest better (p = 0.002); main better than LOF (0.002) and the own-tuned no-graph TCN (0.004); vs STL p = 0.21, vs the no-graph TCN p = 0.13.
+- **Recall by type, ours:**
+  - every typed class 1.000 at every rate, except G2 0.987 at 7 %;
+  - U_SHOCK 0.308 / 0.020 / 0.000; U_PARTIAL 0.975 / 0.736 / 0.340.
+  - Rules alone: G2 0.950 / 0.951 / 0.919, A1 0.997 at 7 %; U_SHOCK and U_PARTIAL 0.
+- **Recall by type, main detector alone at 3 %:** A1 1.000, A2 0.416, A3 0.009, G2 1.000, G3 0.976, G4 0.950.
+
+### 11.3 Attribution (frozen label model; `table9_attribution.csv`, `confusion_label_model_3pct.csv`)
+- **Macro-F1:** label model 0.793 ± 0.064 / 0.774 ± 0.050 / 0.771 ± 0.018; majority vote 0.793 / 0.781 / 0.785.
+- **Accuracy:** label model 0.821 / 0.778 / 0.774; end to end 0.815 / 0.772 / 0.763. Detected share 0.992 / 0.992 / 0.986.
+- **Without A1:** macro-F1 0.978 / 0.951 / 0.949; accuracy 0.970 / 0.940 / 0.931.
+- **Accuracy per class (1 / 3 / 7 %):** A1 0.158 / 0.164 / 0.145; A2 0.914 / 0.862 / 0.845; A3 1.000 / 1.000 / 0.973; G2 1.000; G3 0.944 / 0.847 / 0.877; G4 1.000 / 1.000 / 0.968.
+- **Confusion, all rates pooled (detected typed events):**
+  - A1: 63 A1, 348 G2, 6 G3;
+  - A2: 293 A2, 49 N;
+  - A3: 331 A3, 6 N;
+  - G2: 312 G2;
+  - G3: 298 G3, 42 G4;
+  - G4: 322 G4, 7 G3.
+  - Mean confidence of the A1 → G2 labels: 0.985–0.994.
+- **3 % confusion** (Fig 13b): A1 18 / 90 G2 / 2 G3; A2 75 / 12 N; A3 86; G2 80; G3 72 / 13 G4; G4 81.
+
+### 11.4 Morocco vs Tetouan (`morocco_vs_tetouan.csv`; context only)
+- **Ours:** 0.721 → 0.945 (1 %), 0.876 → 0.919 (3 %), 0.906 → 0.890 (7 %).
+- **Rules:** 0.863 → 0.856, 0.879 → 0.861, 0.896 → 0.860.
+- **Main detector:** 0.644 → 0.857, 0.813 → 0.793, 0.854 → 0.722.
+- **LightGBM:** 0.623 → 0.761, 0.765 → 0.868, 0.827 → 0.764.
+- **Label-model macro-F1:** 0.934 → 0.793, 0.914 → 0.774, 0.900 → 0.771; without A1 on Tetouan 0.978 / 0.951 / 0.949.

@@ -34,7 +34,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from detector import calendar, SPLIT
+import detector as _D
+from detector import calendar   # the cross-fitting split is read from detector.SPLIT at call time (NB6 sets it for 2017)
 
 CAL_COLS = ["tod_sin", "tod_cos", "dow_sin", "dow_cos", "weekend", "month_sin", "month_cos", "ramadan", "eid",
             "holiday", "morocco_gmt"]
@@ -109,7 +110,7 @@ class TCNGAT(nn.Module):
         """Allowed edges i <- j: same city, plus the top-k most similar zones of other cities (GDN-style)."""
         e = F.normalize(self.emb.weight, dim=1)
         sim = (e @ e.T).masked_fill(~self.other_city, -2.0)
-        top = sim.topk(self.k_cross, dim=1).indices
+        top = sim.topk(min(self.k_cross, self.Z), dim=1).indices      # a single-city system has no cross-city edge (NB6)
         cross = torch.zeros_like(self.same_city).scatter_(1, top, True) & self.other_city
         return self.same_city | cross
 
@@ -268,7 +269,7 @@ def fit_graph_models(P, graph=True, cfg=None, device=None, seed=0, log=True, bas
     cfg = {**DEFAULT_CFG, **(cfg or {}), "use_base": base is not None}
     device = device or default_device()
     arr = panel_arrays(P, base)
-    fold = (P["rho"].index >= SPLIT)
+    fold = (P["rho"].index >= _D.SPLIT)
     has_target = arr["valid"].sum(axis=1) > 0
     models, hist = {}, []
     for tr_fold in (False, True):
@@ -277,7 +278,7 @@ def fit_graph_models(P, graph=True, cfg=None, device=None, seed=0, log=True, bas
         train_mask = (fold == tr_fold) & has_target & (np.arange(len(fold)) < cut)
         val_mask = (fold == tr_fold) & has_target & (np.arange(len(fold)) >= cut)
         if log:
-            print(f"  {'TCN-GAT' if graph else 'TCN (no graph)'} | trained on {'>=' if tr_fold else '<'} {SPLIT.date()}: "
+            print(f"  {'TCN-GAT' if graph else 'TCN (no graph)'} | trained on {'>=' if tr_fold else '<'} {_D.SPLIT.date()}: "
                   f"{int(train_mask.sum())} train / {int(val_mask.sum())} validation steps on {device}", flush=True)
         m, h = _train_one(arr, train_mask, val_mask, _city_idx(P), graph, cfg, device, seed + int(tr_fold), log)
         models[tr_fold] = m
@@ -292,7 +293,7 @@ def apply_graph_models(P, models, chunk=512, base=None):
     if any(m.use_base for m in models.values()) and base is None:
         raise ValueError("hybrid graph model: pass base= (the LightGBM forecast on this panel)")
     arr = panel_arrays(P, base)
-    fold = (P["rho"].index >= SPLIT)
+    fold = (P["rho"].index >= _D.SPLIT)
     out = np.full(arr["x"].shape, np.nan, dtype=np.float64)
     for tr_fold, m in models.items():
         dev = m.emb.weight.device
@@ -314,7 +315,7 @@ def learned_graph(P, models, n_chunks=40, chunk=256, seed=0, base=None):
     Returns {train_fold: (adjacency DataFrame (bool, row i <- column j), attention DataFrame)}."""
     arr = panel_arrays(P, base)
     zones = list(P["rho"].columns)
-    fold = (P["rho"].index >= SPLIT)
+    fold = (P["rho"].index >= _D.SPLIT)
     rng = np.random.default_rng(seed)
     out = {}
     for tr_fold, m in models.items():

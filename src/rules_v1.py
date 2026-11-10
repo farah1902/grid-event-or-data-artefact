@@ -49,8 +49,11 @@ R15_DELTA = 50
 R15_MIN_CORR, R15_MIN_GAIN = 0.9, 0.05   # v1 guard: the shifted profile must fit well and clearly beat no shift
 R16_KAPPA = 0.3
 
-EUROPE_DST = ["2022-10-30", "2023-03-26", "2023-10-29", "2024-03-31"]   # last Sunday of Oct / Mar
-MOROCCO_DST = ["2023-03-19", "2023-04-23", "2024-03-10", "2024-04-14"]  # Ramadan switches to/from GMT
+EUROPE_DST = ["2017-03-26", "2017-10-29",                               # 2017: Tetouan transfer test (NB6)
+              "2022-10-30", "2023-03-26", "2023-10-29", "2024-03-31"]   # last Sunday of Oct / Mar
+MOROCCO_DST = ["2017-03-26", "2017-05-21", "2017-07-02", "2017-10-29",  # 2017: summer time, suspended for Ramadan
+               "2023-03-19", "2023-04-23", "2024-03-10", "2024-04-14"]  # Ramadan switches to/from GMT
+# Dates outside a dataset's range are ignored, so the 2017 entries do not change any Morocco result.
 
 RULES = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12",
          "R13", "R14", "R15", "R16", "R19", "R20", "R21"]
@@ -130,7 +133,8 @@ def zone_runs(data, masks):
                         n_zero=n0, value=round(float(seg.iloc[-1]), 3) if kind == "hold" else np.nan,
                         slope=round(float(seg.diff().iloc[-1]), 5) if kind == "interp" else np.nan,
                         quantised=bool((seg == seg.round()).all())))
-    return pd.DataFrame(recs)
+    cols = ["system", "city", "zone", "code", "kind", "start", "end", "a", "b", "steps", "n_zero", "value", "slope", "quantised"]
+    return pd.DataFrame(recs, columns=cols)       # explicit columns: a clean series (Tetouan, NB6) has no run at all
 
 
 def group_by_start(df, tol=TOL):
@@ -347,6 +351,8 @@ def clock_offset(d, bad, step, D, days=7, max_min=120):
 
 def clock_items(raw, data, masks):
     audit = pd.DataFrame(sum((audit_timestamps(c, df) for c, df in raw.items()), []))
+    if audit.empty:                       # a perfectly regular timeline (Tetouan, NB6) has no stamp anomaly
+        audit = pd.DataFrame(columns=["city", "kind", "timestamp", "n"]).astype({"timestamp": "datetime64[ns]", "n": int})
     eu, ma = set(pd.to_datetime(EUROPE_DST)), set(pd.to_datetime(MOROCCO_DST))
     rows = []
     for c, d in data.items():
@@ -486,6 +492,7 @@ def build_from_data(raw, data):
     masks = state_masks(data, exp)
     zr = zone_runs(data, masks)
     parts = [dead_items(data, exp, zr), fill_items(data, masks, zr), clock_items(raw, data, masks), transfer_items(data)]
+    parts = [p for p in parts if len(p)]  # a clean series (Tetouan, NB6) has no dead or fill item
     voters = {"dead": vote_dead, "fill": vote_fill, "clock": vote_clock, "transfer": vote_transfer}
     prefix = {"dead": "D", "fill": "F", "clock": "K", "transfer": "T"}
     for p in parts:
@@ -500,7 +507,7 @@ def build_from_data(raw, data):
     items["n_votes"] = votes.notna().sum(axis=1)
     items["votes"] = [";".join(f"{r}:{l}" for r, l in row.dropna().items()) for _, row in votes.iterrows()]
     items["mv_label"] = [majority(row.dropna().to_dict()) for _, row in votes.iterrows()]
-    items = items.drop(columns=["_codes", "_bounds"])
+    items = items.drop(columns=["_codes", "_bounds"], errors="ignore")
     first = ["item_id", "kind", "episode", "system", "start", "end", "duration_h", "cities", "zones",
              "n_cities", "n_zones", "mv_label", "n_votes", "votes"]
     items = items[first + [c for c in items.columns if c not in first]]

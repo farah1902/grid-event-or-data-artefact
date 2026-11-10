@@ -35,8 +35,8 @@ import lightgbm as lgb
 os.environ.setdefault("LOKY_MAX_CPU_COUNT", str(os.cpu_count() or 4))
 warnings.filterwarnings("ignore", message="X does not have valid feature names")
 
-CITY_SHORT = {"Laayoune": "L", "Boujdour": "B", "Foum eloued": "F", "Marrakech": "M"}
-STEP_MIN = {"south": 10, "Marrakech": 30}
+CITY_SHORT = {"Laayoune": "L", "Boujdour": "B", "Foum eloued": "F", "Marrakech": "M", "Tetouan": "T"}
+STEP_MIN = {"south": 10, "Marrakech": 30, "Tetouan": 10}     # Tetouan: transfer test (NB6), one city, 2017
 SPLIT = pd.Timestamp("2023-07-01")          # cross-fitting boundary (also the guide's train / test boundary)
 WARMUP_DAYS = 21                             # x_hat needs 14 days; robust scores need >= 7 more (D43)
 BANDS = ["raw", "W1", "W2", "W3", "W4", "V4"]
@@ -49,16 +49,20 @@ _PW_LA8 = np.array([-0.0757657147893407, -0.0296355276459541, 0.4976186676324578
 assert np.allclose(LA8, _PW_LA8, atol=1e-10), "PyWavelets sym4 differs from the Percival-Walden LA(8) filter"
 
 # Calendar (Morocco). Religious dates can differ by one day from other countries: treat as approximate.
-RAMADAN = [("2023-03-23", "2023-04-21"), ("2024-03-12", "2024-04-09")]
-EID = ["2023-04-22", "2023-04-23", "2023-06-29", "2023-06-30", "2024-04-10", "2024-04-11"]
-MOROCCO_GMT = [("2023-03-19 03:00", "2023-04-23 02:00"), ("2024-03-10 03:00", "2024-04-14 02:00")]
+RAMADAN = [("2017-05-27", "2017-06-25"), ("2023-03-23", "2023-04-21"), ("2024-03-12", "2024-04-09")]
+EID = ["2017-06-26", "2017-06-27", "2017-09-01", "2017-09-02",
+       "2023-04-22", "2023-04-23", "2023-06-29", "2023-06-30", "2024-04-10", "2024-04-11"]
+# Morocco on GMT. 2017 (Tetouan, NB6): GMT was standard time, with summer time from 26 Mar to 29 Oct suspended
+# for Ramadan (21 May - 2 Jul). Since Oct 2018 GMT+1 is permanent except during Ramadan.
+MOROCCO_GMT = [("2017-01-01 00:00", "2017-03-26 02:00"), ("2017-05-21 03:00", "2017-07-02 02:00"), ("2017-10-29 03:00", "2018-01-01 00:00"),
+               ("2023-03-19 03:00", "2023-04-23 02:00"), ("2024-03-10 03:00", "2024-04-14 02:00")]
 FIXED_HOLIDAYS = ["01-01", "01-11", "05-01", "07-30", "08-14", "08-20", "08-21", "11-06", "11-18"]
 
 
 # ------------------------------------------------------------------ panel
 def build_panel(data, exp, masks, system):
     """Wide frames (time x zone code) for one system: rho, x, mask, plus zone -> city map."""
-    cities = [c for c in data if (c != "Marrakech") == (system == "south")]
+    cities = [c for c in data if c not in ("Marrakech", "Tetouan")] if system == "south" else [c for c in data if c == system]
     cols, rho, x, msk = [], [], [], []
     states = {k: [] for k in ("zero", "dead", "hold", "interp")}
     for c in cities:

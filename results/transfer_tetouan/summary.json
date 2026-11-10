@@ -1,0 +1,178 @@
+{
+  "audit": {
+    "start": "2017-01-01 00:00:00",
+    "end": "2017-12-30 23:50:00",
+    "steps": 52416,
+    "duplicate_stamps": 0,
+    "missing_steps": 0,
+    "zeros": 0,
+    "longest_equal_run": 3
+  },
+  "real_items": {
+    "clock": 4
+  },
+  "real_item_labels": {
+    "N": 4
+  },
+  "real_zone_runs": 0,
+  "predictor_MAE": {
+    "TCN-GAT": 0.0447,
+    "TCN": 0.0406,
+    "LGB": 0.011
+  },
+  "real_alarms": {
+    "TCN-GAT, hierarchy, multi-scale": {
+      "n": 7,
+      "per_zone_month": 0.2
+    },
+    "TCN, no graph, hierarchy, multi-scale": {
+      "n": 9,
+      "per_zone_month": 0.25
+    },
+    "TCN, no graph, hierarchy, multi-scale (own tuned event formation)": {
+      "n": 7,
+      "per_zone_month": 0.2
+    },
+    "LightGBM forecast, hierarchy, multi-scale": {
+      "n": 15,
+      "per_zone_month": 0.42
+    },
+    "STL + MAD": {
+      "n": 13,
+      "per_zone_month": 0.36
+    },
+    "Isolation Forest": {
+      "n": 72,
+      "per_zone_month": 2.01
+    },
+    "LOF": {
+      "n": 11,
+      "per_zone_month": 0.31
+    }
+  },
+  "detection_F1": {
+    "1% | ours (rules + detector)": 0.945,
+    "1% | rules only (rule engine v1)": 0.856,
+    "1% | TCN-GAT, hierarchy, multi-scale": 0.857,
+    "1% | TCN, no graph, hierarchy, multi-scale": 0.832,
+    "1% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.799,
+    "1% | LightGBM forecast, hierarchy, multi-scale": 0.761,
+    "1% | STL + MAD": 0.747,
+    "1% | Isolation Forest": 0.483,
+    "1% | LOF": 0.739,
+    "3% | ours (rules + detector)": 0.919,
+    "3% | rules only (rule engine v1)": 0.861,
+    "3% | TCN-GAT, hierarchy, multi-scale": 0.793,
+    "3% | TCN, no graph, hierarchy, multi-scale": 0.785,
+    "3% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.759,
+    "3% | LightGBM forecast, hierarchy, multi-scale": 0.868,
+    "3% | STL + MAD": 0.828,
+    "3% | Isolation Forest": 0.692,
+    "3% | LOF": 0.728,
+    "7% | ours (rules + detector)": 0.89,
+    "7% | rules only (rule engine v1)": 0.86,
+    "7% | TCN-GAT, hierarchy, multi-scale": 0.722,
+    "7% | TCN, no graph, hierarchy, multi-scale": 0.712,
+    "7% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.663,
+    "7% | LightGBM forecast, hierarchy, multi-scale": 0.764,
+    "7% | STL + MAD": 0.743,
+    "7% | Isolation Forest": 0.806,
+    "7% | LOF": 0.201
+  },
+  "detection_F1_bgx": {
+    "1% | ours (rules + detector)": 0.952,
+    "1% | rules only (rule engine v1)": 0.856,
+    "1% | TCN-GAT, hierarchy, multi-scale": 0.86,
+    "1% | TCN, no graph, hierarchy, multi-scale": 0.826,
+    "1% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.795,
+    "1% | LightGBM forecast, hierarchy, multi-scale": 0.868,
+    "1% | STL + MAD": 0.815,
+    "1% | Isolation Forest": 0.82,
+    "1% | LOF": 0.785,
+    "3% | ours (rules + detector)": 0.917,
+    "3% | rules only (rule engine v1)": 0.861,
+    "3% | TCN-GAT, hierarchy, multi-scale": 0.792,
+    "3% | TCN, no graph, hierarchy, multi-scale": 0.783,
+    "3% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.755,
+    "3% | LightGBM forecast, hierarchy, multi-scale": 0.871,
+    "3% | STL + MAD": 0.836,
+    "3% | Isolation Forest": 0.858,
+    "3% | LOF": 0.733,
+    "7% | ours (rules + detector)": 0.888,
+    "7% | rules only (rule engine v1)": 0.86,
+    "7% | TCN-GAT, hierarchy, multi-scale": 0.721,
+    "7% | TCN, no graph, hierarchy, multi-scale": 0.711,
+    "7% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.662,
+    "7% | LightGBM forecast, hierarchy, multi-scale": 0.76,
+    "7% | STL + MAD": 0.739,
+    "7% | Isolation Forest": 0.83,
+    "7% | LOF": 0.2
+  },
+  "recall": {
+    "1% | ours (rules + detector)": 0.913,
+    "1% | rules only (rule engine v1)": 0.749,
+    "1% | TCN-GAT, hierarchy, multi-scale": 0.763,
+    "1% | TCN, no graph, hierarchy, multi-scale": 0.717,
+    "1% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.672,
+    "1% | LightGBM forecast, hierarchy, multi-scale": 0.785,
+    "1% | STL + MAD": 0.724,
+    "1% | Isolation Forest": 0.812,
+    "1% | LOF": 0.729,
+    "3% | ours (rules + detector)": 0.85,
+    "3% | rules only (rule engine v1)": 0.756,
+    "3% | TCN-GAT, hierarchy, multi-scale": 0.657,
+    "3% | TCN, no graph, hierarchy, multi-scale": 0.646,
+    "3% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.612,
+    "3% | LightGBM forecast, hierarchy, multi-scale": 0.782,
+    "3% | STL + MAD": 0.724,
+    "3% | Isolation Forest": 0.806,
+    "3% | LOF": 0.617,
+    "7% | ours (rules + detector)": 0.801,
+    "7% | rules only (rule engine v1)": 0.754,
+    "7% | TCN-GAT, hierarchy, multi-scale": 0.568,
+    "7% | TCN, no graph, hierarchy, multi-scale": 0.553,
+    "7% | TCN, no graph, hierarchy, multi-scale (own tuned event formation)": 0.498,
+    "7% | LightGBM forecast, hierarchy, multi-scale": 0.621,
+    "7% | STL + MAD": 0.592,
+    "7% | Isolation Forest": 0.731,
+    "7% | LOF": 0.119
+  },
+  "attribution": {
+    "1%": {
+      "detected_share": 0.992,
+      "macro_F1_label_model": 0.793,
+      "macro_F1_majority_vote": 0.793,
+      "accuracy_label_model": 0.821,
+      "accuracy_majority_vote": 0.821,
+      "end_to_end": 0.815
+    },
+    "3%": {
+      "detected_share": 0.992,
+      "macro_F1_label_model": 0.774,
+      "macro_F1_majority_vote": 0.781,
+      "accuracy_label_model": 0.778,
+      "accuracy_majority_vote": 0.781,
+      "end_to_end": 0.772
+    },
+    "7%": {
+      "detected_share": 0.986,
+      "macro_F1_label_model": 0.771,
+      "macro_F1_majority_vote": 0.785,
+      "accuracy_label_model": 0.774,
+      "accuracy_majority_vote": 0.78,
+      "end_to_end": 0.763
+    }
+  },
+  "injected_events": 2778,
+  "injected_by_type": {
+    "A1": 418,
+    "A2": 342,
+    "G3": 340,
+    "U_SHOCK": 338,
+    "U_PARTIAL": 338,
+    "A3": 337,
+    "G2": 336,
+    "G4": 329
+  },
+  "runtime_min": 13.1
+}

@@ -402,3 +402,26 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
   - main results of the real data, NB4 (with the graph as an ablation) and NB5;
   - main figures, repository layout and the reproduce order (including `graph_ablation.py`, `ablation_summary.py` and NB5).
 - **Tooling note:** a long bash heredoc failed again ("unexpected EOF"), so the README was written with the file tool. Multi-line doc edits use a small script that tries both line endings, because the docs mix CRLF and LF.
+
+## Session 8 — 2026-11-10 — NB6: transfer to Tetouan
+
+**User request:** "let's attack NB6 and see how our model can easily detect everything (let's talk with more confidance bro !!)".
+
+**Data audit:** the UCI Tetouan series is pristine (no zeros, no duplicate or missing stamps, no hold or linear-fill runs). That makes it a clean false-alarm test. Recall must come from injected Morocco signatures.
+
+**Code made general for a third, single-city system** (D69). The Morocco regression was rerun after each change: catalogue_v1 items, votes and zone runs identical; label-model `predict` equals the fitted q on Morocco (max difference 0.0); injector r03_s00 truth identical; TCN-GAT MAE 0.0294.
+- `label_model.DawidSkene.predict`: frozen-parameter E-step.
+- `inject.Injector`: single-city patterns and `sample(types=)`.
+- `graph_model`: dynamic `detector.SPLIT`; top-k clamped.
+- `detector.build_panel`: any named system. 2017 calendar entries in detector and rules_v1.
+- **Rule engine on a series with no anomaly at all,** which had never happened: `zone_runs` returns typed empty columns, `clock_items` accepts an empty audit, and `build_from_data` skips empty item kinds. Each surfaced as a crash on Tetouan and was fixed in turn.
+- `src/transfer.py` (new): registration, loading, frozen label model, predictors trained on Tetouan, scores, event formation and metrics.
+
+**Run:** `tools/make_nb6_tetouan.py` → `notebooks/NB6_tetouan.ipynb`, executed locally in 13.1 min (predictors trained by a prototype run and reloaded: TCN-GAT 73 s, TCN 33 s).
+
+**Results (F55–F58, results_summary §11, Fig 13, E22):**
+- Zero false rule items on the clean year.
+- The main detector has the fewest real alarms (7).
+- Full method F1 0.945 / 0.919 / 0.890 at precision 0.98–1.00, above the rules alone at every rate (10/10 seeds).
+- The detector alone: main best at 1 %; LightGBM and STL better at 3–7 %, because the neural predictors are data-hungry (MAE 0.045 vs 0.011).
+- Attribution macro-F1 0.77–0.79, or 0.95–0.98 without A1. A1 → G2 in 348/417 is the single-city limit.

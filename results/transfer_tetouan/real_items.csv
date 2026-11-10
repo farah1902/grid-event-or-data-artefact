@@ -1,0 +1,5 @@
+item_id,kind,episode,system,start,end,duration_h,cities,zones,n_cities,n_zones,mv_label,n_votes,votes,frac_zones,eta,restore_ratio,peak_ratio,ramp_min,pre_ratio,fill_ramp_zones,fill_ramp_min,start_hour,weekday,hold_to_dead,interp_to_dead,coext_hold_zones,coext_interp_zones,others_alive,n_hold_zones,n_interp_zones,fill_kind,max_points,neighbours_vary,fill_to_dead,coext_dead_zones,europe_date,morocco_date,n_duplicate_stamps,n_missing_steps,delta_star_min,corr_at_0,corr_best,zone_up,delta_up,zone_down,delta_down,kappa,label,confidence,mv
+K000,clock,,Tetouan,2017-03-26,2017-03-27,24.0,Tetouan,,1,0,abstain,0,,,,,,,,,,,,,,,,,,,,,,,,True,True,0,0,-10.0,0.9867,0.9869,,,,,,N,0.9686487537828701,N
+K001,clock,,Tetouan,2017-05-21,2017-05-22,24.0,Tetouan,,1,0,abstain,0,,,,,,,,,,,,,,,,,,,,,,,,False,True,0,0,10.0,0.9631,0.9687,,,,,,N,0.9686487537828701,N
+K002,clock,,Tetouan,2017-07-02,2017-07-03,24.0,Tetouan,,1,0,abstain,0,,,,,,,,,,,,,,,,,,,,,,,,False,True,0,0,-30.0,0.9413,0.9621,,,,,,N,0.9686487537828701,N
+K003,clock,,Tetouan,2017-10-29,2017-10-30,24.0,Tetouan,,1,0,abstain,0,,,,,,,,,,,,,,,,,,,,,,,,True,True,0,0,0.0,0.9901,0.9901,,,,,,N,0.9686487537828701,N

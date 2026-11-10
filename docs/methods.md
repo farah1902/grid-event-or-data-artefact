@@ -407,3 +407,28 @@ All rule items and normal windows are predicted out of fold (GroupKFold, 5 folds
 - every flagged dead state (naive, what S0 reports; S1 reports none);
 - flagged dead states inside G-labelled items (typed, S2);
 - the injected G1–G4 core spans (truth), inside NB4's scoring area.
+
+## 9. Transfer test (`src/transfer.py`, NB6; D68–D70)
+
+**Frozen from Morocco:**
+- the rules (all thresholds) and the item and episode definitions;
+- the label model: the parameters (π, θ) fitted on the Morocco votes, applied to the new items by one E-step (`DawidSkene.predict`);
+- the detector architectures and training hyper-parameters;
+- each detector's event formation (w, q, gap);
+- the injected signatures and the metrics.
+
+**Re-estimated from the new system's unlabelled series:**
+- x̂ (eq. 1) and the robust-score scales;
+- the predictor weights (trained on rule-clean steps, cross-fitted in two folds split at mid-year);
+- γ, as the frozen percentile q of the system's own rule-negative zone-steps.
+
+**Single-city system** (Tetouan):
+- u ≡ 0, so the zone score is max(region, zone);
+- the graph has only same-city edges;
+- R1 and R7 cannot fire;
+- G1 is not injected, and multi-city injected types become city-wide.
+
+**Evaluation:** the guide's three outputs, on the whole year after the burn-in:
+1. items and alarms on the real series (false alarms);
+2. recall, precision and F1 on injected events (eq. 17);
+3. the label distribution (attribution by the frozen label model's arg max, with majority vote as the baseline).

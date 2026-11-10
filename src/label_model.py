@@ -267,6 +267,32 @@ class DawidSkene:
         self.loglik_ = self.best_["ll"]
         return self
 
+    def predict(self, votes, items, rule_kind):
+        """Posterior q on NEW items with the fitted (frozen) parameters: one E-step, no refit (transfer test, NB6).
+        A rule output never produced during fitting has no learned probability and is treated as an abstention;
+        such votes are counted in self.unseen_."""
+        items = items.reset_index(drop=True)
+        votes = votes.reindex(columns=self.rules)
+        n, K = len(votes), len(CLASSES)
+        O = np.zeros((n, len(self.rules)), dtype=int)
+        self.unseen_ = {}
+        for j, r in enumerate(self.rules):
+            idx = {l: k for k, l in enumerate(self.vocab[r])}
+            for i, v in enumerate(votes[r].to_numpy()):
+                if pd.isna(v):
+                    continue
+                if v in idx:
+                    O[i, j] = idx[v]
+                else:
+                    self.unseen_[r] = self.unseen_.get(r, 0) + 1
+        kind_idx = np.array([self.kinds.index(k) for k in items.kind])
+        feas = np.zeros((n, K), dtype=bool)
+        for i, it in enumerate(items.itertuples()):
+            feas[i, [CLASSES.index(c) for c in feasible_classes(it)]] = True
+        app = applicability(items, self.rules, rule_kind)
+        q, _ = self._estep(O, kind_idx, feas, app, self.best_["pi"], self.best_["theta"])
+        return pd.DataFrame(q, index=votes.index, columns=CLASSES)
+
     def params_table(self):
         """a = propensity on the classes an output speaks for, b = false-positive rate (constrained structure)."""
         rows = []

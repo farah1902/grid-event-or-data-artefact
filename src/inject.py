@@ -67,6 +67,10 @@ class Injector:
         return [z for z in self.codes if self.city_of[z] == c]
 
     def _pick_zones(self, typ, rng):
+        if typ in ("A1", "G1", "U_SHOCK") and len(self.cities) == 1:
+            # single-city system (Tetouan, NB6): multi-city types become city-wide events; G1 is then the same
+            # event as G2 and is not injected (sample(types=...))
+            return self._city_zones(self.cities[0]), "city"
         if typ in ("A1", "G1", "U_SHOCK"):
             k = 2 if typ == "G1" else int(rng.integers(2, 4))
             cs = list(rng.choice(self.cities, size=k, replace=False))
@@ -78,7 +82,7 @@ class Injector:
             if u < 0.5:
                 c = rng.choice(self.cities); zs = self._city_zones(c)
                 return list(rng.choice(zs, size=int(rng.integers(2, len(zs) + 1)), replace=False)), "zones"
-            if u < 0.75:
+            if u < 0.75 or len(self.cities) == 1:
                 return self._city_zones(rng.choice(self.cities)), "city"
             cs = list(rng.choice(self.cities, size=int(rng.integers(2, 4)), replace=False))
             return sum((self._city_zones(c) for c in cs), []), "cities"
@@ -99,16 +103,17 @@ class Injector:
         a, b = max(0, a), min(len(self.idx), b)
         return free[a:b][:, cols].all()
 
-    def sample(self, period_mask, rate, rng, max_fail=400):
-        """Place events round-robin over TYPES until injected zone-steps reach `rate` x clean zone-steps of the
-        period. Returns (modified copy of data, truth table)."""
+    def sample(self, period_mask, rate, rng, max_fail=400, types=None):
+        """Place events round-robin over `types` (default TYPES) until injected zone-steps reach `rate` x clean
+        zone-steps of the period. Returns (modified copy of data, truth table)."""
+        types = TYPES if types is None else list(types)
         data = {c: d.copy() for c, d in self.data0.items()}
         free = self.clean & period_mask[:, None]
         budget = rate * free.sum()
         lo, hi = int(np.argmax(period_mask)), int(len(period_mask) - np.argmax(period_mask[::-1]))
         truth, used, fails, k = [], 0, 0, 0
         while used < budget and fails < max_fail:
-            order = list(rng.permutation(TYPES))
+            order = list(rng.permutation(types))
             progress = False
             for typ in order:
                 if used >= budget:

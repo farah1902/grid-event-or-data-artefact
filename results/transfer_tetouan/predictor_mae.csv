@@ -1,0 +1,4 @@
+predictor,MAE
+TCN-GAT,0.0447
+TCN,0.0406
+LGB,0.011

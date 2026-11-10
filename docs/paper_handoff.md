@@ -17,7 +17,8 @@ claim points to a finding (F…) in `docs/findings.md` or a decision (D…) in `
   - NB4 §8b produces the south catalogue with the main detector (`results/main_detector/`). NB3's south detector numbers describe the LightGBM detector.
   - The NB4 evaluation protocol was also corrected: the scoring area no longer favours the LightGBM detector (F36).
 - **NB5 done (2026-11-10, local; results_summary §10, F51–F54):** downstream test of the cleaning strategies S0–S3 on real and injected data (D64–D66).
-- Not done: the Tetouan transfer (NB6) and the final figures (NB7).
+- **NB6 done (2026-11-10, local; results_summary §11, F55–F58):** transfer to Tetouan with the method frozen (D68–D70).
+- Not done: the final figures (NB7).
 
 ## 1. The paper in one paragraph (current evidence)
 
@@ -81,7 +82,11 @@ grid-event labels: a 4.15-fold overstatement (F51).
    - Counting every dead state as an outage overstates southern outage time 4.15× on the real data (F51). On injected data, the naive count is 1.89× the truth and the typed count 1.36×, the residual being the A1 → G1 confusion (F52).
    - Typed cleaning gives the best LightGBM forecasts, mainly after anomalies (day-ahead MASE −14 % vs naive interpolation on the real data), and comes within about 1 % of an oracle (F53).
    - A model-free forecaster prefers erasing outages, so the typed labels should be given to the forecaster, not only used for cleaning (F54).
-9. **(Pending)** Tetouan transfer (NB6).
+9. **Tetouan transfer (NB6):**
+   - Frozen rules raise zero false items on a clean year of another city's data (F55).
+   - The full method reaches F1 0.945 / 0.919 / 0.890 at precision 0.98–1.00 and beats the rules everywhere (F56).
+   - On one year of 3 zones, the data-efficient LightGBM is the better stand-alone detector at 3–7 % (F57).
+   - Attribution transfers for 5 of 6 classes (macro-F1 without A1 0.95–0.98). A1 fails because its evidence is cross-city (F58).
 10. **Threats and limitations** (§6 below).
 
 ### Text the author asked to include in the paper
@@ -142,7 +147,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | 3 | Multi-scale residual detector split into region/city/zone parts | **Done and tested (NB4).** Main detector: TCN-GAT residual, multi-scale bands, region/city/zone hierarchy and tuned event formation (D61). It is the best of eight detectors at 3 % and 7 % (F1 0.813 and 0.854, p ≤ 0.02) and tied at 1 % (F41). Qualifiers: removing the learned graph does not hurt it (F42); the multi-scale bands help at low contamination, while the hierarchy is a localisation device, not a detection gain (F43); it is not best at step-wise AUC-PR (F39, F41); and it does not improve prediction (F37). Hierarchy localisation: dead items 92 % at the zone, multi-city dead items 3/3 (LightGBM) or 2/3 (neural residuals) at the region (F30, F43) | F28–F32, F35–F45, Fig 8, Fig 9, E18, E20 |
 | 4 | Released typed event catalogue for UCI 1158 | Draft exists (`results/labels_v1/q.csv`, 327 items, plus episodes). Release after NB4 validation | results_summary §6–7 |
 | 5 | Type-aware cleaning improves forecasts and outage statistics | **Done (NB5), with qualifiers.** Outage time: naive counting overstates it 4.15× on the real data; on injected data the typed count is 1.36× the truth, against 1.89× (naive) and 0 (S1). Forecasts: typed cleaning gives the best LightGBM forecasts after anomalies (real day-ahead MASE 1.061 vs 1.233 for S1 and 1.501 for S0), within about 1 % of the oracle on injected data. Qualifiers: over all test steps the effect is ≤ 3 %, and it needs an indicator-aware forecaster | F51–F54, Fig 12, Table 8 |
-| 6 | Transfer test on Tetouan | Not started (NB6) | — |
+| 6 | Transfer test on Tetouan | **Done (NB6).** Without re-tuning: zero false rule items on the clean real year; full-method F1 0.945 / 0.919 / 0.890 (precision 0.98–1.00), above the rules alone at every rate (p = 0.002); attribution macro-F1 0.77–0.79, or 0.95–0.98 without A1 (the single-city limit). Qualifier: the neural detector alone is overtaken by LightGBM at 3–7 % on this small dataset | F55–F58, Fig 13, Table 9 |
 | new | Methodological: the guide's Dawid–Skene fails on sparse single-label rule sets; a constrained, level-gated variant works | Done | F20–F22, D28–D34 |
 | new | Empirical: straight-line interpolation and synthetic restoration ramps in utility telemetry; a daily logger freeze | Done | F01, F05, F09 |
 
@@ -154,7 +159,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | RQ2: which signatures separate events from artefacts? | Holds and linear fills (log(a/b) 3.4–4.0) and simultaneity with fill (R1, R3, R4, R21) are strong. Exact-zero share (R6, 2.2) is moderate. **Restoration overshoot (R5, 0.12) is uninformative.** Conservation: one example | F16, results_summary §6 |
 | RQ3: does learning beat rules alone and unsupervised detectors? | **Test seeds (NB4).** The learned detector beats every unsupervised detector (STL + MAD, LOF, Isolation Forest) at 3 % and 7 % and ties at 1 % (F41). Adding it to the rules raises recall at every rate (+0.03 to +0.06; untyped shocks, partial outages and city outages the rules miss), but raises event F1 only at 7 % under strict counting, and at every rate when each method's own real-data alarms are not counted. Zone-strict F1 is lower than the rules' at every rate (F44). In attribution, the end model alone is worse than the label model, and fusion matches majority vote (F46). On real data the end model reproduces the label model (F33) | F33, F34, F41, F44, F46 |
 | RQ4: does type-aware cleaning help? | **Yes, where it can.** Outage statistics are much closer to the truth (1.36× vs 1.89×; 4.15× naive-to-typed on the real data). Forecasts after anomalies are better than with naive interpolation and close to the oracle, for a forecaster that reads the event indicator. Over all test steps the gain is small (≤ 3 %). For a naive forecaster, interpolating everything (S1) gives lower error but erases outages | F51–F54 |
-| RQ5: transfer without re-tuning? | Pending (NB6) | — |
+| RQ5: transfer without re-tuning? | **Yes for detection, mostly for attribution.** The frozen method raises no false rule item on Tetouan's clean year and detects 80–91 % of injected events at 98–100 % precision, above the rules alone everywhere. Five of six classes are typed at 0.85–1.00 accuracy. City-wide zero gaps (A1) become city outages, because the A1 evidence is cross-city by design | F55–F58 |
 | H1: acquisition failures → exact zeros or simultaneous holds; de-energised feeders → noise floor | **Supported and extended.** All 3 multi-city zero fills have η = 1.0 and come with holds or linear fills; 84 of 126 dead items have η < 0.9 and are mostly single-zone. Caveat: some noise floors are linear fills (D16) | F03, F06, F17 |
 | H2: real outages restore with a ramp or overshoot; gaps return straight to expected | **Weak / threatened.** Synthetic ramps (21 %); R5 uninformative | F05, F16 |
 | H3: transfers conserve current; faults and gaps don't | One clean case (κ = 0.07); the 12 other level-shift candidates have κ ≥ 0.72 | F19 |
@@ -183,6 +188,9 @@ These are changes to the **guide's plan**, found by running it on the real data.
 20. **Injector realism** (F47): injected multi-city zero gaps copy the zero part of the real compound events but not the holds and fills around them. Part of the A1 → G1 confusion is therefore a property of the injector.
 21. **Post-hoc ablation** (D62, F42): the no-graph multi-scale row was computed after the test results were seen. It changes no design choice (D63), but say that it was added after the main run. It showed that the graph adds no detection skill.
 22. **Spent test seeds** (D63): any design change suggested by NB4 (flat residual, family weights, linking detector-only candidates to episodes) needs development seeds and fresh test seeds.
+23. **Single-city transfer** (F58, D69): with one city, A1 and G2 share every cue the rules use, and G1 cannot exist. The Tetouan attribution numbers include this structural failure. Report them with and without A1.
+24. **Small-system predictors** (F57): the neural predictors are data-hungry (Tetouan MAE 0.045 vs 0.011 for LightGBM). Stand-alone detector rankings on Tetouan differ from Morocco's.
+25. **Tetouan is pre-cleaned** (F55): its real series has no anomaly at all, so its false-alarm rate is a best case, and recall comes only from injected Morocco signatures.
 
 ## 7. Claims the paper must NOT make (yet)
 
@@ -203,6 +211,8 @@ These are changes to the **guide's plan**, found by running it on the real data.
 - That the graph detector is best "at every contamination rate": at 1 % it is tied with the other model-based detectors (F41).
 - That the region/city/zone hierarchy improves detection. The flat residual matches or beats it on event F1 at 1 % and 7 % and on AUC-PR at every rate (F43). The hierarchy's value is localisation (F30).
 - That the label model is more accurate than majority vote on injected data: it is not (F46). Its value is calibrated probabilities and stability on sparse real-data votes.
+- That the method "transfers without loss": A1 attribution fails in a single-city system (F58), and the neural detector alone loses to LightGBM at 3–7 % on Tetouan (F57).
+- That Tetouan's 7 real-data alarms are events: they are unvalidated (F55).
 - Development-seed numbers as results: cite NB4's test seeds.
 
 ## 8. What is still missing (in roadmap order)
@@ -212,7 +222,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | NB3 | **Done** (LightGBM 4.6.0 reference run with the structural-zero fix): residual hierarchy, Fig 8, detector-only candidates, end model, fusion | contribution 3 |
 | NB4 | **Done** (Colab GPU run, 2026-11-09; results_summary §9; F41–F50). No-graph ablation added afterwards with `tools/graph_ablation.py` (D62, F42). Test seeds spent (D63) | Tables 5–7, Figs 9–11, E20–E21 |
 | NB5 | **Done** (local, 2026-11-10; F51–F54, results_summary §10). LightGBM + naive reference; no deep forecaster (D65) | Table 8, Fig 12 |
-| NB6 | Tetouan transfer with frozen rules | Table 9 |
+| NB6 | **Done** (local, 2026-11-10; F55–F58, results_summary §11) | Table 9, Fig 13, E22 |
 | NB7 | Final figures (basemap, typology diagram, framework diagram) | Figs 1, 2, 6 |
 
 **Injection additions required by the findings (including NB3):**
