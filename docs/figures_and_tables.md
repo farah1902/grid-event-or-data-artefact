@@ -64,12 +64,12 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
 
 | Guide item | Status | Where / what remains |
 |---|---|---|
-| Fig 1 (map + coverage) | done (schematic map) | `fig1_map_coverage`; real basemap in NB7 |
-| Fig 2 (typology diagram) | **to draw** | Must now include the linear-fill signature: A2 = simultaneous fill (hold or linear), A3 = single-zone fill (stuck or linear) |
+| Fig 1 (map + coverage) | **done (NB7)** | `fig1_map_coverage`: Natural Earth basemap without boundaries, southern inset, Tetouan; coverage from rule engine v1 (D73) |
+| Fig 2 (typology diagram) | **done (NB7)** | `fig2_typology`: nine schematic signatures with level, signature and rules; straight-line fills in A2 and A3 |
 | Fig 3 (Jan 2023) | done | `fig3_C05_C06_jan2023` |
 | Fig 4 (Mar 2024) | done | `fig4_C12_mar2024` |
 | Fig 5 (clock evidence) | done | `fig5_clock_2022-10-30` |
-| Fig 6 (framework diagram) | **to draw** | Update: item kinds (dead, fill, clock, transfer), episodes, constrained label model (D28–D34) |
+| Fig 6 (framework diagram) | **done (NB7)** | `fig6_framework`: weak-supervision lane, residual-detector lane, end model and fusion, catalogue, the three evaluations |
 | Fig 7 (rule coverage, overlap, conflict) | done | `fig7_rule_diagnostics` |
 | Fig 8 (residual hierarchy g, u, v) | done | `fig8_residual_hierarchy` (NB3) |
 | Fig 9 (detection PR curves) | **done** (NB4 Colab run, 2026-11-09) | `fig9_detection` (dot plot of event F1 and step AUC-PR, test period). The no-graph multi-scale row (D62) is not in the figure; add it in NB7 from `graph_ablation/` |
@@ -77,9 +77,9 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
 | Fig 11 (reliability diagram) | **done** | `fig10_11_attribution` (b); pooled-seed ECE (differs from Table 6's per-seed mean, results_summary §9.4); NB2 has the synthetic-recovery ECE |
 | Fig 12 (downstream MASE, outage-hours error) | **done** (NB5) | `fig12_downstream`: (a) real and (b) injected LightGBM MASE by strategy after anomalies, (c) outage zone-hours / injected truth. Numbers: results_summary §10 |
 | Table 1 (data inventory) | done | `docs/results_summary.md` §1 |
-| Table 2 (typology and signatures) | to update | The guide's table plus the linear-fill signatures (F01) |
+| Table 2 (typology and signatures) | **done (NB7)** | `results/paper/tables/Table2_typology.csv` (with real-data counts) |
 | Table 3 (labelling rules) | done | `docs/methods.md` §4 |
-| Table 4 (event catalogue) | draft done | `docs/results_summary.md` §7; full list in `results/labels_v1/q.csv` and `episodes_labelled.csv` |
+| Table 4 (event catalogue) | **done (NB7)** | `results/paper/tables/Table4_key_events.csv`; the full released catalogue is `results/catalogue_final/` (D72) |
 | Table 5–7 (detection, attribution, ablations) | **done** (NB4) | `results/benchmark_v1/table5*`, `table6*`, `table7*`; plus the no-graph ablation `graph_ablation/table_graph_ablation.csv` (D62). Numbers: results_summary §9 |
 | Table 8 (forecasting) | **done** (NB5) | `results/downstream_v1/table8_forecasting.csv`, `table8_dm.csv`; results_summary §10.2 |
 | Table 9 (Tetouan) | **done** (NB6) | `results/transfer_tetouan/table9_detection.csv`, `table9_attribution.csv`, `table9_recall_by_type.csv`, `table9_wilcoxon.csv`; results_summary §11 |
@@ -89,3 +89,23 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
 - **Label-model comparison:** stability and parameter recovery for constrained DS, the guide's DS and majority vote (`docs/results_summary.md` §6). Good for justifying D32.
 - **Learned rule parameters** a, b, log(a/b) and precision (`results/labels_v1/rule_params.csv`).
 - **Corrections to the guide's method** (`docs/paper_handoff.md` §3), as a methods table or an appendix.
+
+## NB7: the final paper set (D72–D75)
+
+- **The authority for paper numbering and captions is `results/paper/MANIFEST.md`.** Main: Fig 1–14; supplementary: Fig S1–S28; tables: 27 CSVs in `results/paper/tables/`.
+- **Renumbered for the paper:**
+  - Fig 10 = `fig9b_ablations`;
+  - Fig 11 = `fig10_11_attribution`;
+  - Fig 13 = `fig14_transfer_protocol` (the protocol before the results);
+  - Fig 14 = `fig13_tetouan`.
+- **Drawn in NB7:** `fig1_map_coverage` (replaces the schematic map), `fig2_typology`, `fig6_framework`.
+- **Regenerated in NB7 (D74):** `fig8_residual_hierarchy` (axis fixed; F29 reproduced), `fig9_detection` (graph-ablation row), `E4_signatures` (v1 and final labels), `E6_catalogue_timeline` (final labels), `E19_end_model` (legend; final candidates), `E22_tetouan_series` (legend).
+- **Caveats now resolved:**
+  - Fig 1 (D16 masks);
+  - E4 (v0 features);
+  - E6 (v0 types);
+  - the Fig 8 axis and the E19 legend.
+- **Caveats still open:**
+  - E3 uses v0 events (S22);
+  - E5's C01 panel is superseded by E10 (S23);
+  - E17 and E18 show the NB3 LightGBM detector's candidates (S7, S17).

@@ -657,3 +657,56 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **Outputs:**
   - `docs/transfer_protocol.md`: every component of the pipeline marked frozen, re-estimated from unlabelled data, adapted (single city) or engineering, with values, code location, regression checks and the chronology;
   - Fig 14, `results/figures/fig14_transfer_protocol.{png,pdf}` (`tools/make_transfer_diagram.py`, numbers read from `results/transfer_tetouan/summary.json`).
+
+### D72 — The final catalogue and its release [NB7]
+- **One table, 404 entries** (`results/catalogue_final/catalogue.csv`): the 327 items of rule engine v1 and the 77 detector-only candidates, each with its final label, confidence, distribution p over A1–A4, G1–G5, N, and the source of that distribution (`label_source`).
+- **Sources, by item:**
+  - **south dead and fill items (226):** fusion of label model and end model with the main detector (NB4 §8b, `results/main_detector/p_type_south.csv`);
+  - **Marrakech dead and fill items (55):** NB3 fusion (`results/end_model_v1/p_type.csv`). Marrakech keeps NB3's detector (D61);
+  - **clock (33) and transfer (13) items:** the label model q (NB2). The end model covers dead and fill items only;
+  - **detector-only candidates:** the end model through fusion. South: the 70 main-detector candidates, re-identified `XS###`; Marrakech: NB3's 7, re-identified `XM###`. The two runs' `X###` numbers overlap, hence the new prefixes.
+- **Episodes** (`episodes.csv`) carry the label sequence recomputed with the final labels; **key events** (`key_events.csv`) are the guide's C-ids with their final labels.
+- **README:** columns, sources and reading rules (impute A*, keep G*; N on a candidate = untyped; real-data labels validated only by injection; ids stable for this release). The data are derived from UCI 1158 (CC BY 4.0).
+- **Contribution 4** of the plan ("released typed event catalogue") is fulfilled.
+- **Code:** `src/paper_figures.final_catalogue`, `final_episodes`, `key_events_table`; `src/paper_tables.release_catalogue`.
+
+### D73 — Fig 1 basemap: Natural Earth land, no boundaries [NB7]
+- **Map data:** Natural Earth 1:50m land polygons (public domain), pinned to release v5.1.2 and stored in `data/external/natural_earth/` with a README. They are drawn with plain matplotlib, so no cartopy or geopandas dependency is added (the author's light-dependency preference).
+- **No country or regional boundaries are drawn.** Laâyoune, Boujdour and Foum El Oued lie in Western Sahara, whose status is disputed. The UCI dataset labels the sites "Morocco"; a land-only map is neutral and enough for the paper's purpose (where the data come from).
+- **Layout:**
+  - City locations are approximate city centres (degrees), adequate at country scale.
+  - The three southern cities (Laâyoune and Foum El Oued are about 20 km apart) are shown in an inset.
+  - The Tetouan transfer set is added.
+  - The scale bar is valid at 22°N (equirectangular map).
+- **Coverage panel:** rebuilt from rule engine v1's qualifying zone runs (state priority D16): hold, straight-line fill, exact zeros (≥ 50 % of the dead run), noise floor, missing steps. This removes the D16 caveat of the NB1 version.
+
+### D74 — Figures regenerated with the fixes noted during the project [NB7]
+- **Fig 8:**
+  - level scores recomputed from the saved NB4 LightGBM models (the same fit procedure as NB3), with a check that they reproduce F29 exactly (region g during C05/C06: 218.0 forecast, 232.6 nowcast; NB7 asserts it);
+  - x-axis: one label per day (it repeated day labels);
+  - legend headroom.
+- **Fig 9:** NB4's detection figure plus the learned-graph ablation row (D62), from `graph_ablation/test_detection.csv`. Shorter labels, rows grouped (method / main detector and its ablations / other predictors / baselines). "TCN-GAT (raw, hierarchy)" is dropped because it equals "single scale" once the main detector is the TCN-GAT.
+- **E4:** rebuilt from the v1 dead items (restoration measured after the synthetic ramp, D22) with final labels. The v0 version used v0 features measured on synthetic ramps.
+- **E6:** the typed catalogue on one timeline with final labels (v0 types before). Detector-only candidates are outlined; clock days are dotted.
+- **E19:** the legend moved off the bars; panel (c) shows the final catalogue's candidates (south: main detector; Marrakech: NB3) instead of NB3's superseded south candidates.
+- **E22:** the legend moved off the lines.
+- **Side effect handled:** `transfer.register` moves `detector.SPLIT` to 2017. NB7 restores the Morocco split after using it, so the Morocco figures computed in the same process are unaffected.
+- **Code:** `src/paper_regen.py`.
+
+### D75 — The paper set: numbering, captions, tables [NB7]
+- **`results/paper/MANIFEST.md`:** the paper's figure numbers, source files and draft captions. Every number in a caption is in results_summary.
+- **Main figures (14):**
+  - Fig 1–8 as planned;
+  - **Fig 9** detection;
+  - **Fig 10** ablations (`fig9b_ablations`);
+  - **Fig 11** attribution (`fig10_11_attribution`);
+  - **Fig 12** downstream;
+  - **Fig 13** the transfer protocol (`fig14_transfer_protocol`);
+  - **Fig 14** the Tetouan results (`fig13_tetouan`).
+  - The protocol comes before the results, as the handoff's storyline asks. Source file names are kept; the paper numbers live in the manifest and in the copies `results/paper/figures/FigNN_<source>.*`.
+- **Supplementary figures (28):** S1–S28, with notes where a figure uses v0 data (S22) or is partly superseded (S23).
+- **Tables** (`results/paper/tables/`, 27 CSVs):
+  - **new:** Table 1 data inventory (with Tetouan), Table 2 typology and signatures (with real-data counts), Table 3 rules (coverage, overlap, conflict, learned precision, log(a/b)), Table 4 key events (final labels, episode sequences), Table S7 the corrections to the plan (from paper_handoff §3);
+  - **copies:** Tables 5–9 from NB4, the graph ablation, NB5 and NB6, and Tables S1–S6 from the registers.
+- **Corrections table** (paper_handoff §3): #30 brought up to date (the TCN-GAT, implemented in NB4, became the main detector; its graph is an ablation). #37–#40 added: per-detector event formation (D60); no deep forecaster (D65); no A4 re-alignment (D64); the Tetouan re-estimation scope (D68).
+- **Code:** `src/paper_tables.py`; `tools/make_nb7_final_figures.py` → `notebooks/NB7_final_figures.ipynb` (executed locally, 1.1 min).

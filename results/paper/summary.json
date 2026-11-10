@@ -1,0 +1,75 @@
+{
+  "catalogue": {
+    "entries": 404,
+    "by_system_source": {
+      "Marrakech | detector": 7,
+      "Marrakech | rule": 64,
+      "south | detector": 70,
+      "south | rule": 263
+    },
+    "labels": {
+      "A3": 105,
+      "N": 96,
+      "G4": 73,
+      "A2": 58,
+      "G3": 52,
+      "A4": 14,
+      "A1": 4,
+      "G2": 1,
+      "G5": 1
+    },
+    "labels_rule_items": {
+      "A3": 98,
+      "G4": 70,
+      "A2": 57,
+      "G3": 52,
+      "N": 31,
+      "A4": 14,
+      "A1": 3,
+      "G2": 1,
+      "G5": 1
+    }
+  },
+  "fig8_check": {
+    "C05/C06 \u00b7 25\u201330 Jan 2023 (logger: hold \u2192 zero fill)": {
+      "g_forecast_max": 218.0,
+      "g_nowcast_max": 232.6
+    },
+    "C02 \u00b7 29 Oct \u2013 4 Nov 2022 (F4 feeder outage)": {
+      "g_forecast_max": 27.4,
+      "g_nowcast_max": 29.0
+    }
+  },
+  "figures_main": 14,
+  "figures_supp": 28,
+  "tables": [
+    "Table1_data_inventory",
+    "Table2_typology",
+    "Table3_rules",
+    "Table4_key_events",
+    "Table5_detection",
+    "Table5_wilcoxon",
+    "Table6_attribution",
+    "Table7a_pipeline",
+    "Table7b_detector_ablations_3pct",
+    "Table7c_rule_families",
+    "Table7d_threshold_sensitivity",
+    "Table7e_ablations_main_detector",
+    "Table7f_graph_ablation",
+    "Table8_forecasting",
+    "Table8_dm_tests",
+    "Table8_outage_injected",
+    "Table9_tetouan_detection",
+    "Table9_tetouan_wilcoxon",
+    "Table9_tetouan_recall_by_type",
+    "Table9_tetouan_attribution",
+    "TableS1_rule_parameters",
+    "TableS2_label_model_recovery",
+    "TableS3_label_robustness",
+    "TableS4_dev_selection",
+    "TableS5_hard_negatives",
+    "TableS6_predictor_comparison",
+    "TableS7_corrections_to_the_plan"
+  ],
+  "runtime_min": 1.1
+}

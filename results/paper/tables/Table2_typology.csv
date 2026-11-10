@@ -1,0 +1,10 @@
+type,name,family,hierarchy_level,measurable_signature,rules,real_rule_items,real_detector_only,injected_in_NB4
+A1,zero-fill gap,artefact,region (≥ 2 cities) or episode,"exact zeros (η = 1) in ≥ 2 cities at once, often after a hold or straight-line fill; returns at once","R1, R3, R4, R21",3,1,yes
+A2,simultaneous fill,artefact,≥ 2 zones,≥ 2 zones frozen (identical values) or straight-line interpolated over the same span,"R2, R19",57,1,yes
+A3,single-zone fill,artefact,zone,one zone frozen or straight-line interpolated; neighbours move normally,"R12, R20",98,7,yes
+A4,clock error,artefact,"system, one day",daily profile shifted by δ* ≈ ±60 min after a clock-change date; duplicated or missing stamps,"R13, R14, R15",14,0,no (calendar-gated rules)
+G1,regional outage,grid event,region (≥ 2 cities),"noise floor (η < 0.9) in ≥ 2 cities, ramp restoration with cold-load overshoot π ≥ 1.15","R5, R6, R7",0,0,yes (no real example)
+G2,city outage,grid event,city,"all zones of one city at the noise floor, the other cities normal","R8 (+ R5, R6)",1,0,yes
+G3,unplanned feeder outage,grid event,zone,"one zone at the noise floor at any hour, possibly > 24 h, ramp restoration","R9, R11 (+ R6)",52,0,yes
+G4,planned work,grid event,zone,"one zone at the noise floor, starting 06:00–11:59, short (< 6 h)",R10,70,3,yes
+G5,load transfer,grid event,≥ 2 zones of a city,one zone steps down while another steps up by the same amount (conservation κ ≈ 0),R16,1,0,no (weeks long)

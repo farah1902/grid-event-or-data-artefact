@@ -1,0 +1,9 @@
+rate,strategy,zone_hours,outages
+0.03,interpolated away (S1),0.0,0.0
+0.03,naive: every dead state (S0),3882.9,727.7
+0.03,truth (S3),2140.3,405.7
+0.03,"typed, label model (S2)",2891.7,535.0
+0.07,interpolated away (S1),0.0,0.0
+0.07,naive: every dead state (S0),8535.8,1819.0
+0.07,truth (S3),4503.8,999.0
+0.07,"typed, label model (S2)",5640.2,1296.0

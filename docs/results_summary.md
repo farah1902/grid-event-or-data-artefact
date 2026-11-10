@@ -617,3 +617,24 @@ All families 0.914 ± 0.029. Without:
 - **Main detector:** 0.644 → 0.857, 0.813 → 0.793, 0.854 → 0.722.
 - **LightGBM:** 0.623 → 0.761, 0.765 → 0.868, 0.827 → 0.764.
 - **Label-model macro-F1:** 0.934 → 0.793, 0.914 → 0.774, 0.900 → 0.771; without A1 on Tetouan 0.978 / 0.951 / 0.949.
+
+## 12. NB7: the final catalogue and the paper set (`results/catalogue_final/`, `results/paper/`)
+
+**Final catalogue** (`catalogue.csv`): 404 entries.
+- **By system and source:** south 263 rule items (226 dead or fill, 24 clock, 13 transfer) and 70 detector-only candidates; Marrakech 64 rule items (55 dead or fill, 9 clock) and 7 candidates.
+- **Final labels, all entries:** A3 105, N 96, G4 73, A2 58, G3 52, A4 14, A1 4, G2 1, G5 1.
+- **Final labels, the 327 rule items:** A3 98, G4 70, A2 57, G3 52, N 31, A4 14, A1 3, G2 1, G5 1.
+  - The 31 N are 19 clock and 12 transfer items without a vote.
+  - Against NB3's labels, one item moves from G3 to G4: 6 Aug 2023, B2 (F50).
+- **Label sources:** fusion with the main detector 296, NB3 fusion 62, label model 46.
+- **Key events** (`key_events.csv`):
+  - C05/C06: A2 → A2 → A1;
+  - C12: A2 → A1 → A2 → G4;
+  - C09: A1 → A2;
+  - C01: G4 → A3 → A3 → G3;
+  - C02, C04, C07: G3 → A3;
+  - the guide's G2 candidate (26 Sep 2022, L1–L5): G2 (0.994).
+
+**Fig 8 reproduction check (NB7):** region g during C05/C06 = 218.0 (forecast residual) and 232.6 (nowcast), as in F29. For C02: 27.4 and 29.0.
+
+**Paper set:** 14 main figures, 28 supplementary figures, 27 tables (MANIFEST.md).

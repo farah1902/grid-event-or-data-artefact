@@ -1,0 +1,405 @@
+item_id,system,kind,source,start,end,duration_h,cities,zones,n_cities,n_zones,episode,label,confidence,family,label_source,votes,p_A1,p_A2,p_A3,p_A4,p_G1,p_G2,p_G3,p_G4,p_G5,p_N
+K024,Marrakech,clock,rule,2023-01-09 00:00,2023-01-10 00:00,24.0,Marrakech,,1,0,,N,0.9491,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0509,0.0,0.0,0.0,0.0,0.0,0.9491
+D000,Marrakech,dead,rule,2023-01-13 08:30,2023-01-13 14:30,6.0,Marrakech,M2,1,1,EP044,G4,0.9235,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0765,0.9235,0.0,0.0
+F000,Marrakech,fill,rule,2023-01-21 10:30,2023-01-21 17:30,7.0,Marrakech,M2,1,1,EP050,A3,0.9913,artefact,"fusion, NB3",R12:A3,0.0,0.0,0.9913,0.0,0.0,0.0,0.0,0.0,0.0,0.0087
+D001,Marrakech,dead,rule,2023-01-23 01:30,2023-01-24 00:00,22.5,Marrakech,M2,1,1,EP051,G3,0.8221,grid event,"fusion, NB3",R5:G;R9:G3,0.0022,0.0,0.0,0.0,0.0,0.0,0.8221,0.1757,0.0,0.0
+D002,Marrakech,dead,rule,2023-01-24 00:30,2023-01-24 10:00,9.5,Marrakech,M2,1,1,EP053,G3,0.8191,grid event,"fusion, NB3",R9:G3,0.0014,0.0,0.0,0.0,0.0,0.0,0.8191,0.1795,0.0,0.0
+D003,Marrakech,dead,rule,2023-01-24 10:30,2023-01-24 20:00,9.5,Marrakech,M2,1,1,EP055,G3,0.5815,grid event,"fusion, NB3",R9:G3,0.0014,0.0,0.0,0.0,0.0,0.0,0.5815,0.4171,0.0,0.0
+K025,Marrakech,clock,rule,2023-03-19 00:00,2023-03-20 00:00,24.0,Marrakech,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+K026,Marrakech,clock,rule,2023-03-26 00:00,2023-03-27 00:00,24.0,Marrakech,,1,0,,N,0.9492,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0508,0.0,0.0,0.0,0.0,0.0,0.9492
+K027,Marrakech,clock,rule,2023-04-10 00:00,2023-04-11 00:00,24.0,Marrakech,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+K028,Marrakech,clock,rule,2023-04-11 00:00,2023-04-12 00:00,24.0,Marrakech,,1,0,,A4,0.8265,artefact,label model (NB2),R13:A4,0.0,0.0,0.0,0.8265,0.0,0.0,0.0,0.0,0.0,0.1735
+K029,Marrakech,clock,rule,2023-04-23 00:00,2023-04-24 00:00,24.0,Marrakech,,1,0,,N,0.9492,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0508,0.0,0.0,0.0,0.0,0.0,0.9492
+F001,Marrakech,fill,rule,2023-05-01 04:30,2023-05-01 11:00,6.5,Marrakech,M2,1,1,EP083,A3,0.9981,artefact,"fusion, NB3",R12:A3,0.0,0.0,0.9981,0.0,0.0,0.0,0.0,0.0,0.0,0.0019
+F002,Marrakech,fill,rule,2023-05-13 02:30,2023-05-13 08:30,6.0,Marrakech,M2,1,1,EP086,A3,0.9962,artefact,"fusion, NB3",R12:A3,0.0,0.0,0.9962,0.0,0.0,0.0,0.0,0.0,0.0,0.0038
+F003,Marrakech,fill,rule,2023-06-28 17:00,2023-06-29 01:00,8.0,Marrakech,M2,1,1,EP095,A3,0.9913,artefact,"fusion, NB3",R12:A3,0.0,0.0,0.9913,0.0,0.0,0.0,0.0,0.0,0.0,0.0087
+F004,Marrakech,fill,rule,2023-07-01 22:30,2023-07-02 04:30,6.0,Marrakech,M2,1,1,EP096,A3,0.9881,artefact,"fusion, NB3",R12:A3,0.0,0.0,0.9881,0.0,0.0,0.0,0.0,0.0,0.0,0.0119
+F005,Marrakech,fill,rule,2023-07-05 07:30,2023-07-05 13:30,6.0,Marrakech,M2,1,1,EP098,A3,0.9963,artefact,"fusion, NB3",R12:A3,0.0,0.0,0.9963,0.0,0.0,0.0,0.0,0.0,0.0,0.0037
+F006,Marrakech,fill,rule,2023-07-19 09:30,2023-07-19 16:00,6.5,Marrakech,M2,1,1,EP107,A3,0.9895,artefact,"fusion, NB3",R12:A3,0.0,0.0,0.9895,0.0,0.0,0.0,0.0,0.0,0.0,0.0105
+XM144,Marrakech,detector,detector,2023-08-08 22:00,2023-08-09 01:30,3.5,Marrakech,"M1,M2",1,2,,N,0.9106,normal / untyped,"fusion, NB3",,0.0061,0.0273,0.0181,0.0,0.0027,0.0057,0.0134,0.0162,0.0,0.9106
+XM145,Marrakech,detector,detector,2023-08-09 05:00,2023-08-09 07:00,2.0,Marrakech,"M1,M2",1,2,,N,0.9124,normal / untyped,"fusion, NB3",,0.0059,0.0271,0.0195,0.0,0.0025,0.0055,0.0118,0.0153,0.0,0.9124
+XM148,Marrakech,detector,detector,2023-08-10 00:00,2023-08-10 01:30,1.5,Marrakech,"M1,M2",1,2,,N,0.8922,normal / untyped,"fusion, NB3",,0.007,0.035,0.0221,0.0,0.003,0.0065,0.0161,0.0182,0.0,0.8922
+K030,Marrakech,clock,rule,2023-08-16 00:00,2023-08-17 00:00,24.0,Marrakech,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+D004,Marrakech,dead,rule,2023-08-19 17:30,2023-08-20 00:00,6.5,Marrakech,M2,1,1,EP115,G3,0.7844,grid event,"fusion, NB3",R9:G3,0.0007,0.0,0.0,0.0,0.0,0.0,0.7844,0.2149,0.0,0.0
+D005,Marrakech,dead,rule,2023-08-20 00:30,2023-08-20 02:00,1.5,Marrakech,M2,1,1,EP116,G3,0.8122,grid event,"fusion, NB3",R6:G;R9:G3,0.0001,0.0,0.0,0.0,0.0,0.0,0.8122,0.1877,0.0,0.0
+D006,Marrakech,dead,rule,2023-08-20 07:00,2023-08-20 09:00,2.0,Marrakech,M2,1,1,EP117,G4,0.9458,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0542,0.9458,0.0,0.0
+D007,Marrakech,dead,rule,2023-08-20 12:00,2023-08-20 17:30,5.5,Marrakech,M2,1,1,EP118,G3,0.8222,grid event,"fusion, NB3",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.8222,0.1775,0.0,0.0
+K031,Marrakech,clock,rule,2023-08-23 00:00,2023-08-24 00:00,24.0,Marrakech,,1,0,,A4,0.8265,artefact,label model (NB2),R13:A4,0.0,0.0,0.0,0.8265,0.0,0.0,0.0,0.0,0.0,0.1735
+D008,Marrakech,dead,rule,2023-09-09 16:30,2023-09-09 21:00,4.5,Marrakech,M2,1,1,EP125,G3,0.7756,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.7756,0.2242,0.0,0.0
+D009,Marrakech,dead,rule,2023-09-09 22:30,2023-09-10 00:00,1.5,Marrakech,M2,1,1,EP126,G3,0.833,grid event,"fusion, NB3",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.833,0.1667,0.0,0.0
+D010,Marrakech,dead,rule,2023-09-10 00:30,2023-09-10 04:00,3.5,Marrakech,M2,1,1,EP127,G3,0.8175,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8175,0.1823,0.0,0.0
+D011,Marrakech,dead,rule,2023-09-10 04:30,2023-09-10 10:00,5.5,Marrakech,M2,1,1,EP128,G3,0.6865,grid event,"fusion, NB3",R6:G;R9:G3,0.0005,0.0,0.0,0.0,0.0,0.0,0.6865,0.3131,0.0,0.0
+D012,Marrakech,dead,rule,2023-09-10 10:30,2023-09-10 16:00,5.5,Marrakech,M2,1,1,EP129,G4,0.9615,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0385,0.9615,0.0,0.0
+D013,Marrakech,dead,rule,2023-09-27 12:30,2023-09-30 10:00,69.5,Marrakech,M2,1,1,EP131,G3,0.9331,grid event,"fusion, NB3",R6:G;R9:G3;R11:G3,0.0,0.0,0.0,0.0,0.0,0.0,0.9331,0.0668,0.0,0.0
+D014,Marrakech,dead,rule,2023-09-30 10:30,2023-10-01 00:00,13.5,Marrakech,M2,1,1,EP134,G3,0.7051,grid event,"fusion, NB3",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.7051,0.2946,0.0,0.0
+D015,Marrakech,dead,rule,2023-10-01 12:00,2023-10-01 16:00,4.0,Marrakech,M2,1,1,EP135,G3,0.7823,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.7823,0.2175,0.0,0.0
+D016,Marrakech,dead,rule,2023-10-20 12:30,2023-10-20 16:00,3.5,Marrakech,M2,1,1,EP142,G3,0.8131,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8131,0.1867,0.0,0.0
+D017,Marrakech,dead,rule,2023-10-21 11:00,2023-10-22 00:00,13.0,Marrakech,M2,1,1,EP144,G3,0.8572,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8572,0.1426,0.0,0.0
+D018,Marrakech,dead,rule,2023-10-22 00:30,2023-10-22 10:00,9.5,Marrakech,M2,1,1,EP146,G3,0.817,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.817,0.1827,0.0,0.0
+D019,Marrakech,dead,rule,2023-10-22 10:30,2023-10-22 16:00,5.5,Marrakech,M2,1,1,EP147,G4,0.9652,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0348,0.9652,0.0,0.0
+K032,Marrakech,clock,rule,2023-10-29 00:00,2023-10-30 00:00,24.0,Marrakech,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+D020,Marrakech,dead,rule,2023-11-04 18:30,2023-11-04 21:00,2.5,Marrakech,M2,1,1,EP152,G3,0.8438,grid event,"fusion, NB3",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.8438,0.156,0.0,0.0
+D021,Marrakech,dead,rule,2023-11-04 21:30,2023-11-04 23:30,2.0,Marrakech,M2,1,1,EP153,G3,0.8346,grid event,"fusion, NB3",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.8346,0.1652,0.0,0.0
+D022,Marrakech,dead,rule,2023-11-05 01:00,2023-11-05 10:00,9.0,Marrakech,M2,1,1,EP154,G3,0.82,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.82,0.1798,0.0,0.0
+D023,Marrakech,dead,rule,2023-11-05 10:30,2023-11-05 16:30,6.0,Marrakech,M2,1,1,EP156,G4,0.9441,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0559,0.9441,0.0,0.0
+XM184,Marrakech,detector,detector,2023-11-05 23:30,2023-11-06 01:00,1.5,Marrakech,M1,1,1,,N,0.9307,normal / untyped,"fusion, NB3",,0.0071,0.0103,0.0154,0.0,0.0026,0.0055,0.012,0.0164,0.0,0.9307
+D024,Marrakech,dead,rule,2023-11-06 01:00,2023-11-06 10:00,9.0,Marrakech,M2,1,1,EP157,G3,0.8011,grid event,"fusion, NB3",R6:G;R9:G3,0.0005,0.0,0.0,0.0,0.0,0.0,0.8011,0.1985,0.0,0.0
+D025,Marrakech,dead,rule,2023-11-06 10:30,2023-11-06 16:00,5.5,Marrakech,M2,1,1,EP159,G4,0.9523,grid event,"fusion, NB3",R5:G;R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0477,0.9523,0.0,0.0
+XM192,Marrakech,detector,detector,2023-11-11 00:00,2023-11-11 01:30,1.5,Marrakech,"M1,M2",1,2,,N,0.8864,normal / untyped,"fusion, NB3",,0.0074,0.0329,0.0254,0.0,0.0033,0.0069,0.0175,0.0203,0.0,0.8864
+XM193,Marrakech,detector,detector,2023-11-11 23:30,2023-11-12 01:30,2.0,Marrakech,"M1,M2",1,2,,N,0.8901,normal / untyped,"fusion, NB3",,0.009,0.0291,0.0227,0.0,0.0033,0.007,0.0169,0.0218,0.0,0.8901
+D026,Marrakech,dead,rule,2023-11-25 16:30,2023-11-26 00:00,7.5,Marrakech,M2,1,1,EP166,G3,0.8366,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8366,0.1632,0.0,0.0
+D027,Marrakech,dead,rule,2023-11-26 00:30,2023-11-26 16:00,15.5,Marrakech,M2,1,1,EP167,G3,0.8858,grid event,"fusion, NB3",R6:G;R9:G3,0.0001,0.0,0.0,0.0,0.0,0.0,0.8858,0.114,0.0,0.0
+D028,Marrakech,dead,rule,2023-12-02 16:30,2023-12-03 00:00,7.5,Marrakech,M2,1,1,EP168,G3,0.8428,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8428,0.157,0.0,0.0
+D029,Marrakech,dead,rule,2023-12-03 00:30,2023-12-03 10:00,9.5,Marrakech,M2,1,1,EP169,G3,0.8217,grid event,"fusion, NB3",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.8217,0.1781,0.0,0.0
+D030,Marrakech,dead,rule,2023-12-03 10:30,2023-12-03 16:00,5.5,Marrakech,M2,1,1,EP171,G4,0.9466,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0534,0.9466,0.0,0.0
+D031,Marrakech,dead,rule,2023-12-09 16:30,2023-12-10 00:00,7.5,Marrakech,M2,1,1,EP174,G3,0.84,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.84,0.1598,0.0,0.0
+D032,Marrakech,dead,rule,2023-12-10 00:30,2023-12-10 10:00,9.5,Marrakech,M2,1,1,EP175,G3,0.8188,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8188,0.181,0.0,0.0
+D033,Marrakech,dead,rule,2023-12-10 10:30,2023-12-10 16:30,6.0,Marrakech,M2,1,1,EP177,G4,0.9391,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0609,0.9391,0.0,0.0
+D034,Marrakech,dead,rule,2023-12-16 16:30,2023-12-16 19:00,2.5,Marrakech,M2,1,1,EP180,G3,0.831,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.831,0.1688,0.0,0.0
+D035,Marrakech,dead,rule,2023-12-16 22:00,2023-12-17 00:00,2.0,Marrakech,M2,1,1,EP181,G3,0.8106,grid event,"fusion, NB3",R6:G;R9:G3,0.0004,0.0,0.0,0.0,0.0,0.0,0.8106,0.189,0.0,0.0
+D036,Marrakech,dead,rule,2023-12-17 02:00,2023-12-17 10:00,8.0,Marrakech,M2,1,1,EP182,G3,0.7513,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.7513,0.2485,0.0,0.0
+D037,Marrakech,dead,rule,2023-12-17 10:30,2023-12-17 16:00,5.5,Marrakech,M2,1,1,EP184,G4,0.9632,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0368,0.9632,0.0,0.0
+D038,Marrakech,dead,rule,2023-12-23 16:30,2023-12-24 00:00,7.5,Marrakech,M2,1,1,EP185,G3,0.8539,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8539,0.1459,0.0,0.0
+D039,Marrakech,dead,rule,2023-12-24 00:30,2023-12-24 10:00,9.5,Marrakech,M2,1,1,EP186,G3,0.826,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.826,0.1738,0.0,0.0
+D040,Marrakech,dead,rule,2023-12-24 10:30,2023-12-24 16:00,5.5,Marrakech,M2,1,1,EP188,G4,0.9689,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0311,0.9689,0.0,0.0
+D041,Marrakech,dead,rule,2023-12-30 12:00,2024-01-01 00:00,36.0,Marrakech,M2,1,1,EP192,G3,0.9393,grid event,"fusion, NB3",R6:G;R9:G3;R11:G3,0.0,0.0,0.0,0.0,0.0,0.0,0.9393,0.0607,0.0,0.0
+D042,Marrakech,dead,rule,2024-01-01 00:30,2024-01-01 10:00,9.5,Marrakech,M2,1,1,EP194,G3,0.8472,grid event,"fusion, NB3",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8472,0.1525,0.0,0.0
+XM231,Marrakech,detector,detector,2024-01-01 05:00,2024-01-01 13:00,8.0,Marrakech,M1,1,1,,N,0.6906,normal / untyped,"fusion, NB3",,0.0261,0.0418,0.0826,0.0,0.0106,0.0359,0.0497,0.0625,0.0,0.6906
+D043,Marrakech,dead,rule,2024-01-01 10:30,2024-01-01 16:30,6.0,Marrakech,M2,1,1,EP195,G4,0.9166,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0834,0.9166,0.0,0.0
+D044,Marrakech,dead,rule,2024-01-06 16:30,2024-01-07 00:00,7.5,Marrakech,M2,1,1,EP198,G3,0.7945,grid event,"fusion, NB3",R5:G;R6:G;R9:G3,0.0005,0.0,0.0,0.0,0.0,0.0,0.7945,0.205,0.0,0.0
+D045,Marrakech,dead,rule,2024-01-07 00:30,2024-01-07 07:30,7.0,Marrakech,M2,1,1,EP199,G3,0.794,grid event,"fusion, NB3",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.794,0.2057,0.0,0.0
+D046,Marrakech,dead,rule,2024-01-07 08:00,2024-01-07 10:00,2.0,Marrakech,M2,1,1,EP200,G4,0.9483,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0517,0.9483,0.0,0.0
+D047,Marrakech,dead,rule,2024-01-07 10:30,2024-01-07 16:00,5.5,Marrakech,M2,1,1,EP201,G4,0.9677,grid event,"fusion, NB3",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0323,0.9677,0.0,0.0
+F007,south,fill,rule,2022-09-21 03:40,2022-09-21 04:40,1.0,Boujdour,B2,1,1,EP000,A3,0.9984,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9984,0.0,0.0,0.0,0.0,0.0,0.0,0.0016
+F008,south,fill,rule,2022-09-24 03:50,2022-09-24 04:50,1.0,Boujdour,B2,1,1,EP001,A3,0.9986,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+F009,south,fill,rule,2022-09-25 08:20,2022-09-25 09:20,1.0,Laayoune,"L3,L4",1,2,EP002,A2,0.9963,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.9963,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0037
+D048,south,dead,rule,2022-09-26 08:20,2022-09-26 09:10,0.83,Laayoune,"L1,L2,L3,L4,L5",1,5,EP003,G2,0.994,grid event,"fusion, main detector (NB4 8b)",R8:G2,0.0044,0.0,0.0,0.0,0.0,0.994,0.0016,0.0,0.0,0.0
+F010,south,fill,rule,2022-09-29 03:00,2022-09-29 04:00,1.0,Boujdour,B2,1,1,EP004,A3,0.9968,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9968,0.0,0.0,0.0,0.0,0.0,0.0,0.0032
+F011,south,fill,rule,2022-09-29 09:20,2022-09-29 11:10,1.83,Boujdour,"B1,B2,B3",1,3,EP005,A2,0.9957,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9957,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0043
+F012,south,fill,rule,2022-09-30 04:00,2022-09-30 05:00,1.0,Boujdour,B2,1,1,EP006,A3,0.9986,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+D049,south,dead,rule,2022-10-01 09:00,2022-10-01 09:30,0.5,Foum eloued,F1,1,1,EP007,G4,0.9672,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0328,0.9672,0.0,0.0
+F013,south,fill,rule,2022-10-01 09:30,2022-10-01 11:40,2.17,Foum eloued,F1,1,1,EP007,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+D050,south,dead,rule,2022-10-02 08:50,2022-10-02 09:30,0.67,Foum eloued,F1,1,1,EP008,G4,0.9594,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0405,0.9594,0.0,0.0
+D051,south,dead,rule,2022-10-05 10:10,2022-10-05 11:00,0.83,Foum eloued,F6,1,1,EP009,G4,0.9461,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0538,0.9461,0.0,0.0
+T001,south,transfer,rule,2022-10-07 00:00,2022-10-08 00:00,24.0,Foum eloued,"F4,F2",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+F014,south,fill,rule,2022-10-09 04:00,2022-10-09 05:00,1.0,Boujdour,B2,1,1,EP010,A3,0.9985,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9985,0.0,0.0,0.0,0.0,0.0,0.0,0.0015
+F015,south,fill,rule,2022-10-10 03:50,2022-10-10 04:50,1.0,Boujdour,B2,1,1,EP011,A3,0.9984,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9984,0.0,0.0,0.0,0.0,0.0,0.0,0.0016
+F016,south,fill,rule,2022-10-12 03:50,2022-10-12 05:00,1.17,Boujdour,B2,1,1,EP012,A3,0.9985,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9985,0.0,0.0,0.0,0.0,0.0,0.0,0.0015
+F017,south,fill,rule,2022-10-12 08:30,2022-10-12 09:30,1.0,Laayoune,"L1,L3,L4,L5",1,4,EP013,A2,0.9915,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.9915,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0085
+F018,south,fill,rule,2022-10-12 23:20,2022-10-13 00:20,1.0,Laayoune,"L2,L4",1,2,EP014,A2,0.9932,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.9932,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0068
+F019,south,fill,rule,2022-10-14 04:30,2022-10-14 05:30,1.0,Boujdour,B2,1,1,EP015,A3,0.9981,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9981,0.0,0.0,0.0,0.0,0.0,0.0,0.0019
+F020,south,fill,rule,2022-10-14 08:30,2022-10-14 09:30,1.0,Laayoune,L1,1,1,EP016,A3,0.5492,artefact,"fusion, main detector (NB4 8b)",,0.0,0.0,0.5492,0.0,0.0,0.0,0.0,0.0,0.0,0.4508
+F021,south,fill,rule,2022-10-16 04:00,2022-10-16 05:00,1.0,Boujdour,B2,1,1,EP017,A3,0.9986,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+F022,south,fill,rule,2022-10-19 11:40,2022-10-19 14:10,2.5,Laayoune,L5,1,1,EP018,A3,0.9989,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9989,0.0,0.0,0.0,0.0,0.0,0.0,0.0011
+F023,south,fill,rule,2022-10-19 14:20,2022-10-19 18:20,4.0,Laayoune,L5,1,1,EP018,A3,0.999,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.999,0.0,0.0,0.0,0.0,0.0,0.0,0.001
+F024,south,fill,rule,2022-10-20 09:40,2022-10-20 10:40,1.0,Laayoune,L3,1,1,EP019,A3,0.9939,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9939,0.0,0.0,0.0,0.0,0.0,0.0,0.0061
+D052,south,dead,rule,2022-10-23 08:10,2022-10-23 09:40,1.5,Laayoune,L5,1,1,EP020,G4,0.9625,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0374,0.9625,0.0,0.0
+XS000,south,detector,detector,2022-10-23 09:10,2022-10-23 12:30,3.333333333333333,Laayoune,L2,1,1,,N,0.5828,normal / untyped,"fusion, main detector (NB4 8b)",,0.0388,0.0559,0.1439,0.0,0.0195,0.0371,0.0569,0.065,0.0,0.5828
+F025,south,fill,rule,2022-10-23 09:40,2022-10-23 11:10,1.5,Laayoune,L5,1,1,EP020,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+F026,south,fill,rule,2022-10-23 11:20,2022-10-23 18:30,7.17,Laayoune,L5,1,1,EP020,A3,0.9991,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9991,0.0,0.0,0.0,0.0,0.0,0.0,0.0009
+D053,south,dead,rule,2022-10-23 18:30,2022-10-24 09:30,15.0,Laayoune,L5,1,1,EP020,G3,0.6976,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R21:A1,0.0062,0.0,0.0,0.0,0.0,0.0,0.6976,0.2962,0.0,0.0
+D054,south,dead,rule,2022-10-25 08:10,2022-10-25 09:40,1.5,Foum eloued,F1,1,1,EP021,G4,0.9595,grid event,"fusion, main detector (NB4 8b)",R5:G;R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0405,0.9595,0.0,0.0
+F027,south,fill,rule,2022-10-25 09:40,2022-10-25 12:40,3.0,Foum eloued,F1,1,1,EP021,A3,0.9996,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9996,0.0,0.0,0.0,0.0,0.0,0.0,0.0004
+F028,south,fill,rule,2022-10-25 13:10,2022-10-25 14:10,1.0,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP022,A2,0.9936,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9936,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0064
+D055,south,dead,rule,2022-10-26 08:10,2022-10-26 09:40,1.5,Laayoune,L4,1,1,EP023,G4,0.9644,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0355,0.9644,0.0,0.0
+F029,south,fill,rule,2022-10-26 09:40,2022-10-26 11:00,1.33,Laayoune,"L1,L2,L3,L4,L5",1,5,EP023,A2,0.9988,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9988,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0012
+F030,south,fill,rule,2022-10-28 02:30,2022-10-28 03:30,1.0,Boujdour,B2,1,1,EP024,A3,0.9978,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9978,0.0,0.0,0.0,0.0,0.0,0.0,0.0022
+F031,south,fill,rule,2022-10-29 10:00,2022-10-29 11:50,1.83,Laayoune,"L1,L2,L3,L4,L5",1,5,EP025,A2,0.9985,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9985,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0015
+D056,south,dead,rule,2022-10-29 12:00,2022-10-29 14:10,2.17,Boujdour,B3,1,1,EP025,G3,0.7612,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.7612,0.2385,0.0,0.0
+D057,south,dead,rule,2022-10-29 15:00,2022-10-29 16:00,1.0,Boujdour,B3,1,1,EP026,G3,0.7731,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.7731,0.2266,0.0,0.0
+D058,south,dead,rule,2022-10-29 20:40,2022-11-03 08:50,108.17,Foum eloued,F4,1,1,EP028,G3,0.967,grid event,"fusion, main detector (NB4 8b)",R9:G3;R11:G3,0.0005,0.0,0.0,0.0,0.0,0.0,0.967,0.0325,0.0,0.0
+K000,south,clock,rule,2022-10-30 00:00,2022-10-31 00:00,24.0,Laayoune,,1,0,,A4,0.9834,artefact,label model (NB2),R13:A4;R15:A4,0.0,0.0,0.0,0.9834,0.0,0.0,0.0,0.0,0.0,0.0166
+K008,south,clock,rule,2022-10-30 00:00,2022-10-31 00:00,24.0,Boujdour,,1,0,,A4,0.9834,artefact,label model (NB2),R13:A4;R15:A4,0.0,0.0,0.0,0.9834,0.0,0.0,0.0,0.0,0.0,0.0166
+K016,south,clock,rule,2022-10-30 00:00,2022-10-31 00:00,24.0,Foum eloued,,1,0,,A4,0.9834,artefact,label model (NB2),R13:A4;R15:A4,0.0,0.0,0.0,0.9834,0.0,0.0,0.0,0.0,0.0,0.0166
+XS001,south,detector,detector,2022-10-30 05:20,2022-10-30 11:40,6.333333333333333,Boujdour,"B1,B3",1,2,,A2,0.2485,artefact,"fusion, main detector (NB4 8b)",,0.0709,0.2485,0.1243,0.0,0.0355,0.0677,0.1288,0.1162,0.0,0.2081
+D059,south,dead,rule,2022-10-30 06:00,2022-10-30 08:40,2.67,Boujdour,B2,1,1,EP027,G4,0.93,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3;R10:G4,0.0002,0.0,0.0,0.0,0.0,0.0,0.0698,0.93,0.0,0.0
+F032,south,fill,rule,2022-10-30 08:40,2022-10-30 17:50,9.17,Boujdour,B2,1,1,EP027,A3,0.9976,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9976,0.0,0.0,0.0,0.0,0.0,0.0,0.0024
+F033,south,fill,rule,2022-11-03 08:50,2022-11-03 10:30,1.67,Foum eloued,F4,1,1,EP028,A3,0.9996,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9996,0.0,0.0,0.0,0.0,0.0,0.0,0.0004
+XS002,south,detector,detector,2022-11-05 07:10,2022-11-05 11:00,3.8333333333333335,Laayoune,"L3,L5",1,2,,N,0.346,normal / untyped,"fusion, main detector (NB4 8b)",,0.0641,0.2108,0.1362,0.0,0.0295,0.0521,0.0762,0.0852,0.0,0.346
+D060,south,dead,rule,2022-11-05 07:20,2022-11-05 09:00,1.67,Laayoune,L2,1,1,EP029,G4,0.9412,grid event,"fusion, main detector (NB4 8b)",R4:A1;R6:G;R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0586,0.9412,0.0,0.0
+F034,south,fill,rule,2022-11-05 07:40,2022-11-05 08:40,1.0,Laayoune,L1,1,1,EP029,A3,0.6139,artefact,"fusion, main detector (NB4 8b)",,0.0,0.0,0.6139,0.0,0.0,0.0,0.0,0.0,0.0,0.3861
+D061,south,dead,rule,2022-11-05 08:00,2022-11-05 08:50,0.83,Foum eloued,F5,1,1,EP029,G4,0.9605,grid event,"fusion, main detector (NB4 8b)",R4:A1;R5:G;R6:G;R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0393,0.9605,0.0,0.0
+F035,south,fill,rule,2022-11-05 08:50,2022-11-05 11:10,2.33,Foum eloued,F5,1,1,EP029,A3,0.9981,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9981,0.0,0.0,0.0,0.0,0.0,0.0,0.0019
+D062,south,dead,rule,2022-11-09 06:40,2022-11-09 09:00,2.33,Laayoune,L2,1,1,EP030,G4,0.9697,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0302,0.9697,0.0,0.0
+XS003,south,detector,detector,2022-11-10 04:20,2022-11-10 09:30,5.166666666666667,Laayoune,L4,1,1,,N,0.5324,normal / untyped,"fusion, main detector (NB4 8b)",,0.0426,0.0626,0.1741,0.0,0.0214,0.0392,0.0571,0.0705,0.0,0.5324
+D063,south,dead,rule,2022-11-10 06:10,2022-11-10 09:40,3.5,Laayoune,L3,1,1,EP031,G4,0.9326,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0673,0.9326,0.0,0.0
+F036,south,fill,rule,2022-11-12 05:30,2022-11-12 09:10,3.67,Laayoune,"L1,L2,L3,L4,L5",1,5,EP032,A2,0.9987,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9987,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0013
+D064,south,dead,rule,2022-11-16 22:40,2022-11-17 08:50,10.17,Foum eloued,F1,1,1,EP033,G3,0.833,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3,0.0011,0.0,0.0,0.0,0.0,0.0,0.833,0.166,0.0,0.0
+F037,south,fill,rule,2022-11-17 08:50,2022-11-17 10:50,2.0,Foum eloued,F1,1,1,EP033,A3,0.9996,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9996,0.0,0.0,0.0,0.0,0.0,0.0,0.0004
+D065,south,dead,rule,2022-11-21 03:10,2022-11-21 08:50,5.67,Foum eloued,F4,1,1,EP034,G3,0.6366,grid event,"fusion, main detector (NB4 8b)",R9:G3,0.0015,0.0,0.0,0.0,0.0,0.0,0.6366,0.3619,0.0,0.0
+D066,south,dead,rule,2022-11-26 07:40,2022-11-26 09:00,1.33,Foum eloued,F1,1,1,EP035,G4,0.9361,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0639,0.9361,0.0,0.0
+F038,south,fill,rule,2022-11-26 09:00,2022-11-26 11:50,2.83,Foum eloued,F1,1,1,EP035,A3,0.9995,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9995,0.0,0.0,0.0,0.0,0.0,0.0,0.0005
+D067,south,dead,rule,2022-11-27 07:20,2022-11-27 09:00,1.67,Foum eloued,F4,1,1,EP036,G4,0.9372,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0627,0.9372,0.0,0.0
+F039,south,fill,rule,2022-11-27 09:00,2022-11-27 11:30,2.5,Foum eloued,F4,1,1,EP036,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+F040,south,fill,rule,2022-12-03 03:40,2022-12-03 04:40,1.0,Boujdour,B2,1,1,EP037,A3,0.9979,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9979,0.0,0.0,0.0,0.0,0.0,0.0,0.0021
+F041,south,fill,rule,2022-12-06 03:00,2022-12-06 04:10,1.17,Boujdour,B2,1,1,EP038,A3,0.998,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.998,0.0,0.0,0.0,0.0,0.0,0.0,0.002
+D068,south,dead,rule,2022-12-08 08:30,2022-12-08 09:20,0.83,Foum eloued,F5,1,1,EP039,G4,0.96,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0399,0.96,0.0,0.0
+T012,south,transfer,rule,2022-12-12 00:00,2022-12-13 00:00,24.0,Foum eloued,"F6,F7",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+F042,south,fill,rule,2022-12-12 03:10,2022-12-12 04:10,1.0,Boujdour,B2,1,1,EP040,A3,0.9976,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9976,0.0,0.0,0.0,0.0,0.0,0.0,0.0024
+T010,south,transfer,rule,2022-12-18 00:00,2022-12-19 00:00,24.0,Foum eloued,"F6,F2",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+T009,south,transfer,rule,2022-12-19 00:00,2022-12-20 00:00,24.0,Foum eloued,"F6,F3",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+XS004,south,detector,detector,2022-12-19 06:20,2022-12-19 07:50,1.5,Boujdour,B2,1,1,,N,0.5847,normal / untyped,"fusion, main detector (NB4 8b)",,0.0368,0.055,0.1274,0.0,0.0178,0.0567,0.0588,0.0629,0.0,0.5847
+XS005,south,detector,detector,2022-12-20 08:30,2022-12-20 12:00,3.5,Foum eloued,F3,1,1,,G4,0.4688,grid event,"fusion, main detector (NB4 8b)",,0.0427,0.0496,0.1083,0.0,0.0214,0.0408,0.1579,0.4688,0.0,0.1104
+XS006,south,detector,detector,2022-12-24 06:00,2022-12-24 11:10,5.166666666666667,Laayoune,L4,1,1,,N,0.4223,normal / untyped,"fusion, main detector (NB4 8b)",,0.0494,0.0669,0.2283,0.0,0.0249,0.0472,0.0695,0.0915,0.0,0.4223
+XS007,south,detector,detector,2022-12-24 06:20,2022-12-24 09:50,3.5,Laayoune,L3,1,1,,N,0.5249,normal / untyped,"fusion, main detector (NB4 8b)",,0.0436,0.0627,0.1705,0.0,0.0218,0.0417,0.0589,0.0758,0.0,0.5249
+D069,south,dead,rule,2022-12-28 08:30,2022-12-28 10:10,1.67,Boujdour,B2,1,1,EP041,G4,0.9672,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4;R21:A1,0.0006,0.0,0.0,0.0,0.0,0.0,0.0322,0.9672,0.0,0.0
+F043,south,fill,rule,2022-12-28 08:40,2022-12-28 10:10,1.5,Boujdour,"B1,B3",1,2,EP041,A2,0.9983,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9983,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0017
+D070,south,dead,rule,2022-12-29 09:00,2022-12-29 10:20,1.33,Boujdour,B3,1,1,EP042,G4,0.948,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4;R21:A1,0.0002,0.0,0.0,0.0,0.0,0.0,0.0518,0.948,0.0,0.0
+F044,south,fill,rule,2022-12-29 09:10,2022-12-29 10:10,1.0,Boujdour,"B1,B2",1,2,EP042,A2,0.9984,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9984,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0016
+F045,south,fill,rule,2023-01-09 08:20,2023-01-09 09:20,1.0,Laayoune,L1,1,1,EP043,A3,0.7102,artefact,"fusion, main detector (NB4 8b)",,0.0,0.0,0.7102,0.0,0.0,0.0,0.0,0.0,0.0,0.2898
+F046,south,fill,rule,2023-01-14 03:50,2023-01-14 04:50,1.0,Boujdour,B2,1,1,EP045,A3,0.997,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.997,0.0,0.0,0.0,0.0,0.0,0.0,0.003
+D071,south,dead,rule,2023-01-14 09:00,2023-01-14 09:30,0.5,Foum eloued,F5,1,1,EP046,G4,0.9616,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0384,0.9616,0.0,0.0
+F047,south,fill,rule,2023-01-14 09:30,2023-01-14 14:00,4.5,Foum eloued,F5,1,1,EP046,A3,0.9995,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9995,0.0,0.0,0.0,0.0,0.0,0.0,0.0005
+D072,south,dead,rule,2023-01-18 07:40,2023-01-18 09:30,1.83,Laayoune,L4,1,1,EP047,G4,0.9704,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0295,0.9704,0.0,0.0
+F048,south,fill,rule,2023-01-18 09:30,2023-01-18 11:20,1.83,Laayoune,L4,1,1,EP047,A3,0.9995,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9995,0.0,0.0,0.0,0.0,0.0,0.0,0.0005
+D073,south,dead,rule,2023-01-19 08:00,2023-01-19 09:30,1.5,Laayoune,L4,1,1,EP048,G4,0.9676,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0324,0.9676,0.0,0.0
+D074,south,dead,rule,2023-01-19 08:40,2023-01-19 10:20,1.67,Boujdour,B1,1,1,EP049,G4,0.9357,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0642,0.9357,0.0,0.0
+XS008,south,detector,detector,2023-01-19 09:10,2023-01-19 13:10,4.0,Boujdour,B2,1,1,,N,0.5676,normal / untyped,"fusion, main detector (NB4 8b)",,0.0425,0.0611,0.1344,0.0,0.0215,0.0405,0.0599,0.0726,0.0,0.5676
+XS009,south,detector,detector,2023-01-19 09:40,2023-01-19 12:30,2.833333333333333,Boujdour,B3,1,1,,N,0.5891,normal / untyped,"fusion, main detector (NB4 8b)",,0.046,0.0684,0.1126,0.0,0.0232,0.044,0.0522,0.0645,0.0,0.5891
+F049,south,fill,rule,2023-01-19 10:20,2023-01-19 11:20,1.0,Boujdour,B1,1,1,EP049,A3,0.9996,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9996,0.0,0.0,0.0,0.0,0.0,0.0,0.0004
+D075,south,dead,rule,2023-01-23 06:40,2023-01-23 09:30,2.83,Laayoune,L2,1,1,EP052,G4,0.9042,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0002,0.0,0.0,0.0,0.0,0.0,0.0956,0.9042,0.0,0.0
+XS010,south,detector,detector,2023-01-24 05:10,2023-01-24 12:40,7.5,Laayoune,L2,1,1,,N,0.4741,normal / untyped,"fusion, main detector (NB4 8b)",,0.0478,0.0631,0.198,0.0,0.024,0.0457,0.0638,0.0835,0.0,0.4741
+D076,south,dead,rule,2023-01-24 06:40,2023-01-24 09:30,2.83,Laayoune,L3,1,1,EP054,G4,0.9656,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0344,0.9656,0.0,0.0
+F050,south,fill,rule,2023-01-24 09:30,2023-01-24 11:40,2.17,Laayoune,L3,1,1,EP054,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+F051,south,fill,rule,2023-01-26 01:20,2023-01-27 13:20,36.0,Laayoune,"L1,L2,L3,L4,L5",1,5,EP056,A2,0.9964,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.9964,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0036
+F052,south,fill,rule,2023-01-26 02:10,2023-01-28 21:10,67.0,Boujdour+Foum eloued,"B1,B2,B3,F1,F2,F3,F4,F5,F6,F7",2,10,EP056,A2,0.9998,artefact,"fusion, main detector (NB4 8b)",R2:A2;R19:A2,0.0,0.9998,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0002
+D077,south,dead,rule,2023-01-28 21:10,2023-01-29 10:50,13.67,Boujdour+Foum eloued+Laayoune,"B1,B2,B3,F1,F2,F3,F4,F5,F6,F7,L1,L2,L3,L4,L5",3,15,EP056,A1,0.9902,artefact,"fusion, main detector (NB4 8b)",R3:A1,0.9902,0.0,0.0,0.0,0.0098,0.0,0.0,0.0,0.0,0.0
+F053,south,fill,rule,2023-02-04 08:20,2023-02-04 09:20,1.0,Foum eloued,F3,1,1,EP057,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+XS011,south,detector,detector,2023-02-07 06:20,2023-02-07 06:50,0.5,Laayoune,L5,1,1,,N,0.4788,normal / untyped,"fusion, main detector (NB4 8b)",,0.0444,0.0522,0.1525,0.0,0.0223,0.048,0.0961,0.1056,0.0,0.4788
+F054,south,fill,rule,2023-02-07 10:10,2023-02-07 11:50,1.67,Foum eloued,F4,1,1,EP058,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+D078,south,dead,rule,2023-02-07 12:00,2023-02-07 12:30,0.5,Foum eloued,F4,1,1,EP058,G3,0.7393,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.7393,0.2605,0.0,0.0
+F055,south,fill,rule,2023-02-07 13:40,2023-02-07 17:00,3.33,Foum eloued,F4,1,1,EP059,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+XS012,south,detector,detector,2023-02-08 05:00,2023-02-08 11:20,6.333333333333333,Laayoune,L2,1,1,,A3,0.3044,artefact,"fusion, main detector (NB4 8b)",,0.0645,0.0787,0.3044,0.0,0.0323,0.0616,0.0806,0.1054,0.0,0.2725
+D079,south,dead,rule,2023-02-10 08:20,2023-02-12 02:40,42.33,Foum eloued,F6,1,1,EP061,G3,0.8415,grid event,"fusion, main detector (NB4 8b)",R9:G3;R11:G3,0.0011,0.0,0.0,0.0,0.0,0.0,0.8415,0.1574,0.0,0.0
+F056,south,fill,rule,2023-02-11 07:50,2023-02-11 14:30,6.67,Foum eloued,F1,1,1,EP060,A3,0.9981,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9981,0.0,0.0,0.0,0.0,0.0,0.0,0.0019
+F057,south,fill,rule,2023-02-12 02:40,2023-02-12 14:50,12.17,Foum eloued,F6,1,1,EP061,A3,0.9991,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9991,0.0,0.0,0.0,0.0,0.0,0.0,0.0009
+XS013,south,detector,detector,2023-02-15 08:20,2023-02-15 11:00,2.6666666666666665,Foum eloued,F3,1,1,,N,0.7447,normal / untyped,"fusion, main detector (NB4 8b)",,0.0229,0.0347,0.0886,0.0,0.0115,0.0218,0.0337,0.042,0.0,0.7447
+D080,south,dead,rule,2023-02-15 09:00,2023-02-15 09:40,0.67,Foum eloued,F2,1,1,EP062,G4,0.9643,grid event,"fusion, main detector (NB4 8b)",R5:G;R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0357,0.9643,0.0,0.0
+T003,south,transfer,rule,2023-02-21 00:00,2023-02-22 00:00,24.0,Foum eloued,"F3,F6",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+F058,south,fill,rule,2023-02-23 03:50,2023-02-23 04:50,1.0,Boujdour,B2,1,1,EP063,A3,0.998,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.998,0.0,0.0,0.0,0.0,0.0,0.0,0.002
+F059,south,fill,rule,2023-02-23 08:40,2023-02-23 11:00,2.33,Boujdour,"B1,B2,B3",1,3,EP064,A2,0.9947,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9947,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0053
+D081,south,dead,rule,2023-02-25 07:00,2023-02-25 09:50,2.83,Foum eloued,F1,1,1,EP065,G4,0.972,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0279,0.972,0.0,0.0
+F060,south,fill,rule,2023-02-25 09:50,2023-02-25 13:30,3.67,Foum eloued,F1,1,1,EP065,A3,0.9997,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9997,0.0,0.0,0.0,0.0,0.0,0.0,0.0003
+T008,south,transfer,rule,2023-02-27 00:00,2023-02-28 00:00,24.0,Foum eloued,"F7,F6",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+D082,south,dead,rule,2023-03-04 08:00,2023-03-04 09:40,1.67,Foum eloued,F4,1,1,EP066,G4,0.9388,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0611,0.9388,0.0,0.0
+F061,south,fill,rule,2023-03-04 09:40,2023-03-04 15:50,6.17,Foum eloued,F4,1,1,EP066,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+F062,south,fill,rule,2023-03-05 08:40,2023-03-05 10:10,1.5,Boujdour+Laayoune,"B1,B2,B3,L2",2,4,EP067,A2,0.9744,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.9744,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0256
+XS014,south,detector,detector,2023-03-07 07:20,2023-03-07 09:30,2.1666666666666665,Boujdour,B2,1,1,,N,0.5419,normal / untyped,"fusion, main detector (NB4 8b)",,0.0358,0.0542,0.1876,0.0,0.018,0.0342,0.0584,0.0699,0.0,0.5419
+D083,south,dead,rule,2023-03-08 08:30,2023-03-08 09:20,0.83,Foum eloued,F4,1,1,EP068,G4,0.9583,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0417,0.9583,0.0,0.0
+D084,south,dead,rule,2023-03-08 09:40,2023-03-08 10:20,0.67,Foum eloued,F4,1,1,EP069,G4,0.97,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0299,0.97,0.0,0.0
+D085,south,dead,rule,2023-03-10 13:10,2023-03-10 13:40,0.5,Foum eloued,F7,1,1,EP070,G3,0.5871,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3,0.0005,0.0,0.0,0.0,0.0,0.0,0.5871,0.4124,0.0,0.0
+F063,south,fill,rule,2023-03-11 03:50,2023-03-11 05:00,1.17,Boujdour,B2,1,1,EP071,A3,0.9976,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9976,0.0,0.0,0.0,0.0,0.0,0.0,0.0024
+F064,south,fill,rule,2023-03-11 07:40,2023-03-11 10:10,2.5,Laayoune,"L1,L2,L3,L4,L5",1,5,EP072,A2,0.9986,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+D086,south,dead,rule,2023-03-12 08:20,2023-03-12 09:20,1.0,Foum eloued,F5,1,1,EP073,G4,0.9427,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0573,0.9427,0.0,0.0
+T005,south,transfer,rule,2023-03-15 00:00,2023-03-16 00:00,24.0,Foum eloued,"F6,F7",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+F065,south,fill,rule,2023-03-16 03:40,2023-03-16 04:50,1.17,Boujdour,B2,1,1,EP074,A3,0.998,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.998,0.0,0.0,0.0,0.0,0.0,0.0,0.002
+K001,south,clock,rule,2023-03-19 00:00,2023-03-20 00:00,24.0,Laayoune,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+K009,south,clock,rule,2023-03-19 00:00,2023-03-20 00:00,24.0,Boujdour,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+K017,south,clock,rule,2023-03-19 00:00,2023-03-20 00:00,24.0,Foum eloued,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+F066,south,fill,rule,2023-03-19 05:20,2023-03-19 09:50,4.5,Laayoune,"L2,L3",1,2,EP075,A2,0.9969,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9969,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0031
+XS015,south,detector,detector,2023-03-22 08:30,2023-03-22 10:50,2.333333333333333,Foum eloued,F6,1,1,,N,0.7981,normal / untyped,"fusion, main detector (NB4 8b)",,0.0188,0.0287,0.0704,0.0,0.0094,0.018,0.0276,0.0289,0.0,0.7981
+T007,south,transfer,rule,2023-03-24 00:00,2023-03-25 00:00,24.0,Foum eloued,"F6,F1",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+K002,south,clock,rule,2023-03-26 00:00,2023-03-27 00:00,24.0,Laayoune,,1,0,,N,0.9492,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0508,0.0,0.0,0.0,0.0,0.0,0.9492
+K010,south,clock,rule,2023-03-26 00:00,2023-03-27 00:00,24.0,Boujdour,,1,0,,N,0.9492,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0508,0.0,0.0,0.0,0.0,0.0,0.9492
+K018,south,clock,rule,2023-03-26 00:00,2023-03-27 00:00,24.0,Foum eloued,,1,0,,N,0.9492,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0508,0.0,0.0,0.0,0.0,0.0,0.9492
+D087,south,dead,rule,2023-03-26 08:10,2023-03-26 08:40,0.5,Foum eloued,F1,1,1,EP076,G4,0.9626,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0374,0.9626,0.0,0.0
+F067,south,fill,rule,2023-03-30 11:40,2023-03-30 12:50,1.17,Laayoune,"L1,L2,L3,L4,L5",1,5,EP077,A2,0.9987,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9987,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0013
+F068,south,fill,rule,2023-03-30 12:30,2023-03-30 14:00,1.5,Boujdour+Foum eloued,"B1,B2,B3,F1,F2,F3,F4,F5,F6,F7",2,10,EP077,A2,0.9968,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9968,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0032
+F069,south,fill,rule,2023-03-30 13:00,2023-03-30 14:00,1.0,Laayoune,"L1,L2,L3,L4,L5",1,5,EP077,A2,0.9975,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9975,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0025
+F070,south,fill,rule,2023-04-03 13:10,2023-04-03 15:00,1.83,Laayoune,"L1,L2,L3,L4,L5",1,5,EP078,A2,0.997,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.997,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.003
+F071,south,fill,rule,2023-04-05 08:40,2023-04-05 13:30,4.83,Boujdour,"B1,B2,B3",1,3,EP079,A2,0.9987,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9987,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0013
+F072,south,fill,rule,2023-04-06 08:30,2023-04-06 13:30,5.0,Boujdour,"B1,B2,B3",1,3,EP080,A2,0.9979,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9979,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0021
+D088,south,dead,rule,2023-04-15 23:00,2023-04-15 23:30,0.5,Foum eloued,F6,1,1,EP081,G3,0.7094,grid event,"fusion, main detector (NB4 8b)",R9:G3,0.0023,0.0,0.0,0.0,0.0,0.0,0.7094,0.2884,0.0,0.0
+T006,south,transfer,rule,2023-04-16 00:00,2023-04-17 00:00,24.0,Foum eloued,"F4,F6",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+T004,south,transfer,rule,2023-04-19 00:00,2023-04-20 00:00,24.0,Foum eloued,"F2,F6",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+D089,south,dead,rule,2023-04-20 08:00,2023-04-20 09:30,1.5,Laayoune,L5,1,1,EP082,G4,0.9565,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0435,0.9565,0.0,0.0
+K003,south,clock,rule,2023-04-23 00:00,2023-04-24 00:00,24.0,Laayoune,,1,0,,A4,0.7007,artefact,label model (NB2),R14:A4,0.0,0.0,0.0,0.7007,0.0,0.0,0.0,0.0,0.0,0.2993
+K011,south,clock,rule,2023-04-23 00:00,2023-04-24 00:00,24.0,Boujdour,,1,0,,A4,0.7007,artefact,label model (NB2),R14:A4,0.0,0.0,0.0,0.7007,0.0,0.0,0.0,0.0,0.0,0.2993
+K019,south,clock,rule,2023-04-23 00:00,2023-04-24 00:00,24.0,Foum eloued,,1,0,,A4,0.7007,artefact,label model (NB2),R14:A4,0.0,0.0,0.0,0.7007,0.0,0.0,0.0,0.0,0.0,0.2993
+XS016,south,detector,detector,2023-04-27 07:10,2023-04-27 11:10,4.0,Boujdour,B3,1,1,,N,0.5777,normal / untyped,"fusion, main detector (NB4 8b)",,0.042,0.064,0.1354,0.0,0.0211,0.04,0.0546,0.0652,0.0,0.5777
+XS017,south,detector,detector,2023-04-30 14:40,2023-04-30 17:40,3.0,Laayoune,L4,1,1,,N,0.5302,normal / untyped,"fusion, main detector (NB4 8b)",,0.0424,0.0643,0.1726,0.0,0.0212,0.0405,0.0595,0.0694,0.0,0.5302
+T002,south,transfer,rule,2023-05-03 00:00,2023-05-04 00:00,24.0,Foum eloued,"F6,F2",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+D090,south,dead,rule,2023-05-04 03:20,2023-05-04 14:30,11.17,Foum eloued,F1,1,1,EP084,G3,0.7676,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3,0.0017,0.0,0.0,0.0,0.0,0.0,0.7676,0.2307,0.0,0.0
+F073,south,fill,rule,2023-05-04 14:30,2023-05-04 15:30,1.0,Foum eloued,F1,1,1,EP084,A3,0.9995,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9995,0.0,0.0,0.0,0.0,0.0,0.0,0.0005
+F074,south,fill,rule,2023-05-07 08:10,2023-05-07 10:20,2.17,Boujdour,B2,1,1,EP085,A3,0.9947,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9947,0.0,0.0,0.0,0.0,0.0,0.0,0.0053
+XS018,south,detector,detector,2023-05-13 10:10,2023-05-13 10:40,0.5,Boujdour,B2,1,1,,N,0.7038,normal / untyped,"fusion, main detector (NB4 8b)",,0.0291,0.0448,0.0787,0.0,0.0146,0.0309,0.0429,0.0554,0.0,0.7038
+F075,south,fill,rule,2023-05-14 09:20,2023-05-14 13:00,3.67,Foum eloued,F5,1,1,EP087,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+XS019,south,detector,detector,2023-05-24 13:50,2023-05-24 17:40,3.8333333333333335,Laayoune,L4,1,1,,N,0.7976,normal / untyped,"fusion, main detector (NB4 8b)",,0.0205,0.0275,0.0704,0.0,0.0094,0.0167,0.0246,0.0333,0.0,0.7976
+D091,south,dead,rule,2023-05-27 10:10,2023-05-27 10:40,0.5,Laayoune,L1,1,1,EP088,G4,0.9491,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0508,0.9491,0.0,0.0
+F076,south,fill,rule,2023-05-27 10:50,2023-05-27 11:50,1.0,Laayoune,L1,1,1,EP088,A3,0.999,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.999,0.0,0.0,0.0,0.0,0.0,0.0,0.001
+F077,south,fill,rule,2023-05-31 03:40,2023-05-31 05:20,1.67,Boujdour,B2,1,1,EP089,A3,0.998,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.998,0.0,0.0,0.0,0.0,0.0,0.0,0.002
+F078,south,fill,rule,2023-06-02 04:10,2023-06-02 05:10,1.0,Boujdour,B2,1,1,EP090,A3,0.9976,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9976,0.0,0.0,0.0,0.0,0.0,0.0,0.0024
+D092,south,dead,rule,2023-06-06 09:10,2023-06-06 11:00,1.83,Foum eloued,F6,1,1,EP091,G4,0.9717,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0282,0.9717,0.0,0.0
+D093,south,dead,rule,2023-06-07 09:30,2023-06-07 10:00,0.5,Foum eloued,F1,1,1,EP092,G4,0.9614,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0385,0.9614,0.0,0.0
+F079,south,fill,rule,2023-06-15 04:00,2023-06-15 05:00,1.0,Boujdour,B2,1,1,EP093,A3,0.9974,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9974,0.0,0.0,0.0,0.0,0.0,0.0,0.0026
+F080,south,fill,rule,2023-06-25 09:50,2023-06-25 10:50,1.0,Foum eloued,F5,1,1,EP094,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+XS020,south,detector,detector,2023-06-29 07:10,2023-06-29 12:30,5.333333333333333,Laayoune,L2,1,1,,N,0.3254,normal / untyped,"fusion, main detector (NB4 8b)",,0.0778,0.0859,0.2116,0.0,0.0367,0.0633,0.0938,0.1056,0.0,0.3254
+F081,south,fill,rule,2023-07-04 07:30,2023-07-04 08:30,1.0,Boujdour,B2,1,1,EP097,A3,0.9934,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9934,0.0,0.0,0.0,0.0,0.0,0.0,0.0066
+F082,south,fill,rule,2023-07-07 07:20,2023-07-07 08:20,1.0,Boujdour,B2,1,1,EP099,A3,0.9979,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9979,0.0,0.0,0.0,0.0,0.0,0.0,0.0021
+F083,south,fill,rule,2023-07-08 12:20,2023-07-08 14:00,1.67,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP100,A2,0.9967,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9967,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0033
+F084,south,fill,rule,2023-07-09 11:10,2023-07-09 12:20,1.17,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP101,A2,0.9974,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9974,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0026
+D094,south,dead,rule,2023-07-12 10:00,2023-07-12 11:30,1.5,Boujdour,B2,1,1,EP102,G4,0.9643,grid event,"fusion, main detector (NB4 8b)",R5:G;R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0357,0.9643,0.0,0.0
+XS021,south,detector,detector,2023-07-13 07:50,2023-07-13 13:40,5.833333333333333,Boujdour,B2,1,1,,N,0.4798,normal / untyped,"fusion, main detector (NB4 8b)",,0.0507,0.0699,0.19,0.0,0.0235,0.0439,0.064,0.0783,0.0,0.4798
+D095,south,dead,rule,2023-07-13 09:40,2023-07-13 10:50,1.17,Boujdour,B3,1,1,EP103,G4,0.9425,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0574,0.9425,0.0,0.0
+F085,south,fill,rule,2023-07-15 11:00,2023-07-15 12:00,1.0,Laayoune,L2,1,1,EP104,A3,0.9995,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9995,0.0,0.0,0.0,0.0,0.0,0.0,0.0005
+D096,south,dead,rule,2023-07-16 14:50,2023-07-17 07:00,16.17,Boujdour+Foum eloued,"B1,B2,B3,F1,F2,F3,F4,F5,F6,F7",2,10,EP105,A1,0.9345,artefact,"fusion, main detector (NB4 8b)",R5:G;R21:A1,0.9345,0.0,0.0,0.0,0.0655,0.0,0.0,0.0,0.0,0.0
+F086,south,fill,rule,2023-07-16 15:30,2023-07-17 07:00,15.5,Laayoune,"L1,L2,L3,L4,L5",1,5,EP105,A2,0.9972,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9972,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0028
+F087,south,fill,rule,2023-07-18 09:40,2023-07-18 10:50,1.17,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP106,A2,0.9976,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9976,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0024
+XS022,south,detector,detector,2023-08-03 14:30,2023-08-03 19:00,4.5,Laayoune,L5,1,1,,A3,0.2843,artefact,"fusion, main detector (NB4 8b)",,0.0894,0.085,0.2843,0.0,0.0331,0.0583,0.0949,0.1236,0.0,0.2314
+XS023,south,detector,detector,2023-08-05 07:40,2023-08-05 11:40,4.0,Boujdour,"B1,B2",1,2,,N,0.3241,normal / untyped,"fusion, main detector (NB4 8b)",,0.0618,0.2141,0.1249,0.0,0.031,0.0591,0.0871,0.0979,0.0,0.3241
+F088,south,fill,rule,2023-08-05 09:20,2023-08-05 10:40,1.33,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP108,A2,0.9997,artefact,"fusion, main detector (NB4 8b)",R2:A2;R19:A2,0.0,0.9997,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0003
+D097,south,dead,rule,2023-08-05 14:10,2023-08-05 15:00,0.83,Boujdour,B3,1,1,EP109,G3,0.8391,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8391,0.1608,0.0,0.0
+F089,south,fill,rule,2023-08-05 16:10,2023-08-05 17:50,1.67,Boujdour,B3,1,1,EP110,A3,0.999,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.999,0.0,0.0,0.0,0.0,0.0,0.0,0.001
+XS024,south,detector,detector,2023-08-06 06:10,2023-08-06 07:40,1.5,Boujdour,B3,1,1,,N,0.4297,normal / untyped,"fusion, main detector (NB4 8b)",,0.0548,0.072,0.1712,0.0,0.0275,0.0524,0.0992,0.0934,0.0,0.4297
+D098,south,dead,rule,2023-08-06 07:00,2023-08-06 13:30,6.5,Boujdour,B2,1,1,EP111,G4,0.5557,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3,0.0015,0.0,0.0,0.0,0.0,0.0,0.4428,0.5557,0.0,0.0
+XS025,south,detector,detector,2023-08-06 11:10,2023-08-06 16:20,5.166666666666667,Boujdour,B3,1,1,,G4,0.398,grid event,"fusion, main detector (NB4 8b)",,0.0457,0.0576,0.0925,0.0,0.0228,0.0436,0.2297,0.398,0.0,0.1102
+D099,south,dead,rule,2023-08-06 12:50,2023-08-06 13:20,0.5,Boujdour,B1,1,1,EP111,G3,0.6523,grid event,"fusion, main detector (NB4 8b)",R9:G3,0.0023,0.0,0.0,0.0,0.0,0.0,0.6523,0.3454,0.0,0.0
+F090,south,fill,rule,2023-08-06 13:30,2023-08-06 15:20,1.83,Boujdour,B2,1,1,EP111,A3,0.9977,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9977,0.0,0.0,0.0,0.0,0.0,0.0,0.0023
+XS026,south,detector,detector,2023-08-09 13:00,2023-08-09 13:30,0.5,Foum eloued,F2,1,1,,A3,0.28,artefact,"fusion, main detector (NB4 8b)",,0.0682,0.079,0.28,0.0,0.0341,0.0715,0.1617,0.1757,0.0,0.1297
+F091,south,fill,rule,2023-08-10 09:30,2023-08-10 11:30,2.0,Boujdour,"B1,B2,B3",1,3,EP112,A2,0.9826,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.9826,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0174
+F092,south,fill,rule,2023-08-16 04:10,2023-08-16 05:30,1.33,Boujdour,B2,1,1,EP113,A3,0.9986,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+D100,south,dead,rule,2023-08-19 09:20,2023-08-19 10:00,0.67,Foum eloued,F5,1,1,EP114,G4,0.957,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0002,0.0,0.0,0.0,0.0,0.0,0.0428,0.957,0.0,0.0
+XS027,south,detector,detector,2023-08-29 03:00,2023-08-29 08:00,5.0,Laayoune,L4,1,1,,N,0.5149,normal / untyped,"fusion, main detector (NB4 8b)",,0.0551,0.0637,0.173,0.0,0.0222,0.0393,0.0565,0.0755,0.0,0.5149
+XS028,south,detector,detector,2023-08-30 07:10,2023-08-30 15:40,8.5,Laayoune,L2,1,1,,N,0.5117,normal / untyped,"fusion, main detector (NB4 8b)",,0.0496,0.064,0.1745,0.0,0.025,0.0445,0.0595,0.0712,0.0,0.5117
+D101,south,dead,rule,2023-08-30 08:50,2023-08-30 09:50,1.0,Laayoune,L5,1,1,EP119,G4,0.9436,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0564,0.9436,0.0,0.0
+F093,south,fill,rule,2023-08-30 09:50,2023-08-30 13:00,3.17,Laayoune,L5,1,1,EP119,A3,0.9996,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9996,0.0,0.0,0.0,0.0,0.0,0.0,0.0004
+F094,south,fill,rule,2023-09-03 09:30,2023-09-03 11:00,1.5,Boujdour,B2,1,1,EP120,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+F095,south,fill,rule,2023-09-04 03:20,2023-09-04 04:30,1.17,Boujdour,B2,1,1,EP121,A3,0.9979,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9979,0.0,0.0,0.0,0.0,0.0,0.0,0.0021
+F096,south,fill,rule,2023-09-08 03:10,2023-09-08 04:30,1.33,Boujdour+Foum eloued,"B1,B2,B3,F1,F2,F3,F4,F5,F6,F7",2,10,EP122,A2,0.9961,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9961,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0039
+F097,south,fill,rule,2023-09-08 04:20,2023-09-08 05:30,1.17,Laayoune,"L1,L2,L3,L4,L5",1,5,EP122,A2,0.9978,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9978,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0022
+F098,south,fill,rule,2023-09-08 05:10,2023-09-08 06:20,1.17,Boujdour,B2,1,1,EP123,A3,0.9981,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9981,0.0,0.0,0.0,0.0,0.0,0.0,0.0019
+D102,south,dead,rule,2023-09-09 08:50,2023-09-09 10:00,1.17,Laayoune,L2,1,1,EP124,G4,0.9655,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0345,0.9655,0.0,0.0
+F099,south,fill,rule,2023-09-09 10:00,2023-09-09 11:30,1.5,Laayoune,L2,1,1,EP124,A3,0.9997,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9997,0.0,0.0,0.0,0.0,0.0,0.0,0.0003
+F100,south,fill,rule,2023-09-22 03:40,2023-09-22 04:40,1.0,Boujdour,B2,1,1,EP130,A3,0.9982,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9982,0.0,0.0,0.0,0.0,0.0,0.0,0.0018
+XS029,south,detector,detector,2023-09-26 17:10,2023-09-26 19:00,1.8333333333333333,Laayoune,L5,1,1,,N,0.6972,normal / untyped,"fusion, main detector (NB4 8b)",,0.0283,0.0311,0.1153,0.0,0.0131,0.0243,0.0428,0.0478,0.0,0.6972
+F101,south,fill,rule,2023-09-28 04:40,2023-09-28 05:40,1.0,Boujdour,B3,1,1,EP132,A3,0.9966,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9966,0.0,0.0,0.0,0.0,0.0,0.0,0.0034
+F102,south,fill,rule,2023-09-30 09:30,2023-09-30 12:20,2.83,Boujdour,"B1,B2,B3",1,3,EP133,A2,0.9968,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9968,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0032
+F103,south,fill,rule,2023-10-10 09:40,2023-10-10 10:50,1.17,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP136,A2,0.9977,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9977,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0023
+F104,south,fill,rule,2023-10-11 09:20,2023-10-11 11:30,2.17,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP137,A2,0.9987,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9987,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0013
+F105,south,fill,rule,2023-10-12 08:10,2023-10-12 09:30,1.33,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP138,A2,0.9972,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9972,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0028
+F106,south,fill,rule,2023-10-12 10:10,2023-10-12 12:30,2.33,Boujdour,"B1,B2,B3",1,3,EP139,A2,0.9987,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9987,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0013
+XS030,south,detector,detector,2023-10-12 12:40,2023-10-12 17:10,4.5,Laayoune,L3,1,1,,N,0.4234,normal / untyped,"fusion, main detector (NB4 8b)",,0.0558,0.0716,0.2069,0.0,0.0257,0.0454,0.0749,0.0962,0.0,0.4234
+F107,south,fill,rule,2023-10-14 10:20,2023-10-14 11:20,1.0,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP140,A2,0.9974,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9974,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0026
+F108,south,fill,rule,2023-10-19 03:20,2023-10-19 04:40,1.33,Boujdour,B2,1,1,EP141,A3,0.997,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.997,0.0,0.0,0.0,0.0,0.0,0.0,0.003
+F109,south,fill,rule,2023-10-21 09:00,2023-10-21 11:10,2.17,Laayoune,L2,1,1,EP143,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+XS031,south,detector,detector,2023-10-21 09:20,2023-10-21 13:00,3.6666666666666665,Laayoune,L4,1,1,,N,0.8163,normal / untyped,"fusion, main detector (NB4 8b)",,0.0192,0.0264,0.0529,0.0,0.0096,0.0184,0.0284,0.0288,0.0,0.8163
+XS032,south,detector,detector,2023-10-21 12:00,2023-10-21 13:30,1.5,Laayoune,L5,1,1,,N,0.684,normal / untyped,"fusion, main detector (NB4 8b)",,0.0329,0.0507,0.0777,0.0,0.0165,0.0314,0.0515,0.0552,0.0,0.684
+F110,south,fill,rule,2023-10-21 12:10,2023-10-21 13:30,1.33,Laayoune,L3,1,1,EP145,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+F111,south,fill,rule,2023-10-24 05:20,2023-10-24 06:40,1.33,Boujdour,B2,1,1,EP148,A3,0.9973,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9973,0.0,0.0,0.0,0.0,0.0,0.0,0.0027
+F112,south,fill,rule,2023-10-25 10:40,2023-10-25 11:50,1.17,Laayoune,L4,1,1,EP149,A3,0.9993,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9993,0.0,0.0,0.0,0.0,0.0,0.0,0.0007
+D103,south,dead,rule,2023-10-28 10:20,2023-10-28 11:10,0.83,Foum eloued,F6,1,1,EP150,G4,0.9709,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.029,0.9709,0.0,0.0
+K004,south,clock,rule,2023-10-29 00:00,2023-10-30 00:00,24.0,Laayoune,,1,0,,A4,0.9834,artefact,label model (NB2),R13:A4;R15:A4,0.0,0.0,0.0,0.9834,0.0,0.0,0.0,0.0,0.0,0.0166
+K012,south,clock,rule,2023-10-29 00:00,2023-10-30 00:00,24.0,Boujdour,,1,0,,A4,0.9834,artefact,label model (NB2),R13:A4;R15:A4,0.0,0.0,0.0,0.9834,0.0,0.0,0.0,0.0,0.0,0.0166
+K020,south,clock,rule,2023-10-29 00:00,2023-10-30 00:00,24.0,Foum eloued,,1,0,,A4,0.8265,artefact,label model (NB2),R13:A4,0.0,0.0,0.0,0.8265,0.0,0.0,0.0,0.0,0.0,0.1735
+XS033,south,detector,detector,2023-10-29 07:50,2023-10-29 10:10,2.333333333333333,Laayoune,L5,1,1,,N,0.6162,normal / untyped,"fusion, main detector (NB4 8b)",,0.0371,0.0535,0.1357,0.0,0.0186,0.0355,0.0476,0.0558,0.0,0.6162
+XS034,south,detector,detector,2023-11-01 11:10,2023-11-01 16:10,5.0,Laayoune,L2,1,1,,N,0.5482,normal / untyped,"fusion, main detector (NB4 8b)",,0.0425,0.0661,0.1419,0.0,0.0213,0.0405,0.0629,0.0766,0.0,0.5482
+XS035,south,detector,detector,2023-11-01 11:40,2023-11-01 14:20,2.6666666666666665,Laayoune,L4,1,1,,N,0.478,normal / untyped,"fusion, main detector (NB4 8b)",,0.0495,0.0586,0.1759,0.0,0.0248,0.0473,0.0785,0.0875,0.0,0.478
+XS036,south,detector,detector,2023-11-02 09:00,2023-11-02 11:50,2.833333333333333,Laayoune,L2,1,1,,N,0.7364,normal / untyped,"fusion, main detector (NB4 8b)",,0.0289,0.0449,0.0678,0.0,0.0145,0.0275,0.0398,0.0404,0.0,0.7364
+XS037,south,detector,detector,2023-11-02 10:30,2023-11-02 12:50,2.333333333333333,Laayoune,L4,1,1,,N,0.4652,normal / untyped,"fusion, main detector (NB4 8b)",,0.0464,0.0548,0.216,0.0,0.0235,0.044,0.0654,0.0847,0.0,0.4652
+F113,south,fill,rule,2023-11-03 03:20,2023-11-03 05:00,1.67,Boujdour,B2,1,1,EP151,A3,0.9986,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+XS038,south,detector,detector,2023-11-03 05:20,2023-11-03 08:50,3.5,Laayoune,L2,1,1,,N,0.7244,normal / untyped,"fusion, main detector (NB4 8b)",,0.0279,0.0436,0.0773,0.0,0.014,0.0266,0.0401,0.0461,0.0,0.7244
+F114,south,fill,rule,2023-11-05 03:50,2023-11-05 05:40,1.83,Boujdour,B2,1,1,EP155,A3,0.9988,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9988,0.0,0.0,0.0,0.0,0.0,0.0,0.0012
+F115,south,fill,rule,2023-11-06 04:10,2023-11-06 05:10,1.0,Boujdour,B2,1,1,EP158,A3,0.9986,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+F116,south,fill,rule,2023-11-08 09:10,2023-11-08 11:10,2.0,Boujdour,"B1,B2,B3",1,3,EP160,A2,0.9971,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9971,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0029
+F117,south,fill,rule,2023-11-09 08:50,2023-11-09 12:00,3.17,Boujdour,"B1,B2,B3",1,3,EP161,A2,0.9978,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9978,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0022
+F118,south,fill,rule,2023-11-09 09:30,2023-11-09 11:20,1.83,Foum eloued,F7,1,1,EP161,A3,0.9995,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9995,0.0,0.0,0.0,0.0,0.0,0.0,0.0005
+XS039,south,detector,detector,2023-11-09 09:40,2023-11-09 11:40,2.0,Foum eloued,F1,1,1,,N,0.6715,normal / untyped,"fusion, main detector (NB4 8b)",,0.029,0.0436,0.1169,0.0,0.0145,0.0276,0.0441,0.0527,0.0,0.6715
+XS040,south,detector,detector,2023-11-13 17:20,2023-11-13 23:00,5.666666666666667,Laayoune,L3,1,1,,N,0.2178,normal / untyped,"fusion, main detector (NB4 8b)",,0.0808,0.0677,0.1276,0.0,0.0291,0.1022,0.2046,0.1701,0.0,0.2178
+XS041,south,detector,detector,2023-11-14 16:40,2023-11-14 23:00,6.333333333333333,Laayoune,L3,1,1,,A3,0.2888,artefact,"fusion, main detector (NB4 8b)",,0.0687,0.0797,0.2888,0.0,0.0344,0.0656,0.0882,0.1017,0.0,0.2729
+F119,south,fill,rule,2023-11-18 02:00,2023-11-18 03:10,1.17,Boujdour,B2,1,1,EP162,A3,0.9979,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9979,0.0,0.0,0.0,0.0,0.0,0.0,0.0021
+F120,south,fill,rule,2023-11-22 03:00,2023-11-22 04:50,1.83,Boujdour,B2,1,1,EP163,A3,0.9983,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9983,0.0,0.0,0.0,0.0,0.0,0.0,0.0017
+T011,south,transfer,rule,2023-11-23 00:00,2023-11-24 00:00,24.0,Foum eloued,"F3,F4",1,2,,N,0.9835,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0165,0.9835
+F121,south,fill,rule,2023-11-23 09:50,2023-11-23 11:30,1.67,Boujdour,"B1,B2,B3",1,3,EP164,A2,0.9982,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9982,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0018
+F122,south,fill,rule,2023-11-24 09:10,2023-11-24 11:40,2.5,Boujdour,"B1,B2,B3",1,3,EP165,A2,0.9942,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9942,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0058
+XS042,south,detector,detector,2023-11-30 05:10,2023-11-30 09:40,4.5,Laayoune,L5,1,1,,A3,0.3126,artefact,"fusion, main detector (NB4 8b)",,0.0628,0.077,0.3126,0.0,0.0317,0.06,0.0843,0.1036,0.0,0.2678
+XS043,south,detector,detector,2023-11-30 06:10,2023-11-30 09:20,3.1666666666666665,Laayoune,L2,1,1,,N,0.7089,normal / untyped,"fusion, main detector (NB4 8b)",,0.028,0.0336,0.0944,0.0,0.0142,0.0268,0.042,0.0521,0.0,0.7089
+F123,south,fill,rule,2023-12-03 03:30,2023-12-03 05:40,2.17,Boujdour,B2,1,1,EP170,A3,0.9955,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9955,0.0,0.0,0.0,0.0,0.0,0.0,0.0045
+XS044,south,detector,detector,2023-12-05 14:10,2023-12-05 16:20,2.1666666666666665,Laayoune,L4,1,1,,N,0.5804,normal / untyped,"fusion, main detector (NB4 8b)",,0.0392,0.0599,0.1217,0.0,0.0197,0.0375,0.0656,0.0761,0.0,0.5804
+XS045,south,detector,detector,2023-12-05 19:10,2023-12-06 00:10,5.0,Laayoune,L5,1,1,,A3,0.319,artefact,"fusion, main detector (NB4 8b)",,0.0695,0.0704,0.319,0.0,0.032,0.0566,0.0883,0.1199,0.0,0.2444
+XS046,south,detector,detector,2023-12-05 21:00,2023-12-05 23:20,2.333333333333333,Laayoune,"L2,L3",1,2,,N,0.7115,normal / untyped,"fusion, main detector (NB4 8b)",,0.0279,0.0763,0.0578,0.0,0.0142,0.0267,0.0371,0.0485,0.0,0.7115
+D104,south,dead,rule,2023-12-06 09:10,2023-12-06 10:00,0.83,Boujdour,B2,1,1,EP172,G4,0.9513,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0485,0.9513,0.0,0.0
+F124,south,fill,rule,2023-12-07 09:20,2023-12-07 12:20,3.0,Boujdour,"B1,B2,B3",1,3,EP173,A2,0.9826,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9826,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0174
+D105,south,dead,rule,2023-12-10 08:10,2023-12-10 09:10,1.0,Laayoune,L1,1,1,EP176,G4,0.962,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.038,0.962,0.0,0.0
+XS047,south,detector,detector,2023-12-12 10:50,2023-12-12 13:40,2.833333333333333,Boujdour,B2,1,1,,N,0.5027,normal / untyped,"fusion, main detector (NB4 8b)",,0.0434,0.0656,0.1786,0.0,0.022,0.0414,0.0658,0.0804,0.0,0.5027
+XS048,south,detector,detector,2023-12-14 06:50,2023-12-14 12:10,5.333333333333333,Laayoune,L2,1,1,,N,0.5377,normal / untyped,"fusion, main detector (NB4 8b)",,0.0447,0.0608,0.1544,0.0,0.0227,0.0423,0.0618,0.0755,0.0,0.5377
+D106,south,dead,rule,2023-12-14 08:50,2023-12-14 10:00,1.17,Laayoune,L5,1,1,EP178,G4,0.9594,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0405,0.9594,0.0,0.0
+T000,south,transfer,rule,2023-12-16 00:00,2023-12-17 00:00,24.0,Boujdour,"B2,B1",1,2,,G5,0.6813,grid event,label model (NB2),R16:G5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.6813,0.3187
+D107,south,dead,rule,2023-12-16 07:30,2023-12-16 10:00,2.5,Foum eloued,F6,1,1,EP179,G4,0.9556,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0443,0.9556,0.0,0.0
+F125,south,fill,rule,2023-12-16 10:00,2023-12-16 14:20,4.33,Foum eloued,F6,1,1,EP179,A3,0.9996,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9996,0.0,0.0,0.0,0.0,0.0,0.0,0.0004
+D108,south,dead,rule,2023-12-17 08:10,2023-12-17 09:20,1.17,Foum eloued,F2,1,1,EP183,G4,0.9719,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0281,0.9719,0.0,0.0
+XS049,south,detector,detector,2023-12-24 04:40,2023-12-24 09:10,4.5,Laayoune,L4,1,1,,N,0.5654,normal / untyped,"fusion, main detector (NB4 8b)",,0.0402,0.0591,0.1533,0.0,0.0205,0.0381,0.0562,0.0671,0.0,0.5654
+D109,south,dead,rule,2023-12-24 05:50,2023-12-24 06:20,0.5,Laayoune,L3,1,1,EP187,G3,0.5488,grid event,"fusion, main detector (NB4 8b)",R5:G;R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.5488,0.451,0.0,0.0
+F126,south,fill,rule,2023-12-24 05:50,2023-12-24 17:00,11.17,Laayoune,L2,1,1,EP187,A3,0.9596,artefact,"fusion, main detector (NB4 8b)",,0.0,0.0,0.9596,0.0,0.0,0.0,0.0,0.0,0.0,0.0404
+F127,south,fill,rule,2023-12-24 06:20,2023-12-24 16:50,10.5,Laayoune,L3,1,1,EP187,A3,0.9683,artefact,"fusion, main detector (NB4 8b)",,0.0,0.0,0.9683,0.0,0.0,0.0,0.0,0.0,0.0,0.0317
+XS050,south,detector,detector,2023-12-24 07:00,2023-12-24 08:10,1.1666666666666667,Laayoune,L5,1,1,,N,0.6494,normal / untyped,"fusion, main detector (NB4 8b)",,0.0362,0.0539,0.1099,0.0,0.0182,0.0346,0.0458,0.052,0.0,0.6494
+F128,south,fill,rule,2023-12-26 09:20,2023-12-26 11:00,1.67,Laayoune,"L1,L2,L3,L4,L5",1,5,EP189,A2,0.9986,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+F129,south,fill,rule,2023-12-27 09:20,2023-12-27 11:50,2.5,Laayoune,"L1,L2,L3,L4,L5",1,5,EP190,A2,0.9988,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9988,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0012
+F130,south,fill,rule,2023-12-28 09:10,2023-12-28 11:30,2.33,Laayoune,"L1,L2,L3,L4,L5",1,5,EP191,A2,0.9988,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9988,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0012
+D110,south,dead,rule,2023-12-31 11:20,2023-12-31 14:40,3.33,Laayoune,L4,1,1,EP193,G4,0.8486,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0003,0.0,0.0,0.0,0.0,0.0,0.1511,0.8486,0.0,0.0
+F131,south,fill,rule,2023-12-31 11:20,2023-12-31 12:20,1.0,Boujdour+Laayoune,"B1,B2,B3,L1,L2,L3,L5",2,7,EP193,A2,0.9997,artefact,"fusion, main detector (NB4 8b)",R2:A2;R19:A2,0.0,0.9997,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0003
+F132,south,fill,rule,2023-12-31 14:40,2024-01-01 10:10,19.5,Laayoune,L4,1,1,EP193,A3,0.9986,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+F133,south,fill,rule,2024-01-03 09:30,2024-01-03 10:50,1.33,Boujdour,B1,1,1,EP196,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+F134,south,fill,rule,2024-01-04 09:20,2024-01-04 11:20,2.0,Boujdour,"B1,B2,B3",1,3,EP197,A2,0.9963,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9963,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0037
+XS051,south,detector,detector,2024-01-11 07:10,2024-01-11 09:10,2.0,Laayoune,L2,1,1,,N,0.49,normal / untyped,"fusion, main detector (NB4 8b)",,0.045,0.057,0.2023,0.0,0.0228,0.0427,0.0637,0.0765,0.0,0.49
+XS052,south,detector,detector,2024-01-11 12:40,2024-01-11 14:50,2.1666666666666665,Laayoune,"L2,L5",1,2,,N,0.4067,normal / untyped,"fusion, main detector (NB4 8b)",,0.0545,0.1942,0.1086,0.0,0.0276,0.0517,0.0684,0.0883,0.0,0.4067
+F135,south,fill,rule,2024-01-16 09:10,2024-01-16 11:30,2.33,Laayoune,"L1,L2,L3,L4,L5",1,5,EP202,A2,0.9986,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+XS053,south,detector,detector,2024-01-17 09:00,2024-01-17 11:40,2.6666666666666665,Laayoune,"L2,L5",1,2,,N,0.3912,normal / untyped,"fusion, main detector (NB4 8b)",,0.0576,0.2083,0.1037,0.0,0.0289,0.0546,0.0727,0.083,0.0,0.3912
+XS054,south,detector,detector,2024-01-20 04:10,2024-01-20 16:20,12.166666666666666,Laayoune,L4,1,1,,N,0.5262,normal / untyped,"fusion, main detector (NB4 8b)",,0.0478,0.0742,0.1512,0.0,0.0243,0.0453,0.06,0.071,0.0,0.5262
+F136,south,fill,rule,2024-01-20 05:50,2024-01-20 14:50,9.0,Laayoune,"L2,L3",1,2,EP203,A2,0.9971,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9971,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0029
+XS055,south,detector,detector,2024-01-20 10:20,2024-01-20 15:10,4.833333333333333,Laayoune,"L1,L5",1,2,,N,0.4038,normal / untyped,"fusion, main detector (NB4 8b)",,0.0544,0.2207,0.0906,0.0,0.0276,0.0518,0.0735,0.0777,0.0,0.4038
+D111,south,dead,rule,2024-01-27 08:50,2024-01-27 10:10,1.33,Foum eloued,F4,1,1,EP204,G4,0.9633,grid event,"fusion, main detector (NB4 8b)",R5:G;R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0367,0.9633,0.0,0.0
+XS056,south,detector,detector,2024-02-05 08:50,2024-02-05 13:00,4.166666666666667,Boujdour+Foum eloued+Laayoune,"B1,B2,B3,F1,F2,F3,F4,F5,F6,F7,L1,L2,L3,L4,L5",3,15,,A1,0.2157,artefact,"fusion, main detector (NB4 8b)",,0.2157,0.1199,0.0695,0.0,0.0289,0.1042,0.1071,0.1642,0.0,0.1904
+XS057,south,detector,detector,2024-02-10 05:50,2024-02-10 17:00,11.166666666666666,Laayoune,L2,1,1,,N,0.356,normal / untyped,"fusion, main detector (NB4 8b)",,0.0608,0.0746,0.2482,0.0,0.0305,0.0581,0.0791,0.0927,0.0,0.356
+F137,south,fill,rule,2024-02-13 09:20,2024-02-13 10:30,1.17,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP205,A2,0.9987,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9987,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0013
+F138,south,fill,rule,2024-02-15 08:50,2024-02-15 09:50,1.0,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP206,A2,0.997,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.997,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.003
+F139,south,fill,rule,2024-02-24 13:00,2024-02-24 14:10,1.17,Foum eloued,F5,1,1,EP207,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+F140,south,fill,rule,2024-02-27 20:50,2024-02-27 22:10,1.33,Boujdour,B1,1,1,EP208,A3,0.9968,artefact,"fusion, main detector (NB4 8b)",R12:A3,0.0,0.0,0.9968,0.0,0.0,0.0,0.0,0.0,0.0,0.0032
+XS058,south,detector,detector,2024-02-27 20:50,2024-02-27 23:00,2.1666666666666665,Boujdour,B2,1,1,,N,0.5612,normal / untyped,"fusion, main detector (NB4 8b)",,0.0397,0.0603,0.1435,0.0,0.02,0.038,0.0626,0.0749,0.0,0.5612
+D112,south,dead,rule,2024-02-29 08:30,2024-02-29 12:50,4.33,Foum eloued,F1,1,1,EP209,G4,0.9362,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0002,0.0,0.0,0.0,0.0,0.0,0.0636,0.9362,0.0,0.0
+D113,south,dead,rule,2024-02-29 08:50,2024-02-29 10:00,1.17,Laayoune,L4,1,1,EP210,G4,0.9716,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0283,0.9716,0.0,0.0
+D114,south,dead,rule,2024-03-02 09:00,2024-03-02 10:10,1.17,Foum eloued,F1,1,1,EP211,G4,0.9497,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0503,0.9497,0.0,0.0
+F141,south,fill,rule,2024-03-02 10:10,2024-03-02 16:10,6.0,Foum eloued,F1,1,1,EP211,A3,0.9996,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9996,0.0,0.0,0.0,0.0,0.0,0.0,0.0004
+D115,south,dead,rule,2024-03-02 16:10,2024-03-02 17:10,1.0,Foum eloued,F1,1,1,EP211,G3,0.7083,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R21:A1,0.0023,0.0,0.0,0.0,0.0,0.0,0.7083,0.2894,0.0,0.0
+XS059,south,detector,detector,2024-03-07 16:40,2024-03-07 19:30,2.833333333333333,Laayoune,L5,1,1,,N,0.7206,normal / untyped,"fusion, main detector (NB4 8b)",,0.0252,0.0321,0.1004,0.0,0.0129,0.0239,0.0374,0.0476,0.0,0.7206
+XS060,south,detector,detector,2024-03-08 20:40,2024-03-09 01:20,4.666666666666667,Laayoune,L5,1,1,,A3,0.2812,artefact,"fusion, main detector (NB4 8b)",,0.073,0.0845,0.2812,0.0,0.0371,0.0692,0.0928,0.1163,0.0,0.2459
+XS061,south,detector,detector,2024-03-08 23:20,2024-03-09 01:20,2.0,Laayoune,L3,1,1,,N,0.5343,normal / untyped,"fusion, main detector (NB4 8b)",,0.0474,0.0633,0.1586,0.0,0.0212,0.0398,0.0601,0.0753,0.0,0.5343
+K005,south,clock,rule,2024-03-10 00:00,2024-03-11 00:00,24.0,Laayoune,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+K013,south,clock,rule,2024-03-10 00:00,2024-03-11 00:00,24.0,Boujdour,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+K021,south,clock,rule,2024-03-10 00:00,2024-03-11 00:00,24.0,Foum eloued,,1,0,,N,0.9686,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0314,0.0,0.0,0.0,0.0,0.0,0.9686
+XS062,south,detector,detector,2024-03-11 06:10,2024-03-11 11:30,5.333333333333333,Laayoune,L2,1,1,,G4,0.3503,grid event,"fusion, main detector (NB4 8b)",,0.0459,0.0524,0.0955,0.0,0.0223,0.0711,0.1654,0.3503,0.0,0.197
+XS063,south,detector,detector,2024-03-12 17:20,2024-03-12 19:20,2.0,Laayoune,L5,1,1,,N,0.7183,normal / untyped,"fusion, main detector (NB4 8b)",,0.0301,0.052,0.0763,0.0,0.0151,0.0286,0.0379,0.0417,0.0,0.7183
+XS064,south,detector,detector,2024-03-12 17:40,2024-03-12 22:40,5.0,Laayoune,L4,1,1,,N,0.2593,normal / untyped,"fusion, main detector (NB4 8b)",,0.0581,0.0699,0.1273,0.0,0.0293,0.052,0.1775,0.2267,0.0,0.2593
+XS065,south,detector,detector,2024-03-12 18:10,2024-03-12 19:20,1.1666666666666667,Laayoune,"L1,L2,L3",1,3,,N,0.8016,normal / untyped,"fusion, main detector (NB4 8b)",,0.0191,0.0666,0.0347,0.0,0.0096,0.0183,0.0243,0.0257,0.0,0.8016
+XS066,south,detector,detector,2024-03-13 17:30,2024-03-13 18:40,1.1666666666666667,Laayoune,L5,1,1,,N,0.762,normal / untyped,"fusion, main detector (NB4 8b)",,0.0252,0.0431,0.0597,0.0,0.0126,0.024,0.0328,0.0405,0.0,0.762
+F142,south,fill,rule,2024-03-14 09:40,2024-03-14 11:00,1.33,Foum eloued,"F1,F2,F3,F4,F5,F6,F7",1,7,EP212,A2,0.9985,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9985,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0015
+F143,south,fill,rule,2024-03-23 10:00,2024-03-23 11:00,1.0,Laayoune,L2,1,1,EP213,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+XS067,south,detector,detector,2024-03-26 20:50,2024-03-26 23:50,3.0,Laayoune,L2,1,1,,N,0.575,normal / untyped,"fusion, main detector (NB4 8b)",,0.0381,0.0575,0.147,0.0,0.0192,0.0364,0.0577,0.0691,0.0,0.575
+D116,south,dead,rule,2024-03-26 21:40,2024-03-26 22:10,0.5,Laayoune,L5,1,1,EP214,G3,0.8175,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3,0.0002,0.0,0.0,0.0,0.0,0.0,0.8175,0.1823,0.0,0.0
+XS068,south,detector,detector,2024-03-27 09:50,2024-03-27 12:00,2.1666666666666665,Laayoune,L2,1,1,,N,0.5757,normal / untyped,"fusion, main detector (NB4 8b)",,0.0395,0.0543,0.148,0.0,0.0199,0.0377,0.0585,0.0664,0.0,0.5757
+K006,south,clock,rule,2024-03-31 00:00,2024-04-01 00:00,24.0,Laayoune,,1,0,,N,0.9492,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0508,0.0,0.0,0.0,0.0,0.0,0.9492
+K014,south,clock,rule,2024-03-31 00:00,2024-04-01 00:00,24.0,Boujdour,,1,0,,N,0.6006,normal / untyped,label model (NB2),R15:A4,0.0,0.0,0.0,0.3994,0.0,0.0,0.0,0.0,0.0,0.6006
+K022,south,clock,rule,2024-03-31 00:00,2024-04-01 00:00,24.0,Foum eloued,,1,0,,N,0.9492,normal / untyped,label model (NB2),,0.0,0.0,0.0,0.0508,0.0,0.0,0.0,0.0,0.0,0.9492
+F144,south,fill,rule,2024-03-31 09:10,2024-03-31 11:10,2.0,Boujdour+Foum eloued,"B1,B2,B3,F1,F2,F3,F4,F5,F6,F7",2,10,EP215,A2,0.997,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.997,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.003
+D117,south,dead,rule,2024-03-31 11:10,2024-04-02 07:00,43.83,Boujdour+Foum eloued+Laayoune,"B1,B2,B3,F1,F2,F3,F4,F5,F6,F7,L3,L4,L5",3,13,EP215,A1,1.0,artefact,"fusion, main detector (NB4 8b)",R1:A1;R3:A1;R4:A1,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+F145,south,fill,rule,2024-03-31 11:10,2024-04-02 06:10,43.0,Laayoune,"L1,L2",1,2,EP215,A2,0.9921,artefact,"fusion, main detector (NB4 8b)",R2:A2,0.0,0.9921,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0079
+D118,south,dead,rule,2024-04-02 06:10,2024-04-02 07:00,0.83,Laayoune,L1,1,1,EP215,G4,0.8934,grid event,"fusion, main detector (NB4 8b)",R3:A1;R9:G3;R10:G4,0.0163,0.0,0.0,0.0,0.0,0.0,0.0902,0.8934,0.0,0.0
+D119,south,dead,rule,2024-04-06 08:20,2024-04-06 09:10,0.83,Laayoune,L1,1,1,EP216,G4,0.9402,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0597,0.9402,0.0,0.0
+F146,south,fill,rule,2024-04-06 08:30,2024-04-06 10:10,1.67,Laayoune,"L2,L3,L4,L5",1,4,EP216,A2,0.9937,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9937,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0063
+F147,south,fill,rule,2024-04-06 09:20,2024-04-06 10:20,1.0,Laayoune,L1,1,1,EP216,A3,0.8752,artefact,"fusion, main detector (NB4 8b)",,0.0,0.0,0.8752,0.0,0.0,0.0,0.0,0.0,0.0,0.1248
+D120,south,dead,rule,2024-04-09 09:00,2024-04-09 09:50,0.83,Foum eloued,F4,1,1,EP217,G4,0.9622,grid event,"fusion, main detector (NB4 8b)",R9:G3;R10:G4,0.0001,0.0,0.0,0.0,0.0,0.0,0.0377,0.9622,0.0,0.0
+D121,south,dead,rule,2024-04-13 05:40,2024-04-13 07:00,1.33,Foum eloued,F5,1,1,EP218,G3,0.5117,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3,0.0003,0.0,0.0,0.0,0.0,0.0,0.5117,0.488,0.0,0.0
+K007,south,clock,rule,2024-04-14 00:00,2024-04-15 00:00,24.0,Laayoune,,1,0,,A4,0.7007,artefact,label model (NB2),R14:A4,0.0,0.0,0.0,0.7007,0.0,0.0,0.0,0.0,0.0,0.2993
+K015,south,clock,rule,2024-04-14 00:00,2024-04-15 00:00,24.0,Boujdour,,1,0,,A4,0.7007,artefact,label model (NB2),R14:A4,0.0,0.0,0.0,0.7007,0.0,0.0,0.0,0.0,0.0,0.2993
+K023,south,clock,rule,2024-04-14 00:00,2024-04-15 00:00,24.0,Foum eloued,,1,0,,A4,0.7007,artefact,label model (NB2),R14:A4,0.0,0.0,0.0,0.7007,0.0,0.0,0.0,0.0,0.0,0.2993
+D122,south,dead,rule,2024-04-18 08:50,2024-04-18 10:00,1.17,Foum eloued,F7,1,1,EP219,G4,0.9694,grid event,"fusion, main detector (NB4 8b)",R5:G;R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0306,0.9694,0.0,0.0
+XS069,south,detector,detector,2024-04-20 13:30,2024-04-20 15:20,1.8333333333333333,Laayoune,L2,1,1,,N,0.602,normal / untyped,"fusion, main detector (NB4 8b)",,0.035,0.0542,0.1444,0.0,0.0175,0.0333,0.0502,0.0634,0.0,0.602
+F148,south,fill,rule,2024-04-21 02:00,2024-04-21 03:00,1.0,Laayoune,"L1,L2,L3,L4,L5",1,5,EP220,A2,0.9986,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+F149,south,fill,rule,2024-04-23 10:00,2024-04-23 11:10,1.17,Foum eloued,F5,1,1,EP221,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+F150,south,fill,rule,2024-04-24 06:00,2024-04-24 07:50,1.83,Foum eloued,"F1,F5",1,2,EP222,A2,0.9903,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9903,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0097
+D123,south,dead,rule,2024-04-30 08:20,2024-04-30 10:30,2.17,Foum eloued,F1,1,1,EP223,G4,0.9594,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0405,0.9594,0.0,0.0
+F151,south,fill,rule,2024-05-04 10:40,2024-05-04 11:50,1.17,Laayoune,L4,1,1,EP224,A3,0.9994,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9994,0.0,0.0,0.0,0.0,0.0,0.0,0.0006
+D124,south,dead,rule,2024-05-05 11:00,2024-05-05 13:20,2.33,Foum eloued,F5,1,1,EP225,G4,0.9643,grid event,"fusion, main detector (NB4 8b)",R5:G;R9:G3;R10:G4,0.0002,0.0,0.0,0.0,0.0,0.0,0.0355,0.9643,0.0,0.0
+F152,south,fill,rule,2024-05-09 10:30,2024-05-09 12:10,1.67,Laayoune,"L1,L2,L3,L4,L5",1,5,EP226,A2,0.9986,artefact,"fusion, main detector (NB4 8b)",R19:A2,0.0,0.9986,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0014
+F153,south,fill,rule,2024-05-13 21:30,2024-05-13 23:10,1.67,Foum eloued,F5,1,1,EP227,A3,0.9987,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9987,0.0,0.0,0.0,0.0,0.0,0.0,0.0013
+D125,south,dead,rule,2024-05-14 10:00,2024-05-14 11:00,1.0,Foum eloued,F1,1,1,EP228,G4,0.9364,grid event,"fusion, main detector (NB4 8b)",R6:G;R9:G3;R10:G4,0.0,0.0,0.0,0.0,0.0,0.0,0.0636,0.9364,0.0,0.0
+F154,south,fill,rule,2024-05-14 20:30,2024-05-14 23:20,2.83,Foum eloued,F5,1,1,EP229,A3,0.9989,artefact,"fusion, main detector (NB4 8b)",R20:A3,0.0,0.0,0.9989,0.0,0.0,0.0,0.0,0.0,0.0,0.0011

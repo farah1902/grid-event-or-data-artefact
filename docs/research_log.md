@@ -431,3 +431,43 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 - **New `docs/transfer_protocol.md`:** the complete register, with components, values, status (frozen / re-estimated / adapted / engineering), code locations, regression checks and the chronology from file modification times. No file changed after the first injected Tetouan result.
 - **New Fig 14** (`tools/make_transfer_diagram.py`): the protocol stage by stage, with results read from `summary.json`. Layout was fixed in three passes: a stray arrow, hyphen and formula wraps, spacing.
 - D71; README embeds Fig 14 and links the register; docs index, figure register, handoff (storyline item 9) and CLAUDE.md updated.
+
+## Session 9 — 2026-11-10 — NB7: final figures, tables and the released catalogue
+
+**User request:** "yes ready for the NB7 (focus on this step without missing anything please)".
+
+**Inventory first.** From the figure register, the handoff, the guide's figure plan and the fixes noted along the way:
+- figures never drawn: Fig 1 basemap, Fig 2, Fig 6;
+- fixes: Fig 8 axis, E19 legend, Fig 9 graph row, E22 legend;
+- stale versions: E4 (v0 features), E6 (v0 types), Fig 1(b) (D16 masks);
+- tables: Table 2, Table 4;
+- the catalogue release (contribution 4).
+
+**Done:**
+- `src/paper_figures.py`:
+  - the final catalogue (404 entries; D72);
+  - Fig 1 with a Natural Earth basemap (downloaded v5.1.2, public domain), no boundaries (Western Sahara is disputed), a southern inset and Tetouan (D73);
+  - Fig 2 (nine schematic signatures; the A1 panel shows the compound hold → zeros);
+  - Fig 6 (two lanes, end model and fusion, catalogue, evaluations).
+- `src/paper_regen.py` (D74):
+  - Fig 8: scores recomputed with the saved LightGBM models; F29 reproduced exactly (218.0 / 232.6), and NB7 asserts it;
+  - Fig 9 with the graph-ablation row;
+  - E4, E6, E19 and E22.
+- `src/paper_tables.py` (D72, D75):
+  - Tables 1–4 and S7 built; Tables 5–9 and S1–S6 copied;
+  - the numbered figure set and MANIFEST.md with draft captions;
+  - the catalogue release with a README data card.
+- `tools/make_nb7_final_figures.py` → `notebooks/NB7_final_figures.ipynb`, executed locally (1.1 min, no errors).
+- **paper_handoff §3 corrections:** #30 brought up to date; #37–#40 added (per-detector event formation, no deep forecaster, no A4 re-alignment, Tetouan re-estimation scope).
+
+**Visual checks and fixes:**
+- Fig 1: label collisions → southern inset; scale bar under the inset; inset spines hidden by the global style.
+- Fig 2: notes touching traces; A1 vs G1 made explicit with in-panel notes.
+- Fig 6: a crossing arrow removed; boxes resized; the fusion formula rendered with mathtext.
+- Fig 8: legend over the plateau → headroom.
+- E6: legend for the clock days.
+
+**Pitfalls:**
+- bash heredocs turn `\\n` into a newline (scripts written with the file tool instead);
+- `transfer.register` moves `detector.SPLIT` (restored in NB7);
+- the corrections-table parser needed escaped-pipe handling.

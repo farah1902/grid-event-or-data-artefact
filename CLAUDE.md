@@ -30,6 +30,9 @@ src/end_model.py              detector-only candidates, normal windows, item fea
 src/graph_model.py            TCN-GAT with a learned graph (guide eq. 13; D53) = the main detector's predictor (D61); hybrids on the LightGBM forecast (base=, D59)
 src/inject.py                 injection of observed signatures into clean zone-time (D54)
 src/benchmark.py              variants (VARIANTS, incl. the no-graph multi-scale ablation V_TCN_MS, D62), event formation per detector (D60), pipeline() on any dataset, run() on injected data, baselines, metrics
+src/paper_figures.py          NB7: final catalogue, Fig 1 (basemap), Fig 2 (typology), Fig 6 (framework)
+src/paper_regen.py            NB7: regenerated Fig 8, Fig 9, E4, E6, E19, E22 (D74)
+src/paper_tables.py           NB7: paper tables, numbered figure set + MANIFEST.md, catalogue release (D72, D75)
 src/transfer.py               NB6: Tetouan transfer (register the system, frozen label model, predictors trained on Tetouan, metrics)
 src/downstream.py             NB5: cleaning strategies S0-S3, global LightGBM direct forecaster, seasonal naive, MASE/DM test, outage statistics
 notebooks/NB1_evidence_figures.ipynb   Fig 1, 3, 4, 5, E1–E8 (executed)
@@ -39,6 +42,7 @@ notebooks/NB3_detector_end_model.ipynb detector + end model, Fig 8, E16–E19 (e
 notebooks/NB4_benchmark.ipynb          TCN-GAT + injection benchmark, Tables 5–7, Figs 9–11, E20–E21 (executed on Colab GPU 2026-11-09 = reference run; its generator has since gained the V_TCN_MS row, not re-executed)
 notebooks/NB5_downstream.ipynb         downstream test: cleaning strategies, Table 8, Fig 12, outage statistics (local CPU; resumable)
 notebooks/NB6_tetouan.ipynb            transfer to Tetouan with the method frozen: Table 9, Fig 13, E22 (local CPU, ~13 min; resumable)
+notebooks/NB7_final_figures.ipynb      final catalogue, Figs 1/2/6, regenerated figures, paper set (local, ~1 min; needs the LightGBM pickle)
 tools/make_nb*.py             generators that write the notebooks (see "Notebooks" below)
 tools/diag_structural_zeros.py diagnostic behind F35/D51 (writes results/detector_v1/structural_zeros.csv)
 tools/dev_select_detector.py  development selection (seeds 100-104): event formation per detector + the main detector -> results/benchmark_v1/dev_selection.json (D60, D61)
@@ -54,6 +58,9 @@ results/benchmark_v1/         NB4 outputs; runs/ = one set of files per (rate, s
 results/main_detector/        NB4 §8b: south catalogue of the main (graph) detector, supersedes NB3's south detector outputs
 results/downstream_v1/        NB5 outputs (real data + injected/ per dataset)
 results/transfer_tetouan/     NB6 outputs (real series, runs/, Table 9, models trained on Tetouan)
+results/catalogue_final/      NB7: the released typed catalogue (catalogue, episodes, key events, README)
+results/paper/                NB7: the paper set: MANIFEST.md (numbering, captions), figures/, tables/
+data/external/natural_earth/  Natural Earth 1:50m land (public domain) for the Fig 1 basemap
 results/figures/              all figures (png + pdf) and small csv tables
 _local_archive/               git-ignored scratch (duplicates, zips, old copies). Not part of the project
 ```
@@ -99,6 +106,7 @@ python tools/dev_select_detector.py            # before NB4: development selecti
 python tools/graph_ablation.py                 # after NB4: no-graph ablation on the NB4 datasets, ~30 min on CPU (D62)
 python tools/make_nb5_downstream.py notebooks/NB5_downstream.ipynb   # then execute NB5 like the others (local CPU)
 python tools/make_nb6_tetouan.py notebooks/NB6_tetouan.ipynb         # then execute NB6 (local CPU, ~13 min)
+python tools/make_nb7_final_figures.py notebooks/NB7_final_figures.ipynb   # then execute NB7 (~1 min)
 ```
 Sync the repo to the Drive copy before a Colab run, and pull the outputs after it:
 ```bash
@@ -135,4 +143,4 @@ See `docs/paper_handoff.md` § "What is still missing". In short:
 - **NB4:** done (Colab run 2026-11-09; results_summary §9, F41–F50, no-graph ablation F42/D62). **The test seeds 0–9 are spent (D63):** do not change the design based on them.
 - **NB5:** done (`src/downstream.py`, `tools/make_nb5_downstream.py`; results_summary §10, F51–F54).
 - **NB6:** done (`src/transfer.py`, `tools/make_nb6_tetouan.py`; results_summary §11, F55–F58).
-- **NB7:** final figures.
+- **NB7:** done (D72–D75). **All notebooks are done; next is writing the paper** from `docs/paper_handoff.md`, `results/paper/MANIFEST.md` and `docs/results_summary.md`.

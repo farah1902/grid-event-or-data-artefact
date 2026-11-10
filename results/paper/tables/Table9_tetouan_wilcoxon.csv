@@ -1,0 +1,25 @@
+rate,comparison,main,other,main_wins,p
+1%,main detector vs ours (rules + detector),0.857,0.9454,0,0.001953125
+1%,main detector vs rules only (rule engine v1),0.857,0.8564,4,0.8886378608950078
+1%,"main detector vs TCN, no graph, hierarchy, multi-scale",0.857,0.8318,7,0.08583095844428565
+1%,"main detector vs TCN, no graph, hierarchy, multi-scale (own tuned event formation)",0.857,0.7987,10,0.001953125
+1%,"main detector vs LightGBM forecast, hierarchy, multi-scale",0.857,0.7606,10,0.001953125
+1%,main detector vs STL + MAD,0.857,0.7467,10,0.001953125
+1%,main detector vs Isolation Forest,0.857,0.4835,10,0.001953125
+1%,main detector vs LOF,0.857,0.7393,9,0.00390625
+3%,main detector vs ours (rules + detector),0.7929,0.9189,0,0.001953125
+3%,main detector vs rules only (rule engine v1),0.7929,0.8607,0,0.001953125
+3%,"main detector vs TCN, no graph, hierarchy, multi-scale",0.7929,0.7846,5,0.32698934959801507
+3%,"main detector vs TCN, no graph, hierarchy, multi-scale (own tuned event formation)",0.7929,0.7586,9,0.007685794055213263
+3%,"main detector vs LightGBM forecast, hierarchy, multi-scale",0.7929,0.8682,0,0.001953125
+3%,main detector vs STL + MAD,0.7929,0.8281,1,0.00390625
+3%,main detector vs Isolation Forest,0.7929,0.692,10,0.001953125
+3%,main detector vs LOF,0.7929,0.7282,8,0.064453125
+7%,main detector vs ours (rules + detector),0.7223,0.8896,0,0.001953125
+7%,main detector vs rules only (rule engine v1),0.7223,0.8597,0,0.001953125
+7%,"main detector vs TCN, no graph, hierarchy, multi-scale",0.7223,0.712,8,0.130859375
+7%,"main detector vs TCN, no graph, hierarchy, multi-scale (own tuned event formation)",0.7223,0.6627,9,0.00390625
+7%,"main detector vs LightGBM forecast, hierarchy, multi-scale",0.7223,0.7636,1,0.005859375
+7%,main detector vs STL + MAD,0.7223,0.7425,3,0.21352435403618242
+7%,main detector vs Isolation Forest,0.7223,0.8062,0,0.001953125
+7%,main detector vs LOF,0.7223,0.2015,10,0.001953125

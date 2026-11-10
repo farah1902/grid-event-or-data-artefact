@@ -1,0 +1,5 @@
+stage,macro_F1,ECE
+majority vote (rules),0.921 ± 0.029,n/a
+label model q,0.914 ± 0.029,0.089 ± 0.027
+"fusion, no detector features (β*)",0.918 ± 0.022,0.090 ± 0.023
+"fusion (β*, D50 abstention)",0.919 ± 0.023,0.090 ± 0.020

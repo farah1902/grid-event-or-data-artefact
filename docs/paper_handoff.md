@@ -18,7 +18,12 @@ claim points to a finding (F…) in `docs/findings.md` or a decision (D…) in `
   - The NB4 evaluation protocol was also corrected: the scoring area no longer favours the LightGBM detector (F36).
 - **NB5 done (2026-11-10, local; results_summary §10, F51–F54):** downstream test of the cleaning strategies S0–S3 on real and injected data (D64–D66).
 - **NB6 done (2026-11-10, local; results_summary §11, F55–F58):** transfer to Tetouan with the method frozen (D68–D70).
-- Not done: the final figures (NB7).
+- **NB7 done (2026-11-10, local; D72–D75, results_summary §12):**
+  - the final catalogue is released (`results/catalogue_final/`);
+  - Figs 1, 2 and 6 are drawn;
+  - Figs 8 and 9 and E4, E6, E19 and E22 are regenerated with the noted fixes;
+  - the paper set (`results/paper/`: 14 main and 28 supplementary figures with draft captions, 27 tables) is ready.
+- **The analysis is complete. Next: writing the paper** from this handoff, `results/paper/MANIFEST.md` and results_summary.
 
 ## 1. The paper in one paragraph (current evidence)
 
@@ -131,13 +136,17 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | 27 | Hold minimum 6 steps | Laâyoune has a daily 30–50 min freeze in all zones (218 episodes) below the threshold | Keep 6; sensitivity sweep; report as a finding | D18, F09 |
 | 28 | Eq. 8 windows [d, d+13] vs [d−14, d−1] | v0 uses [d+1, d+14] vs [d−13, d] | Documented; one-day shift, no effect on the C11 result | methods §3 |
 | 29 | R10 window "06:00–11:00" | v0 uses start hours 6–11 inclusive | Documented (06:00–11:59) | D24 |
-| 30 | TCN-GAT nowcaster | Not needed to test the hierarchy idea; heavy on CPU | LightGBM (Huber) nowcasts, the guide's own fallback | D39 |
+| 30 | TCN-GAT nowcaster | Not needed to test the hierarchy idea in NB3; heavy on CPU | NB3 used LightGBM (Huber), the guide's own fallback (D39). NB4 implemented the TCN-GAT with a learned graph (D53); it became the main detector (D61), and the learned graph is presented as an ablation because removing it does not hurt detection (D67, F42) | D39, D53, D61, D67 |
 | 31 | Eq. 13 graph nowcast (neighbours' current values) as the residual | Adds nothing on clean data (MAE 0.0292 vs 0.0288); also does not absorb masked logger artefacts | Forecast residual as main; the nowcast is kept as a comparison and a feature | D40, F29 |
 | 32 | MODWT bands of ρ, one predictor per band | Five predictors per zone. Causal coefficients smear events by up to 18 h | MODWT of the residual, phase-aligned by measured group delays | D42, F31 |
 | 33 | "An artefact on the logger moves the region part" (eq. 14 rationale) | True for zero fills; false for holds and linear fills (zone-specific drift) | Report hierarchy accuracy by kind; rules handle fills | F30 |
 | 36 | Eq. 15 robust z over the hierarchy parts | A median over an odd number of zones makes one zone's v exactly 0; with these zeros in the scale estimate, the MAD collapses (B1, z = 15,182) and every small city's zone scores are inflated | Exclude structural zeros from the median and MAD | D51, F35 |
 | 34 | Detector adds coverage within the typology | Detector-only anomalies are mostly outside it (partial outages, short interruptions, surges) | Report them as untyped; propose typology extensions; ε sweep in NB4 | F32 |
 | 35 | Fusion eq. 16 for every class | The end model cannot learn a class with one example out of fold (the G2 item flipped to G3) | End-model abstention on classes with < 3 items of training mass | D50, F34 |
+| 37 | One threshold rule (γ, gap) for every detector | Event formation changes detector rankings more than the predictor does; a fixed rule favours some detectors | Smoothing, percentile threshold and merge gap tuned per detector on separate development seeds, with the same budget for every detector | D60, F38 |
+| 38 | Deep forecaster (PatchTST or N-BEATS) in the downstream test | Heavy, and not needed to show that the effect does not depend on the model | A model-free naive reference (persistence, seasonal naive) next to LightGBM | D65, F54 |
+| 39 | S2 re-aligns A4 clock stamps | Timestamps are kept as recorded throughout the study | Clock items are excluded from scoring instead | D11, D64 |
+| 40 | Tetouan: only the expected-value baseline is re-estimated | A forecast-residual detector also needs predictor weights and a threshold on any new system | Predictor weights and γ (frozen percentile) re-estimated from the unlabelled series as well; rules, label-model parameters and event formation frozen; every adaptation listed in docs/transfer_protocol.md | D68–D71, F55–F58 |
 
 ## 4. Contributions — status against the guide's list
 
@@ -146,7 +155,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | 1 | Typology (4 artefact + 5 grid-event types) with measurable signatures | **Done and extended** (linear-fill signature) | F01–F06, methods §2 |
 | 2 | Hierarchical weak supervision without manual annotation, calibrated probabilistic labels | **Label model done.** Stability and synthetic-recovery calibration shown (ECE 0.033). Calibration against known types is pending (NB4) | F20–F24 |
 | 3 | Multi-scale residual detector split into region/city/zone parts | **Done and tested (NB4).** Main detector: TCN-GAT residual, multi-scale bands, region/city/zone hierarchy and tuned event formation (D61). It is the best of eight detectors at 3 % and 7 % (F1 0.813 and 0.854, p ≤ 0.02) and tied at 1 % (F41). Qualifiers: removing the learned graph does not hurt it (F42); the multi-scale bands help at low contamination, while the hierarchy is a localisation device, not a detection gain (F43); it is not best at step-wise AUC-PR (F39, F41); and it does not improve prediction (F37). Hierarchy localisation: dead items 92 % at the zone, multi-city dead items 3/3 (LightGBM) or 2/3 (neural residuals) at the region (F30, F43) | F28–F32, F35–F45, Fig 8, Fig 9, E18, E20 |
-| 4 | Released typed event catalogue for UCI 1158 | Draft exists (`results/labels_v1/q.csv`, 327 items, plus episodes). Release after NB4 validation | results_summary §6–7 |
+| 4 | Released typed event catalogue for UCI 1158 | **Done (NB7).** `results/catalogue_final/`: 404 entries (327 rule items + 77 detector-only candidates) with label, confidence, p(y), label source and episodes; README data card. Labels validated on injected data (NB4), not against external records | D72, results_summary §12 |
 | 5 | Type-aware cleaning improves forecasts and outage statistics | **Done (NB5), with qualifiers.** Outage time: naive counting overstates it 4.15× on the real data; on injected data the typed count is 1.36× the truth, against 1.89× (naive) and 0 (S1). Forecasts: typed cleaning gives the best LightGBM forecasts after anomalies (real day-ahead MASE 1.061 vs 1.233 for S1 and 1.501 for S0), within about 1 % of the oracle on injected data. Qualifiers: over all test steps the effect is ≤ 3 %, and it needs an indicator-aware forecaster | F51–F54, Fig 12, Table 8 |
 | 6 | Transfer test on Tetouan | **Done (NB6).** Without re-tuning: zero false rule items on the clean real year; full-method F1 0.945 / 0.919 / 0.890 (precision 0.98–1.00), above the rules alone at every rate (p = 0.002); attribution macro-F1 0.77–0.79, or 0.95–0.98 without A1 (the single-city limit). Qualifier: the neural detector alone is overtaken by LightGBM at 3–7 % on this small dataset | F55–F58, Fig 13, Table 9 |
 | new | Methodological: the guide's Dawid–Skene fails on sparse single-label rule sets; a constrained, level-gated variant works | Done | F20–F22, D28–D34 |
@@ -224,7 +233,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | NB4 | **Done** (Colab GPU run, 2026-11-09; results_summary §9; F41–F50). No-graph ablation added afterwards with `tools/graph_ablation.py` (D62, F42). Test seeds spent (D63) | Tables 5–7, Figs 9–11, E20–E21 |
 | NB5 | **Done** (local, 2026-11-10; F51–F54, results_summary §10). LightGBM + naive reference; no deep forecaster (D65) | Table 8, Fig 12 |
 | NB6 | **Done** (local, 2026-11-10; F55–F58, results_summary §11) | Table 9, Fig 13, E22 |
-| NB7 | Final figures (basemap, typology diagram, framework diagram) | Figs 1, 2, 6 |
+| NB7 | **Done** (local, 2026-11-10; D72–D75): catalogue release, Figs 1, 2, 6, regenerated figures, the paper set | `results/paper/MANIFEST.md`, `results/catalogue_final/` |
 
 **Injection additions required by the findings (including NB3):**
 - **unflagged** multi-zone shared shocks, to compare the forecast and nowcast residuals (F29);
@@ -262,5 +271,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | Figures and their roles | `docs/figures_and_tables.md` |
 | Chronology | `docs/research_log.md` |
 | Original plan, equations 1–20, references | `docs/research_guide.md` |
-| Probabilistic catalogue | `results/labels_v1/q.csv`, `episodes_labelled.csv` |
+| Probabilistic catalogue (final, released) | `results/catalogue_final/` (README inside) |
+| Paper figures and tables, numbering and draft captions | `results/paper/MANIFEST.md` |
+| Label-model output (NB2) | `results/labels_v1/q.csv`, `episodes_labelled.csv` |
 | Code | `src/rules_v1.py`, `src/label_model.py`, `src/detector.py`, `src/end_model.py` |

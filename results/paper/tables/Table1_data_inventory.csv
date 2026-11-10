@@ -1,0 +1,6 @@
+city,system,zones,step_min,unit,start,end,regular_steps,missing_steps,exact_zero_zone_steps
+Laayoune,south (one logger),5,10,A,2022-09-14 17:10:00,2024-05-24 00:00:00,88890,12,1465
+Boujdour,south (one logger),3,10,A,2022-09-14 17:10:00,2024-05-24 00:00:00,88890,12,1413
+Foum eloued,south (one logger),7,10,A,2022-09-14 17:10:00,2024-05-24 00:00:00,88890,12,4323
+Marrakech,Marrakech,2,30,kW,2023-01-09 00:00:00,2024-01-08 23:30:00,17520,25,101
+Tetouan,Tetouan (transfer),3,10,kW,2017-01-01 00:00:00,2017-12-30 23:50:00,52416,0,0

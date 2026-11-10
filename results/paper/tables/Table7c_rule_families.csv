@@ -1,0 +1,10 @@
+label_model,macro_F1
+all rule families,0.914 ± 0.029
+without calendar,0.778 ± 0.021
+without city,0.922 ± 0.029
+without conservation,0.915 ± 0.026
+without hold,0.893 ± 0.032
+without interpolation,0.724 ± 0.110
+without restoration,0.902 ± 0.029
+without simultaneity,0.941 ± 0.047
+without single_zone,0.915 ± 0.028

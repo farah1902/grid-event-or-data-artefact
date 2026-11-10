@@ -7,8 +7,8 @@ Utilities often clean feeder telemetry without knowing what the anomalies are. Z
 The output is a typed, probabilistic event catalogue for the UCI Morocco smart-meter dataset (id 1158). The catalogue is evaluated on injected events and on a downstream forecasting task.
 
 **Status (2026-11-10):**
-- Done: rule engine, label model, detector, end model, injection benchmark (NB4), downstream test (NB5) and transfer to Tetouan (NB6).
-- Remaining: the final figures (NB7).
+- **The analysis is complete:** rule engine, label model, detector, end model, injection benchmark (NB4), downstream test (NB5), transfer to Tetouan (NB6), and final figures, tables and the released catalogue (NB7).
+- **Next:** writing the paper. The figure numbering, draft captions and every table are in [results/paper/MANIFEST.md](results/paper/MANIFEST.md).
 
 ## The method in one picture
 
@@ -96,30 +96,45 @@ Every component of the transfer is classified as frozen, re-estimated from unlab
 
 Limitations and claims the paper must not make: [docs/paper_handoff.md](docs/paper_handoff.md) §6–7.
 
+## The released catalogue
+
+[`results/catalogue_final/`](results/catalogue_final/README.md) holds the typed, probabilistic event catalogue for UCI 1158: 404 entries, i.e. 327 rule-engine items and 77 detector-only candidates.
+- **Every entry** has its type (A1–A4, G1–G5, N), a confidence, the full distribution p(y), the source of that distribution, and its episode.
+- **Final labels of the 327 rule items:** A3 98, G4 70, A2 57, G3 52, N 31, A4 14, A1 3, G2 1, G5 1.
+- **Key events with their final labels:** C05/C06 A2 → A2 → A1; C12 A2 → A1 → A2 → G4; C09 A1 → A2.
+- **How to use it:** impute the artefacts (A*), keep and flag the grid events (G*).
+- **Validation:** the labels are validated on injected events, not against external records.
+
 ## Main figures
 
-| Figure | File (`results/figures/`) | Source |
-|---|---|---|
-| Compound logger failure, Jan 2023 (all 15 zones) | `fig3_C05_C06_jan2023` | NB1 |
-| L1/L2 held while the other zones are zero-filled, Mar–Apr 2024 | `fig4_C12_mar2024` | NB1 |
-| Rule coverage, overlap and conflict | `fig7_rule_diagnostics` | NB1b |
-| Residual hierarchy: a logger fault moves the region part, a feeder outage the zone part | `fig8_residual_hierarchy` | NB3 |
-| Detection: event F1 and step AUC-PR of every method | `fig9_detection` | NB4 |
-| **Ablations of the main detector (the learned graph first)** | `fig9b_ablations` | `tools/ablation_summary.py` |
-| Attribution confusion and reliability | `fig10_11_attribution` | NB4 |
-| Downstream: forecast error by cleaning strategy, outage-hours error | `fig12_downstream` | NB5 |
-| Transfer to Tetouan: detection of every method, attribution confusion | `fig13_tetouan` | NB6 |
-| **Transfer protocol: frozen, re-estimated, adapted, results** | `fig14_transfer_protocol` | `tools/make_transfer_diagram.py` |
-| The graph learned by the TCN-GAT | `E20_learned_graph` | NB4 |
+The paper's numbering (source files in `results/figures/`; numbered copies and draft captions in [results/paper/](results/paper/MANIFEST.md)):
 
-Every figure, with its role and caveats: [docs/figures_and_tables.md](docs/figures_and_tables.md).
+| Paper | Content | Source file |
+|---|---|---|
+| Fig 1 | Data: map (Natural Earth, no boundaries) and the anomalous states per zone | `fig1_map_coverage` |
+| Fig 2 | Typology: four artefacts and five grid events with their signatures | `fig2_typology` |
+| Fig 3 | Compound logger failure, Jan 2023 (all 15 zones) | `fig3_C05_C06_jan2023` |
+| Fig 4 | L1/L2 held while the other zones are zero-filled, Mar–Apr 2024 | `fig4_C12_mar2024` |
+| Fig 5 | Clock evidence, 30 Oct 2022 | `fig5_clock_2022-10-30` |
+| Fig 6 | Framework | `fig6_framework` |
+| Fig 7 | Rule coverage, overlap and conflict | `fig7_rule_diagnostics` |
+| Fig 8 | Residual hierarchy: a logger fault moves the region part, a feeder outage the zone part | `fig8_residual_hierarchy` |
+| Fig 9 | Detection: event F1 and step AUC-PR of every method | `fig9_detection` |
+| Fig 10 | **Ablations of the main detector (the learned graph first)** | `fig9b_ablations` |
+| Fig 11 | Attribution confusion and reliability | `fig10_11_attribution` |
+| Fig 12 | Downstream: forecast error by cleaning strategy, outage-hours error | `fig12_downstream` |
+| Fig 13 | **Transfer protocol: frozen, re-estimated, adapted, results** | `fig14_transfer_protocol` |
+| Fig 14 | Transfer to Tetouan: detection of every method, attribution confusion | `fig13_tetouan` |
+
+There are 28 supplementary figures (S1–S28) and 27 tables (CSV). Roles and caveats: [docs/figures_and_tables.md](docs/figures_and_tables.md).
 
 ## Documentation
 
 Start with [docs/README.md](docs/README.md).
 - To write the paper: [docs/paper_handoff.md](docs/paper_handoff.md).
 - Every number: [docs/results_summary.md](docs/results_summary.md).
-- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D71).
+- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D75).
+- The paper set (figure numbering, draft captions, tables): [results/paper/MANIFEST.md](results/paper/MANIFEST.md).
 - The transfer to Tetouan, adaptation by adaptation: [docs/transfer_protocol.md](docs/transfer_protocol.md).
 - Every finding: [docs/findings.md](docs/findings.md) (F01–F58).
 - The method as implemented, with equations: [docs/methods.md](docs/methods.md).
@@ -133,6 +148,7 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 ├── data/raw/
 │   ├── Data Morocco.xlsx                     # UCI 1158: Laâyoune, Boujdour, Foum El Oued (10 min, A), Marrakech (30 min, kW)
 │   └── tetouan/Tetuan City power consumption.csv   # transfer-test dataset (UCI Tetouan, 2017, 10 min)
+├── data/external/natural_earth/              # Natural Earth 1:50m land (public domain) for the Fig 1 map
 ├── docs/                                     # full documentation (see docs/README.md)
 ├── src/
 │   ├── rules_v0.py, rules_v1.py              # rule engines (v1: 19 rules voting on items, episodes)
@@ -144,8 +160,10 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 │   ├── benchmark.py                          # whole pipeline on any dataset, detector variants, metrics
 │   ├── downstream.py                         # cleaning strategies S0–S3, forecasters, MASE / DM test, outage statistics
 │   ├── transfer.py                           # transfer test: a new system with the method frozen (Tetouan)
+│   ├── paper_figures.py, paper_regen.py      # NB7: final catalogue, Figs 1/2/6, regenerated figures
+│   ├── paper_tables.py                       # NB7: paper tables, numbered figure set, catalogue release
 │   └── viz.py                                # shared plotting style
-├── notebooks/                                # NB1, NB1b, NB2, NB3, NB4 (Colab GPU run), NB5, NB6, all executed
+├── notebooks/                                # NB1, NB1b, NB2, NB3, NB4 (Colab GPU run), NB5, NB6, NB7, all executed
 ├── tools/
 │   ├── make_nb*.py                           # notebook generators
 │   ├── dev_select_detector.py                # development selection of the main detector and event formation (D60, D61)
@@ -161,6 +179,8 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
     ├── benchmark_v1/                         # NB4: Tables 5–7, 7e, runs/, dev/, graph_ablation/, models/
     ├── downstream_v1/                        # NB5: Table 8, outage statistics, injected/
     ├── transfer_tetouan/                     # NB6: Table 9, real-series items and alarms, runs/, models trained on Tetouan
+    ├── catalogue_final/                      # NB7: the released typed catalogue (catalogue, episodes, key events, README)
+    ├── paper/                                # NB7: MANIFEST.md (figure numbering, captions), figures/, tables/
     └── figures/                              # all figures (png + pdf)
 ```
 
@@ -183,6 +203,7 @@ python tools/graph_ablation.py         # learned-graph ablation on the NB4 datas
 python tools/ablation_summary.py       # Table 7e + Fig 9b, seconds
 cd notebooks && python -m jupyter nbconvert --to notebook --execute --inplace NB5_downstream.ipynb   # ~18 min
 python -m jupyter nbconvert --to notebook --execute --inplace NB6_tetouan.ipynb                     # ~15 min (Tetouan transfer)
+python -m jupyter nbconvert --to notebook --execute --inplace NB7_final_figures.ipynb               # ~1 min (final figures, tables, catalogue)
 ```
 
 **Colab:** copy the repository to `MyDrive/grid-event-or-data-artefact/` (`python tools/sync_drive.py "G:/My Drive/grid-event-or-data-artefact"`) and open the notebook there. The first cell installs the dependencies and mounts Drive. The last cell flushes Drive; then save the notebook (Ctrl+S) and pull the outputs back with `sync_drive.py --pull`.

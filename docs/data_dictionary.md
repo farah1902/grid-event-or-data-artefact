@@ -336,3 +336,29 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 | `morocco_vs_tetouan.csv` | F1 of the same methods on Morocco (NB4 test period) and Tetouan, and label-model macro-F1 (context, not paired) |
 | `models/` | predictors trained on Tetouan: `tcn_gat.pt`, `tcn.pt` (+ histories), `lightgbm_forecast.pkl` |
 | `summary.json` | audit, real items and labels, predictor MAE, real alarms, F1, F1 with background excluded, recall, attribution, injected counts, runtime |
+
+## Final catalogue — `results/catalogue_final/` (NB7, D72)
+
+| File | Content |
+|---|---|
+| `catalogue.csv` | item_id (`D/F/K/T###` rule items, `XS###` south and `XM###` Marrakech detector-only candidates), system, kind, source (rule, detector), start, end (as recorded, end exclusive), duration_h, cities, zones, n_cities, n_zones, episode, label, confidence, family (artefact, grid event, normal / untyped), label_source, votes, p_A1 … p_N |
+| `episodes.csv` | episode, start, end, n_items, cities, n_zones_max, items, sequence (final labels with confidence, in time order), families, duration_h |
+| `key_events.csv` | guide_id (C01–C12, G2 candidate), item, kind, start, duration_h, zones, label, confidence, episode, episode_sequence |
+| `README.md` | data card: columns, sources, how to read the labels, caveats |
+
+## Paper set — `results/paper/` (NB7, D75)
+
+| Path | Content |
+|---|---|
+| `MANIFEST.md` | paper figure numbers → source files, draft captions; table list with sources |
+| `figures/FigNN_<source>.pdf|png`, `figures/FigSNN_<source>.pdf|png` | copies of `results/figures/<source>` under their paper numbers |
+| `tables/Table1_data_inventory.csv` | city, system, zones, step_min, unit, start, end, regular_steps, missing_steps, exact_zero_zone_steps (Morocco and Tetouan) |
+| `tables/Table2_typology.csv` | type, name, family, hierarchy_level, measurable_signature, rules, real_rule_items, real_detector_only, injected_in_NB4 |
+| `tables/Table3_rules.csv` | rule, family, item_kind, n_votes, coverage, overlap, conflict, outputs, learned_precision, log_odds_a_over_b, defining |
+| `tables/Table4_key_events.csv` | as `catalogue_final/key_events.csv` |
+| `tables/Table5…9_*.csv`, `TableS1…S6_*.csv` | copies of the result tables named in MANIFEST.md |
+| `tables/TableS7_corrections_to_the_plan.csv` | no, guide_item, problem_found, fix, ref (paper_handoff §3) |
+| `summary.json` | catalogue counts, Fig 8 check, figure and table lists, runtime |
+
+## External data — `data/external/natural_earth/`
+- `ne_50m_land.geojson`: Natural Earth 1:50m land polygons (v5.1.2, public domain), used for the Fig 1 coastline. See its README.

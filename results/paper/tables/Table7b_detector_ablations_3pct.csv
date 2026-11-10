@@ -1,0 +1,13 @@
+variant,F1,AUC_PR,recall_U_SHOCK,recall_U_PARTIAL,recall_A2,recall_G3
+"main detector: TCN-GAT, hierarchy, multi-scale",0.813 ± 0.020,0.598 ± 0.044,0.212 ± 0.100,0.207 ± 0.126,0.788 ± 0.172,1.000 ± 0.000
+"mean(LightGBM, TCN-GAT), hierarchy, multi-scale",0.773 ± 0.024,0.592 ± 0.055,0.038 ± 0.041,0.163 ± 0.102,0.736 ± 0.207,0.939 ± 0.079
+"LightGBM + learned-graph correction, hierarchy, multi-scale",0.765 ± 0.024,0.676 ± 0.056,0.169 ± 0.119,0.162 ± 0.106,0.731 ± 0.191,0.947 ± 0.072
+"LightGBM + TCN correction (no graph), hierarchy, multi-scale",0.752 ± 0.026,0.671 ± 0.056,0.023 ± 0.039,0.133 ± 0.087,0.608 ± 0.177,0.896 ± 0.112
+"LightGBM forecast, hierarchy, multi-scale",0.765 ± 0.022,0.678 ± 0.053,0.163 ± 0.112,0.162 ± 0.106,0.725 ± 0.190,0.947 ± 0.072
+"TCN-GAT, NB3 event formation (untuned)",0.670 ± 0.040,0.595 ± 0.041,0.774 ± 0.115,0.395 ± 0.078,0.862 ± 0.155,1.000 ± 0.000
+"LightGBM, NB3 event formation (untuned)",0.705 ± 0.036,0.695 ± 0.049,0.591 ± 0.087,0.320 ± 0.150,0.855 ± 0.153,1.000 ± 0.000
+"main detector, single scale (raw band)",0.772 ± 0.017,0.626 ± 0.042,0.111 ± 0.101,0.231 ± 0.108,0.820 ± 0.148,1.000 ± 0.000
+"main detector, no hierarchy (flat residual)",0.796 ± 0.014,0.811 ± 0.042,0.053 ± 0.060,0.222 ± 0.088,0.836 ± 0.154,1.000 ± 0.000
+"LGB nowcast, raw (all zones, no learned edges)",0.715 ± 0.022,0.704 ± 0.054,0.000 ± 0.000,0.066 ± 0.083,0.580 ± 0.183,0.831 ± 0.087
+"TCN, no graph, raw",0.775 ± 0.021,0.668 ± 0.050,0.196 ± 0.086,0.245 ± 0.113,0.821 ± 0.176,1.000 ± 0.000
+"TCN-GAT, learned graph, raw",0.772 ± 0.017,0.626 ± 0.042,0.111 ± 0.101,0.231 ± 0.108,0.820 ± 0.148,1.000 ± 0.000
