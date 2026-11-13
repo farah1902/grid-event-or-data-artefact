@@ -9,6 +9,7 @@
 - highlights: 3–5 bullet points, ≤ 85 characters each including spaces, in a separate editable file with "highlights" in its name;
 - graphical abstract: encouraged, not required.
 - **Not yet verified (do not rely on until checked on the official page):** total length limit, keyword count, nomenclature, required declarations (competing interests, CRediT, data availability, generative-AI statement), reference style.
+- **Length: working budget 8,000 words of body text** (excluding references, captions and tables). Third-party sources disagree (8,000; 7,000–10,000; 12,000; an outdated 2015 author pack says 5,000); 8,000 is the commonly cited and the safer figure. To be replaced by the official number once read on the guide.
 
 **Source rule for every sentence:** numbers come only from `docs/results_summary.md` (F/D numbers given per item). External references are added only after their metadata is fetched from Crossref or the publisher (DOI resolved) and the cited claim is checked against the paper; never from memory.
 
@@ -20,7 +21,7 @@ Five claims, each with its evidence. The introduction states them; the results p
 
 | # | Claim | Evidence | Where |
 |---|---|---|---|
-| V1 | **What the telemetry contains.** A public smart-meter dataset's apparent outages are mostly data-logger artefacts; straight-line fills are the commonest fill; restoration "ramps" are synthetic; counting every dead state overstates southern outage time **4.15×** (1,220.5 vs 294.0 zone-h) | F01, F05, F16, F51; Figs 4–6; Table 5 | §6.1 |
+| V1 | **What the telemetry contains.** A public smart-meter dataset's apparent outages are mostly data-logger artefacts; straight-line fills are the commonest fill; restoration "ramps" are synthetic; counting every dead state overstates southern outage time **4.15×** (1,220.5 vs 294.0 zone-h) | F01, F05, F16, F51; Fig 4 | §6.1 |
 | V2 | **Label-free typing that works on sparse rules.** The standard Dawid–Skene model cannot use single-label rules (posterior = prior, F20) and is unstable (≤ 63 % restart agreement, F21); the constrained model is fully stable (100 %, F22) and gives calibrated probabilities (ECE 0.07–0.10) at macro-F1 0.90–0.94 | F20–F22, F46 | §4.5, §6.2, §6.5 |
 | V3 | **A detector that extends the rules.** Best of eight detectors at 3 % and 7 % (p ≤ 0.02; F41); adding it to the rules raises recall at every rate (10/10 seeds) and F1 at every rate once each method's own real-data alarms are excluded (F44). Strict view and zone-strict view reported next to it | F41–F45 | §6.4 |
 | V4 | **Practical impact for distribution operators.** Typed outage counting 1.26× the truth vs 1.88× naive, closer in **30/30** injected datasets (F59); typed cleaning gives the best forecasts after anomalies (real day-ahead MASE 1.061 vs 1.233 interpolation vs 1.501 raw; F53) | F51–F54, F59 | §6.6 |
@@ -30,6 +31,22 @@ Five claims, each with its evidence. The introduction states them; the results p
 Honesty items that protect the value (each stated where it belongs, never hidden): the strict 1 % F1 loss and zone-strict loss (F44); label model ≈ majority vote on accuracy (F46); the learned graph adds no detection skill (F42, ablation); A1 → G1 confusion (F47); single-city A1 limit (F58); no utility ground truth.
 
 ---
+
+## Word budget (8,000 words of body text)
+
+| Section | Words |
+|---|---|
+| 1 Introduction | 850 |
+| 2 Related work | 850 |
+| 3 Data, hierarchy and typology | 850 |
+| 4 Method | 1,750 |
+| 5 Experimental design | 750 |
+| 6 Results | 2,000 |
+| 7 Discussion | 700 |
+| 8 Conclusions | 250 |
+| **Total** | **8,000** |
+
+Main paper: **11 figures, 9 tables, 26 equations**; the rest in the supplement.
 
 ## Structure, with the place of every figure, table and equation
 
@@ -82,16 +99,16 @@ Paper numbering follows the order of first citation. Source files: `results/pape
 - *Changed from the first plan:* baselines that were not run (Matrix Profile, USAD, TranAD, Anomaly Transformer, TimesNet, N-BEATS, GDN, MTAD-GAT, Snorkel, k-means, HDBSCAN) and metrics not computed (VUS-PR, balanced accuracy) are not listed as run; the reasons go to §7.3 (D-register). No temperature scaling (ECE reported as is). No external-validation rule (news records). No 30-min robustness test.
 
 ### 6 Results
-6.1 What the telemetry contains (V1). **Fig 4** January 2023 logger episode (`fig3_C05_C06_jan2023`); **Fig 5** 31 Mar – 2 Apr 2024 compound episode (`fig4_C12_mar2024`); **Fig 6** clock evidence (`fig5_clock_2022-10-30`); **Table 5** key real-data events with final labels and episode sequences (`Table4_key_events`). The July 2023 regional-outage candidate is most probably an acquisition failure (F03, confidence *strong*, not *solid*; Fig S1); synthetic restoration ramps (F05, F16); the 4.15× real-data overstatement (F51).
+6.1 What the telemetry contains (V1). **Fig 4** the two logger episodes, (a) January 2023 (`fig3_C05_C06_jan2023`) and (b) 31 Mar – 2 Apr 2024 (`fig4_C12_mar2024`), one composite figure to be built in the figure step; clock evidence δ* = −60 min in the text, figure in the supplement (`fig5_clock_2022-10-30`); key real-data events with final labels and episode sequences in the supplement (`Table4_key_events`). The July 2023 regional-outage candidate is most probably an acquisition failure (F03, confidence *strong*, not *solid*; Fig S1); synthetic restoration ramps (F05, F16); the 4.15× real-data overstatement (F51).
 6.2 Weak supervision on the real data (V2): coverage and conflicts (Fig S-rules, `fig7_rule_diagnostics`), stability and parameter recovery (F21, F22), robustness (F24, F48), the released catalogue (404 entries).
-6.3 The residual hierarchy on real data. **Fig 7** (`fig8_residual_hierarchy`): logger failures load the region part (g up to 218), a feeder outage only the zone part.
-6.4 Detection on injected events (V3). **Fig 8** (`fig9_detection`); **Table 6** (`Table5_detection`: F1 at 1 / 3 / 7 %, strict, background-excluded, zone-strict); **Fig 9** ablations (`fig9b_ablations`, learned graph first).
-6.5 Attribution (V2). **Fig 10** (`fig10_11_attribution`: confusion, reliability); **Table 7** (`Table6_attribution`: majority vote, label model, end model, fusion; macro-F1, ECE).
-6.6 Downstream: outage statistics and forecasting (V4). **Fig 11** (`fig12_downstream`); **Table 8** (outage ratios on 30 datasets from `Table8_outage_all_datasets` + MASE after anomalies from `Table8_forecasting`, DM p-values).
-6.7 Transfer to another city (V5). **Fig 12** transfer protocol (`fig14_transfer_protocol`); **Fig 13** Tetouan results (`fig13_tetouan`); **Table 9** (`Table9_tetouan_detection` + attribution with and without A1).
+6.3 The residual hierarchy on real data. **Fig 5** (`fig8_residual_hierarchy`): logger failures load the region part (g up to 218), a feeder outage only the zone part.
+6.4 Detection on injected events (V3). **Fig 6** (`fig9_detection`); **Table 5** (`Table5_detection`: F1 at 1 / 3 / 7 %, strict, background-excluded, zone-strict); **Fig 7** ablations (`fig9b_ablations`, learned graph first).
+6.5 Attribution (V2). **Fig 8** (`fig10_11_attribution`: confusion, reliability); **Table 6** (`Table6_attribution`: majority vote, label model, end model, fusion; macro-F1, ECE).
+6.6 Downstream: outage statistics and forecasting (V4). **Fig 9** (`fig12_downstream`); **Table 7** (outage ratios on 30 datasets from `Table8_outage_all_datasets` + MASE after anomalies from `Table8_forecasting`, DM p-values).
+6.7 Transfer to another city (V5). **Fig 10** transfer protocol (`fig14_transfer_protocol`); **Fig 11** Tetouan results (`fig13_tetouan`); **Table 8** (`Table9_tetouan_detection` + attribution with and without A1).
 
 ### 7 Discussion
-7.1 Answers to RQ1–RQ5 and H1–H3. **Table 10** (question, answer, evidence).
+7.1 Answers to RQ1–RQ5 and H1–H3. **Table 9** (question, answer, evidence).
 7.2 What this means for distribution operators: reliability reporting, telemetry quality checks, forecasting pipelines.
 7.3 Limitations and threats to validity: no utility-confirmed labels; few large real events; injection realism and circularity (signatures injected are the ones the rules know); A1 → G1 confusion; zone spill-over of the detector; threshold sensitivity (hold length, ε); timestamps as recorded; single-city transfer; baselines not run and why.
 
@@ -102,7 +119,7 @@ Summary of V1–V5; future work: utility event records, more cities, online use.
 Data availability (UCI 1158, UCI Tetouan, catalogue, code), CRediT, funding, competing interests, generative-AI statement (if the guide requires it).
 
 ### Supplementary material
-A typology details; B full rules (Table S-rules, S1 parameters); C label-model derivations and recovery (S2, S3); D full catalogue (CSV); E all baselines and ablations (Table 7b–7f, S6); F sensitivity (S3, Table 7d); G injection parameters and signatures (Fig S10, S21); H reproducibility (versions, runtimes, seeds). Supplementary figures S1–S28 per `results/paper/MANIFEST.md`, plus the rule-diagnostics figure.
+A typology details and the key real-data events (Table S, `Table4_key_events`); clock evidence (Figs S); B full rules (Table S-rules, S1 parameters); C label-model derivations and recovery (S2, S3); D full catalogue (CSV); E all baselines and ablations (Table 7b–7f, S6); F sensitivity (S3, Table 7d); G injection parameters and signatures (Fig S10, S21); H reproducibility (versions, runtimes, seeds). Supplementary figures S1–S28 per `results/paper/MANIFEST.md`, plus the rule-diagnostics figure.
 
 ---
 
