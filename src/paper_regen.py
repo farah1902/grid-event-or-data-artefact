@@ -5,6 +5,8 @@
   E6     - the typed catalogue on one timeline (final labels; v0 types before)
   E19    - end model: the legend moved off the bars; panel (c) uses the final catalogue's candidates
   E22    - Tetouan series: the legend moved off the lines
+  Fig 12 - NB5's downstream figure; panel (c) now from all 30 NB4 test datasets (tools/outage_all_datasets.py, D76)
+           instead of NB5's 4; panels (a), (b) unchanged (Table 8)
 Nothing here changes a method result."""
 import pickle
 import re
@@ -246,3 +248,53 @@ def e22_tetouan(fig_dir):
     axs[1].xaxis.set_major_formatter(mdates.DateFormatter("%a %d %b"))
     fig.suptitle("E22 — UCI Tetouan: three zones of one city (transfer test)", y=1.0)
     fig.tight_layout(); savefig(fig, fig_dir, "E22_tetouan_series")
+
+
+# ---------------------------------------------------------------- Fig 12
+SC12 = {"S0": "#9AA0A6", "S1": "#F2A541", "S2": "#C8553D", "S3": "#2F6690"}
+
+
+def fig12_downstream(fig_dir):
+    """(a), (b): LightGBM MASE after anomalies by strategy (NB5 Table 8, unchanged).
+    (c): outage zone-hours / injected truth on the 30 NB4 test datasets, per rate: seeds as points, mean +- sd."""
+    t8 = pd.read_csv(RES / "downstream_v1" / "table8_forecasting.csv")
+    per = pd.read_csv(RES / "downstream_v1" / "outage_all" / "outage_per_dataset.csv")
+    fig, axs = plt.subplots(1, 3, figsize=(15, 4.4), gridspec_kw=dict(width_ratios=[1, 1, 1.15]))
+    for k, (ax, data) in enumerate(zip(axs[:2], ("real", "injected"))):
+        g = t8[(t8.data == data) & (t8.subset == "after anomaly (2 days)") & (t8.model == "LightGBM")]
+        g = g.pivot_table(index="horizon", columns="strategy", values="MASE").reindex(["1 h", "1 day"])
+        g.plot.bar(ax=ax, color=[SC12[c] for c in g.columns], rot=0, width=0.8, edgecolor="white", linewidth=1)
+        ax.set_ylabel("MASE (LightGBM)"); ax.set_xlabel("")
+        ax.set_title(f"({'ab'[k]}) {data} data, test steps after an anomaly (2 days)", fontsize=9)
+        ax.set_ylim(0, g.max().max() * 1.12); ax.legend(fontsize=8, ncol=4, loc="upper left")
+        for cont in ax.containers:
+            ax.bar_label(cont, fmt="%.2f", fontsize=6, padding=1)
+    ax = axs[2]
+    rates = sorted(per.rate.unique())
+    rows = [(f"{r:.0%}", per[per.rate == r]) for r in rates] + [("all 30", per)]
+    rng = np.random.default_rng(0)
+    for i, (lab, g) in enumerate(rows):
+        for dy, col, key, name in ((-0.17, SC12["S0"], "naive_ratio", "naive: every dead state (S0)"),
+                                   (0.17, SC12["S2"], "typed_ratio", "typed, label model (S2)")):
+            y = i + dy
+            if lab != "all 30":
+                ax.scatter(g[key], y + rng.uniform(-0.06, 0.06, len(g)), s=10, color=col, alpha=0.45, lw=0, zorder=2)
+            m, s = g[key].mean(), g[key].std(ddof=1)
+            ax.errorbar(m, y, xerr=s, fmt="D" if lab == "all 30" else "o", color=col, mec="white", mew=1, ms=7, capsize=3,
+                        lw=1.6, zorder=3, label=name if i == 0 else None)
+            ax.text(m, y - 0.2 if dy < 0 else y + 0.2, f"{m:.2f} ± {s:.2f}", ha="center", va="bottom" if dy < 0 else "top",
+                    fontsize=7, color="#1F2328")
+    ax.axvline(1, color="#1F2328", lw=0.9, ls="--", zorder=1)
+    ax.text(1.0, -0.5, " truth", fontsize=7.5, va="center", color="#1F2328")
+    ax.axhline(len(rows) - 1.5, color="#DDDDDD", lw=0.8)
+    ax.set_yticks(range(len(rows))); ax.set_yticklabels([lab for lab, _ in rows]); ax.invert_yaxis()
+    ax.set_ylim(len(rows) - 0.4, -0.6)
+    ax.set_xlim(0.65, max(per.naive_ratio.max(), per.typed_ratio.max()) * 1.08)
+    ax.set_xlabel("outage zone-hours / injected truth   (S1 interpolation: 0, outages erased)")
+    ax.set_ylabel("contamination rate")
+    ax.set_title("(c) outage statistics, the 30 injected test datasets (10 seeds per rate)", fontsize=9)
+    ax.grid(axis="x", color="#EEEEEE", lw=0.6); ax.set_axisbelow(True)
+    ax.legend(fontsize=7.5, loc="lower right")
+    fig.suptitle("Fig 12 — Downstream: forecast error by cleaning strategy (test period 1 Jan – 24 May 2024) "
+                 "and outage-hours error", y=1.02)
+    fig.tight_layout(); savefig(fig, fig_dir, "fig12_downstream")

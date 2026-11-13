@@ -512,11 +512,23 @@ All families 0.914 ± 0.029. Without:
   - Dead zone-hours by label: A1 926.5, G3 201.8, G4 88.0, G2 4.2.
   - By city (naive / typed zone-h): Foum El Oued 728.7 / 220.0, Laâyoune 252.0 / 52.2, Boujdour 239.8 / 21.8.
 - **Injected data** (`outage_injected.csv`, `injected/*_outage.csv`; outage zone-hours / truth):
-  - naive 1.49, 2.39, 1.77, 1.90 (mean **1.89**);
+  - naive 1.49, 2.39, 1.77, 1.90 (mean **1.88**: the mean of the unrounded ratios, 1.8847; averaging the rounded values gives 1.89, the number cited before 2026-11-13);
   - typed 1.14, 1.76, 1.29, 1.25 (mean **1.36**);
   - S1 0.
   - Truth 2,478.8 / 1,595.8 / 2,346.3 / 4,503.8 zone-h.
   - Typed outage zone-steps: precision 0.567–0.872, recall 0.997–0.999.
+
+### 10.1b Outage statistics on all 30 NB4 test datasets (`outage_all/`; `tools/outage_all_datasets.py`, D76, F59) — **cite these**
+- NB5's outage code, unchanged, on rates 1 / 3 / 7 % × seeds 0–9. Reproduces NB5's 4 datasets exactly. Full run 58.2 min on CPU.
+- **Outage zone-hours / truth** (mean ± sd over 10 seeds; `outage_summary.csv`):
+  - naive (S0): 1.76 ± 0.46 / 2.01 ± 0.26 / 1.89 ± 0.13; all 30: **1.88 ± 0.32** (range 1.20–2.56);
+  - typed (S2): 1.16 ± 0.36 / 1.28 ± 0.20 / 1.33 ± 0.07; all 30: **1.26 ± 0.24** (range 1.00–2.16);
+  - S1: 0.
+- **Typed closer to the truth** (|log ratio|): 10/10 at each rate, Wilcoxon p = 0.002 each; **30/30**, p = 1.9 × 10⁻⁹.
+- **Outage counts / truth:** naive 1.88 / 1.81 / 1.83 (all 1.84); typed 1.14 / 1.24 / 1.30 (all 1.22).
+- **Typed zone-steps:** precision 0.90 / 0.79 / 0.75 (all 0.82, range 0.46–1.00); recall 0.999 / 0.998 / 0.997 (all 0.998, range 0.987–1.000).
+- **Excess hours** (sums over 30, `outage_per_dataset.csv`): typed 21,171.2 zone-h, 99.98 % inside injected A1 spans (21,166.3), 0.0 in other artefacts, 4.8 elsewhere; naive 62,698.5 zone-h, 99.99 % inside injected artefact spans. Typed misses 178.7 of 70,411.8 true outage zone-h.
+- **Truth per dataset:** mean 701.9 / 1,916.6 / 4,422.7 zone-h.
 
 ### 10.2 Forecasting (Table 8, Fig 12; `table8_forecasting.csv`, `table8_dm.csv`; MASE, eq. 19)
 
@@ -637,4 +649,4 @@ All families 0.914 ± 0.029. Without:
 
 **Fig 8 reproduction check (NB7):** region g during C05/C06 = 218.0 (forecast residual) and 232.6 (nowcast), as in F29. For C02: 27.4 and 29.0.
 
-**Paper set:** 14 main figures, 28 supplementary figures, 27 tables (MANIFEST.md).
+**Paper set:** 14 main figures, 28 supplementary figures, 28 tables (MANIFEST.md; 27 at NB7, plus `Table8_outage_all_datasets` from D76).

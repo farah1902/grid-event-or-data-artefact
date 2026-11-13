@@ -1,0 +1,5 @@
+strategy,zone_hours,outages,rate,seed,typed_precision_zone_steps,typed_recall_zone_steps
+truth (S3),2093.333333333333,368,0.03,8,0.7304873793183668,1.0
+naive: every dead state (S0),4012.6666666666665,659,0.03,8,0.7304873793183668,1.0
+interpolated away (S1),0.0,0,0.03,8,0.7304873793183668,1.0
+"typed, label model (S2)",2865.666666666666,478,0.03,8,0.7304873793183668,1.0

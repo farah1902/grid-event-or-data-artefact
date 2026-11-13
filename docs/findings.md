@@ -618,7 +618,7 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 - **By city, naive vs typed zone-hours:** Foum El Oued 728.7 vs 220.0, Laâyoune 252.0 vs 52.2, Boujdour 239.8 vs 21.8.
 - **Paper:** the utility-facing headline. On the injected data, where the truth is known, the typed count is far closer to it than the naive count (F52). The real-data ratio inherits the label uncertainty: the attribution accuracy on injected data is 0.90–0.94 (F46).
 
-### F52 — On injected data, typed outage statistics remove most of the naive overcount but still overcount, because of the A1 → G1 confusion — *solid*
+### F52 — On injected data, typed outage statistics remove most of the naive overcount but still overcount, because of the A1 → G1 confusion — *solid* (**extended to all 30 test datasets in F59: typed 1.26× vs naive 1.88×, typed closer in 30/30; cite F59 in the paper**)
 - **Outage zone-hours inside NB4's scoring area**, relative to the injected truth (G1–G4 core spans):
 
   | Dataset | Truth (zone-h) | Naive, every dead state (S0) | Typed, label model (S2) | Interpolated away (S1) |
@@ -627,12 +627,12 @@ All numbers in this section are from the **development datasets** (seeds 100–1
   | 3 %, seed 1 | 1,595.8 | 2.39× | 1.76× | 0 |
   | 3 %, seed 2 | 2,346.3 | 1.77× | 1.29× | 0 |
   | 7 %, seed 0 | 4,503.8 | 1.90× | 1.25× | 0 |
-  | mean | | **1.89×** | **1.36×** | 0 |
+  | mean | | **1.88×** | **1.36×** | 0 |
 
 - **Outage counts (runs):** at 3 %, truth 405.7, naive 727.7, typed 535.0; at 7 %, 999, 1,819 and 1,296.
 - **Typed outage zone-steps:** recall 0.997–0.999, precision 0.567–0.872. The typed count misses almost no true outage time; its excess is artefact time labelled G, mainly multi-city zero gaps read as regional outages (F47).
 - **S1 erases every outage:** a forecaster-oriented cleaning that interpolates everything reports no outage time at all.
-- **Paper:** typed cleaning cuts the outage-time error from +89 % to +36 % on average. The remaining error is a measured, named confusion. Do not claim "correct outage statistics" (the guide's expected effect); claim "much closer to the truth than naive counting, with a known residual bias".
+- **Paper:** typed cleaning cuts the outage-time error from +88 % to +36 % on average. The remaining error is a measured, named confusion. Do not claim "correct outage statistics" (the guide's expected effect); claim "much closer to the truth than naive counting, with a known residual bias".
 
 ### F53 — Typed cleaning gives the best LightGBM forecasts on real and injected data; the gain sits after anomalies and comes close to the oracle — *solid*
 - **Real data, MASE, S0 / S1 / S2** (Diebold–Mariano p for S1 vs S2 and S0 vs S2):
@@ -737,3 +737,26 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 - **A2 → N in 49 of 342:** two-zone fills with one zone held and the other linearly interpolated. Neither R2 (≥ 2 held zones) nor R19 (≥ 2 linear zones) fires.
 - **G3 ↔ G4 in 49 of 669:** unplanned outages placed in the 06:00–11:00 window read as planned work (R10), as in Morocco.
 - **Paper:** RQ5 answered for attribution. Five of the six injected classes transfer at 0.85–1.00 accuracy. A1 does not, and the paper must say why: in a single-city system, a logger zero gap and a city outage share every cue the rules use. A within-city cue (an exact-zero share η = 1 across all zones together with a missing restoration ramp) is future work, and would need fresh evaluation (D63).
+
+### F59 — On all 30 test datasets, typed outage counting is closer to the truth in every dataset; its whole excess is multi-city zero gaps read as grid outages — *solid*
+- **Why:** F52 rested on 4 injected datasets (external review, 2026-11-13; D76). `tools/outage_all_datasets.py` repeats NB5's outage code unchanged on every NB4 test dataset (1, 3, 7 %, seeds 0–9). It reproduces NB5's 4 datasets exactly (`reproduction_nb5.csv`, difference 0.0).
+- **Outage zone-hours relative to the injected truth** (G1–G4 core spans; `outage_all/outage_summary.csv`; mean ± sd over 10 seeds, range):
+
+  | Rate | Naive, every dead state (S0) | Typed, label model (S2) | Typed closer to truth | Wilcoxon p |
+  |---|---|---|---|---|
+  | 1 % | 1.76 ± 0.46 (1.20–2.56) | **1.16 ± 0.36** (1.00–2.16) | 10/10 | 0.002 |
+  | 3 % | 2.01 ± 0.26 (1.49–2.39) | **1.28 ± 0.20** (1.06–1.76) | 10/10 | 0.002 |
+  | 7 % | 1.89 ± 0.13 (1.64–2.02) | **1.33 ± 0.07** (1.21–1.45) | 10/10 | 0.002 |
+  | all 30 | 1.88 ± 0.32 | **1.26 ± 0.24** | **30/30** | 1.9 × 10⁻⁹ |
+
+  - Distance to the truth = |log(estimate / truth)|; paired Wilcoxon signed-rank test, naive vs typed.
+  - S1 (naive interpolation) reports 0 outage hours in every dataset.
+- **Outage counts (runs ≥ 3 steps) / truth:** naive 1.84, typed 1.22 (mean over 30).
+- **Typed outage zone-steps:** recall 0.998 (0.987–1.000), precision 0.82 (0.46–1.00). The typed count misses 178.7 of 70,411.8 true outage zone-hours (0.25 %).
+- **Where the excess comes from** (sums over the 30 datasets, `outage_per_dataset.csv`):
+  - typed: 21,171.2 extra zone-hours, of which **21,166.3 (99.98 %) lie inside injected A1 spans** (multi-city zero gaps), 0.0 inside other injected artefacts and 4.8 elsewhere;
+  - naive: 62,698.5 extra zone-hours, 62,693.7 (99.99 %) inside injected artefact spans.
+  - This confirms F52's explanation directly: the typed residual is exactly the A1 → G1 confusion (F47), and nothing else.
+- **Spread:** the typed ratio is ≤ 1.05 in 6 of 30 datasets. Its worst case (1 %, seed 6: 2.16, precision 0.46) is one dataset whose A1 gaps are long relative to its small true outage time (564 zone-h). The typed mean rises with contamination (1.16 → 1.28 → 1.33) as A1 events become more numerous; its spread falls (sd 0.36 → 0.07).
+- **The 4-dataset mean (1.36) was on the high side:** the 30-dataset mean is 1.26. NB5's 3 %, seed 1 dataset (1.76) is the 3 % maximum.
+- **Paper:** "typed counting cuts the outage-time overstatement from +88 % to +26 % on average and is closer to the truth in all 30 injected datasets (Wilcoxon p = 0.002 at every rate). Its remaining excess is entirely multi-city zero gaps labelled as outages." Cite this instead of F52's 4-dataset numbers; keep the real-data 4.15× (F51) next to it.

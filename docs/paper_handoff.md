@@ -22,7 +22,8 @@ claim points to a finding (F…) in `docs/findings.md` or a decision (D…) in `
   - the final catalogue is released (`results/catalogue_final/`);
   - Figs 1, 2 and 6 are drawn;
   - Figs 8 and 9 and E4, E6, E19 and E22 are regenerated with the noted fixes;
-  - the paper set (`results/paper/`: 14 main and 28 supplementary figures with draft captions, 27 tables) is ready.
+  - the paper set (`results/paper/`: 14 main and 28 supplementary figures with draft captions, 28 tables since D76) is ready.
+- **External review (2026-11-13; D76, F59):** the naive outage mean corrected to 1.88 (was 1.89, an average of rounded values); outage statistics extended to all 30 NB4 test datasets (typed 1.26× vs naive 1.88×, typed closer in 30/30); Fig 12(c) regenerated from them.
 - **The analysis is complete. Next: writing the paper** from this handoff, `results/paper/MANIFEST.md` and results_summary.
 
 ## 1. The paper in one paragraph (current evidence)
@@ -65,7 +66,7 @@ grid-event labels: a 4.15-fold overstatement (F51).
 - **Attribution:** macro-F1 0.91–0.94, calibrated (ECE 0.07–0.10), but no better than majority vote on these signatures (F46). The main error is multi-city zero gaps read as regional outages (F47).
 
 **Downstream (NB5; F51–F54).**
-- **Outages:** on injected data, typed outage counts are 1.36× the truth, against 1.89× for naive counting.
+- **Outages:** on the 30 injected test datasets, typed outage counts are 1.26× the truth (± 0.24), against 1.88× (± 0.32) for naive counting; typed is closer to the truth in 30/30 datasets, and its whole excess is multi-city zero gaps read as outages (F59).
 - **Forecasts:** typed cleaning gives the best forecasts after anomalies, within about 1 % of an oracle, for a forecaster that reads the event indicator.
 
 ## 2. Suggested storyline
@@ -84,7 +85,7 @@ grid-event labels: a 4.15-fold overstatement (F51).
    - Then the injection benchmark (NB4): Table 5 and Fig 9 (detectors and baselines), then **Table 7e and Fig 9b, the ablations of the main detector, with the learned-graph ablation first** (D67, F42, F43). Table 6 and Figs 10–11 cover attribution.
 7. **Case studies on real data:** the catalogue (Table 4 draft in results_summary §7), C01/C09 re-reads, synthetic restoration ramps, the daily logger freeze.
 8. **Downstream (NB5):**
-   - Counting every dead state as an outage overstates southern outage time 4.15× on the real data (F51). On injected data, the naive count is 1.89× the truth and the typed count 1.36×, the residual being the A1 → G1 confusion (F52).
+   - Counting every dead state as an outage overstates southern outage time 4.15× on the real data (F51). On the 30 injected test datasets, the naive count is 1.88× the truth and the typed count 1.26×, closer in 30/30 (p = 1.9 × 10⁻⁹); 99.98 % of the typed excess lies inside injected A1 spans, i.e. the A1 → G1 confusion (F59; first measured on 4 datasets in F52).
    - Typed cleaning gives the best LightGBM forecasts, mainly after anomalies (day-ahead MASE −14 % vs naive interpolation on the real data), and comes within about 1 % of an oracle (F53).
    - A model-free forecaster prefers erasing outages, so the typed labels should be given to the forecaster, not only used for cleaning (F54).
 9. **Tetouan transfer (NB6).**
@@ -156,7 +157,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | 2 | Hierarchical weak supervision without manual annotation, calibrated probabilistic labels | **Label model done.** Stability and synthetic-recovery calibration shown (ECE 0.033). Calibration against known types is pending (NB4) | F20–F24 |
 | 3 | Multi-scale residual detector split into region/city/zone parts | **Done and tested (NB4).** Main detector: TCN-GAT residual, multi-scale bands, region/city/zone hierarchy and tuned event formation (D61). It is the best of eight detectors at 3 % and 7 % (F1 0.813 and 0.854, p ≤ 0.02) and tied at 1 % (F41). Qualifiers: removing the learned graph does not hurt it (F42); the multi-scale bands help at low contamination, while the hierarchy is a localisation device, not a detection gain (F43); it is not best at step-wise AUC-PR (F39, F41); and it does not improve prediction (F37). Hierarchy localisation: dead items 92 % at the zone, multi-city dead items 3/3 (LightGBM) or 2/3 (neural residuals) at the region (F30, F43) | F28–F32, F35–F45, Fig 8, Fig 9, E18, E20 |
 | 4 | Released typed event catalogue for UCI 1158 | **Done (NB7).** `results/catalogue_final/`: 404 entries (327 rule items + 77 detector-only candidates) with label, confidence, p(y), label source and episodes; README data card. Labels validated on injected data (NB4), not against external records | D72, results_summary §12 |
-| 5 | Type-aware cleaning improves forecasts and outage statistics | **Done (NB5), with qualifiers.** Outage time: naive counting overstates it 4.15× on the real data; on injected data the typed count is 1.36× the truth, against 1.89× (naive) and 0 (S1). Forecasts: typed cleaning gives the best LightGBM forecasts after anomalies (real day-ahead MASE 1.061 vs 1.233 for S1 and 1.501 for S0), within about 1 % of the oracle on injected data. Qualifiers: over all test steps the effect is ≤ 3 %, and it needs an indicator-aware forecaster | F51–F54, Fig 12, Table 8 |
+| 5 | Type-aware cleaning improves forecasts and outage statistics | **Done (NB5), with qualifiers.** Outage time: naive counting overstates it 4.15× on the real data; on the 30 injected test datasets the typed count is 1.26× the truth, against 1.88× (naive) and 0 (S1), closer in 30/30 (F59). Forecasts: typed cleaning gives the best LightGBM forecasts after anomalies (real day-ahead MASE 1.061 vs 1.233 for S1 and 1.501 for S0), within about 1 % of the oracle on injected data. Qualifiers: over all test steps the effect is ≤ 3 %, and it needs an indicator-aware forecaster | F51–F54, F59, Fig 12, Table 8 |
 | 6 | Transfer test on Tetouan | **Done (NB6).** Without re-tuning: zero false rule items on the clean real year; full-method F1 0.945 / 0.919 / 0.890 (precision 0.98–1.00), above the rules alone at every rate (p = 0.002); attribution macro-F1 0.77–0.79, or 0.95–0.98 without A1 (the single-city limit). Qualifier: the neural detector alone is overtaken by LightGBM at 3–7 % on this small dataset | F55–F58, Fig 13, Table 9 |
 | new | Methodological: the guide's Dawid–Skene fails on sparse single-label rule sets; a constrained, level-gated variant works | Done | F20–F22, D28–D34 |
 | new | Empirical: straight-line interpolation and synthetic restoration ramps in utility telemetry; a daily logger freeze | Done | F01, F05, F09 |
@@ -168,7 +169,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 | RQ1: can the hierarchy alone give reliable type labels? | Partly. Labels are stable and agree 98 % with majority vote. **Reliability vs truth: NB4** | F22, F23 |
 | RQ2: which signatures separate events from artefacts? | Holds and linear fills (log(a/b) 3.4–4.0) and simultaneity with fill (R1, R3, R4, R21) are strong. Exact-zero share (R6, 2.2) is moderate. **Restoration overshoot (R5, 0.12) is uninformative.** Conservation: one example | F16, results_summary §6 |
 | RQ3: does learning beat rules alone and unsupervised detectors? | **Test seeds (NB4).** The learned detector beats every unsupervised detector (STL + MAD, LOF, Isolation Forest) at 3 % and 7 % and ties at 1 % (F41). Adding it to the rules raises recall at every rate (+0.03 to +0.06; untyped shocks, partial outages and city outages the rules miss), but raises event F1 only at 7 % under strict counting, and at every rate when each method's own real-data alarms are not counted. Zone-strict F1 is lower than the rules' at every rate (F44). In attribution, the end model alone is worse than the label model, and fusion matches majority vote (F46). On real data the end model reproduces the label model (F33) | F33, F34, F41, F44, F46 |
-| RQ4: does type-aware cleaning help? | **Yes, where it can.** Outage statistics are much closer to the truth (1.36× vs 1.89×; 4.15× naive-to-typed on the real data). Forecasts after anomalies are better than with naive interpolation and close to the oracle, for a forecaster that reads the event indicator. Over all test steps the gain is small (≤ 3 %). For a naive forecaster, interpolating everything (S1) gives lower error but erases outages | F51–F54 |
+| RQ4: does type-aware cleaning help? | **Yes, where it can.** Outage statistics are much closer to the truth (1.26× vs 1.88× on 30 injected datasets, closer in 30/30; 4.15× naive-to-typed on the real data). Forecasts after anomalies are better than with naive interpolation and close to the oracle, for a forecaster that reads the event indicator. Over all test steps the gain is small (≤ 3 %). For a naive forecaster, interpolating everything (S1) gives lower error but erases outages | F51–F54, F59 |
 | RQ5: transfer without re-tuning? | **Yes for detection, mostly for attribution.** The frozen method raises no false rule item on Tetouan's clean year and detects 80–91 % of injected events at 98–100 % precision, above the rules alone everywhere. Five of six classes are typed at 0.85–1.00 accuracy. City-wide zero gaps (A1) become city outages, because the A1 evidence is cross-city by design | F55–F58 |
 | H1: acquisition failures → exact zeros or simultaneous holds; de-energised feeders → noise floor | **Supported and extended.** All 3 multi-city zero fills have η = 1.0 and come with holds or linear fills; 84 of 126 dead items have η < 0.9 and are mostly single-zone. Caveat: some noise floors are linear fills (D16) | F03, F06, F17 |
 | H2: real outages restore with a ramp or overshoot; gaps return straight to expected | **Weak / threatened.** Synthetic ramps (21 %); R5 uninformative | F05, F16 |
@@ -207,7 +208,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 - Any accuracy, F1 or calibration number "on real data". Only synthetic recovery and, later, injection results exist.
 - That a regional outage (G1) was detected in the data.
 - That restoration dynamics (ramp, overshoot) distinguish outages from artefacts.
-- "Correct outage statistics" for typed cleaning: it still overcounts by 36 % on injected data (F52). Say "much closer to the truth than naive counting".
+- "Correct outage statistics" for typed cleaning: it still overcounts by 26 % on average over the 30 injected datasets (up to 2.16× in one; F59). Say "much closer to the truth than naive counting, in every dataset, with a known residual: multi-city zero gaps read as outages".
 - That typed cleaning improves forecasts in general: the gain concentrates after anomalies, and over all test steps it is ≤ 3 % (F53). It needs an indicator-aware forecaster (F54).
 - Any causal link between events and the Boujdour II commissioning (26 Jan 2023) or the 400 kV switch (Jul 2023). These are coincidences in time only; external validation was not pursued.
 - Marrakech outage counts as physical outages.
@@ -231,7 +232,7 @@ These are changes to the **guide's plan**, found by running it on the real data.
 |---|---|---|
 | NB3 | **Done** (LightGBM 4.6.0 reference run with the structural-zero fix): residual hierarchy, Fig 8, detector-only candidates, end model, fusion | contribution 3 |
 | NB4 | **Done** (Colab GPU run, 2026-11-09; results_summary §9; F41–F50). No-graph ablation added afterwards with `tools/graph_ablation.py` (D62, F42). Test seeds spent (D63) | Tables 5–7, Figs 9–11, E20–E21 |
-| NB5 | **Done** (local, 2026-11-10; F51–F54, results_summary §10). LightGBM + naive reference; no deep forecaster (D65) | Table 8, Fig 12 |
+| NB5 | **Done** (local, 2026-11-10; F51–F54, results_summary §10). LightGBM + naive reference; no deep forecaster (D65). Outage statistics extended to the 30 test datasets on 2026-11-13 (`tools/outage_all_datasets.py`, D76, F59, §10.1b) | Table 8, Fig 12 |
 | NB6 | **Done** (local, 2026-11-10; F55–F58, results_summary §11) | Table 9, Fig 13, E22 |
 | NB7 | **Done** (local, 2026-11-10; D72–D75): catalogue release, Figs 1, 2, 6, regenerated figures, the paper set | `results/paper/MANIFEST.md`, `results/catalogue_final/` |
 

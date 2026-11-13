@@ -1,0 +1,14 @@
+{
+ "rate": 0.03,
+ "seed": 1,
+ "n_injected": 189,
+ "n_A1": 25,
+ "typed_extra_h": 1215.1666666666665,
+ "typed_extra_in_A1_h": 1214.5,
+ "typed_extra_in_other_artefacts_h": 0.0,
+ "typed_extra_elsewhere_h": 0.6666666666666666,
+ "naive_extra_h": 2212.333333333333,
+ "naive_extra_in_artefacts_h": 2211.6666666666665,
+ "naive_extra_elsewhere_h": 0.6666666666666666,
+ "typed_missed_h": 1.6666666666666665
+}

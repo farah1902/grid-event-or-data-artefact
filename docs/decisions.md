@@ -710,3 +710,18 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - **copies:** Tables 5–9 from NB4, the graph ablation, NB5 and NB6, and Tables S1–S6 from the registers.
 - **Corrections table** (paper_handoff §3): #30 brought up to date (the TCN-GAT, implemented in NB4, became the main detector; its graph is an ablation). #37–#40 added: per-detector event formation (D60); no deep forecaster (D65); no A4 re-alignment (D64); the Tetouan re-estimation scope (D68).
 - **Code:** `src/paper_tables.py`; `tools/make_nb7_final_figures.py` → `notebooks/NB7_final_figures.ipynb` (executed locally, 1.1 min).
+
+### D76 — Outage statistics on all 30 NB4 test datasets; 1.88, not 1.89 [post-NB7, external review]
+- **Trigger:** an external review of the repository (2026-11-13, another Claude instance, read by the author) made two remarks on F52:
+  - the naive mean was misquoted: the mean of the four unrounded naive/truth ratios (1.4897, 2.3853, 1.7685, 1.8952) is 1.8847 → **1.88**; the docs had averaged the rounded values (1.49, 2.39, 1.77, 1.90 → 1.8875 → 1.89). Fig 12 always printed 1.88. The typed mean is unchanged (1.362 → 1.36);
+  - the outage result rested on 4 injected datasets, one of them at 1.76× for the typed count. It should be a mean ± sd over many datasets.
+- **Decision:** measure the outage statistics on every NB4 test dataset (rates 1, 3, 7 %, seeds 0–9 = 30 datasets) with NB5's outage code unchanged.
+  - NB5 used 4 datasets because it also trains forecasters on each. The outage count needs only the rules and the label model (about 30–60 s per dataset on CPU), so no Colab run is needed.
+  - **Same procedure as NB5 §4:** each dataset regenerated from its seed and checked against `runs/*_truth.csv`; rules v1 and the label model fitted on the injected data; typed = flagged dead states inside G-labelled items; truth = injected G1–G4 core spans; all inside NB4's scoring area (clean region plus injected spans).
+  - **Reproduction check:** on NB5's 4 datasets the script reproduces `injected/*_outage.csv` exactly (asserted).
+  - **Added:** a breakdown of where the extra hours come from (inside injected A1 spans, other injected artefacts, elsewhere), to test F52's explanation (the A1 → G1 confusion, F47) directly.
+  - **Statistic:** per dataset, the distance of each count to the truth is |log(estimate / truth)| (symmetric for over- and under-counting); the paired Wilcoxon signed-rank test compares naive and typed per rate (n = 10) and over all 30.
+- **D63 is respected:** evaluation only. Nothing is selected or tuned, and the method is unchanged.
+- **Runtime:** 58.2 min on the author's 8-core CPU (0.5–4 min per dataset, longest at 7 %). Results: F59, results_summary §10.1b.
+- **Paper:** the outage claim cites the 30-dataset numbers (F59); NB5's 4-dataset numbers stay in F52 as the first measurement. Fig 12(c) is regenerated from the 30 datasets by NB7 (`paper_regen.fig12_downstream`); its panels (a) and (b) are NB5's Table 8, unchanged.
+- **Code:** `tools/outage_all_datasets.py` → `results/downstream_v1/outage_all/`; `src/paper_regen.py` (`fig12_downstream`); `src/paper_tables.py` (Fig 12 caption, `Table8_outage_all_datasets`); `tools/make_nb7_final_figures.py` (calls the Fig 12 regeneration).

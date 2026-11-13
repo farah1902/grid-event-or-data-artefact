@@ -25,7 +25,8 @@ The last step of the roadmap. NB7 computes no new method result; everything is r
 - E4: built from v1, with final labels;
 - E6: final labels;
 - E19: legend fixed; panel (c) shows the final candidates;
-- E22: legend fixed.
+- E22: legend fixed;
+- Fig 12: panel (c) from all 30 NB4 test datasets (`tools/outage_all_datasets.py`, D76; run it before this notebook), not NB5's 4.
 
 **4. The paper set** (D75) → `results/paper/`:
 - the main and supplementary figures under their paper numbers, with draft captions in `MANIFEST.md`;
@@ -77,6 +78,7 @@ RG.e4_signatures(cat, FIG); plt.show()
 RG.e6_catalogue_timeline(cat, res, FIG); plt.show()
 RG.e19_end_model(cat, FIG); plt.show()
 RG.e22_tetouan(FIG); plt.show()
+RG.fig12_downstream(FIG); plt.show()   # panel (c) from the 30 NB4 test datasets (D76)
 print("cross-fitting split still", D.SPLIT.date())"""))
 
 cells.append(M("## 6. The paper set: tables, numbered figures, manifest (D75)"))

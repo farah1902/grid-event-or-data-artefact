@@ -68,7 +68,7 @@ All numbers are in [docs/results_summary.md](docs/results_summary.md) and the fi
   - end-to-end accuracy (detected and correctly typed): 0.945 / 0.907 / 0.896.
 
 **Downstream test** (NB5: test period 1 Jan – 24 May 2024).
-- **Outage statistics on injected data:** the typed count is **1.36×** the true outage time, naive counting **1.89×**, and naive interpolation erases every outage (F52).
+- **Outage statistics on the 30 injected test datasets:** the typed count is **1.26×** the true outage time (± 0.24), naive counting **1.88×** (± 0.32); typed is closer to the truth in **30 of 30** datasets, and naive interpolation erases every outage (F59).
 - **Forecasts:** typed cleaning gives the best LightGBM forecasts after anomalies.
   - Real data, day-ahead MASE: 1.061 typed, 1.233 interpolate-everything, 1.501 raw.
   - Injected data: within about 1 % of an oracle that knows the true types (F53).
@@ -126,17 +126,17 @@ The paper's numbering (source files in `results/figures/`; numbered copies and d
 | Fig 13 | **Transfer protocol: frozen, re-estimated, adapted, results** | `fig14_transfer_protocol` |
 | Fig 14 | Transfer to Tetouan: detection of every method, attribution confusion | `fig13_tetouan` |
 
-There are 28 supplementary figures (S1–S28) and 27 tables (CSV). Roles and caveats: [docs/figures_and_tables.md](docs/figures_and_tables.md).
+There are 28 supplementary figures (S1–S28) and 28 tables (CSV). Roles and caveats: [docs/figures_and_tables.md](docs/figures_and_tables.md).
 
 ## Documentation
 
 Start with [docs/README.md](docs/README.md).
 - To write the paper: [docs/paper_handoff.md](docs/paper_handoff.md).
 - Every number: [docs/results_summary.md](docs/results_summary.md).
-- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D75).
+- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D76).
 - The paper set (figure numbering, draft captions, tables): [results/paper/MANIFEST.md](results/paper/MANIFEST.md).
 - The transfer to Tetouan, adaptation by adaptation: [docs/transfer_protocol.md](docs/transfer_protocol.md).
-- Every finding: [docs/findings.md](docs/findings.md) (F01–F58).
+- Every finding: [docs/findings.md](docs/findings.md) (F01–F59).
 - The method as implemented, with equations: [docs/methods.md](docs/methods.md).
 - The original plan: [docs/research_guide.md](docs/research_guide.md). Several parts were corrected; see paper_handoff §3.
 
@@ -169,6 +169,7 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 │   ├── dev_select_detector.py                # development selection of the main detector and event formation (D60, D61)
 │   ├── graph_ablation.py                     # learned-graph ablation on the NB4 datasets (D62)
 │   ├── ablation_summary.py                   # Table 7e + Fig 9b (D67)
+│   ├── outage_all_datasets.py                # outage statistics on all 30 NB4 test datasets (D76)
 │   ├── make_transfer_diagram.py              # Fig 14: the transfer protocol diagram (D71)
 │   └── sync_drive.py                         # repo ↔ Google Drive copy for Colab runs
 └── results/
@@ -177,7 +178,7 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
     ├── detector_v1/, end_model_v1/           # NB3 (LightGBM detector; Marrakech catalogue)
     ├── main_detector/                        # south catalogue with the main detector (NB4 §8b)
     ├── benchmark_v1/                         # NB4: Tables 5–7, 7e, runs/, dev/, graph_ablation/, models/
-    ├── downstream_v1/                        # NB5: Table 8, outage statistics, injected/
+    ├── downstream_v1/                        # NB5: Table 8, outage statistics, injected/; outage_all/ (30 datasets, D76)
     ├── transfer_tetouan/                     # NB6: Table 9, real-series items and alarms, runs/, models trained on Tetouan
     ├── catalogue_final/                      # NB7: the released typed catalogue (catalogue, episodes, key events, README)
     ├── paper/                                # NB7: MANIFEST.md (figure numbering, captions), figures/, tables/
@@ -201,6 +202,7 @@ python tools/dev_select_detector.py && python tools/dev_select_detector.py --ext
 # NB4: run on Colab with a GPU (resumable; 1-3 h), or locally (~2.5 h on 8 cores)
 python tools/graph_ablation.py         # learned-graph ablation on the NB4 datasets, ~30 min on CPU
 python tools/ablation_summary.py       # Table 7e + Fig 9b, seconds
+python tools/outage_all_datasets.py    # outage statistics on the 30 NB4 test datasets, ~1 h on CPU (D76; before NB7)
 cd notebooks && python -m jupyter nbconvert --to notebook --execute --inplace NB5_downstream.ipynb   # ~18 min
 python -m jupyter nbconvert --to notebook --execute --inplace NB6_tetouan.ipynb                     # ~15 min (Tetouan transfer)
 python -m jupyter nbconvert --to notebook --execute --inplace NB7_final_figures.ipynb               # ~1 min (final figures, tables, catalogue)

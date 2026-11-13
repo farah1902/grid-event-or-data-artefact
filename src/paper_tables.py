@@ -36,7 +36,8 @@ MAIN_FIGURES = [
     ("Fig 11", "fig10_11_attribution", "Attribution on injected events (3 %, test period): (a) confusion of the injected type against the fused label; "
      "(b) reliability of the label model q, the end model f and the fusion p."),
     ("Fig 12", "fig12_downstream", "Downstream test: LightGBM forecast error (MASE) by cleaning strategy after anomalies, (a) real and (b) injected data, "
-     "test period 1 Jan – 24 May 2024; (c) outage zone-hours relative to the injected truth for each strategy."),
+     "test period 1 Jan – 24 May 2024; (c) outage zone-hours relative to the injected truth, naive counting (S0) and typed counting (S2), "
+     "on the 30 injected test datasets (points: seeds; markers: mean ± sd per rate and over all 30). Naive interpolation (S1) reports 0."),
     ("Fig 13", "fig14_transfer_protocol", "Transfer protocol: stage by stage, what is frozen from Morocco, what is re-estimated from Tetouan's unlabelled series, "
      "and what a single-city system changes, with the results. Every adaptation is listed in docs/transfer_protocol.md."),
     ("Fig 14", "fig13_tetouan", "Transfer to Tetouan without re-tuning: (a) event F1 of every method at 1, 3 and 7 %; (b) attribution confusion of the frozen "
@@ -122,6 +123,7 @@ def build_tables(res, tet_data, cat, eps, ke, typology):
               ("Table7d_threshold_sensitivity", B / "table7d_threshold_sensitivity.csv"), ("Table7e_ablations_main_detector", B / "table7e_ablations_main_detector.csv"),
               ("Table7f_graph_ablation", B / "graph_ablation" / "table_graph_ablation.csv"),
               ("Table8_forecasting", DS / "table8_forecasting.csv"), ("Table8_dm_tests", DS / "table8_dm.csv"), ("Table8_outage_injected", DS / "outage_injected.csv"),
+              ("Table8_outage_all_datasets", DS / "outage_all" / "outage_summary.csv"),
               ("Table9_tetouan_detection", TT / "table9_detection.csv"), ("Table9_tetouan_wilcoxon", TT / "table9_wilcoxon.csv"),
               ("Table9_tetouan_recall_by_type", TT / "table9_recall_by_type.csv"), ("Table9_tetouan_attribution", TT / "table9_attribution.csv"),
               ("TableS1_rule_parameters", RES / "labels_v1" / "rule_params.csv"), ("TableS2_label_model_recovery", RES / "labels_v1" / "recovery_summary.csv"),

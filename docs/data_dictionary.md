@@ -320,6 +320,17 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 | `outage_injected.csv` | mean outage zone-hours and counts by rate and strategy |
 | `summary.json` | real-data outage totals and ratio, dead zone-hours by label, real-data forecast scores and DM tests, injected outage means and ratios to truth, runtime |
 
+### Outage statistics on all 30 NB4 test datasets — `results/downstream_v1/outage_all/` (from `tools/outage_all_datasets.py`; D76)
+
+| File | Content |
+|---|---|
+| `runs/r{rate}_s{seed}_outage.csv` | as `injected/*_outage.csv` (NB5 §4, outage part, unchanged), for every rate (1, 3, 7 %) and seed (0–9) |
+| `runs/r{rate}_s{seed}_breakdown.json` | n_injected, n_A1; where the extra hours come from (zone-hours): typed_extra_h (typed outage steps outside the true outages), split into typed_extra_in_A1_h (inside injected A1 spans), typed_extra_in_other_artefacts_h (inside injected A2/A3 spans) and typed_extra_elsewhere_h; naive_extra_h split into naive_extra_in_artefacts_h and naive_extra_elsewhere_h; typed_missed_h (true outage time the typed count misses) |
+| `outage_per_dataset.csv` | one row per (rate, seed): truth, naive and typed zone-hours and counts, naive_ratio and typed_ratio (zone-hours / truth), the count ratios, typed precision and recall (zone-steps), the breakdown, typed_extra_share_A1, naive_extra_share_artefacts |
+| `outage_summary.csv` | per rate and over all 30 (rate = "all"): n, mean, sd, min and max of the naive and typed ratios; typed_closer_n (datasets where the typed count is closer to the truth, distance = abs(log ratio)); wilcoxon_p (paired Wilcoxon signed-rank on those distances); mean count ratios; mean typed precision and recall; share of the typed excess inside injected A1 spans; share of the naive excess inside injected artefact spans; mean truth zone-hours |
+| `reproduction_nb5.csv` | max absolute difference to NB5's `injected/*_outage.csv` on its 4 datasets (asserted 0) |
+| `summary.json` | the same summary as JSON, runtime |
+
 ## Transfer test — `results/transfer_tetouan/` (from `src/transfer.py`, NB6; D68–D70)
 
 | File | Content |

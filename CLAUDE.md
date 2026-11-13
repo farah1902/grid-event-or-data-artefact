@@ -49,6 +49,7 @@ tools/dev_select_detector.py  development selection (seeds 100-104): event forma
 tools/graph_ablation.py       post-run no-graph ablation of the main detector on the NB4 datasets -> results/benchmark_v1/graph_ablation/ (D62, F42)
 tools/make_transfer_diagram.py Fig 14: the Tetouan transfer protocol diagram (D71; reads results/transfer_tetouan/summary.json)
 tools/ablation_summary.py     Table 7e + Fig 9b: all ablations of the main detector, the learned graph first (D67; reads stored files, seconds)
+tools/outage_all_datasets.py  outage statistics on all 30 NB4 test datasets (NB5's code unchanged) -> results/downstream_v1/outage_all/ (D76, F59)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary
 results/labels_v1/            label-model outputs (q.csv = probabilistic labels)
@@ -56,7 +57,7 @@ results/detector_v1/          detector metrics, hierarchy test, recall, detector
 results/end_model_v1/         item features, normal windows, end-model metrics, p_type.csv (fused labels)
 results/benchmark_v1/         NB4 outputs; runs/ = one set of files per (rate, seed); models/ (the LightGBM pickle is git-ignored, on Drive); dev/ + dev_selection.json
 results/main_detector/        NB4 §8b: south catalogue of the main (graph) detector, supersedes NB3's south detector outputs
-results/downstream_v1/        NB5 outputs (real data + injected/ per dataset)
+results/downstream_v1/        NB5 outputs (real data + injected/ per dataset); outage_all/ = outage statistics on the 30 test datasets (D76)
 results/transfer_tetouan/     NB6 outputs (real series, runs/, Table 9, models trained on Tetouan)
 results/catalogue_final/      NB7: the released typed catalogue (catalogue, episodes, key events, README)
 results/paper/                NB7: the paper set: MANIFEST.md (numbering, captions), figures/, tables/
@@ -106,7 +107,8 @@ python tools/dev_select_detector.py            # before NB4: development selecti
 python tools/graph_ablation.py                 # after NB4: no-graph ablation on the NB4 datasets, ~30 min on CPU (D62)
 python tools/make_nb5_downstream.py notebooks/NB5_downstream.ipynb   # then execute NB5 like the others (local CPU)
 python tools/make_nb6_tetouan.py notebooks/NB6_tetouan.ipynb         # then execute NB6 (local CPU, ~13 min)
-python tools/make_nb7_final_figures.py notebooks/NB7_final_figures.ipynb   # then execute NB7 (~1 min)
+python tools/outage_all_datasets.py           # outage statistics on the 30 NB4 test datasets, ~1 h on CPU (D76); before NB7 (Fig 12c)
+python tools/make_nb7_final_figures.py notebooks/NB7_final_figures.ipynb   # then execute NB7 (~2 min)
 ```
 Sync the repo to the Drive copy before a Colab run, and pull the outputs after it:
 ```bash
@@ -141,6 +143,6 @@ See `docs/paper_handoff.md` § "What is still missing". In short:
 - **NB3:** done (reference run local, LightGBM 4.6.0, with the D51 fix).
 - **Main detector (D61):** the TCN-GAT multi-scale residual detector with tuned event formation (w 24, q 99.9, gap 12), chosen on development seeds with every detector tuned alike (D60). **Paper framing (D67, author's decision):** the learned graph is presented as an ablation (graph on/off; it adds no detection skill, F42); LightGBM is a predictor ablation. Read F36–F43 before writing about it.
 - **NB4:** done (Colab run 2026-11-09; results_summary §9, F41–F50, no-graph ablation F42/D62). **The test seeds 0–9 are spent (D63):** do not change the design based on them.
-- **NB5:** done (`src/downstream.py`, `tools/make_nb5_downstream.py`; results_summary §10, F51–F54).
+- **NB5:** done (`src/downstream.py`, `tools/make_nb5_downstream.py`; results_summary §10, F51–F54). Outage statistics on all 30 test datasets: `tools/outage_all_datasets.py` (D76, F59, §10.1b); cite those.
 - **NB6:** done (`src/transfer.py`, `tools/make_nb6_tetouan.py`; results_summary §11, F55–F58).
 - **NB7:** done (D72–D75). **All notebooks are done; next is writing the paper** from `docs/paper_handoff.md`, `results/paper/MANIFEST.md` and `docs/results_summary.md`.
