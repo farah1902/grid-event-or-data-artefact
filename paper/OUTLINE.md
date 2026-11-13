@@ -4,12 +4,24 @@
 
 **Journal:** Applied Energy (author's decision, 2026-11-13). Format: LaTeX, Elsevier `elsarticle` class, in `paper/`.
 
-**Journal requirements verified so far** (official guide for authors, ScienceDirect, via search result 2026-11-13; the page itself blocks automated download):
-- abstract ≤ 250 words;
-- highlights: 3–5 bullet points, ≤ 85 characters each including spaces, in a separate editable file with "highlights" in its name;
-- graphical abstract: encouraged, not required.
-- **Not yet verified (do not rely on until checked on the official page):** total length limit, keyword count, nomenclature, required declarations (competing interests, CRediT, data availability, generative-AI statement), reference style.
-- **Length: working budget 8,000 words of body text** (excluding references, captions and tables). Third-party sources disagree (8,000; 7,000–10,000; 12,000; an outdated 2015 author pack says 5,000); 8,000 is the commonly cited and the safer figure. To be replaced by the official number once read on the guide.
+**Journal requirements** (official guide for authors, "Writing and formatting" section, pasted by the author from the ScienceDirect page on 2026-11-13; the page blocks automated download):
+- **Files:** .tex source (PDF is not a source file); double-column layout allowed for LaTeX; Elsevier LaTeX template encouraged; all editable sources supplied.
+- **Title page:** concise title without abbreviations or formulae; given and family names; affiliations with lowercase superscript letters and full postal address including country; corresponding author with e-mail (published); present address as a superscript Arabic-numeral footnote if needed.
+- **Abstract:** ≤ 250 words; purpose, procedures, main findings with statistical significance, principal conclusions, what is new; stands alone; no references (or author + year); non-standard abbreviations avoided or defined.
+- **Keywords:** 1–7, in English; avoid multi-word keywords with "and" or "of"; abbreviations only if firmly established.
+- **Highlights:** 3–5 bullets, ≤ 85 characters each including spaces; separate editable file with "highlights" in the file name; novel results and new methods.
+- **Graphical abstract:** encouraged; separate file; ≥ 1328 px wide, longest side horizontal, readable at 13 cm width; TIFF, EPS, PDF or MS Office; generative-AI use must follow Elsevier's GenAI policy.
+- **Math:** editable text, not images; simple formulae in line; solidus (X/Y) for small fractions; variables in italics; powers of e as exp; display equations numbered consecutively in the order they are referred to.
+- **Tables:** editable text; cited in the text; numbered in order of appearance; caption with each table; notes below the body; **no vertical rules and no shading** (booktabs); **used sparingly and not duplicating results shown elsewhere** (so each main table must carry what its figure does not: statistics, other views, p-values).
+- **Figures:** each a separate file named in a logical way (Figure_1, Figure_2, ...), cited and numbered in order of appearance; vector drawings as EPS or PDF with embedded fonts; bitmaps ≥ 300 dpi (single column ≥ 1063 px, full page ≥ 2244 px), bitmapped line drawings ≥ 1000 dpi; every figure has a caption (brief title + description, symbols explained); **no multiple images combined into one file** unless they are meant to be compared; colour accessible to colour-vision deficiency.
+- **Still not seen in the pasted section:** total length limit, declarations (competing interests, CRediT, data availability, generative-AI statement), reference style. To be checked on the "Article structure / References / Declarations" parts of the guide.
+- **Length: working budget 8,000 words of body text** (excluding references, captions and tables). Third-party sources disagree (8,000; 7,000–10,000; 12,000; an outdated 2015 author pack says 5,000); 8,000 is the commonly cited and the safer figure.
+
+**Consequences for this paper:**
+- the two real logger episodes stay **two separate figures** (Figs 4 and 5), not one composite file;
+- figures are re-exported as PDF with TrueType fonts embedded (matplotlib `pdf.fonttype = 42`) and checked for size and legibility at print width in the figure step;
+- tables use `booktabs`, and each main table adds information its figure does not show;
+- the submission package will name files Figure_1 … Figure_12.
 
 **Source rule for every sentence:** numbers come only from `docs/results_summary.md` (F/D numbers given per item). External references are added only after their metadata is fetched from Crossref or the publisher (DOI resolved) and the cited claim is checked against the paper; never from memory.
 
@@ -21,7 +33,7 @@ Five claims, each with its evidence. The introduction states them; the results p
 
 | # | Claim | Evidence | Where |
 |---|---|---|---|
-| V1 | **What the telemetry contains.** A public smart-meter dataset's apparent outages are mostly data-logger artefacts; straight-line fills are the commonest fill; restoration "ramps" are synthetic; counting every dead state overstates southern outage time **4.15×** (1,220.5 vs 294.0 zone-h) | F01, F05, F16, F51; Fig 4 | §6.1 |
+| V1 | **What the telemetry contains.** A public smart-meter dataset's apparent outages are mostly data-logger artefacts; straight-line fills are the commonest fill; restoration "ramps" are synthetic; counting every dead state overstates southern outage time **4.15×** (1,220.5 vs 294.0 zone-h) | F01, F05, F16, F51; Figs 4, 5 | §6.1 |
 | V2 | **Label-free typing that works on sparse rules.** The standard Dawid–Skene model cannot use single-label rules (posterior = prior, F20) and is unstable (≤ 63 % restart agreement, F21); the constrained model is fully stable (100 %, F22) and gives calibrated probabilities (ECE 0.07–0.10) at macro-F1 0.90–0.94 | F20–F22, F46 | §4.5, §6.2, §6.5 |
 | V3 | **A detector that extends the rules.** Best of eight detectors at 3 % and 7 % (p ≤ 0.02; F41); adding it to the rules raises recall at every rate (10/10 seeds) and F1 at every rate once each method's own real-data alarms are excluded (F44). Strict view and zone-strict view reported next to it | F41–F45 | §6.4 |
 | V4 | **Practical impact for distribution operators.** Typed outage counting 1.26× the truth vs 1.88× naive, closer in **30/30** injected datasets (F59); typed cleaning gives the best forecasts after anomalies (real day-ahead MASE 1.061 vs 1.233 interpolation vs 1.501 raw; F53) | F51–F54, F59 | §6.6 |
@@ -46,7 +58,7 @@ Honesty items that protect the value (each stated where it belongs, never hidden
 | 8 Conclusions | 250 |
 | **Total** | **8,000** |
 
-Main paper: **11 figures, 9 tables, 26 equations**; the rest in the supplement.
+Main paper: **12 figures, 9 tables, 26 equations**; the rest in the supplement. Captions, tables and references do not count towards the 8,000 words.
 
 ## Structure, with the place of every figure, table and equation
 
@@ -99,13 +111,13 @@ Paper numbering follows the order of first citation. Source files: `results/pape
 - *Changed from the first plan:* baselines that were not run (Matrix Profile, USAD, TranAD, Anomaly Transformer, TimesNet, N-BEATS, GDN, MTAD-GAT, Snorkel, k-means, HDBSCAN) and metrics not computed (VUS-PR, balanced accuracy) are not listed as run; the reasons go to §7.3 (D-register). No temperature scaling (ECE reported as is). No external-validation rule (news records). No 30-min robustness test.
 
 ### 6 Results
-6.1 What the telemetry contains (V1). **Fig 4** the two logger episodes, (a) January 2023 (`fig3_C05_C06_jan2023`) and (b) 31 Mar – 2 Apr 2024 (`fig4_C12_mar2024`), one composite figure to be built in the figure step; clock evidence δ* = −60 min in the text, figure in the supplement (`fig5_clock_2022-10-30`); key real-data events with final labels and episode sequences in the supplement (`Table4_key_events`). The July 2023 regional-outage candidate is most probably an acquisition failure (F03, confidence *strong*, not *solid*; Fig S1); synthetic restoration ramps (F05, F16); the 4.15× real-data overstatement (F51).
+6.1 What the telemetry contains (V1). **Fig 4** the January 2023 logger episode (`fig3_C05_C06_jan2023`); **Fig 5** the 31 Mar – 2 Apr 2024 compound episode (`fig4_C12_mar2024`); clock evidence δ* = −60 min in the text, figure in the supplement (`fig5_clock_2022-10-30`); key real-data events with final labels and episode sequences in the supplement (`Table4_key_events`). The July 2023 regional-outage candidate is most probably an acquisition failure (F03, confidence *strong*, not *solid*; Fig S1); synthetic restoration ramps (F05, F16); the 4.15× real-data overstatement (F51).
 6.2 Weak supervision on the real data (V2): coverage and conflicts (Fig S-rules, `fig7_rule_diagnostics`), stability and parameter recovery (F21, F22), robustness (F24, F48), the released catalogue (404 entries).
-6.3 The residual hierarchy on real data. **Fig 5** (`fig8_residual_hierarchy`): logger failures load the region part (g up to 218), a feeder outage only the zone part.
-6.4 Detection on injected events (V3). **Fig 6** (`fig9_detection`); **Table 5** (`Table5_detection`: F1 at 1 / 3 / 7 %, strict, background-excluded, zone-strict); **Fig 7** ablations (`fig9b_ablations`, learned graph first).
-6.5 Attribution (V2). **Fig 8** (`fig10_11_attribution`: confusion, reliability); **Table 6** (`Table6_attribution`: majority vote, label model, end model, fusion; macro-F1, ECE).
-6.6 Downstream: outage statistics and forecasting (V4). **Fig 9** (`fig12_downstream`); **Table 7** (outage ratios on 30 datasets from `Table8_outage_all_datasets` + MASE after anomalies from `Table8_forecasting`, DM p-values).
-6.7 Transfer to another city (V5). **Fig 10** transfer protocol (`fig14_transfer_protocol`); **Fig 11** Tetouan results (`fig13_tetouan`); **Table 8** (`Table9_tetouan_detection` + attribution with and without A1).
+6.3 The residual hierarchy on real data. **Fig 6** (`fig8_residual_hierarchy`): logger failures load the region part (g up to 218), a feeder outage only the zone part.
+6.4 Detection on injected events (V3). **Fig 7** (`fig9_detection`); **Table 5** (`Table5_detection`: what Fig 7 does not show — precision, recall, the background-excluded and zone-strict views, Wilcoxon p against the rules); **Fig 8** ablations (`fig9b_ablations`, learned graph first).
+6.5 Attribution (V2). **Fig 9** (`fig10_11_attribution`: confusion, reliability); **Table 6** (`Table6_attribution`: majority vote, label model, end model, fusion; macro-F1, ECE).
+6.6 Downstream: outage statistics and forecasting (V4). **Fig 10** (`fig12_downstream`); **Table 7** (outage ratios on 30 datasets from `Table8_outage_all_datasets` + MASE after anomalies from `Table8_forecasting`, DM p-values).
+6.7 Transfer to another city (V5). **Fig 11** transfer protocol (`fig14_transfer_protocol`); **Fig 12** Tetouan results (`fig13_tetouan`); **Table 8** (`Table9_tetouan_detection` + attribution with and without A1).
 
 ### 7 Discussion
 7.1 Answers to RQ1–RQ5 and H1–H3. **Table 9** (question, answer, evidence).
