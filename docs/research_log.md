@@ -490,3 +490,21 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 - **Docs:** D76, F59 (F52 header points to it), results_summary §10.1b, figure register, data dictionary, handoff (status, outage claims, RQ4, "do not claim" list), README, CLAUDE.md, docs index.
 
 **Pitfall:** re-executing NB7 rewrites every PDF with a new timestamp although the content is unchanged (the PNGs are byte-identical); the timestamp-only PDFs were restored from git, so only Fig 12 changed.
+
+## Session 11 — 2026-11-13 — Paper writing starts: journal, framing, outline
+
+**Author's decisions (2026-11-13):**
+- journal: **Applied Energy**;
+- framing: data findings and weak supervision first, the detector as a complement (with the Tetouan transfer), and **the value of the work made explicit**;
+- format: **LaTeX** (Elsevier `elsarticle`) in `paper/`;
+- front matter (authors, affiliations, funding, CRediT): later;
+- no email to the dataset authors (the author has already asked about the data).
+- Working rule set by the author: step by step, every figure, table and equation placed deliberately; **every external reference verified on the web, never from memory**.
+
+**Journal requirements checked** (official guide for authors via search; the ScienceDirect page blocks automated download): abstract ≤ 250 words; highlights 3–5 bullets ≤ 85 characters; graphical abstract encouraged. Length limit, keyword count and declarations still to be verified on the official page (third-party pages disagree).
+
+**Done:** `paper/OUTLINE.md`:
+- the value thread V1–V5 with evidence (F/D numbers);
+- the adapted structure (8 sections + declarations + supplement), adapted from the author's proposed structure; items that were not run (several deep and graph baselines, Snorkel, clustering labelers, VUS-PR, balanced accuracy, temperature scaling, 30-min robustness, news-record rule) are not presented as run;
+- the place of every main figure (13), table (10) and equation (26), with paper numbering in order of first citation;
+- the writing order (methods and results first, introduction and abstract last).
