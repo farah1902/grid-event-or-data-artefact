@@ -833,3 +833,19 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
   - Figure 12 is drawn from `transfer_tetouan/runs/*_detection.csv` and `confusion_label_model_3pct.csv`.
 - **LaTeX:** `lmodern` loaded; the PDF had bitmap Type 3 fonts from T1 encoding without scalable Computer Modern; now none.
 - **Length:** Section 6 1,798 words (budget 1,870).
+
+### D87 — Section 7 (Discussion): answers table, operator implications, limitations; the research questions fixed for Section 1 [paper, step 7]
+- **Content** (`paper/sections/07_discussion.tex`, 749 words of body text; budget 800): 7.1 three results that reach beyond the dataset and Table 9 (answers to RQ1–RQ5 and H1–H3, with the section that reports the evidence); 7.2 implications for reliability reporting, telemetry quality checks, forecasting pipelines and users of the UCI data; 7.3 limitations, taken from the threats register (paper_handoff §6) and checked against the findings.
+- **The research questions and hypotheses are fixed here, and Section 1 must state them with the same wording:**
+  - RQ1: Can the hierarchy and the signatures alone, without labels, type the anomalies?
+  - RQ2: Which signatures separate grid events from artefacts?
+  - RQ3: Does learning add to the rules?
+  - RQ4: Does type-aware cleaning help downstream?
+  - RQ5: Does the method transfer without re-tuning?
+  - H1: Acquisition failures leave exact zeros, holds or straight lines; de-energised feeders leave a noise floor.
+  - H2: Outages restore with a ramp or an overshoot; gaps return directly.
+  - H3: Load transfers conserve current; faults and gaps do not.
+- **H1 answer recomputed from `results/catalogue_v1/items.csv`** (new numbers in results_summary §5): the three multi-city dead items have η = 1.0; of the 74 southern single-zone dead items, 40 have η < 0.9 (noise floor) and 19 are pure zeros. So H1 is supported for multi-city events and only partly for single feeders (the handoff's "84 of 126 dead items have η < 0.9" mixes in Marrakech, where 44 of 48 do).
+- **No SAIDI / IEEE 1366 reference:** the DOI 10.1109/IEEESTD.2022.9955492 resolves to "IEEE Guide for Electric Power Distribution Reliability Indices" (2022-11-18), but the link to the standard number 1366-2022 could not be confirmed (the IEEE standards page returned 502). The text says "duration-based reliability indices" without a citation; the reference can be added in Section 1 or 2 once verified.
+- **Limitations added to fill the budget with substance:** time stamps as recorded (two calendars); Marrakech outside the benchmark (all 48 dead items in zone M2, 44 noise floors); the graph ablation and the deep baselines were added after the test results were seen and changed no design (D62, D82, D63).
+- **Budget:** Section 7 800 (was 700); with Sections 1, 2 and 8 at 850, 850 and 250 the total plan is 7,968 used + to write, so Sections 1–2 need about 30 more words than budgeted to reach 8,000.
