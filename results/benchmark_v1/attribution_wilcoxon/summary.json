@@ -1,0 +1,27 @@
+{
+ "beta_star": {
+  "1%": 0.7,
+  "3%": 0.6,
+  "7%": 0.6
+ },
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9
+ ],
+ "rates": [
+  "1%",
+  "3%",
+  "7%"
+ ],
+ "selection": "test period, detected, true type in the seven typed classes (as NB4 Table 6)",
+ "test": "scipy.stats.wilcoxon, two-sided, zero differences dropped (exact when no ties, else normal approximation)",
+ "table6_means_reproduced": true
+}

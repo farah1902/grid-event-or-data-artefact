@@ -264,6 +264,14 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 | `clock_offsets.csv` | date, event, city, delta_star_min, corr_at_0, corr_best (NB1; calendar dates only) |
 | `interp_runs.csv` | NB1's interpolation runs (≥ 6 points everywhere, before the v1 priority rules): city, zone, start, end, points, slope_per_step, group |
 
+### Paired tests of Table 6 — `results/benchmark_v1/attribution_wilcoxon/` (from `tools/attribution_wilcoxon.py`; D94, F66)
+
+| File | Content |
+|---|---|
+| `macro_f1_per_dataset.csv` | rate, seed, labeler (majority vote, label model q, fusion β* with D50 abstention), n, macro_f1 on the typed test events the full method detects |
+| `wilcoxon.csv` | per rate: label model and fusion vs majority vote: means, counts better / ties / majority vote better, two-sided Wilcoxon p |
+| `summary.json` | β* per rate (from `beta_tuning_train_period.csv`), selection, test, check that the means reproduce `table6_attribution.csv` |
+
 ## Benchmark — `results/benchmark_v1/` (from `src/benchmark.py`, `src/inject.py`, `src/graph_model.py`, NB4)
 
 | File | Content |

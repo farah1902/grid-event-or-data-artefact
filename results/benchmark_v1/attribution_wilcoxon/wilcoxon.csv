@@ -1,0 +1,7 @@
+rate,comparison,mean_other,mean_mv,other_better,ties,mv_better,wilcoxon_p
+1%,label model q vs majority vote,0.9345,0.9397,1,6,3,0.14412703481601533
+1%,"fusion (β*, D50 abstention) vs majority vote",0.9442,0.9397,3,6,1,0.4652088184521418
+3%,label model q vs majority vote,0.9142,0.9209,2,0,8,0.130859375
+3%,"fusion (β*, D50 abstention) vs majority vote",0.9194,0.9209,5,2,3,0.8886378608950078
+7%,label model q vs majority vote,0.9003,0.9134,1,0,9,0.005859375
+7%,"fusion (β*, D50 abstention) vs majority vote",0.9064,0.9134,3,0,7,0.130859375

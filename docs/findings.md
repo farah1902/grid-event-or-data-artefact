@@ -826,3 +826,11 @@ All numbers in this section are from the **development datasets** (seeds 100–1
   - ours vs majority vote: not better (p = 0.32, 0.14; at 7 % majority vote is better, p = 0.021), as F46.
 - **Where Snorkel errs:** of the 213 events ours types correctly and Snorkel (+ feasible sets) does not, 174 are single-zone fills (A3) labelled N: the A3 rules only ever vote A3, so nothing in the votes separates A3 from N for an estimator without our applicability and feasibility structure. In the other direction (75 events), ours errs mostly on A2 → N (50).
 - **Paper:** Sections 2.3, 4.4 (now "Why generic label models fall short here"), 6.2, 6.5, 7.3 and Table 9.
+
+### F66 — Majority vote is slightly but significantly more accurate than the label model at 7 % contamination, on both injected test sets; the fusion is not different from majority vote — *solid*
+- **Detected events (Table 6 set; `tools/attribution_wilcoxon.py` -> `results/benchmark_v1/attribution_wilcoxon/`):** per-dataset macro-F1 rebuilt from the NB4 run files (means reproduce `table6_attribution.csv`); paired Wilcoxon over 10 seeds:
+  - label model q vs majority vote: 0.934 vs 0.940 (q better 1, ties 6, majority vote better 3; p = 0.14), 0.914 vs 0.921 (2 / 0 / 8; p = 0.13), 0.900 vs 0.913 (1 / 0 / 9; **p = 0.006**);
+  - fusion (β*, D50 abstention) vs majority vote: 0.944 vs 0.940 (p = 0.47), 0.919 vs 0.921 (p = 0.89), 0.906 vs 0.913 (p = 0.13).
+- **Rule-matched events (Snorkel test set, F65):** majority vote 0.919 vs label model 0.907 at 7 % (majority vote better in 9 seeds, 1 tie; **p = 0.021**); not different at 1 % and 3 % (p = 0.32, 0.14).
+- **Reading:** on clean injected signatures, where the rules rarely conflict, the label model's re-weighting costs a little accuracy at the highest contamination; the fusion with the end model recovers it. Refines F46 ("does not beat" becomes "slightly worse, significantly only at 7 %").
+- **Paper:** Section 6.5 (both test sets), Section 7.1 ("at least as accurate"), Table 9 RQ3.

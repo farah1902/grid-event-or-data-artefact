@@ -468,6 +468,7 @@ Authors' released settings, trained on the real series (cross-fitted, rule-clean
   - G1 133/133; G2 126/137 (→ N 11); G3 108/123 (→ G4 15); G4 126/126.
 - **A1 → G1 mechanism** (3 %, both periods, label-model arg max, 271 detected A1): multi-city zero gaps → G1 in 40/128 (two cities) and 29/100 (three cities); zero fills after a city fill → G2 in 13/25. Label-model A1 accuracy 0.697; without the simultaneity family 0.834. G1 accuracy 1.000 either way.
 - **End to end** (typed test events, detected and correctly typed, `end_to_end.csv`): 0.945 ± 0.038 / 0.907 ± 0.026 / 0.896 ± 0.020. Detected share 1.000 / 1.000 / 0.9996.
+- **Paired tests against majority vote** (`attribution_wilcoxon/wilcoxon.csv`, F66; 10 seeds): label model q p = 0.14 / 0.13 / **0.006** (majority vote better in 3 / 8 / 9 seeds); fusion (β*, D50) p = 0.47 / 0.89 / 0.13. On the rule-matched (Snorkel) set: label model vs majority vote p = 0.32 / 0.14 / **0.021**.
 - **Table 7a (3 %):** majority vote 0.921; label model 0.914 (ECE 0.089); fusion without detector features 0.918 (0.090); fusion with D50 abstention 0.919 (0.090).
 
 ### 9.5 Rule-family ablation (Table 7c; 3 %, label model macro-F1, test)

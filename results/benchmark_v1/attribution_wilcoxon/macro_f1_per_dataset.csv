@@ -1,0 +1,91 @@
+rate,seed,labeler,n,macro_f1
+1%,0,majority vote (rules),37,1.0
+1%,0,label model q,37,1.0
+1%,0,"fusion (β*, D50 abstention)",37,1.0
+1%,1,majority vote (rules),30,0.9711399711399711
+1%,1,label model q,30,0.9711399711399711
+1%,1,"fusion (β*, D50 abstention)",30,0.9711399711399711
+1%,2,majority vote (rules),42,0.9413947397140675
+1%,2,label model q,42,0.950731807874665
+1%,2,"fusion (β*, D50 abstention)",42,0.9543817527010804
+1%,3,majority vote (rules),22,0.8240362811791382
+1%,3,label model q,22,0.8113378684807255
+1%,3,"fusion (β*, D50 abstention)",22,0.8716553287981859
+1%,4,majority vote (rules),28,0.9428571428571428
+1%,4,label model q,28,0.9428571428571428
+1%,4,"fusion (β*, D50 abstention)",28,0.9428571428571428
+1%,5,majority vote (rules),30,0.9206349206349207
+1%,5,label model q,30,0.9079365079365079
+1%,5,"fusion (β*, D50 abstention)",30,0.9206349206349207
+1%,6,majority vote (rules),33,0.9510204081632653
+1%,6,label model q,33,0.9510204081632653
+1%,6,"fusion (β*, D50 abstention)",33,0.9510204081632653
+1%,7,majority vote (rules),28,0.8795918367346939
+1%,7,label model q,28,0.8795918367346939
+1%,7,"fusion (β*, D50 abstention)",28,0.9
+1%,8,majority vote (rules),28,0.9666048237476809
+1%,8,label model q,28,0.9666048237476809
+1%,8,"fusion (β*, D50 abstention)",28,0.9666048237476809
+1%,9,majority vote (rules),34,1.0
+1%,9,label model q,34,0.963718820861678
+1%,9,"fusion (β*, D50 abstention)",34,0.963718820861678
+3%,0,majority vote (rules),114,0.8917050421838384
+3%,0,label model q,114,0.8913261107704243
+3%,0,"fusion (β*, D50 abstention)",114,0.8917050421838384
+3%,1,majority vote (rules),86,0.939784083394631
+3%,1,label model q,86,0.9273502209607687
+3%,1,"fusion (β*, D50 abstention)",86,0.9132987382987384
+3%,2,majority vote (rules),96,0.904301046583508
+3%,2,label model q,96,0.903242845525307
+3%,2,"fusion (β*, D50 abstention)",96,0.904301046583508
+3%,3,majority vote (rules),87,0.978806907378336
+3%,3,label model q,87,0.9560439560439561
+3%,3,"fusion (β*, D50 abstention)",87,0.9461446558220752
+3%,4,majority vote (rules),68,0.9500499500499501
+3%,4,label model q,68,0.9489870743067674
+3%,4,"fusion (β*, D50 abstention)",68,0.9465940222242744
+3%,5,majority vote (rules),113,0.8953549824295097
+3%,5,label model q,113,0.8855962402229497
+3%,5,"fusion (β*, D50 abstention)",113,0.9001932813854557
+3%,6,majority vote (rules),86,0.9192840492840493
+3%,6,label model q,86,0.9208539079967651
+3%,6,"fusion (β*, D50 abstention)",86,0.9322710622710624
+3%,7,majority vote (rules),96,0.9274489795918368
+3%,7,label model q,96,0.916734693877551
+3%,7,"fusion (β*, D50 abstention)",96,0.9445918367346939
+3%,8,majority vote (rules),79,0.8865184815184816
+3%,8,label model q,79,0.8632584082584083
+3%,8,"fusion (β*, D50 abstention)",79,0.8867016317016317
+3%,9,majority vote (rules),86,0.9160165303540985
+3%,9,label model q,86,0.9285095856524429
+3%,9,"fusion (β*, D50 abstention)",86,0.9285095856524429
+7%,0,majority vote (rules),252,0.9294492494287884
+7%,0,label model q,252,0.9012162927917228
+7%,0,"fusion (β*, D50 abstention)",252,0.9085471440096169
+7%,1,majority vote (rules),254,0.9108436425036867
+7%,1,label model q,254,0.9069414414183871
+7%,1,"fusion (β*, D50 abstention)",254,0.9206958592524552
+7%,2,majority vote (rules),254,0.9247792760049487
+7%,2,label model q,254,0.9238119644577599
+7%,2,"fusion (β*, D50 abstention)",254,0.9328419468210757
+7%,3,majority vote (rules),222,0.9098317745231684
+7%,3,label model q,222,0.8959119835575721
+7%,3,"fusion (β*, D50 abstention)",222,0.9048845380966289
+7%,4,majority vote (rules),258,0.9126608666919973
+7%,4,label model q,258,0.8995919203123435
+7%,4,"fusion (β*, D50 abstention)",258,0.9052486274396386
+7%,5,majority vote (rules),270,0.9187983340995903
+7%,5,label model q,270,0.8940992622614043
+7%,5,"fusion (β*, D50 abstention)",270,0.9021256693416494
+7%,6,majority vote (rules),295,0.9298622905913324
+7%,6,label model q,295,0.9111014050392204
+7%,6,"fusion (β*, D50 abstention)",295,0.9159477665947121
+7%,7,majority vote (rules),257,0.8818756254145806
+7%,7,label model q,257,0.8730297480297481
+7%,7,"fusion (β*, D50 abstention)",257,0.8738956562284523
+7%,8,majority vote (rules),221,0.919955587297733
+7%,8,label model q,221,0.9225482759158299
+7%,8,"fusion (β*, D50 abstention)",221,0.9241454365192017
+7%,9,majority vote (rules),249,0.8957759502402359
+7%,9,label model q,249,0.8749642826175107
+7%,9,"fusion (β*, D50 abstention)",249,0.8760855372998428

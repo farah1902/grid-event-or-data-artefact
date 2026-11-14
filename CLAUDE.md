@@ -56,6 +56,7 @@ tools/marrakech_beta_sensitivity.py Marrakech labels vs the fusion weight β (NB
 tools/deep_baselines.py      deep multivariate baselines GDN and USAD on the NB4 datasets -> results/benchmark_v1/deep_baselines/ (D82, F61)
 tools/gdn_forecast_check.py  GDN's forecast vs persistence on the real series (F63)
 tools/snorkel_baseline.py    Snorkel's LabelModel on the same votes (real data + 30 NB4 datasets); run with a venv that has snorkel==0.10.0 (see its docstring) -> results/labels_v1/snorkel/, results/benchmark_v1/snorkel_baseline/ (D92, F65)
+tools/attribution_wilcoxon.py paired Wilcoxon tests behind Table 6 (label model and fusion vs majority vote; seconds) -> results/benchmark_v1/attribution_wilcoxon/ (D94, F66)
 tools/forecast_all_datasets.py forecasting test (NB5 §4, unchanged) on all 30 NB4 test datasets -> results/downstream_v1/forecast_all/ (D83, F62)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary
