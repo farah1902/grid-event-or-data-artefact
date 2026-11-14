@@ -10,15 +10,19 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{tabularx}
 \usepackage{lineno}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 
 \graphicspath{{figures/}}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 
 % notation used throughout
+\usepackage{dsfont}
 \newcommand{\xh}{\hat{x}}
+\newcommand{\one}{\mathds{1}}   % indicator function
 
 \journal{Applied Energy}
 

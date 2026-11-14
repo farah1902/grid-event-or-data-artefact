@@ -39,6 +39,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 1 | Outline | done (2026-11-13) |
 | 2 | LaTeX skeleton, verified dataset references | done (2026-11-14) |
 | 3 | §3 Data, hierarchy and typology | first draft (2026-11-14), 712 words |
-| 4–12 | §4 Method … final checks | to do |
+| 4 | §4 Method | first draft (2026-11-14), 1,497 words; Eqs (3)–(22), Table 3 (rules), Fig 3; 12 method references verified |
+| 5–12 | §5 Experimental design … final checks | to do |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).

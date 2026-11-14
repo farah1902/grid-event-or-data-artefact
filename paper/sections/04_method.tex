@@ -1,4 +1,191 @@
-% Method -- budget 1750 words. Plan (paper/OUTLINE.md): 4.1 overview (Fig 3); 4.2 states and signatures, Eqs (3)-(10); 4.3 rules (Table 4); 4.4 why the standard label model fails, Eq (11); 4.5 constrained label model, Eqs (12)-(13); 4.6 detector, Eqs (14)-(18); 4.7 end model and fusion, Eqs (19)-(20); 4.8 type-aware cleaning, Eq (21). Step 4.
+% Method -- budget 1,750 words (body text).
+% Source: docs/methods.md (sections 2-8, the method as implemented), docs/decisions.md (D-numbers in comments),
+% results/paper/tables/Table3_rules.csv. External references verified in references.bib.
 \section{Method}\label{sec:method}
 
-[To be written.]
+\subsection{Overview}\label{sec:overview}
+
+Fig.~\ref{fig:framework} summarises the framework. Per-step states turn each series into candidate \emph{items}. Labelling rules vote on the items, and a label model combines the votes into probabilistic labels without any manual annotation (weak supervision \cite{ratner2017snorkel}). In parallel, a multi-scale residual detector scores every zone at every step and finds anomalies that no rule covers. An end model learns the labels from item features, including the detector's scores, and a fusion step combines both sources of evidence into the final typed, probabilistic catalogue. Type-aware cleaning then uses the catalogue.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\textwidth]{Figure_3}
+\caption{Framework. Per-step states and items feed 19 labelling rules and a constrained Dawid--Skene label model (weak supervision, no manual labels). A multi-scale hierarchical residual detector finds anomalies that no rule covers. An end model and a fusion step produce the typed, probabilistic catalogue, which is evaluated by injection, by a downstream test and by transfer to another city (Section~\ref{sec:experiments}).}
+\label{fig:framework}
+\end{figure}
+
+\subsection{Per-step states, items and signatures}\label{sec:states}
+
+Four states are computed for each zone series. A step is an exact zero if $x_{z,t} = 0$ and at the noise floor if $x_{z,t} \leq \varepsilon\, \xh_{z,t}$, with $\varepsilon = 0.05$. A zone is \emph{dead} at step $t$ when
+\begin{equation}
+d_{z,t} = \one[x_{z,t} = 0] \;\lor\; \big(\one[x_{z,t} \leq \varepsilon\, \xh_{z,t}] \land \lnot \ell_{z,t}\big),
+\label{eq:dead}
+\end{equation}
+where $\ell_{z,t}$ marks straight-line fills (below); dead runs need at least three steps. For a dead run $E$, the exact-zero share
+\begin{equation}
+\eta_E = \frac{1}{|E|} \sum_{t \in E} \one[x_{z,t} = 0]
+\label{eq:eta}
+\end{equation}
+separates exact zeros, which a recording gap produces, from the small residual current of a de-energised feeder. A step is \emph{held} if it belongs to a run of at least $m_h$ identical non-zero values,
+\begin{equation}
+h_{z,t} = \one[x_{z,t} = x_{z,t-1} \neq 0],
+\label{eq:hold}
+\end{equation}
+with $m_h = 6$ at 10~min and 12 at 30~min. Straight-line fills, the signature found in the data audit, are runs of at least $m_\ell$ collinear points (6 at 10~min, 12 at 30~min), detected through a vanishing second difference:
+\begin{equation}
+\ell_{z,t} = \one\big[\, |\Delta^2 x_{z,t}| < 10^{-8} \max(1, |x_{z,t}|) \;\land\; |\Delta x_{z,t}| > 10^{-12} \;\land\; x_{z,t} \neq 0 \,\big].
+\label{eq:linear}
+\end{equation}
+When states overlap, exact zero takes precedence over a straight-line fill, which takes precedence over the noise floor and then the hold.
+
+\emph{Items} are the units the rules vote on. Dead runs of one system whose starts lie within $\tau = 10$~min of the first start form a dead item; hold and straight-line runs form fill items in the same way. The simultaneity of an item is the number of cities involved,
+\begin{equation}
+S_E = \left| \left\{ c : \exists z \in c,\; |s_{z} - s_E| \leq \tau \right\} \right|, \qquad s_E = \min_{z} s_{z},
+\label{eq:simultaneity}
+\end{equation}
+where $s_z$ is the start of zone $z$'s run. Each item also records whether a fill run in another zone is co-extensive with it (time intersection over union $\geq 0.5$) and whether a fill ends exactly where a dead run begins. Items that overlap or touch, and share a boundary or most of their span, are linked into \emph{episodes}.
+
+Restoration is measured after the event, but only once any straight-line fill that follows it has ended, because such a fill imitates a ramp. With $k_z$ the first step after the run and after any adjoining fill in zone $z$,
+\begin{equation}
+r_E = \frac{\sum_{z} \sum_{j=0}^{n_{30}-1} x_{z,k_z+j}}{\sum_{z} \sum_{j=0}^{n_{30}-1} \xh_{z,k_z+j}}, \qquad
+\pi_E = \max_{0 \leq j < n_{60}} \frac{\sum_{z} x_{z,k_z+j}}{\sum_{z} \xh_{z,k_z+j}},
+\label{eq:restoration}
+\end{equation}
+where $n_{30}$ and $n_{60}$ are the steps in 30 and 60~min; the ramp time $\tau_E$ is the delay until the ratio first reaches 0.9 (within 6~h). % D22, F05
+
+Two further item kinds test the remaining types. For load transfers, $\Delta_z(d)$ is the change in a zone's 14-day median of daily means around day $d$, and a candidate day is one where one zone rises and another falls by more than a quarter of their mean level. The conservation index
+\begin{equation}
+\kappa(d) = \frac{\left| \sum_z \Delta_z(d) \right|}{\max\big(\Delta^{+}(d),\, -\Delta^{-}(d)\big)},
+\label{eq:kappa}
+\end{equation}
+with $\Delta^{+}$ and $\Delta^{-}$ the largest rise and fall, is near 0 when current moves between feeders and near 1 when load appears or disappears. For clock errors, candidate dates are the European and Moroccan clock-change dates and every date with duplicated or missing stamps. With $p_{\mathrm{pre}}$ and $p_{\mathrm{post}}$ the mean normalised daily profiles over the 7 days before and after a date (anomalous steps removed), the clock offset is
+\begin{equation}
+\delta^{*} = \arg\max_{\delta \in [-120,\,120]\ \mathrm{min}} \operatorname{corr}\big(p_{\mathrm{pre}},\, \operatorname{shift}_{\delta}(p_{\mathrm{post}})\big).
+\label{eq:clock}
+\end{equation}
+
+\subsection{Labelling rules}\label{sec:rules}
+
+Nineteen rules turn these signatures into votes (Table~\ref{tab:rules}). Each rule emits one label or abstains. The rules fall into nine families: simultaneity, holds, restoration, city, single zone, calendar, clock, conservation and straight-line fills. Nine of the rules are \emph{defining}, i.e. their condition is the type's definition. A rule may vote for the grid-event family as a whole (G) rather than a single type. No rule uses external records.
+
+\begin{table}[tbp]
+\centering
+\caption{Labelling rules. Item: the item kind the rule reads. Coverage: share of the real-data items of that kind on which the rule fires. Precision: the label model's learned precision (mean posterior mass on the voted type over the items the rule fires on). R7 never fires on the real data. $^{\dagger}$Defining rule. $r_E$, $\pi_E$, $\tau_E$: Eq.~(\ref{eq:restoration}).}
+\label{tab:rules}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\textwidth}{@{}l l l l Y r r@{}}
+\toprule
+Rule & Family & Item & Vote & Condition & Coverage & Precision \\
+\midrule
+R1 & Simultaneity & Dead & A1 & $S_E \geq 2$, $\eta_E \geq 0.95$, $|r_E - 1| \leq 0.2$, $\tau_E \leq 10$~min & 0.008 & 1.00 \\
+R2$^{\dagger}$ & Hold & Fill & A2 & Held in $\geq 2$ zones & 0.077 & 0.99 \\
+R3 & Hold & Dead & A1 & A hold ends where the dead run starts & 0.024 & 0.67 \\
+R4 & Hold & Dead & A1 & A co-extensive hold in another zone & 0.024 & 0.33 \\
+R5 & Restoration & Dead & G & Overshoot $\pi_E \geq 1.15$ & 0.167 & 0.96 \\
+R6 & Restoration & Dead & G & Noise floor, $\eta_E < 0.9$ & 0.667 & 1.00 \\
+R7 & Simultaneity & Dead & G1 & $S_E \geq 2$, no hold or fill evidence, and R5, R6 or slow restoration & 0 & -- \\
+R8$^{\dagger}$ & City & Dead & G2 & $\geq 90\%$ of one city's zones dead, other cities alive & 0.008 & 0.99 \\
+R9 & Single zone & Dead & G3 & One zone & 0.968 & 1.00 \\
+R10$^{\dagger}$ & Calendar & Dead & G4 & One zone, starts 06:00--11:59, lasts $\leq 6$~h & 0.548 & 0.96 \\
+R11 & Single zone & Dead & G3 & One zone, lasts $> 24$~h & 0.032 & 0.98 \\
+R12$^{\dagger}$ & Hold & Fill & A3 & Held in one zone, neighbours varying & 0.284 & 1.00 \\
+R13$^{\dagger}$ & Clock & Clock & A4 & Duplicated stamps on the date & 0.242 & 0.93 \\
+R14$^{\dagger}$ & Calendar & Clock & A4 & Missing stamps on a clock-change date & 0.182 & 0.70 \\
+R15 & Clock & Clock & A4 & $|\delta^*| \geq 50$~min, correlation $\geq 0.9$ at $\delta^*$ and $\geq 0.05$ above that at 0 & 0.182 & 0.89 \\
+R16$^{\dagger}$ & Conservation & Transfer & G5 & $\kappa \leq 0.3$ & 0.077 & 0.68 \\
+R19$^{\dagger}$ & Straight line & Fill & A2 & Straight-line fill in $\geq 2$ zones & 0.310 & 1.00 \\
+R20$^{\dagger}$ & Straight line & Fill & A3 & Straight-line fill in one zone, neighbours varying & 0.310 & 1.00 \\
+R21 & Straight line & Dead & A1 & A straight-line fill ends where the dead run starts, or is co-extensive & 0.040 & 0.19 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Why the standard label model fails here}\label{sec:dsfail}
+
+The Dawid--Skene model \cite{dawid1979} treats each rule $r$ as an annotator with a confusion matrix $\theta_r(y, l)$, the probability that $r$ outputs $l$ on an item of type $y$ when it fires, and computes, for item $i$,
+\begin{equation}
+q_i(y) \propto \pi_y \prod_{r:\, \lambda_r(i) \neq \varnothing} \theta_r\big(y, \lambda_r(i)\big).
+\label{eq:ds}
+\end{equation}
+When abstentions are ignored, as in Eq.~(\ref{eq:ds}), a rule that can emit only one label $l$ has $\theta_r(y, l) = 1$ for every $y$: its vote multiplies every class by the same factor, and the posterior equals the prior. All nineteen rules are of this kind, so Eq.~(\ref{eq:ds}) cannot use them. Modelling abstention restores the information, but a free confusion matrix per rule is then poorly identified, because most items receive only one to three votes (Section~\ref{sec:results}).
+
+\subsection{A constrained label model with abstention}\label{sec:labelmodel}
+
+Three constraints make the model identifiable. First, each item kind and level has a feasible set $\mathcal{Y}(i)$; for example, a dead item spanning two cities can only be A1 or G1, and a single-zone fill only A3 or N. Second, a rule only counts on the items it can observe (its applicability set $\mathcal{A}(i)$), and its abstention there is informative. Third, each rule output $l$ has a set $S(r, l)$ of types it speaks for. The posterior is
+\begin{equation}
+q_i(y) \propto \one[y \in \mathcal{Y}(i)]\; \pi_{k(i)}(y) \prod_{r \in \mathcal{A}(i)} \theta_r\big(y, o_{ir}\big), \qquad o_{ir} \in \{\varnothing\} \cup \mathrm{out}(r),
+\label{eq:lm}
+\end{equation}
+with a class prior $\pi_k$ per item kind, and each output has two parameters, in the spirit of the one-coin model \cite{zhang2016spectral}:
+\begin{equation}
+\theta_r(y, l) = \begin{cases} a_{rl}, & y \in S(r,l), \\ b_{rl}, & y \notin S(r,l), \end{cases} \qquad \theta_r(y, \varnothing) = 1 - \sum_{l} \theta_r(y, l).
+\label{eq:onecoin}
+\end{equation}
+The expectation--maximisation updates use Beta pseudo-counts:
+\begin{equation}
+\begin{gathered}
+a_{rl} = \frac{\alpha_1 + \sum_i m_{i} \one[o_{ir} = l]}{\alpha_1 + \alpha_0 + \sum_i m_{i}}, \qquad
+b_{rl} = \frac{\beta_1 + \sum_i n_{i} \one[o_{ir} = l]}{\beta_1 + \beta_0 + \sum_i n_{i}}, \\
+\pi_k(y) \propto \gamma + \sum_{i:\, k(i) = k} q_i(y),
+\end{gathered}
+\label{eq:mstep}
+\end{equation}
+where the sums run over the items to which $r$ applies, and $m_i$ and $n_i$ are the posterior masses on $S(r,l)$ and on its complement. We set $(\alpha_1, \alpha_0) = (1, 1)$, or $(9, 1)$ for defining rules, $(\beta_1, \beta_0) = (1, 9)$ and $\gamma = 1$, and keep the best of 20 restarts. % D28-D34
+
+\subsection{Multi-scale hierarchical residual detector}\label{sec:detector}
+
+The detector predicts each zone's relative level $\rho_{z,t}$ (clipped to $[0, 3]$) from information that excludes the zone's own current value, and scores the residual
+\begin{equation}
+e_{z,t} = \rho_{z,t} - \hat{\rho}_{z,t}, \qquad \hat{\rho}_{z,t} = f\big(\rho_{z,<t},\, \{\rho_{z',t}\}_{z' \in \mathcal{N}(z)},\, \mathbf{c}_t\big),
+\label{eq:residual}
+\end{equation}
+where $\mathbf{c}_t$ holds calendar features and the zone's values one and seven days earlier. The predictor $f$ combines a causal temporal convolutional network \cite{bai2018tcn} over the zone's past (six residual blocks, dilations 1 to 32, a receptive field of about 42~h) with two-head graph attention \cite{velickovic2018gat} over the current values of its neighbours $\mathcal{N}(z)$: the zones of the same city and the four zones of other cities whose learned embeddings are most similar, as in GDN \cite{deng2021gdn}. It is trained with a Huber loss \cite{huber1964} on rule-clean steps only, with two-fold temporal cross-fitting so that every prediction is made out of sample. The learned graph is evaluated as an ablation (Section~\ref{sec:results}).
+
+The residual is split into frequency bands by a maximal overlap discrete wavelet transform (MODWT) with LA(8) filters \cite{percival2000wavelet},
+\begin{equation}
+W_{j,t} = \sum_{l=0}^{L-1} \tilde{h}_l\, V_{j-1,\, t-2^{j-1} l}, \qquad V_{j,t} = \sum_{l=0}^{L-1} \tilde{g}_l\, V_{j-1,\, t-2^{j-1} l}, \qquad V_{0} = e,
+\label{eq:modwt}
+\end{equation}
+for $j = 1, \dots, 4$, where $\tilde{g}$ and $\tilde{h}$ are the LA(8) scaling and wavelet filters rescaled for the MODWT and $L = 8$. Each band is shifted by its group delay so that the bands align in time, and the detector uses $b \in \{e, W_1, \dots, W_4, V_4\}$. In each band, the residual is decomposed along the hierarchy into a region part, a city part and a zone part:
+\begin{equation}
+g_t = \operatorname*{med}_{z \in R} e_{z,t}, \qquad u_{c,t} = \operatorname*{med}_{z \in c} e_{z,t} - g_t, \qquad v_{z,t} = e_{z,t} - g_t - u_{c(z),t}.
+\label{eq:hierarchy}
+\end{equation}
+A failure shared by the whole system moves $g$, a city outage moves $u_c$ and a feeder fault moves only $v_z$. Each part $\epsilon \in \{g, u_c, v_z\}$ is scored by a trailing robust $z$-score,
+\begin{equation}
+s_t^{\epsilon} = \frac{|\epsilon_t| - \operatorname{med}_{W}|\epsilon|}{1.4826\, \operatorname{MAD}_{W}|\epsilon| + 10^{-6}},
+\label{eq:score}
+\end{equation}
+where $W$ is the previous 28 days restricted to rule-clean steps and the MAD is scaled to be consistent at the normal distribution \cite{rousseeuw1993mad}. Structural zeros ($|\epsilon| \leq 10^{-12}$) are excluded from $W$: a median over an odd number of zones is attained by one of them, whose part is then exactly zero and would otherwise collapse the scale. % D51, F35
+
+The zone-step score $Z_{z,t} = \max_b \max(s^{g}_t, s^{u_{c(z)}}_t, s^{v_z}_t)$ is smoothed and thresholded:
+\begin{equation}
+\tilde{Z}_{z,t} = \frac{1}{w} \sum_{k=-\lfloor w/2 \rfloor}^{\lceil w/2 \rceil - 1} Z_{z,t+k}, \qquad
+\mathrm{flag}_{z,t} = \one\big[\tilde{Z}_{z,t} > \gamma_q\big],
+\label{eq:events}
+\end{equation}
+with $\gamma_q$ the $q$-quantile of $\tilde{Z}$ on zone-steps far from any rule state. Flag runs of at least three steps, merged across gaps of up to $g_{\max}$ steps, are the detector's events; those that overlap no rule item are \emph{detector-only candidates}. The setting $(w, q, g_{\max}) = (24, 99.9\%, 12)$, i.e. 4~h smoothing, was chosen on development data like the settings of every compared detector (Section~\ref{sec:experiments}).
+
+\subsection{End model and fusion}\label{sec:fusion}
+
+The end model learns the label-model posteriors from features that every item has: structure (duration, numbers of zones and cities), shares of each per-step state, the dynamics of $\rho$ before, during and after the item, calendar, adjacency to fills, episode context and the detector's level and band scores. Rule items carry their posterior $q_i$ as a soft target, normal windows carry the target N, and detector-only candidates are unlabelled. A LightGBM classifier \cite{ke2017lightgbm} minimises the soft-label cross-entropy
+\begin{equation}
+\mathcal{L} = -\frac{1}{n} \sum_{i} \sum_{y} q_i(y) \log f(y \mid \boldsymbol{\phi}_i),
+\label{eq:endmodel}
+\end{equation}
+and predicts out of fold, with folds grouped by episode. The fusion is a weighted product of the two experts \cite{hinton2002poe}, restricted to the feasible set:
+\begin{equation}
+p_i(y) \propto \one[y \in \mathcal{Y}(i)]\; q_i(y)^{\beta}\, f(y \mid \boldsymbol{\phi}_i)^{1-\beta}.
+\label{eq:fusion}
+\end{equation}
+The rules bring evidence the features cannot express, and the end model brings detector and context evidence, so either source can change the winning type. The weight $\beta$ is tuned on the training period of the injected data (Section~\ref{sec:experiments}). The end model abstains ($p = q$) for classes with too little training mass, and detector-only candidates use a uniform $q$, so their type follows $f$. Clock and transfer items keep their label-model posterior.
+
+\subsection{Type-aware cleaning}\label{sec:cleaning}
+
+Cleaning changes only flagged zone-steps (dead, held or straight-line states inside a qualifying run). Four strategies are compared: S0 keeps the raw data; S1 interpolates every flagged run linearly, outages included; S2, the type-aware strategy, uses the catalogue; S3 is an oracle that uses the true types and exists only for injected data. In S2, artefact steps (A1--A3) are imputed from the expected value, rescaled so that the imputation joins the observed series at both edges:
+\begin{equation}
+\tilde{x}_{z,t} = \xh_{z,t}\big[(1 - \lambda_t)\, \bar{r}_{\mathrm{L}} + \lambda_t\, \bar{r}_{\mathrm{R}}\big],
+\label{eq:impute}
+\end{equation}
+where $\bar{r}_{\mathrm{L}}$ and $\bar{r}_{\mathrm{R}}$ are the median ratios $x/\xh$ of up to three valid steps within 6~h before and after the gap, and $\lambda_t$ rises linearly from 0 to 1 across it. Grid-event steps (G1--G5) are kept as recorded, marked by an event indicator that the forecaster reads, and excluded from its training loss. Items labelled N, clock and transfer items and detector-only candidates are left unchanged.

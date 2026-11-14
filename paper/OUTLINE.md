@@ -58,7 +58,7 @@ Honesty items that protect the value (each stated where it belongs, never hidden
 | 8 Conclusions | 250 |
 | **Total** | **8,000** |
 
-Main paper: **12 figures, 9 tables, 26 equations**; the rest in the supplement. Captions, tables and references do not count towards the 8,000 words.
+Main paper: **12 figures, 9 tables, 27 equations**; the rest in the supplement. Captions, tables and references do not count towards the 8,000 words.
 
 ## Structure, with the place of every figure, table and equation
 
@@ -95,15 +95,15 @@ Paper numbering follows the order of first citation. Source files: `results/pape
 4.2 Per-step states and signatures (methods §2–3). **Eq. (3)** dead state (guide eq 4, ε = 0.05, no exact-zero requirement, D15); **Eq. (4)** exact-zero share η (eq 5); **Eq. (5)** hold (eq 6); **Eq. (6)** straight-line fill (new signature, F01); **Eq. (7)** cross-city simultaneity (eq 7); **Eq. (8)** restoration measured after the fill ramp (eq 3 as implemented, D22); **Eq. (9)** conservation index κ (eq 8); **Eq. (10)** clock offset δ* (eq 9). Items and episodes.
 4.3 Labelling rules: 19 rules in families. **Table 4** (rules: family, label, condition, coverage, learned precision; `Table3_rules`, compact; full version in the supplement).
 4.4 Why the standard label model fails here. **Eq. (11)**: with single-label rules θ_r(y, l) = 1 and the posterior equals the prior (F20).
-4.5 The constrained (one-coin) label model with abstention. **Eq. (12)** likelihood; **Eq. (13)** EM updates with priors (exact form from methods §5).
-4.6 Multi-scale hierarchical residual detector: predictor (TCN-GAT; the learned graph is evaluated as an ablation) **Eq. (14)**; MODWT bands **Eq. (15)**; region / city / zone decomposition g, u, v **Eq. (16)** (guide eq 14); robust level score **Eq. (17)** (guide eq 15); event formation (smoothing w, percentile q, merge gap) **Eq. (18)**.
-4.7 End model and fusion. **Eq. (19)** soft-label cross-entropy (guide eq 12); **Eq. (20)** fusion p ∝ q^β f^(1−β) on the feasible set (guide eq 16, corrected).
-4.8 Type-aware cleaning S0–S3. **Eq. (21)** artefact imputation: x̂ scaled to join both edges.
+4.5 The constrained (one-coin) label model with abstention. **Eq. (12)** likelihood with feasibility and applicability; **Eq. (13)** one-coin parameterisation; **Eq. (14)** EM updates with Beta pseudo-counts.
+4.6 Multi-scale hierarchical residual detector: predictor (TCN-GAT; the learned graph is evaluated as an ablation) and residual **Eq. (15)**; MODWT bands **Eq. (16)**; region / city / zone decomposition g, u, v **Eq. (17)** (guide eq 14); robust level score **Eq. (18)** (guide eq 15); event formation (smoothing w, percentile q, merge gap) **Eq. (19)**.
+4.7 End model and fusion. **Eq. (20)** soft-label cross-entropy (guide eq 12); **Eq. (21)** fusion p ∝ q^β f^(1−β) on the feasible set (guide eq 16, corrected).
+4.8 Type-aware cleaning S0–S3. **Eq. (22)** artefact imputation: x̂ scaled to join both edges.
 
 ### 5 Experimental design
 5.1 Injection benchmark: observed signatures injected into clean zone-time (D54), types, rates 1 / 3 / 7 %, development seeds 100–104 for every choice, test seeds 0–9 untouched until the final run (D60, D63). Fig S10.
 5.2 Methods compared: rules; main detector; its ablations (graph off, single scale, flat, raw residual, LightGBM predictor, NB3 event formation); hybrids; STL + MAD; LOF; Isolation Forest. Event formation tuned alike for every detector (D60).
-5.3 Metrics: **Eq. (22)** event F1 (guide eq 17), zone-strict variant, step AUC-PR, onset error; **Eq. (23)** ECE (guide eq 18), macro-F1; **Eq. (24)** MASE (guide eq 19); **Eq. (25)** Diebold–Mariano statistic on summed scaled loss (guide eq 20, D66); **Eq. (26)** outage ratio and its distance |log ratio| (D76).
+5.3 Metrics: **Eq. (23)** event F1 (guide eq 17), zone-strict variant, step AUC-PR, onset error; **Eq. (24)** ECE (guide eq 18), macro-F1; **Eq. (25)** MASE (guide eq 19); **Eq. (26)** Diebold–Mariano statistic on summed scaled loss (guide eq 20, D66); **Eq. (27)** outage ratio and its distance |log ratio| (D76).
 5.4 Statistics: mean ± sd over 10 seeds; paired Wilcoxon signed-rank tests.
 5.5 Downstream protocol (D64–D66): strategies S0–S3, LightGBM direct forecaster + naive reference, test period 1 Jan – 24 May 2024, scoring area.
 5.6 Transfer protocol (D68–D71): frozen / re-estimated / adapted, in text; the diagram opens §6.7.

@@ -15,8 +15,9 @@ None of the datasets comes with event labels: there is no record of which zeros 
 \centering
 \caption{Datasets. Regular steps: length of the regular time grid from the first to the last stamp. Missing steps: grid steps without a record. Zone-steps: one zone at one time step.}
 \label{tab:data}
-\small
-\begin{tabular}{@{}lccccrrr@{}}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}l c c c Y r r r@{}}
 \toprule
 City & Zones & Step & Unit & Period & Regular & Missing & Exact-zero \\
      &       & (min) &     &        & steps   & steps   & zone-steps \\
@@ -27,7 +28,7 @@ Foum El Oued & 7 & 10 & A  & 14 Sep 2022 -- 24 May 2024 & 88,890 & 12 & 4,323 \\
 Marrakech    & 2 & 30 & kW & 9 Jan 2023 -- 8 Jan 2024   & 17,520 & 25 & 101 \\
 Tetouan$^{a}$ & 3 & 10 & n.s. & 1 Jan 2017 -- 30 Dec 2017 & 52,416 & 0 & 0 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 
 \vspace{2pt}
 \footnotesize{$^{a}$Transfer test only. n.s.: unit not stated in the repository record \cite{salam2018uci}.}
@@ -73,7 +74,8 @@ Straight-line fills were not part of the initial typology. They appeared in the 
 \caption{Typology. Level: the level of the hierarchy at which the signature appears. Rules: the labelling rules that vote for the type (Section~\ref{sec:method}). Real items: rule items assigned the type in the final catalogue of the real data. $\eta$: share of exact zeros in a dead run; $\pi$: restoration overshoot; $\delta^*$: estimated clock offset; $\kappa$: conservation index.}
 \label{tab:typology}
 \footnotesize
-\begin{tabular}{@{}l L{2.5cm} L{2.0cm} L{5.6cm} L{1.6cm} r@{}}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}l L{2.1cm} L{1.9cm} Y L{1.6cm} r@{}}
 \toprule
 Type & Name & Level & Signature & Rules & Real items \\
 \midrule
@@ -88,7 +90,7 @@ G3 & Unplanned feeder outage & Zone & One zone at the noise floor at any hour, p
 G4 & Planned work & Zone & One zone at the noise floor, starting 06:00--11:59, shorter than 6~h & R10 & 70 \\
 G5 & Load transfer & $\geq 2$ zones of a city & One zone steps down while another steps up by the same amount ($\kappa \approx 0$) & R16 & 1 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \begin{figure}[t]
