@@ -288,6 +288,8 @@ Per class (GBDT, all features): A1 3/3, A2 57/57, A3 95/95, G2 0/1 (→ G4), G3 
 
 **Marrakech β sensitivity** (`marrakech_beta_sensitivity.csv`, F60): the label model and the end model agree on 53 of the 55 Marrakech rule items; every β from 0.4 to 1 gives the same labels as β = 0.5 (G3 35, G4 13, A3 7); β 0.1–0.3 changes 1 label and β = 0 changes 2 (G3 → G4). Marrakech is outside the injection benchmark, so its β stays at 0.5 (D80).
 
+**Final catalogue confidence** (`results/catalogue_final/catalogue.csv`, 327 rule items): mean confidence of the final labels 0.937; 13 items below 0.7. Counts per type of the rule items: A3 98, G4 70, A2 57, G3 52, A4 14, A1 3, G2 1, G5 1 (N 31); detector-only candidates 77 (south 70, Marrakech 7).
+
 **Superseded for the south by NB4 (D61):** the paper's main detector is now the TCN-GAT graph detector with tuned event formation. NB4 §8b writes the south catalogue it produces to `results/main_detector/`. The numbers above describe the LightGBM detector at NB3's event formation (w 1, q 99.5, gap 1). Marrakech keeps them.
 
 ## 8b. NB4 development selection (`results/benchmark_v1/dev/`, `dev_selection.json`; development seeds 100–104, *not test results*)
@@ -581,6 +583,7 @@ All families 0.914 ± 0.029. Without:
   - S1 is never significantly better than S2.
   - S2 closes 62–86 % of the S1-to-S3 gap.
 - **Injected data, naive reference:** S1 is significantly better than S2 in 4/4 datasets at 1 h and 2/4 at 1 day (F54).
+- **Real-data DM p, naive reference, S1 vs S2** (`dm_real.csv`): 1 h after anomaly 0.44, 1 h all 0.44; 1 day after anomaly 0.16, 1 day all 0.16.
 
 ### 10.2b Forecasting on all 30 NB4 test datasets (`forecast_all/`; `tools/forecast_all_datasets.py`, D83, F62) — **cite these for injected data**
 NB5's code unchanged; its 4 datasets reproduced exactly. MASE, mean over 30 datasets, S0 / S1 / S2 / S3; paired Wilcoxon over datasets.

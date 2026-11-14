@@ -1,12 +1,13 @@
 """NB7: figures regenerated from stored results with the fixes noted during the project (D74).
   Fig 8  - level scores recomputed with the saved LightGBM models; the x-axis repeated day labels fixed
-  Fig 9  - NB4's detection figure plus the learned-graph ablation row (D62), shorter labels
+  Fig 9  - NB4's detection figure plus the learned-graph ablation row (D62) and the deep baselines GDN and USAD (D82),
+           shorter labels; paper mode = the paper's Figure 7 (compared methods only, print width, no title; D85)
   E4     - signatures of the v1 dead items (restoration measured after the synthetic ramp, D22), final labels
   E6     - the typed catalogue on one timeline (final labels; v0 types before)
   E19    - end model: the legend moved off the bars; panel (c) uses the final catalogue's candidates
   E22    - Tetouan series: the legend moved off the lines
-  Fig 12 - NB5's downstream figure; panel (c) now from all 30 NB4 test datasets (tools/outage_all_datasets.py, D76)
-           instead of NB5's 4; panels (a), (b) unchanged (Table 8)
+  Fig 12 - NB5's downstream figure; panel (c) from all 30 NB4 test datasets (tools/outage_all_datasets.py, D76) and
+           panel (b) from the 30-dataset forecasting run (D83) instead of NB5's 4; paper mode = the paper's Figure 10 (D85)
 Nothing here changes a method result."""
 import pickle
 import re
@@ -85,10 +86,15 @@ SHORT = {
     B.V_GAT_NB3: "main detector, NB3 event formation",
     B.V_LGB_NB3: "LightGBM, NB3 event formation",
     "STL + MAD": "STL + MAD", "Isolation Forest": "Isolation Forest", "LOF": "LOF",
+    "GDN": "GDN (deep: learned graph)", "USAD": "USAD (deep: autoencoders)",
 }
 ORDER9 = ["ours (rules + detector)", "rules only (rule engine v1)", B.V_GAT, B.V_TCN_MS, B.V_SINGLE, B.V_FLAT, B.V_TCN_RAW,
-          B.V_GAT_NB3, B.V_MEAN, B.V_HYB, B.V_HYB_NOG, B.V_LGB, B.V_LGB_NB3, B.V_NOW, "STL + MAD", "Isolation Forest", "LOF"]
-BASE9 = ["rules only (rule engine v1)", "STL + MAD", "Isolation Forest", "LOF"]
+          B.V_GAT_NB3, B.V_MEAN, B.V_HYB, B.V_HYB_NOG, B.V_LGB, B.V_LGB_NB3, B.V_NOW, "STL + MAD", "Isolation Forest", "LOF",
+          "GDN", "USAD"]
+BASE9 = ["rules only (rule engine v1)", "STL + MAD", "Isolation Forest", "LOF", "GDN", "USAD"]
+# paper mode: the compared methods only; the ablations of the main detector are in Figure 8 (fig9b_ablations)
+ORDER9_PAPER = ["ours (rules + detector)", "rules only (rule engine v1)", B.V_GAT, B.V_LGB, B.V_MEAN, B.V_HYB,
+                "STL + MAD", "LOF", "Isolation Forest", "GDN", "USAD"]
 
 
 def detection_runs():
@@ -100,29 +106,66 @@ def detection_runs():
     nb4 = pd.concat(rows, ignore_index=True)
     ga = pd.read_csv(RES / "benchmark_v1" / "graph_ablation" / "test_detection.csv")
     ga = ga[ga.method == B.V_TCN_MS]
+    deep = pd.read_csv(RES / "benchmark_v1" / "deep_baselines" / "test_detection.csv")      # GDN, USAD (D82)
     cols = ["method", "period", "rate", "seed", "f1", "auc_pr"]
-    d = pd.concat([nb4[cols], ga[cols]], ignore_index=True)
+    d = pd.concat([nb4[cols], ga[cols], deep[cols]], ignore_index=True)
     return d[d.period == "test"]
 
 
-def fig9_detection(fig_dir):
-    dt = detection_runs()
-    rates = [0.01, 0.03, 0.07]
-    fig, axs = plt.subplots(1, 3, figsize=(16, 5.6), sharey=True)
+def _fig9_draw(dt, rates, order, seps, size, paper_name, fig_dir, ms=(5, 4)):
+    """Figure 7 in submission form: print width, no title, one PDF."""
+    fig, axs = plt.subplots(1, 3, figsize=size, sharey=True)
     for ax, rate in zip(axs, rates):
         d = dt[dt.rate == rate]
-        for i, m in enumerate(ORDER9):
+        for i, m in enumerate(order):
+            g = d[d.method == m]
+            col = "#C8553D" if m in ("ours (rules + detector)", B.V_GAT) else ("#2F6690" if m in BASE9 else "#7B5EA7")
+            ax.errorbar(g.f1.mean(), i, xerr=g.f1.std(ddof=1), fmt="o", color=col, ms=ms[0], capsize=1.5, lw=0.9)
+            ax.errorbar(g.auc_pr.mean(), i + 0.3, xerr=g.auc_pr.std(ddof=1), fmt="s", color=col, mfc="white", ms=ms[1],
+                        capsize=1.5, lw=0.9)
+        for y in seps:
+            ax.axhline(y, color="#DDDDDD", lw=0.6)
+        ax.set_yticks(range(len(order))); ax.set_yticklabels([SHORT_PAPER.get(m, SHORT[m]) for m in order]); ax.invert_yaxis()
+        ax.set_xlim(0, 1); ax.set_xticks([0, 0.25, 0.5, 0.75, 1]); ax.set_xticklabels(["0", ".25", ".5", ".75", "1"])
+        ax.set_title(f"{rate:.0%} contamination")
+        ax.grid(axis="x", color="#EEEEEE", lw=0.5); ax.set_axisbelow(True)
+    axs[1].set_xlabel("event F1 (●) and step-wise AUC-PR (□)")
+    fig.tight_layout(w_pad=0.6)
+    fig.savefig(f"{fig_dir}/{paper_name}.pdf", bbox_inches="tight"); print("saved", f"{fig_dir}/{paper_name}.pdf")
+
+
+SHORT_PAPER = {"ours (rules + detector)": "full method (rules + main detector)", B.V_GAT: "main detector (TCN-GAT)",
+               B.V_LGB: "LightGBM residual", B.V_MEAN: "mean of LightGBM and TCN-GAT",
+               B.V_HYB: "LightGBM + learned-graph correction", "STL + MAD": "STL"}
+
+
+def fig9_detection(fig_dir, paper_name=None):
+    """Repo version: every method, ablations included. Paper mode (paper_name): the compared methods only (the
+    ablations are Figure 8), no title (the caption carries it), one PDF; the caller sets pdf.fonttype 42."""
+    dt = detection_runs()
+    rates = [0.01, 0.03, 0.07]
+    order = ORDER9_PAPER if paper_name else ORDER9
+    seps = (1.5, 2.5, 5.5) if paper_name else (1.5, 7.5, 13.5)
+    if paper_name:
+        with plt.rc_context({"font.size": 7, "axes.titlesize": 7.5, "axes.labelsize": 7, "xtick.labelsize": 6.5,
+                             "ytick.labelsize": 7}):
+            return _fig9_draw(dt, rates, order, seps, (7.2, 3.1), paper_name, fig_dir, ms=(3.5, 3))
+    fig, axs = plt.subplots(1, 3, figsize=(16, 6.0), sharey=True)
+    for ax, rate in zip(axs, rates):
+        d = dt[dt.rate == rate]
+        for i, m in enumerate(order):
             g = d[d.method == m]
             col = "#C8553D" if m in ("ours (rules + detector)", B.V_GAT) else ("#2F6690" if m in BASE9 else "#7B5EA7")
             ax.errorbar(g.f1.mean(), i, xerr=g.f1.std(ddof=1), fmt="o", color=col, ms=5, capsize=2)
             ax.errorbar(g.auc_pr.mean(), i + 0.28, xerr=g.auc_pr.std(ddof=1), fmt="s", color=col, mfc="white", ms=4, capsize=2)
-        for y in (1.5, 7.5, 13.5):
+        for y in seps:
             ax.axhline(y, color="#DDDDDD", lw=0.7)
-        ax.set_yticks(range(len(ORDER9))); ax.set_yticklabels([SHORT[m] for m in ORDER9], fontsize=7.5); ax.invert_yaxis()
-        ax.set_xlim(0, 1); ax.set_title(f"{rate:.0%} contamination"); ax.set_xlabel("event F1 (●) and step AUC-PR (□)")
+        ax.set_yticks(range(len(order))); ax.set_yticklabels([SHORT[m] for m in order], fontsize=7.5)
+        ax.invert_yaxis()
+        ax.set_xlim(0, 1); ax.set_title(f"{rate:.0%} contamination", fontsize=10); ax.set_xlabel("event F1 (●) and step AUC-PR (□)")
         ax.grid(axis="x", color="#EEEEEE", lw=0.6); ax.set_axisbelow(True)
     fig.suptitle("Fig 9 — Detection on injected events (test period, mean ± sd over 10 seeds). Red: ours and the main detector; "
-                 "purple: its ablations (–) and other predictors; blue: baselines", y=1.0, fontsize=10.5)
+                 "purple: its ablations (–) and other predictors; blue: baselines (classical and deep)", y=1.0, fontsize=10.5)
     fig.tight_layout(); savefig(fig, fig_dir, "fig9_detection")
 
 
@@ -254,47 +297,77 @@ def e22_tetouan(fig_dir):
 SC12 = {"S0": "#9AA0A6", "S1": "#F2A541", "S2": "#C8553D", "S3": "#2F6690"}
 
 
-def fig12_downstream(fig_dir):
-    """(a), (b): LightGBM MASE after anomalies by strategy (NB5 Table 8, unchanged).
-    (c): outage zone-hours / injected truth on the 30 NB4 test datasets, per rate: seeds as points, mean +- sd."""
+def fig12_downstream(fig_dir, paper_name=None):
+    """(a): LightGBM MASE after anomalies by strategy, real data (NB5 Table 8, unchanged).
+    (b): the same on injected data, mean over the 30 NB4 test datasets (tools/forecast_all_datasets.py, D83; NB5's
+    4-dataset means before). (c): outage zone-hours / injected truth on the 30 NB4 test datasets, per rate: seeds as
+    points, mean +- sd. Paper mode (paper_name): print width (7.2 in), text >= 6.5 pt, no title and no bar values (the
+    paper's downstream table carries them), one PDF; the caller sets pdf.fonttype 42."""
+    P = paper_name is not None
+    F_PAPER = dict(title=7.5, legend=6.5, bar=6, text=6.5, tick=6.5, label=7, ms=4.5, s=5)
+    F_REPO = dict(title=9, legend=8, bar=6, text=7, tick=9, label=10, ms=7, s=10)
+    F = F_PAPER if P else F_REPO
     t8 = pd.read_csv(RES / "downstream_v1" / "table8_forecasting.csv")
+    fa = pd.read_csv(RES / "downstream_v1" / "forecast_all" / "forecast_summary.csv")
     per = pd.read_csv(RES / "downstream_v1" / "outage_all" / "outage_per_dataset.csv")
-    fig, axs = plt.subplots(1, 3, figsize=(15, 4.4), gridspec_kw=dict(width_ratios=[1, 1, 1.15]))
+    fig, axs = plt.subplots(1, 3, figsize=(7.2, 2.6) if P else (15, 4.4), gridspec_kw=dict(width_ratios=[1, 1, 1.25]))
     for k, (ax, data) in enumerate(zip(axs[:2], ("real", "injected"))):
-        g = t8[(t8.data == data) & (t8.subset == "after anomaly (2 days)") & (t8.model == "LightGBM")]
-        g = g.pivot_table(index="horizon", columns="strategy", values="MASE").reindex(["1 h", "1 day"])
-        g.plot.bar(ax=ax, color=[SC12[c] for c in g.columns], rot=0, width=0.8, edgecolor="white", linewidth=1)
-        ax.set_ylabel("MASE (LightGBM)"); ax.set_xlabel("")
-        ax.set_title(f"({'ab'[k]}) {data} data, test steps after an anomaly (2 days)", fontsize=9)
-        ax.set_ylim(0, g.max().max() * 1.12); ax.legend(fontsize=8, ncol=4, loc="upper left")
-        for cont in ax.containers:
-            ax.bar_label(cont, fmt="%.2f", fontsize=6, padding=1)
+        if data == "real":
+            g = t8[(t8.data == data) & (t8.subset == "after anomaly (2 days)") & (t8.model == "LightGBM")]
+            g = g.pivot_table(index="horizon", columns="strategy", values="MASE").reindex(["1 h", "1 day"])
+            title = "(a) real data" if P else "(a) real data, test steps after an anomaly (2 days)"
+        else:
+            g = fa[(fa.rate == "all") & (fa.subset == "after anomaly (2 days)") & (fa.model == "LightGBM")].set_index("horizon")
+            g = g[[f"MASE_{s}_mean" for s in ("S0", "S1", "S2", "S3")]].rename(columns=lambda c: c[5:7]).reindex(["1 h", "1 day"])
+            title = "(b) injected data (30 datasets)" if P else "(b) injected data (mean of 30 datasets), steps after an anomaly"
+        g.plot.bar(ax=ax, color=[SC12[c] for c in g.columns], rot=0, width=0.8, edgecolor="white", linewidth=0.6 if P else 1)
+        ax.set_ylabel("MASE (LightGBM)" if (k == 0 or not P) else "", fontsize=F["label"]); ax.set_xlabel("")
+        ax.set_title(title, fontsize=F["title"]); ax.tick_params(labelsize=F["tick"])
+        ax.set_ylim(0, g.max().max() * (1.22 if P else 1.12))
+        ax.legend(fontsize=F["legend"], ncol=4, loc="upper left", handlelength=1, columnspacing=0.8, frameon=False)
+        if not P:
+            for cont in ax.containers:
+                ax.bar_label(cont, fmt="%.2f", fontsize=F["bar"], padding=1)
     ax = axs[2]
     rates = sorted(per.rate.unique())
     rows = [(f"{r:.0%}", per[per.rate == r]) for r in rates] + [("all 30", per)]
     rng = np.random.default_rng(0)
     for i, (lab, g) in enumerate(rows):
-        for dy, col, key, name in ((-0.17, SC12["S0"], "naive_ratio", "naive: every dead state (S0)"),
-                                   (0.17, SC12["S2"], "typed_ratio", "typed, label model (S2)")):
+        for dy, col, key, name in ((-0.17, SC12["S0"], "naive_ratio", "naive, every dead state (S0)"),
+                                   (0.17, SC12["S2"], "typed_ratio", "typed (S2)" if P else "typed, label model (S2)")):
             y = i + dy
             if lab != "all 30":
-                ax.scatter(g[key], y + rng.uniform(-0.06, 0.06, len(g)), s=10, color=col, alpha=0.45, lw=0, zorder=2)
-            m, s = g[key].mean(), g[key].std(ddof=1)
-            ax.errorbar(m, y, xerr=s, fmt="D" if lab == "all 30" else "o", color=col, mec="white", mew=1, ms=7, capsize=3,
-                        lw=1.6, zorder=3, label=name if i == 0 else None)
-            ax.text(m, y - 0.2 if dy < 0 else y + 0.2, f"{m:.2f} ± {s:.2f}", ha="center", va="bottom" if dy < 0 else "top",
-                    fontsize=7, color="#1F2328")
-    ax.axvline(1, color="#1F2328", lw=0.9, ls="--", zorder=1)
-    ax.text(1.0, -0.5, " truth", fontsize=7.5, va="center", color="#1F2328")
+                ax.scatter(g[key], y + rng.uniform(-0.06, 0.06, len(g)), s=F["s"], color=col, alpha=0.45, lw=0, zorder=2)
+            m, sd = g[key].mean(), g[key].std(ddof=1)
+            ax.errorbar(m, y, xerr=sd, fmt="D" if lab == "all 30" else "o", color=col, mec="white", mew=0.8 if P else 1,
+                        ms=F["ms"], capsize=2 if P else 3, lw=1.1 if P else 1.6, zorder=3, label=name if i == 0 else None)
+            if P and lab == "all 30":      # paper: values only for the pooled row (cited in the text), beside the bar
+                ax.text(m + sd + 0.04, y, f"{m:.2f} ± {sd:.2f}", ha="left", va="center", fontsize=F["text"], color="#1F2328")
+            elif not P:
+                ax.text(m, y - 0.2 if dy < 0 else y + 0.2, f"{m:.2f} ± {sd:.2f}", ha="center", va="bottom" if dy < 0 else "top",
+                        fontsize=F["text"], color="#1F2328")
+    ax.axvline(1, color="#1F2328", lw=0.8, ls="--", zorder=1)
+    ax.text(1.0, -0.5, " truth", fontsize=F["text"], va="center", color="#1F2328")
     ax.axhline(len(rows) - 1.5, color="#DDDDDD", lw=0.8)
     ax.set_yticks(range(len(rows))); ax.set_yticklabels([lab for lab, _ in rows]); ax.invert_yaxis()
+    ax.tick_params(labelsize=F["tick"])
     ax.set_ylim(len(rows) - 0.4, -0.6)
     ax.set_xlim(0.65, max(per.naive_ratio.max(), per.typed_ratio.max()) * 1.08)
-    ax.set_xlabel("outage zone-hours / injected truth   (S1 interpolation: 0, outages erased)")
-    ax.set_ylabel("contamination rate")
-    ax.set_title("(c) outage statistics, the 30 injected test datasets (10 seeds per rate)", fontsize=9)
+    ax.set_xlabel("outage zone-hours / injected truth" if P else
+                  "outage zone-hours / injected truth   (S1 interpolation: 0, outages erased)", fontsize=F["label"])
+    ax.set_ylabel("contamination rate", fontsize=F["label"])
+    ax.set_title("(c) outage hours, 30 injected datasets" if P else
+                 "(c) outage statistics, the 30 injected test datasets (10 seeds per rate)", fontsize=F["title"])
     ax.grid(axis="x", color="#EEEEEE", lw=0.6); ax.set_axisbelow(True)
-    ax.legend(fontsize=7.5, loc="lower right")
+    if P:
+        ax.legend(fontsize=F["legend"], loc="upper center", bbox_to_anchor=(0.45, -0.24), ncol=2, frameon=False,
+                  handletextpad=0.3, columnspacing=1.0)
+    else:
+        ax.legend(fontsize=F["legend"], loc="lower right", frameon=False)
+    if P:
+        fig.tight_layout(w_pad=0.8)
+        fig.savefig(f"{fig_dir}/{paper_name}.pdf", bbox_inches="tight"); print("saved", f"{fig_dir}/{paper_name}.pdf")
+        return
     fig.suptitle("Fig 12 — Downstream: forecast error by cleaning strategy (test period 1 Jan – 24 May 2024) "
                  "and outage-hours error", y=1.02)
     fig.tight_layout(); savefig(fig, fig_dir, "fig12_downstream")
