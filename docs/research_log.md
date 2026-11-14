@@ -573,3 +573,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Introduction accepted (D96):** one wording fix after acceptance: "from the telemetry and the grouping of feeders into cities, without labelled data" instead of "from the telemetry alone". Introduction 687 words; Conclusions budget 210.
 
 **Section 8 (Conclusions) written (D97):** 210 words; summary, what the data contain (by our typing), injected results, catalogue, four future-work items including deliberate manipulation. Body text 8,100 words. Next: abstract, highlights, graphical abstract, front matter and final checks.
+
+**Conclusions accepted (D97):** forecasting result added with its qualifier (a forecaster that reads the types), untyped candidates in parentheses; 210 words, body text 8,100.
