@@ -44,7 +44,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 6 | §6 Results | accepted (2026-11-14, D85, D86), 1,798 words; Figs 4–12, Tables 5–8; all 12 figures in submission form |
 | 7 | §7 Discussion | revised after review (2026-11-14, D88), 850 words; Table 9 (answers to RQ1–RQ5, H1–H3) |
 | 8 | §2 Related work | revised after review (2026-11-14, D90–D93), 895 words; Table 1 (positioning); 19 references verified; Snorkel baseline run (F65) |
-| 9 | §1 Introduction | first draft (2026-11-14, D95), 645 words; RQ1–RQ5 and H1–H3 as in Table 9 |
+| 9 | §1 Introduction | revised after review (2026-11-14, D95, D96), 682 words; RQ1–RQ5 and H1–H3 as in Table 9 |
 | 10–12 | §8 Conclusions, front matter, final checks | to do |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).

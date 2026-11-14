@@ -539,7 +539,7 @@ All families 0.914 ± 0.029. Without:
 ### 10.1 Outage statistics
 - **Real data** (`outage_real.csv`):
   - naive (every dead state) 1,220.5 zone-h in 117 runs; typed (G items) 294.0 zone-h in 79 runs; **ratio 4.15**.
-  - Dead zone-hours by label: A1 926.5, G3 201.8, G4 88.0, G2 4.2.
+  - Dead zone-hours by label: A1 926.5, G3 201.8, G4 88.0, G2 4.2 (A1 share 75.9 %, "three quarters" in Section 1).
   - By city (naive / typed zone-h): Foum El Oued 728.7 / 220.0, Laâyoune 252.0 / 52.2, Boujdour 239.8 / 21.8.
 - **Injected data** (`outage_injected.csv`, `injected/*_outage.csv`; outage zone-hours / truth):
   - naive 1.49, 2.39, 1.77, 1.90 (mean **1.88**: the mean of the unrounded ratios, 1.8847; averaging the rounded values gives 1.89, the number cited before 2026-11-13);
