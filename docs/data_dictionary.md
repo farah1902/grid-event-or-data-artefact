@@ -241,6 +241,8 @@ Other files:
 
 The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label N means that no typed class fits** (F32).
 
+**`marrakech_beta_sensitivity.csv`** (`tools/marrakech_beta_sensitivity.py`, F60) — one row per β ∈ {0, 0.1, …, 1}: beta, marrakech_items, changed_vs_beta_0_5 (Marrakech rule items whose fused label differs from β = 0.5), n_A1 … n_N (label counts). **`marrakech_beta_sensitivity.json`** — marrakech_rule_items, stored_labels_reproduced_at_beta_0_5, q_f_argmax_agree, q_f_disagree_items, beta_range_same_labels_as_0_5, max_changed, low_support_classes.
+
 **`summary.json`** — headline numbers of the run: backend (`lightgbm` or `sklearn`), lightgbm_version, colab (true if run on Colab), γ, MAEs, hierarchy consistency, end-model agreement, fused changes, recall, nature counts, runtime. Check `backend` before citing any NB3 number.
 
 ## Figure-side tables — `results/figures/`

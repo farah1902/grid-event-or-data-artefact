@@ -1,0 +1,29 @@
+{
+  "marrakech_rule_items": 55,
+  "stored_labels_reproduced_at_beta_0_5": 1.0,
+  "q_f_argmax_agree": 53,
+  "q_f_disagree_items": [
+    {
+      "item_id": "D003",
+      "label_q": "G3",
+      "label_f": "G4",
+      "label_p": "G3"
+    },
+    {
+      "item_id": "D011",
+      "label_q": "G3",
+      "label_f": "G4",
+      "label_p": "G3"
+    }
+  ],
+  "beta_range_same_labels_as_0_5": [
+    0.4,
+    1.0
+  ],
+  "max_changed": 2,
+  "low_support_classes": [
+    "A1",
+    "G1",
+    "G2"
+  ]
+}

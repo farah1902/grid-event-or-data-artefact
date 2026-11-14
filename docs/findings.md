@@ -760,3 +760,13 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 - **Spread:** the typed ratio is ≤ 1.05 in 6 of 30 datasets. Its worst case (1 %, seed 6: 2.16, precision 0.46) is one dataset whose A1 gaps are long relative to its small true outage time (564 zone-h). The typed mean rises with contamination (1.16 → 1.28 → 1.33) as A1 events become more numerous; its spread falls (sd 0.36 → 0.07).
 - **The 4-dataset mean (1.36) was on the high side:** the 30-dataset mean is 1.26. NB5's 3 %, seed 1 dataset (1.76) is the 3 % maximum.
 - **Paper:** "typed counting cuts the outage-time overstatement from +88 % to +26 % on average and is closer to the truth in all 30 injected datasets (Wilcoxon p = 0.002 at every rate). Its remaining excess is entirely multi-city zero gaps labelled as outages." Cite this instead of F52's 4-dataset numbers; keep the real-data 4.15× (F51) next to it.
+
+### F60 — The Marrakech labels do not depend on the fusion weight β in [0.4, 1] — *solid*
+- **Why:** Marrakech is outside the injection benchmark, so its β (0.5) is untuned (D80).
+- **Check** (`tools/marrakech_beta_sensitivity.py` → `results/end_model_v1/marrakech_beta_sensitivity.csv` and `.json`): NB3's stored q and f (4 decimals) with NB3's feasible sets and D50 abstention reproduce every stored rule-item label at β = 0.5 (281/281).
+- **Marrakech (55 rule items: G3 35, G4 13, A3 7):**
+  - the label-model and end-model arg max agree on 53 of 55; the 2 disagreements (D003, D011) are G3 (q) vs G4 (f), fused to G3;
+  - β ∈ {0.4, …, 1.0}: 0 labels change relative to β = 0.5;
+  - β ∈ {0.1, 0.2, 0.3}: 1 label changes (G3 → G4); β = 0: 2 change.
+- The released catalogue (`results/catalogue_final/catalogue.csv`) carries the same 35 / 13 / 7 Marrakech labels.
+- **Paper:** §4.7 states the reason and the insensitivity in one sentence.

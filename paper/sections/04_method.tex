@@ -165,7 +165,7 @@ The zone-step score $Z_{z,t} = \max_b \max(s^{g}_t, s^{u_{c(z)}}_t, s^{v_z}_t)$ 
 \mathrm{flag}_{z,t} = \one\big[\tilde{Z}_{z,t} > \gamma_q\big],
 \label{eq:events}
 \end{equation}
-with $\gamma_q$ the $q$-quantile of $\tilde{Z}$ on zone-steps more than 53 steps (about 9~h, half the support of the widest band) from any rule state in the zone and from any multi-zone rule state in the system. Flag runs of at least three steps, merged across gaps of up to $g_{\max}$ steps, are the detector's events; those that overlap no rule item are \emph{detector-only candidates}. The setting $(w, q, g_{\max}) = (24, 99.9\%, 12)$, i.e. 4~h smoothing, was chosen on development data like the settings of every compared detector (Section~\ref{sec:experiments}). The phase alignment and the centred smoothing use future steps, so the detector is retrospective: it builds a catalogue offline and is not a real-time alarm.
+with $\gamma_q$ the $q$-quantile of $\tilde{Z}$ on zone-steps more than 53 steps (about 9~h, half the support of the widest band) from any rule state in the zone and from any multi-zone rule state in the system. Flag runs of at least three steps, merged across gaps of up to $g_{\max}$ steps, are the detector's events; those that overlap no rule item are \emph{detector-only candidates}. The setting $(w, q, g_{\max}) = (24, 99.9\%, 12)$, i.e. 4~h smoothing, was chosen on development data like the settings of every compared detector (Section~\ref{sec:experiments}). The phase alignment and the centred smoothing use future steps, so the detector is retrospective: an offline catalogue builder, not a real-time alarm.
 
 \subsection{End model and fusion}\label{sec:fusion}
 
@@ -179,7 +179,7 @@ and predicts out of fold, with folds grouped by episode. The fusion is a weighte
 p_i(y) \propto \one[y \in \mathcal{Y}(i)]\; q_i(y)^{\beta}\, f(y \mid \boldsymbol{\phi}_i)^{1-\beta}.
 \label{eq:fusion}
 \end{equation}
-The rules bring evidence the features cannot express, and the end model brings detector and context evidence, so either source can change the winning type. The weight $\beta$ is tuned on the training period of the injected data (Section~\ref{sec:experiments}); the real southern catalogue uses $\beta = 0.6$, the value selected at 3\% contamination, and Marrakech items use $\beta = 0.5$. The end model abstains ($p = q$) on items whose label-model class has fewer than three items of training mass, and detector-only candidates use a uniform $q$, so their type follows $f$. Clock and transfer items keep their label-model posterior.
+Each expert carries evidence the other lacks (rule votes; detector and context features), so either can change the winning type. The weight $\beta$ is tuned on the training period of the injected data (Section~\ref{sec:experiments}); the real southern catalogue uses $\beta = 0.6$, the value selected at 3\% contamination. The injection benchmark covers only the southern system, so Marrakech items keep the untuned default $\beta = 0.5$, which is harmless: the two experts agree on 53 of the 55 Marrakech items and every $\beta$ from 0.4 to 1 gives the same labels. The end model abstains ($p = q$) on items whose label-model class has fewer than three items of training mass, and detector-only candidates use a uniform $q$, so their type follows $f$. Clock and transfer items keep their label-model posterior. % beta: D56, D80, F60
 
 \subsection{Type-aware cleaning}\label{sec:cleaning}
 

@@ -50,6 +50,7 @@ tools/graph_ablation.py       post-run no-graph ablation of the main detector on
 tools/make_transfer_diagram.py Fig 14: the Tetouan transfer protocol diagram (D71; reads results/transfer_tetouan/summary.json)
 tools/ablation_summary.py     Table 7e + Fig 9b: all ablations of the main detector, the learned graph first (D67; reads stored files, seconds)
 tools/outage_all_datasets.py  outage statistics on all 30 NB4 test datasets (NB5's code unchanged) -> results/downstream_v1/outage_all/ (D76, F59)
+tools/marrakech_beta_sensitivity.py Marrakech labels vs the fusion weight β (NB3's stored q, f) -> results/end_model_v1/marrakech_beta_sensitivity.* (D80, F60)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary
 results/labels_v1/            label-model outputs (q.csv = probabilistic labels)

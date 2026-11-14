@@ -286,6 +286,8 @@ Per class (GBDT, all features): A1 3/3, A2 57/57, A3 95/95, G2 0/1 (→ G4), G3 
 - Final rule-item labels (`p_type.csv`): A3 98, G4 69, A2 57, G3 53, A1 3, G2 1.
 - The C12 tail item on L1 (2 Apr 2024 06:10) stays G4 after fusion (p = 0.83); the end model alone says G3. Episode features do not resolve F25.
 
+**Marrakech β sensitivity** (`marrakech_beta_sensitivity.csv`, F60): the label model and the end model agree on 53 of the 55 Marrakech rule items; every β from 0.4 to 1 gives the same labels as β = 0.5 (G3 35, G4 13, A3 7); β 0.1–0.3 changes 1 label and β = 0 changes 2 (G3 → G4). Marrakech is outside the injection benchmark, so its β stays at 0.5 (D80).
+
 **Superseded for the south by NB4 (D61):** the paper's main detector is now the TCN-GAT graph detector with tuned event formation. NB4 §8b writes the south catalogue it produces to `results/main_detector/`. The numbers above describe the LightGBM detector at NB3's event formation (w 1, q 99.5, gap 1). Marrakech keeps them.
 
 ## 8b. NB4 development selection (`results/benchmark_v1/dev/`, `dev_selection.json`; development seeds 100–104, *not test results*)

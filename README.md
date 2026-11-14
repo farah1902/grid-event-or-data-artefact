@@ -133,10 +133,10 @@ There are 28 supplementary figures (S1–S28) and 28 tables (CSV). Roles and cav
 Start with [docs/README.md](docs/README.md).
 - To write the paper: [docs/paper_handoff.md](docs/paper_handoff.md).
 - Every number: [docs/results_summary.md](docs/results_summary.md).
-- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D79).
+- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D80).
 - The paper set (figure numbering, draft captions, tables): [results/paper/MANIFEST.md](results/paper/MANIFEST.md).
 - The transfer to Tetouan, adaptation by adaptation: [docs/transfer_protocol.md](docs/transfer_protocol.md).
-- Every finding: [docs/findings.md](docs/findings.md) (F01–F59).
+- Every finding: [docs/findings.md](docs/findings.md) (F01–F60).
 - The method as implemented, with equations: [docs/methods.md](docs/methods.md).
 - The original plan: [docs/research_guide.md](docs/research_guide.md). Several parts were corrected; see paper_handoff §3.
 

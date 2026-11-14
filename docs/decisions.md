@@ -756,3 +756,10 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **Prior sensitivity disclosed:** without the defining-rule prior, 39 % of the real dead items change label (F24); the full sensitivity goes to the supplement.
 - **Rule families:** the reviewed Figure 3 said "8 families"; it had already been corrected to nine in D78.
 - **Length:** Section 4 is 1,673 words of body text by texcount (the reviewer's "about 2,600" counted LaTeX source); budget 1,700. Section 4.4 is kept: it carries the paper's methodological argument (F20).
+
+### D80 — Marrakech keeps the untuned fusion weight β = 0.5, with its sensitivity reported [paper, Section 4 review]
+- **Trigger:** the author's review of the revised Section 4 (2026-11-14): β = 0.6 for the southern catalogue and 0.5 for Marrakech needed a reason.
+- **Reason:** β is tuned on the injection benchmark (D56), and the benchmark covers only the southern system (`src/inject.py`; D54). Marrakech items come from NB3's fusion (D75), which uses the provisional default β = 0.5 (D47): equal weight on the two experts, set before any tuning.
+- **Alternative:** apply the southern β = 0.6 to Marrakech. Rejected: it was tuned on a different system, and it would change nothing (F60).
+- **Evidence:** `tools/marrakech_beta_sensitivity.py` re-fuses NB3's stored q and f; every β from 0.4 to 1 gives the same 55 Marrakech labels (F60).
+- **Paper (§4.7):** "The injection benchmark covers only the southern system, so Marrakech items keep the untuned default β = 0.5, which is harmless: the two experts agree on 53 of the 55 Marrakech items and every β from 0.4 to 1 gives the same labels." To stay within Section 4's 1,700 words, two sentences of §4.6 and §4.7 were shortened (no content removed).
