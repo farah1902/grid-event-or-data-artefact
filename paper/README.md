@@ -6,7 +6,8 @@ The plan (structure, value thread, place of every figure, table and equation, wr
 ## Build
 
 ```bash
-python paper/tools/sync_figures.py        # copies results/figures/<stem>.pdf -> paper/figures/Figure_N.pdf
+python paper/tools/sync_figures.py        # copies results/figures/<stem>.pdf -> paper/figures/Figure_N.pdf (Figures 4-12)
+python paper/tools/export_figures.py      # draws Figures 1-3 in submission form (no built-in title, TrueType fonts)
 cd paper && latexmk -pdf main.tex         # MiKTeX: pdflatex + bibtex; elsarticle 3.5 (2026/01/09), elsarticle-num style
 python paper/tools/wordcount.py           # body-text words per section vs the 8,000-8,100 target
 ```
@@ -38,7 +39,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 |---|---|---|
 | 1 | Outline | done (2026-11-13) |
 | 2 | LaTeX skeleton, verified dataset references | done (2026-11-14) |
-| 3 | §3 Data, hierarchy and typology | first draft (2026-11-14), 712 words |
+| 3 | §3 Data, hierarchy and typology | revised after review (2026-11-14, D78), 891 words |
 | 4 | §4 Method | first draft (2026-11-14), 1,497 words; Eqs (3)–(22), Table 3 (rules), Fig 3; 12 method references verified |
 | 5–12 | §5 Experimental design … final checks | to do |
 

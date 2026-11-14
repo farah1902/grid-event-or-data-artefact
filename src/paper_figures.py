@@ -102,6 +102,16 @@ def key_events_table(cat, eps):
 
 
 # ====================================================================== Fig 1: basemap + coverage (D73)
+def _save(fig, fig_dir, name, paper_name=None):
+    """Repo figures: png + pdf under the source name (viz.savefig). Paper mode (paper_name given): one PDF under the
+    submission name; the caller sets TrueType fonts (pdf.fonttype 42), and the caption carries the title."""
+    if paper_name:
+        fig.savefig(f"{fig_dir}/{paper_name}.pdf", bbox_inches="tight")
+        print("saved", f"{fig_dir}/{paper_name}.pdf")
+    else:
+        savefig(fig, fig_dir, name)
+
+
 def _land(path, bbox):
     gj = json.loads(Path(path).read_text())
     x0, x1, y0, y1 = bbox
@@ -117,7 +127,7 @@ def _land(path, bbox):
     return polys
 
 
-def fig1_map_coverage(res, fig_dir, land_path):
+def fig1_map_coverage(res, fig_dir, land_path, paper_name=None):
     fig = plt.figure(figsize=(15, 7.2))
     ax = fig.add_axes([0.02, 0.08, 0.36, 0.84])
     bbox = (-19.5, 1.0, 20.5, 37.5)
@@ -133,12 +143,12 @@ def fig1_map_coverage(res, fig_dir, land_path):
         ax.plot(x, y, mk, color=col, ms=8 if c in ("Marrakech", "Tetouan") else 5, mec="white", mew=1.0, zorder=5)
     wb = dict(boxstyle="round,pad=0.3", fc="white", ec="none", alpha=0.9)
     ax.text(CITIES["Tetouan"][0] + 0.5, CITIES["Tetouan"][1] - 0.15, "Tetouan", ha="left", va="center", fontsize=9, weight="bold", color=INK, zorder=6)
-    ax.text(-10.2, 35.9, "transfer test (UCI Tetouan)\n3 zones · 10 min · kW · 2017", ha="center", va="center", fontsize=7.6, color="#5F6B76", bbox=wb, zorder=6)
+    ax.text(-10.2, 35.9, "transfer test (UCI Tetouan)\n3 zones · 10 min · 2017", ha="center", va="center", fontsize=7.6, color="#5F6B76", bbox=wb, zorder=6)
     ax.text(CITIES["Marrakech"][0] + 0.5, CITIES["Marrakech"][1], "Marrakech", ha="left", va="center", fontsize=9, weight="bold", color=INK, zorder=6)
     ax.text(-12.6, 31.8, "separate system\n2 zones · 30 min · kW · 2023", ha="center", va="center", fontsize=7.6, color="#2F6690", bbox=wb, zorder=6)
     zx0, zx1, zy0, zy1 = -15.1, -12.4, 25.7, 27.7
     ax.add_patch(Rectangle((zx0, zy0), zx1 - zx0, zy1 - zy0, fc="none", ec="#C8553D", lw=1.3, ls="--", zorder=4))
-    ax.text(-17.6, 24.1, "southern system\none shared logger\n15 zones · 10 min · A\nSep 2022 – May 2024", ha="center", va="center",
+    ax.text(-17.6, 24.1, "southern system\none shared timeline\n15 zones · 10 min · A\nSep 2022 – May 2024", ha="center", va="center",
             fontsize=7.6, color="#C8553D", bbox=wb, zorder=6)
     # inset: the three southern cities (Laâyoune and Foum El Oued are about 20 km apart)
     ins = ax.inset_axes([0.56, 0.06, 0.41, 0.34])
@@ -202,11 +212,12 @@ def fig1_map_coverage(res, fig_dir, land_path):
     handles = [Rectangle((0, 0), 1, 1, fc=COL[k]) for k in ("hold", "interp", "zero", "dead", "missing")]
     axb.legend(handles, ["hold (frozen value)", "straight-line fill", "exact zeros", "noise floor (≤ 5 % of x̂)", "missing step"],
                ncol=5, fontsize=7.5, loc="upper center", bbox_to_anchor=(0.5, -0.07), frameon=False)
-    axb.set_title("(b) flagged states per zone (rule engine v1, qualifying runs; dotted: clock-change dates)", fontsize=9)
+    axb.set_title("(b) anomalous states per zone (qualifying runs; dotted: clock-change dates)", fontsize=9)
     for sp in ("top", "right"):
         axb.spines[sp].set_visible(False)
-    fig.suptitle("Fig 1 — Data: the southern logger system, Marrakech and the Tetouan transfer set; where the anomalous states are", y=0.99, fontsize=11)
-    savefig(fig, fig_dir, "fig1_map_coverage")
+    if not paper_name:
+        fig.suptitle("Fig 1 — Data: the southern system, Marrakech and the Tetouan transfer set; where the anomalous states are", y=0.99, fontsize=11)
+    _save(fig, fig_dir, "fig1_map_coverage", paper_name)
     return fig
 
 
@@ -230,11 +241,11 @@ TYPOLOGY = [
     ("A4", "clock error", "artefact", "system, one day",
      "daily profile shifted by δ* ≈ ±60 min after a clock-change date; duplicated or missing stamps", "R13, R14, R15"),
     ("G1", "regional outage", "grid event", "region (≥ 2 cities)",
-     "noise floor (η < 0.9) in ≥ 2 cities, ramp restoration with cold-load overshoot π ≥ 1.15", "R5, R6, R7"),
+     "noise floor (η < 0.9) in ≥ 2 cities; hypothesised: ramp restoration with cold-load overshoot π ≥ 1.15", "R5, R6, R7"),
     ("G2", "city outage", "grid event", "city",
      "all zones of one city at the noise floor, the other cities normal", "R8 (+ R5, R6)"),
     ("G3", "unplanned feeder outage", "grid event", "zone",
-     "one zone at the noise floor at any hour, possibly > 24 h, ramp restoration", "R9, R11 (+ R6)"),
+     "one zone at the noise floor at any hour, possibly > 24 h; hypothesised: ramp restoration", "R9, R11 (+ R6)"),
     ("G4", "planned work", "grid event", "zone",
      "one zone at the noise floor, starting 06:00–11:59, short (< 6 h)", "R10"),
     ("G5", "load transfer", "grid event", "≥ 2 zones of a city",
@@ -247,7 +258,7 @@ def _profile(t, phase=0.0, level=1.0):
     return level * (0.75 + 0.18 * np.sin(2 * np.pi * (h - 9 + phase) / 24) + 0.1 * np.exp(-((h - 20 + phase) / 2.2) ** 2))
 
 
-def fig2_typology(fig_dir):
+def fig2_typology(fig_dir, paper_name=None):
     t = np.arange(0, 48, 1 / 6)
     fig, axs = plt.subplots(3, 3, figsize=(15, 10.2))
     rng = np.random.default_rng(3)
@@ -293,7 +304,7 @@ def fig2_typology(fig_dir):
             ax.text(-0.5, offs[k] + lv[k] * 0.75, labels[k], ha="right", va="center", fontsize=7, color="#555")
         span = {"G4": (32, 36), "G5": (a, 48), "A4": (24, 48)}.get(code, (a, b))
         ax.axvspan(*span, color=c_ev, alpha=0.18, lw=0)
-        note = {"A1": "exact zeros, instant return\n(here after a hold)", "G1": "noise floor, then ramp + overshoot",
+        note = {"A1": "exact zeros, instant return\n(here after a hold)", "G1": "noise floor, then ramp + overshoot\n(hypothesised)",
                 "G2": "one city at the noise floor", "A2": "hold + straight line", "A3": "straight line", "A4": "profile shifted 60 min",
                 "G5": "−Δ / +Δ (conserved)"}.get(code)
         if note:
@@ -309,13 +320,14 @@ def fig2_typology(fig_dir):
         import textwrap
         ax.text(0.0, -0.13, f"level: {level}\n" + textwrap.fill(f"signature: {sig}", 62) + f"\nrules: {rules}",
                 transform=ax.transAxes, ha="left", va="top", fontsize=7.6, color=INK, linespacing=1.3)
-    fig.text(0.5, 0.005, "dashed: expected value x̂ (eq. 1) · black: observed · shaded: the event span · "
+    fig.text(0.5, 0.005, "dashed: expected value x̂ (Eq. 1) · black: observed · shaded: the event span · "
              "artefacts A1–A4 are data failures (impute); grid events G1–G5 are real (keep and flag)",
              ha="center", fontsize=8.5, color="#444")
-    fig.suptitle("Fig 2 — Typology: four artefacts and five grid events, each with a measurable signature at a level of the hierarchy "
-                 "(schematic; straight-line fills are part of A2 and A3)", y=0.995, fontsize=11)
-    fig.tight_layout(rect=(0.03, 0.03, 1, 0.975), h_pad=6.0, w_pad=4.5)
-    savefig(fig, fig_dir, "fig2_typology")
+    if not paper_name:
+        fig.suptitle("Fig 2 — Typology: four artefacts and five grid events, each with a measurable signature at a level of the hierarchy "
+                     "(schematic; straight-line fills are part of A2 and A3)", y=0.995, fontsize=11)
+    fig.tight_layout(rect=(0.03, 0.03, 1, 0.975 if not paper_name else 1.0), h_pad=6.0, w_pad=4.5)
+    _save(fig, fig_dir, "fig2_typology", paper_name)
     return fig
 
 
@@ -348,7 +360,7 @@ def _arr(ax, p, q, text=None, color=INK, rad=0.0, fs=7.2, tx=None):
                 bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.9))
 
 
-def fig6_framework(fig_dir, n_items=327, n_det=77):
+def fig6_framework(fig_dir, n_items=327, n_det=77, paper_name=None):
     fig = plt.figure(figsize=(17.5, 9.4))
     ax = fig.add_axes([0, 0, 1, 1]); ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
     BL, OR, GR, RD, TE = "#2F6690", "#C77C11", "#5F6B76", "#C8553D", "#2A9D8F"
@@ -357,25 +369,25 @@ def fig6_framework(fig_dir, n_items=327, n_det=77):
     ax.text(0.152, 0.893, "WEAK SUPERVISION: no manual labels", fontsize=9, color=BL, weight="bold", va="top")
     ax.text(0.152, 0.458, "RESIDUAL DETECTOR: anomalies no rule covers", fontsize=9, color=OR, weight="bold", va="top")
     # input
-    _box(ax, 0.01, 0.30, 0.12, 0.42, "INPUT", "feeder series x per zone\n\nzone → city → region\n(one shared logger in the south)\n\n10-min A (south), 30-min kW (Marrakech)\n\ntimestamps as recorded", GR, "white", wrap=22)
+    _box(ax, 0.01, 0.30, 0.12, 0.42, "INPUT", "feeder series x per zone\n\nzone → city → region\n(one shared timeline in the south)\n\n10-min A (south), 30-min kW (Marrakech)\n\ntimestamps as recorded", GR, "white", wrap=22)
     # weak supervision lane
-    _box(ax, 0.155, 0.70, 0.17, 0.165, "1 · Per-step states", "x̂ = 14-day same-slot median (eq. 1)\nexact zero · noise floor (≤ 5 % of x̂)\nhold (≥ 6 equal values)\nstraight-line fill (≥ 6 collinear points)", BL, "white")
+    _box(ax, 0.155, 0.70, 0.17, 0.165, "1 · Per-step states", "x̂ = 14-day same-slot median\nexact zero · noise floor (≤ 5 % of x̂)\nhold (≥ 6 equal values)\nstraight-line fill (≥ 6 collinear points)", BL, "white")
     _box(ax, 0.155, 0.515, 0.17, 0.165, "2 · Items and episodes", f"dead · fill · clock · transfer items\n({n_items} on the real data)\nitems sharing boundaries → episodes\n(e.g. hold → zero fill)", BL, "white")
-    _box(ax, 0.345, 0.70, 0.17, 0.165, "3 · 19 labelling rules", "vote or abstain, in 8 families:\nsimultaneity · hold · interpolation ·\nrestoration · city / zone · calendar ·\nclock · conservation", BL, "white")
+    _box(ax, 0.345, 0.70, 0.17, 0.165, "3 · 19 labelling rules", "vote or abstain, in 9 families:\nsimultaneity · hold · straight line ·\nrestoration · city · single zone ·\ncalendar · clock · conservation", BL, "white")
     _box(ax, 0.345, 0.515, 0.17, 0.165, "4 · Constrained label model", "Dawid–Skene with feasible classes\nby level, applicability domains,\none-coin parameters and priors\n→ q(y) over A1–A4, G1–G5, N", BL, "white")
     # detector lane
     _box(ax, 0.155, 0.19, 0.17, 0.235, "5 · Predictor", "TCN-GAT forecast of ρ = x / x̂,\ncross-fitted, trained on\nrule-clean steps\nablations: learned graph on/off;\nLightGBM predictor", OR, "white")
-    _box(ax, 0.345, 0.19, 0.17, 0.235, "6 · Multi-scale residual\n    hierarchy", "\nphase-aligned MODWT bands\nregion g · city u · zone v (eq. 14)\nrobust z (eq. 15)\nmax over bands and levels", OR, "white")
+    _box(ax, 0.345, 0.19, 0.17, 0.235, "6 · Multi-scale residual\n    hierarchy", "\nphase-aligned MODWT bands\nregion g · city u · zone v\nrobust z-scores\nmax over bands and levels", OR, "white")
     _box(ax, 0.535, 0.19, 0.165, 0.235, "7 · Event formation", "smoothing w · threshold at\npercentile q · merge gap\n(tuned on development data,\nthe same budget for every\ndetector)\n→ detector-only candidates", OR, "white")
     # end model and fusion
     _box(ax, 0.535, 0.70, 0.165, 0.165, "8 · End model", "gradient boosting on item\nfeatures (shape, timing,\nepisode context, level scores\nfrom step 6), trained on q\nout of fold → f(y)", TE, "white")
-    _box(ax, 0.535, 0.515, 0.165, 0.165, "9 · Fusion", r"$p \propto q^{\beta}\, f^{1-\beta}$" + "\non feasible classes;\nabstain on rare classes (D50)", TE, "white")
+    _box(ax, 0.535, 0.515, 0.165, 0.165, "9 · Fusion", r"$p \propto q^{\beta}\, f^{1-\beta}$" + "\non feasible classes;\nabstain on rare classes", TE, "white")
     # catalogue
     _box(ax, 0.725, 0.40, 0.125, 0.34, "TYPED\nPROBABILISTIC\nCATALOGUE", f"\n\n{n_items + n_det} entries:\n{n_items} rule items\n+ {n_det} detector-only\n\nlabel, confidence,\np(y) per class\n\nepisodes as label\nsequences", RD, "#FBE9E5", tfs=9.2)
     # evaluation
-    _box(ax, 0.865, 0.64, 0.128, 0.20, "Injection benchmark (NB4)", "30 datasets, 1/3/7 %\ndetection, attribution,\nablations", GR, "white", wrap=26)
-    _box(ax, 0.865, 0.405, 0.128, 0.20, "Downstream (NB5)", "typed cleaning:\nforecasts and outage\nstatistics", GR, "white", wrap=26)
-    _box(ax, 0.865, 0.17, 0.128, 0.20, "Transfer (NB6)", "Tetouan, with the\nmethod frozen", GR, "white", wrap=26)
+    _box(ax, 0.865, 0.64, 0.128, 0.20, "Injection benchmark", "30 datasets, 1/3/7 %\ndetection, attribution,\nablations", GR, "white", wrap=26)
+    _box(ax, 0.865, 0.405, 0.128, 0.20, "Downstream test", "typed cleaning:\nforecasts and outage\nstatistics", GR, "white", wrap=26)
+    _box(ax, 0.865, 0.17, 0.128, 0.20, "Transfer test", "Tetouan, with the\nmethod frozen", GR, "white", wrap=26)
     # arrows
     _arr(ax, (0.13, 0.62), (0.155, 0.78)); _arr(ax, (0.13, 0.42), (0.155, 0.31))
     _arr(ax, (0.24, 0.70), (0.24, 0.68))
@@ -390,9 +402,10 @@ def fig6_framework(fig_dir, n_items=327, n_det=77):
     _arr(ax, (0.70, 0.60), (0.725, 0.60))
     for y in (0.74, 0.505, 0.27):
         _arr(ax, (0.85, 0.57), (0.865, y))
-    ax.text(0.5, 0.965, "Fig 6 — Framework: weak supervision from hierarchical rules, a multi-scale residual detector, an end model and fusion "
-            "produce a typed, probabilistic event catalogue", ha="center", fontsize=12, weight="bold", color=INK)
+    if not paper_name:
+        ax.text(0.5, 0.965, "Fig 6 — Framework: weak supervision from hierarchical rules, a multi-scale residual detector, an end model and fusion "
+                "produce a typed, probabilistic event catalogue", ha="center", fontsize=12, weight="bold", color=INK)
     ax.text(0.5, 0.11, "A1 zero-fill gap · A2 simultaneous fill · A3 single-zone fill · A4 clock error · G1 regional outage · G2 city outage · "
             "G3 unplanned feeder outage · G4 planned work · G5 load transfer · N normal / untyped", ha="center", fontsize=8.5, color="#444")
-    savefig(fig, fig_dir, "fig6_framework")
+    _save(fig, fig_dir, "fig6_framework", paper_name)
     return fig

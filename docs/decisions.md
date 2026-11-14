@@ -732,3 +732,17 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **Decision:** the paper says the southern cities "share one recording timeline" and attributes cross-city artefacts to "a common acquisition and export chain". The internal docs keep their wording (the code and the results do not change); the paper's figures are re-titled in the figure step (Fig 1's baked-in title says "logger").
 - **Also from the data paper:** in its Table 1, Foum El Oued zones 5–7 end on 26 Dec 2023; in the UCI file we analyse, all seven zones carry values until 24 May 2024 (checked 2026-11-14). The paper reports the coverage of the analysed file.
 - **Tetouan units:** the UCI record of the Tetouan dataset states no unit; the paper writes "not stated" (the repo inventory's "kW" is not cited).
+
+### D78 — Section 3 review: data provenance, hypotheses as hypotheses, figures without built-in titles [paper, step 3 revision]
+- **Trigger:** a review of the Section 3 draft (2026-11-14, read by the author; five points plus two small ones). Every point was checked before it was applied.
+- **Applied in `paper/sections/03_data.tex`:**
+  - N is "no typed class fits (normal or untyped)", not "normal";
+  - the item definition covers dead and fill spans, clock dates, transfer days and episodes;
+  - the acquisition-failure signatures (holds, straight lines, exact zeros vs a de-energised feeder's noise floor) are stated as a hypothesis tested in Section 6;
+  - data facts added, each verified: the UCI record says "Has Missing Values? No" while the regular grid lacks 12 stamps per southern city and 25 in Marrakech; duplicated stamps (12 per southern city on 30 Oct 2022 and 29 Oct 2023, 3 in Marrakech) are averaged, hence 4,323 exact zeros in Foum El Oued instead of 4,329 raw; the 14-day warm-up of x̂;
+  - the exact file: `Data Morocco.xlsx`, 22,434,854 bytes, SHA-256 507134d6…c6fc (full hash in the data availability statement), byte-identical to the file UCI served on 14 Nov 2026 (downloaded and hashed that day);
+  - Foum El Oued zones 5–7 continue without a break until 24 May 2024 in the analysed file (the data paper's table says 26 Dec 2023);
+  - G1's restoration and cold-load overshoot marked "hypothesised" (table and figure); for consistency G3's ramp restoration too (Fig 2 text).
+- **Figures in submission form:** `src/paper_figures.py` gained a paper mode (`paper_name=`): no title inside the image, one PDF named Figure_N; `paper/tools/export_figures.py` exports Figures 1–3 with TrueType fonts embedded (pdf.fonttype 42; checked with pdffonts). The remaining main figures are re-exported the same way in the figure step.
+- **Wording fixed inside the figures (repo and paper versions):** "one shared logger" → "one shared timeline" (Fig 1, framework; D77); "rule engine v1", "(NB4/NB5/NB6)", "(D50)" and the guide's equation numbers removed from figure text; "kW" removed from the Tetouan label (the UCI record states no unit); the framework's rule families corrected from 8 to 9 (city and single zone are separate families, as in docs/methods.md). NB7 re-run; only fig1, fig2, fig6 and Table2_typology changed.
+- **Word budget:** Section 3 grows to 891 words with the added facts; budgets moved to 900 (Section 3) and 1,700 (Section 4, 1,501 used). Total unchanged at 8,000.

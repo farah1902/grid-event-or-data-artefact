@@ -11,10 +11,8 @@ SRC = ROOT / "results" / "figures"
 DST = ROOT / "paper" / "figures"
 
 # paper number -> source stem in results/figures/
+# Figures 1-3 (map, typology, framework) are drawn in submission form by export_figures.py and are not copied here.
 FIGURES = {
-    1: "fig1_map_coverage",          # 3.1 data: map and anomalous-state coverage
-    2: "fig2_typology",              # 3.4 typology
-    3: "fig6_framework",             # 4.1 framework
     4: "fig3_C05_C06_jan2023",       # 6.1 January 2023 logger episode
     5: "fig4_C12_mar2024",           # 6.1 31 Mar - 2 Apr 2024 compound episode
     6: "fig8_residual_hierarchy",    # 6.3 residual hierarchy on real data
