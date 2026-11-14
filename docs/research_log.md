@@ -575,3 +575,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Section 8 (Conclusions) written (D97):** 210 words; summary, what the data contain (by our typing), injected results, catalogue, four future-work items including deliberate manipulation. Body text 8,100 words. Next: abstract, highlights, graphical abstract, front matter and final checks.
 
 **Conclusions accepted (D97):** forecasting result added with its qualifier (a forecaster that reads the types), untyped candidates in parentheses; 210 words, body text 8,100.
+
+**Abstract written (D98):** 246 words, no acronyms, original plain wording; every number checked against results_summary (three quarters = 926.5 / 1,220.5; 1.26 vs 1.88, 30/30, p = 1.9e-9; 0.90–0.94 and 0.07–0.10; 17 feeders). Next: highlights, graphical abstract, CRediT, final checks.

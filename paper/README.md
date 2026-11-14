@@ -46,6 +46,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 8 | §2 Related work | revised after review (2026-11-14, D90–D93), 895 words; Table 1 (positioning); 19 references verified; Snorkel baseline run (F65) |
 | 9 | §1 Introduction | accepted (2026-11-14, D95, D96), 687 words; RQ1–RQ5 and H1–H3 as in Table 9 |
 | 10 | §8 Conclusions | accepted (2026-11-14, D97), 210 words; body text 8,100 words |
-| 11–12 | front matter (abstract, highlights, graphical abstract, CRediT), final checks | to do |
+| 11 | Abstract | first draft (2026-11-14, D98), 246 words, no acronyms |
+| 12 | highlights, graphical abstract, CRediT, final checks | to do |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).
