@@ -54,7 +54,7 @@ Honesty items that protect the value (each stated where it belongs, never hidden
 | 4 Method | 1,700 |
 | 5 Experimental design | 880 |
 | 6 Results | 1,800 |
-| 7 Discussion | 850 |
+| 7 Discussion | 860 |
 | 8 Conclusions | 250 |
 | **Total** | **8,000** |
 

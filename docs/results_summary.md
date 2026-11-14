@@ -19,6 +19,7 @@ The regular grid has 12 NaN steps per southern city and 25 in Marrakech.
 - **Duplicated stamps** (averaged by the regularisation): 12 per southern city (24 rows), all on 30 Oct 2022 and 29 Oct 2023; 3 in Marrakech (11 Apr and 23 Aug 2023). Averaging is why Foum El Oued has 4,323 exact zeros instead of 4,329.
 - **File analysed:** `Data Morocco.xlsx`, 22,434,854 bytes, SHA-256 `507134d67ecbbddbf17640e1937da132d0db8000fbfd32a88dda9a4cbf53c6fc`, byte-identical to the file inside the zip served by UCI on 14 Nov 2026 (archive date 4 May 2025; record donated 3 May 2025).
 - **Foum El Oued zones 5–7** continue without a break across 26 Dec 2023 09:10 until 24 May 2024 in this file (the Data in Brief table says they end on 26 Dec 2023).
+- **Public copies (F64):** the Zenodo CSVs of the Data in Brief record equal the UCI workbook rounded to two decimals (same stamps, same artefacts); the article mentions raw and processed versions, but no other copy was found.
 - **Expected-value warm-up:** x̂ rests on fewer than 14 days during the first 14 days of each series.
 
 ## 2. Timestamp audit (`results/event_catalogue_v0/timestamp_audit.csv`)

@@ -862,3 +862,11 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **What was verified for the prior-work paragraph:** the OPSEARCH abstract is elided by the publisher (Crossref, Semantic Scholar), so nothing is said about its preprocessing; the Sarange and Ingale abstract was read (17 zone series, common unit, four city series, 30-min timestamps); the Chen et al. abstract was read (corrupted and missing data from meter and transfer failures; B-spline and kernel smoothing); Morrison et al. from its title and DOI record. The Wang et al. (2019) smart-meter review was considered and not cited: its abstract does not mention bad-data detection.
 - **References added (3):** sarange2026, chen2010cleansing, morrison2022scada (`references.bib`, 32 entries).
 - **Budget:** Section 7 850 words (budget 850, was 800); Section 6 budget 1,800 (uses 1,798). Budgets sum to 8,080; used + remaining budgets = 8,069.
+
+### D89 — Provenance check after the author supplied the OPSEARCH abstract and the Data in Brief PDF [paper, Sections 3.2 and 7]
+- **Trigger:** the author supplied the OPSEARCH abstract (withheld from the public APIs) and the full Data in Brief PDF (2026-11-14).
+- **Findings:** F64 (the two public copies hold the same series, both with the artefacts; the article mentions a raw version that was not found; OPSEARCH reports its own preprocessing).
+- **Text changes:**
+  - Section 7, prior-work paragraph: "the series are published as recorded" removed (not verifiable); now: the two public copies hold the same series, the second rounded to two decimals, and both contain these artefacts; "the forecasting study that introduced the data reports its own preprocessing"; no claim about how the studies treated anomalies.
+  - Section 3.2: "a failure in the shared recording or export process" → "recording, export or processing chain", because the stage at which straight-line fills arise cannot be identified from the published data.
+  - Section 7 trimmed to 859 words (budget 860); projected total 8,079.
