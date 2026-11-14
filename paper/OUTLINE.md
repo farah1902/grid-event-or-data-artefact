@@ -48,7 +48,7 @@ Honesty items that protect the value (each stated where it belongs, never hidden
 
 | Section | Words |
 |---|---|
-| 1 Introduction | 640 |
+| 1 Introduction | 645 |
 | 2 Related work | 895 |
 | 3 Data, hierarchy and typology | 892 |
 | 4 Method | 1,736 |
