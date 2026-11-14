@@ -175,6 +175,18 @@ Other files:
 | `robustness.csv` | test (drop family, or prior/init), setting, rules_removed, changed (share of all items whose label changes), changed_dead, changed_fill, changed_clock, changed_transfer |
 | `summary.json` | headline counts used in the docs |
 
+### Snorkel baseline — `results/labels_v1/snorkel/` and `results/benchmark_v1/snorkel_baseline/` (from `tools/snorkel_baseline.py`; D92, F65)
+
+| File | Content |
+|---|---|
+| `labels_v1/snorkel/q_snorkel_seed0.csv`, `q_snorkel_feasible_seed0.csv` | Snorkel posteriors per rule item (seed 0), as is and restricted to the feasible set |
+| `labels_v1/snorkel/stability_seeds.csv` | per seed 0–19: agreement of the labels with seed 0 (both variants) |
+| `labels_v1/snorkel/summary.json` | versions, fit settings, items not modelled (transfer), stability, infeasible labels, agreement with ours and with majority vote (overall and by kind), label counts |
+| `benchmark_v1/snorkel_baseline/runs/r{rate}_s{seed}_labels.csv` | rule-matched typed test events: event_id, type, item_id, label_ours, label_mv, label_snorkel, label_snorkel_feasible |
+| `benchmark_v1/snorkel_baseline/macro_f1_per_dataset.csv` | per dataset: n, macro-F1 and accuracy of each labeller |
+| `benchmark_v1/snorkel_baseline/table_snorkel_attribution.csv`, `wilcoxon_snorkel.csv` | per rate: mean ± sd macro-F1; paired Wilcoxon of our label model against majority vote and both Snorkel variants |
+| `benchmark_v1/snorkel_baseline/summary.json` | versions, settings, number of datasets and events, confusion at 3 % for each labeller |
+
 ## Detector — `results/detector_v1/` (from `src/detector.py`, NB3)
 
 | File | Columns / content |

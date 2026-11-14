@@ -1,0 +1,4 @@
+rate,n_events,majority vote,label model (ours),Snorkel,Snorkel + feasible sets,majority vote | accuracy,label model (ours) | accuracy,Snorkel | accuracy,Snorkel + feasible sets | accuracy
+1%,309,0.950 ± 0.044,0.946 ± 0.040,0.903 ± 0.050,0.903 ± 0.050,0.947,0.944,0.879,0.879
+3%,895,0.929 ± 0.028,0.923 ± 0.026,0.898 ± 0.031,0.898 ± 0.031,0.92,0.914,0.881,0.881
+7%,2503,0.919 ± 0.015,0.907 ± 0.021,0.874 ± 0.030,0.878 ± 0.030,0.908,0.898,0.858,0.861

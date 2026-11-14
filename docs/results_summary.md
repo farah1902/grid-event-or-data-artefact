@@ -144,6 +144,9 @@ The value in brackets is the correlation at δ\*. The 2023-03-26 and 2024-03-31 
 - South totals: artefacts 2,604.6 zone-h, grid events 294.0 zone-h, out of about 222,222 zone-hours in the record (1.17 % and 0.13 %).
 - A naive "zero = outage" count, (936.5 + 294.0) / 294.0, overstates southern outage time about 4.2× (F26, provisional).
 
+**Snorkel's label model on the same votes** (`results/labels_v1/snorkel/`, F65): seed agreement min 0.847, mean 0.961; 6 infeasible labels; transfer kind (1 rule) not modellable; agreement with our labels 0.755, with majority vote 0.765.
+**Snorkel on injected test events matched to rule items** (`results/benchmark_v1/snorkel_baseline/`, 30 datasets, 3,707 events), macro-F1 1 / 3 / 7 %: majority vote 0.950 / 0.929 / 0.919; ours 0.946 / 0.923 / 0.907; Snorkel 0.903 / 0.898 / 0.874; Snorkel + feasible sets 0.903 / 0.898 / 0.878; ours better than Snorkel in 9 (1 tie) / 8 / 8 of 10 seeds, p = 0.008 / 0.020 / 0.010. Snorkel's main extra error: single-zone fills (A3) labelled N (174 of 213).
+
 **Parameter recovery** (`recovery_summary.csv`, 20 seeds):
 
 | Labeler | Accuracy | Macro-F1 | ECE | Brier |

@@ -1,0 +1,69 @@
+{
+  "snorkel_version": "0.10.0",
+  "fit": {
+    "n_epochs": 500,
+    "lr": 0.01,
+    "log_freq": 500
+  },
+  "items": 327,
+  "not_modelled_by_snorkel": {
+    "n": 13,
+    "why": "kind with < 3 rules (transfer: R16 only); majority vote used"
+  },
+  "stability_min": 0.8470948012232415,
+  "stability_mean": 0.9611620795107034,
+  "stability_min_feasible": 0.8470948012232415,
+  "infeasible_labels": 6,
+  "agree_with_ours": 0.7553516819571865,
+  "agree_with_ours_feasible": 0.764525993883792,
+  "agree_with_majority_vote": 0.764525993883792,
+  "agree_with_majority_vote_feasible": 0.764525993883792,
+  "label_counts": {
+    "G4": 66,
+    "A2": 63,
+    "N": 62,
+    "G3": 51,
+    "A3": 48,
+    "A4": 27,
+    "A1": 8,
+    "G2": 1,
+    "G5": 1
+  },
+  "label_counts_feasible": {
+    "G4": 66,
+    "N": 62,
+    "A2": 57,
+    "A3": 54,
+    "G3": 51,
+    "A4": 27,
+    "A1": 8,
+    "G2": 1,
+    "G5": 1
+  },
+  "by_kind": {
+    "dead": {
+      "n": 126,
+      "agree_with_ours": 0.9603174603174603,
+      "agree_with_ours_feasible": 0.9603174603174603,
+      "infeasible": 0
+    },
+    "fill": {
+      "n": 155,
+      "agree_with_ours": 0.6774193548387096,
+      "agree_with_ours_feasible": 0.6967741935483871,
+      "infeasible": 6
+    },
+    "clock": {
+      "n": 33,
+      "agree_with_ours": 0.24242424242424243,
+      "agree_with_ours_feasible": 0.24242424242424243,
+      "infeasible": 0
+    },
+    "transfer": {
+      "n": 13,
+      "agree_with_ours": 1.0,
+      "agree_with_ours_feasible": 1.0,
+      "infeasible": 0
+    }
+  }
+}

@@ -1,4 +1,4 @@
-% Results -- budget 1800 words (body text).
+% Results -- budget 1910 words (body text).
 % Sources: docs/results_summary.md sections 5-11 (incl. 9.2d deep baselines, 10.1b outages and 10.2b forecasting on
 % 30 datasets); docs/findings.md F01-F07, F16, F17, F21-F24, F30, F41-F47, F50, F51, F55-F59, F61-F63;
 % results/catalogue_final/catalogue.csv (404 entries; rule-item confidence). Table rows generated from the result
@@ -32,7 +32,7 @@ Artefacts dominate the anomalous time. Counting every dead state as an outage gi
 
 \subsection{Weak supervision on the real data}\label{sec:res-ws}
 
-The constrained label model is stable where the standard one is not: its 20 restarts agree on every item, whereas restarts of the unconstrained Dawid--Skene model agree on as few as 62.7\% of the items (mean 83.2\%). On votes simulated from the fitted model, it recovers the true types with accuracy 0.922 and macro-F1 0.872 and is calibrated (ECE 0.033); the unconstrained model reaches 0.682, 0.493 and 0.276. Its labels agree with the rules' majority vote on 98.2\% of the items, but they come with probabilities: the mean confidence of the final rule-item labels is 0.937, and 13 items fall below 0.7.
+The constrained label model is stable where the standard one is not: its 20 restarts agree on every item, whereas restarts of the unconstrained Dawid--Skene model agree on as few as 62.7\% of the items (mean 83.2\%). Snorkel's label model, fitted on the same votes, agrees with itself across 20 seeds on as few as 84.7\%, assigns 6 labels outside the item's feasible set and cannot model the load-transfer days, which have a single rule. On votes simulated from the fitted model, it recovers the true types with accuracy 0.922 and macro-F1 0.872 and is calibrated (ECE 0.033); the unconstrained model reaches 0.682, 0.493 and 0.276. Its labels agree with the rules' majority vote on 98.2\% of the items, but they come with probabilities: the mean confidence of the final rule-item labels is 0.937, and 13 items fall below 0.7.
 
 The labels rest on the evidence one would expect. Dropping the straight-line rules changes 98.1\% of the fill labels and dropping the calendar rules 38.9\% of the dead labels, whereas dropping the simultaneity, restoration or single-zone rules changes none (supplementary material).
 
@@ -102,6 +102,8 @@ USAD & 0.23/0.49/0.76 & 0.38/0.36/0.39 & 0.43/0.45/0.48 & 0.23/0.35/0.41 & 243 \
 On the injected events that the full method detects, every labeller reaches macro-F1 0.85--0.94 (Table~\ref{tab:attribution}). The label model does not beat the rules' majority vote on these signatures (0.900--0.934 against 0.913--0.940), the fusion matches both (0.906--0.944), and the end model alone is weaker at low contamination. What weak supervision adds is a calibrated probability for each label: the expected calibration error of the label model and of the fusion stays between 0.07 and 0.10 without recalibration (Fig.~\ref{fig:attribution}b). End to end, 0.90--0.95 of the typed injected events are both detected and correctly typed.
 
 One confusion dominates (Fig.~\ref{fig:attribution}a): at 3\%, 44 of 160 zero-fill gaps (A1) are labelled regional outages (G1). The injected gaps drop to exactly zero in several cities at once, the simultaneity rules vote for a regional event, and nothing else separates the two; the real multi-city gaps also carry fill evidence, which the injector does not copy. Without the simultaneity rules the label model's A1 accuracy would rise from 0.70 to 0.83 and its macro-F1 from 0.914 to 0.941; we report this but do not adopt it, because it was observed on the test seeds. The other classes reach F1 0.86--0.99; feeder outages are sometimes taken for planned work (15 of 123).
+
+Snorkel's label model does worse on the same votes. On the injected test events matched to rule items, it reaches macro-F1 0.874--0.903 against 0.907--0.946 for the constrained model, which is better in 8 or 9 of 10 seeds at every rate ($p \leq 0.02$), also when Snorkel's output is restricted to the feasible sets. Most of its extra errors label single-zone fills as normal: their rules only ever vote A3, so nothing in the votes separates A3 from N.
 
 \begin{table}[tbp]
 \centering

@@ -101,14 +101,14 @@ R21 & Straight line & Dead & A1 & A straight-line fill ends where the dead run s
 \end{tabularx}
 \end{table}
 
-\subsection{Why the standard label model fails here}\label{sec:dsfail}
+\subsection{Why generic label models fall short here}\label{sec:dsfail}
 
 The Dawid--Skene model \cite{dawid1979} treats each rule $r$ as an annotator with a confusion matrix $\theta_r(y, l)$, the probability that $r$ outputs $l$ on an item of type $y$ when it fires, and computes, for item $i$,
 \begin{equation}
 q_i(y) \propto \pi_y \prod_{r:\, \lambda_r(i) \neq \varnothing} \theta_r\big(y, \lambda_r(i)\big).
 \label{eq:ds}
 \end{equation}
-When abstentions are ignored, as in Eq.~(\ref{eq:ds}), a rule that can emit only one label $l$ has $\theta_r(y, l) = 1$ for every $y$: its vote multiplies every class by the same factor, and the posterior equals the prior. All nineteen rules are of this kind, so Eq.~(\ref{eq:ds}) cannot use them. Modelling abstention restores the information, but a free confusion matrix per rule is then unstable: most items receive only one to three votes, and different restarts of the estimation reach different labels (Section~\ref{sec:results}).
+When abstentions are ignored, as in Eq.~(\ref{eq:ds}), a rule that can emit only one label $l$ has $\theta_r(y, l) = 1$ for every $y$: its vote multiplies every class by the same factor, and the posterior equals the prior. All nineteen rules are of this kind. Modelling abstention restores the information, but a free confusion matrix per rule is then unstable, because most items receive only one to three votes. Snorkel's label model estimates the accuracies of abstaining sources by matrix completion \cite{ratner2019metal}, but it needs at least three labelling functions per model, cannot express a vote for a family of classes or a feasible set, and on these votes is less stable and less accurate than the model below (Section~\ref{sec:results}).
 
 \subsection{A constrained label model with abstention}\label{sec:labelmodel}
 
