@@ -48,8 +48,8 @@ Honesty items that protect the value (each stated where it belongs, never hidden
 
 | Section | Words |
 |---|---|
-| 1 Introduction | 850 |
-| 2 Related work | 850 |
+| 1 Introduction | 900 |
+| 2 Related work | 760 |
 | 3 Data, hierarchy and typology | 900 |
 | 4 Method | 1,700 |
 | 5 Experimental design | 880 |

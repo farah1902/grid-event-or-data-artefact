@@ -1,4 +1,46 @@
-% Related work -- budget 850 words. Plan (paper/OUTLINE.md): 2.1 load anomaly detection; 2.2 physical events vs data-quality faults; 2.3 weak supervision; 2.4 multivariate and graph time-series detection; 2.5 evaluation; 2.6 positioning + Table 1. Written in step 8.
+% Related work -- budget 760 words (body text).
+% Every reference verified (DOI record, abstract or proceedings page; notes in references.bib). Claims about other
+% works are limited to what their abstracts state; Table 1 describes data and outputs, not the absence of features.
 \section{Related work}\label{sec:related}
 
-[To be written.]
+\subsection{Anomalies in energy and metering data}\label{sec:rw-energy}
+
+Anomaly detection in energy consumption has been reviewed for buildings \cite{himeur2021review}, where unsupervised methods such as autoencoders are preferred because anomaly labels are rarely available \cite{fan2018autoencoder}. Classical unsupervised detectors score the remainder of a seasonal-trend decomposition \cite{cleveland1990stl}, how easily a point is isolated \cite{liu2008iforest} or its local density \cite{breunig2000lof}; like the deep detectors below, they return a score, not a cause. In distribution networks, smart-meter data have been used to detect anomalous events at lateral and customer levels with a generative model that accounts for the hierarchical structure of the network \cite{moghaddass2018hierarchical}. A separate line treats faulty readings as bad data to be repaired or removed: smoothing that cleanses corrupted and missing load-curve data \cite{chen2010cleansing}, a robust low-rank and sparse decomposition that cleanses and imputes load profiles, attributing outliers to faulty readings and attacks and missing data to communication errors \cite{mateos2013cleansing}, and anomaly filters that clean wind-turbine SCADA power curves \cite{morrison2022scada}. The first line asks whether something is unusual, the second whether a reading is wrong. In feeder telemetry both kinds of anomaly occur together, and they call for opposite treatment: an acquisition artefact should be imputed, a grid event kept.
+
+\subsection{Weak supervision}\label{sec:rw-ws}
+
+When no ground truth exists, labels can be inferred from several noisy sources. The Dawid--Skene model estimates each source's confusion matrix and the true classes jointly by expectation--maximisation \cite{dawid1979}, and spectral initialisation gives provable guarantees, including for the one-coin model in which each source has a single accuracy \cite{zhang2016spectral}. Data programming replaces annotators by labelling functions that vote, possibly in conflict, on subsets of the data; it treats them as a generative model of the label noise and trains a discriminative model with a noise-aware loss on the result \cite{ratner2016dataprogramming}. Snorkel makes the approach practical \cite{ratner2017snorkel}. In these systems the probabilistic labels are a means to train a model. Here they are also the product: the released catalogue is the label model's output, combined with an end model as a product of experts \cite{hinton2002poe}, so their calibration matters in itself. These label models assume that sources vote among classes. Rules written from physical signatures behave differently: each rule votes for one class, applies only to some kinds of item, and abstains elsewhere. Section~\ref{sec:dsfail} shows that the standard model then cannot learn, which motivates the constrained model of Section~\ref{sec:labelmodel}.
+
+\subsection{Multivariate and graph-based detection}\label{sec:rw-mts}
+
+Multivariate time-series detectors learn normal behaviour and flag deviations from it. Forecasting-based detectors threshold the residual of a predictor, as for spacecraft telemetry, where a nonparametric threshold adapts to the residuals \cite{hundman2018spacecraft}; reconstruction-based detectors score what an encoder cannot reproduce \cite{su2019omnianomaly,audibert2020usad}; graph-based detectors relate the variables through graph attention, combining forecasting and reconstruction \cite{zhao2020mtadgat,velickovic2018gat}, or through a graph learned from sensor embeddings \cite{deng2021gdn}. Temporal convolutional networks \cite{bai2018tcn} and wavelet decompositions \cite{percival2000wavelet} provide the multi-scale views used in this paper. These detectors return a score per time step, or per variable, rather than a type, and they learn what is normal from the data. A held value or a straight line is easy to forecast and to reconstruct, so it can look normal to them (Section~\ref{sec:res-detection}).
+
+\subsection{Evaluating anomaly detection}\label{sec:rw-eval}
+
+How detections are counted changes the ranking of methods. Point adjustment can make even a random score look competitive \cite{kim2022rigorous}, range-based precision and recall account for anomalies that last over time \cite{tatbul2018precision}, and popular benchmarks suffer from trivial anomalies, unrealistic anomaly density, mislabelled ground truth and run-to-failure bias \cite{wu2023flawed}. A comparison of 71 algorithms on 976 datasets weighs their individual strengths and weaknesses to ease the choice among them \cite{schmidl2022comprehensive}. Calibration is evaluated separately from accuracy: modern neural networks are often poorly calibrated, and temperature scaling corrects them on held-out labelled data \cite{guo2017calibration}. Without labels, calibration can only be measured on injected events, which is what Section~\ref{sec:res-attribution} does. This paper counts events rather than adjusted points, reports several counting views, and injects only signatures observed in the data, which leaves the circularity discussed in Section~\ref{sec:limitations}.
+
+\subsection{Positioning}\label{sec:positioning}
+
+Table~\ref{tab:positioning} summarises the closest works. Their outputs are a cleansed series, an anomaly score or a set of probabilistic labels. The nearest in spirit is the hierarchical framework of \cite{moghaddass2018hierarchical}, which also builds the network structure into the model; it detects anomalous events from smart meters at the customers' premises, whereas this paper works from feeder telemetry and asks, for each anomaly, whether the grid or the acquisition chain produced it. To our knowledge, none of them types each anomaly of a feeder record as an acquisition artefact or a grid event, uses the acquisition chain as a level of the hierarchy, and evaluates the resulting catalogue downstream and on a second system. This paper does all four, without labelled data.
+
+\begin{table}[tbp]
+\centering
+\caption{Closest works, by the data they use and what they return (as stated in their abstracts).}
+\label{tab:positioning}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}L{3.3cm} L{3.2cm} Y L{2.3cm}@{}}
+\toprule
+Work & Data & Returns & Hierarchy \\
+\midrule
+Load-curve cleansing \cite{chen2010cleansing,mateos2013cleansing} & load curves; metered load profiles & repaired series: corrupted, outlying and missing readings cleansed or imputed & -- \\
+SCADA cleaning \cite{morrison2022scada} & wind-turbine SCADA & power curve cleaned of anomalous points & -- \\
+Building energy anomalies \cite{fan2018autoencoder} & building operational data & anomaly scores (unsupervised autoencoders) & -- \\
+Smart-grid anomaly detection \cite{moghaddass2018hierarchical} & smart-meter data & anomalous events at lateral and customer levels & network hierarchy \\
+Multivariate detectors \cite{hundman2018spacecraft,su2019omnianomaly,audibert2020usad,zhao2020mtadgat,deng2021gdn} & multivariate telemetry and sensors & anomaly scores per time step or per variable & graph-based ones: learned relations between variables \\
+Label models \cite{dawid1979,ratner2016dataprogramming,ratner2017snorkel} & votes of annotators or labelling functions & probabilistic labels & -- \\
+\midrule
+This paper & feeder telemetry of three cities & typed, calibrated catalogue: artefact or grid event, nine types, level & zone, city, region and the acquisition chain \\
+\bottomrule
+\end{tabularx}
+\end{table}
