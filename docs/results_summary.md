@@ -417,6 +417,20 @@ Scoring area: rule-based, the same for every detector (D60). "Every alarm counts
 | LightGBM predictor instead of TCN-GAT (own tuning) | −0.021 (0.16) | −0.048 (0.002) | −0.027 (0.002) |
 | − tuned event formation (NB3 setting) | −0.279 (0.002) | −0.143 (0.002) | −0.018 (0.002) |
 
+### 9.2d Deep multivariate baselines GDN and USAD (`results/benchmark_v1/deep_baselines/`, `tools/deep_baselines.py`, D82, F61)
+Authors' released settings, trained on the real series (cross-fitted, rule-clean windows, min-max scaled), own event formation tuned on development seeds 100–104: GDN (w 6, q 99.5, gap 1; development F1 0.567), USAD (w 6, q 99.0, gap 3; 0.446). Test period, mean ± sd over 10 seeds, 1 % / 3 % / 7 %.
+
+| Detector | Event F1 | Precision | Recall | Zone-strict F1 | Own background excluded | AUC-PR | Real-data alarms |
+|---|---|---|---|---|---|---|---|
+| GDN | 0.370 ± 0.044 / 0.563 ± 0.028 / 0.707 ± 0.025 | 0.268 / 0.519 / 0.776 | 0.602 / 0.617 / 0.650 | 0.287 / 0.456 / 0.568 | 0.681 / 0.702 / 0.740 | 0.177 / 0.282 / 0.353 | 366 |
+| USAD | 0.286 ± 0.046 / 0.413 ± 0.025 / 0.517 ± 0.038 | 0.233 / 0.485 / 0.759 | 0.378 / 0.362 / 0.393 | 0.232 / 0.349 / 0.405 | 0.427 / 0.448 / 0.475 | 0.129 / 0.321 / 0.422 | 243 |
+
+- **Wilcoxon (F1):** the main detector, the rules, rules + detector and STL + MAD beat both in 10/10 seeds at every rate (p = 0.002); also on zone-strict F1. Own background excluded: same, except GDN vs STL (9/10, 10/10, 8/10; p = 0.010, 0.002, 0.037).
+- GDN beats Isolation Forest at every rate and loses to LOF at 1 % and 3 % (p = 0.002; 7 %: p = 0.43). USAD beats Isolation Forest at 1 % only; LOF beats USAD at every rate.
+- **Recall by type (GDN):** A1 0.99 / 0.98 / 0.96, G1 1.00, A2 0.25–0.29, A3 0.00–0.01. U_SHOCK: GDN 0.26–0.32, USAD 0.06–0.09. Onset error: GDN 20 min, USAD 90–95 min.
+- **GDN forecast quality** (`gdn_forecast_vs_persistence.csv`, F63): MSE 6.7–13.8 × that of the last value on rule-clean real windows; mean self-attention 0.22 / 0.51.
+- **Training (CPU):** GDN early-stopped at 29 and 26 epochs (389 s, 400 s per fold); USAD 100 epochs. Whole run 47.5 min.
+
 ### 9.3 Recall by type (`detection_recall_by_type.csv`, zone-strict, test period)
 - **Rules only:** A1, A2, A3, G1, G3, G4 1.000; G2 0.900 / 0.929 / 0.939; U_SHOCK 0, U_PARTIAL 0 / 0.020 / 0.
 - **Ours:** every typed class 1.000 (G2 0.998 at 7 %); U_SHOCK 0.302 / 0.212 / 0.052; U_PARTIAL 0.180 / 0.207 / 0.220.
@@ -547,7 +561,7 @@ All families 0.914 ± 0.029. Without:
 | real | LightGBM | 1 day | all | 1.140 | 1.115 | **1.102** | — |
 | real | naive | 1 h | after anomaly | 1.081 | 1.059 | **1.052** | — |
 | real | naive | 1 day | after anomaly | 2.220 | 1.553 | **1.278** | — |
-| injected (mean of 4) | LightGBM | 1 h | after anomaly | 0.708 | 0.640 | 0.625 | **0.618** |
+| injected (mean of 4; **superseded by §10.2b, 30 datasets**) | LightGBM | 1 h | after anomaly | 0.708 | 0.640 | 0.625 | **0.618** |
 | injected | LightGBM | 1 h | all | 0.652 | 0.622 | 0.613 | **0.608** |
 | injected | LightGBM | 1 day | after anomaly | 1.293 | 1.107 | 1.056 | **1.046** |
 | injected | LightGBM | 1 day | all | 1.170 | 1.069 | 1.043 | **1.039** |
@@ -567,6 +581,25 @@ All families 0.914 ± 0.029. Without:
   - S1 is never significantly better than S2.
   - S2 closes 62–86 % of the S1-to-S3 gap.
 - **Injected data, naive reference:** S1 is significantly better than S2 in 4/4 datasets at 1 h and 2/4 at 1 day (F54).
+
+### 10.2b Forecasting on all 30 NB4 test datasets (`forecast_all/`; `tools/forecast_all_datasets.py`, D83, F62) — **cite these for injected data**
+NB5's code unchanged; its 4 datasets reproduced exactly. MASE, mean over 30 datasets, S0 / S1 / S2 / S3; paired Wilcoxon over datasets.
+
+| Model | Horizon | Subset | S0 / S1 / S2 / S3 | S2 better than S0 | S2 better than S1 |
+|---|---|---|---|---|---|
+| LightGBM | 1 day | after anomaly | 1.295 / 1.140 / **1.058** / 1.052 | 29/30 (p 3.7e-9) | 29/30 (p 4.7e-7) |
+| LightGBM | 1 day | all | 1.174 / 1.076 / **1.052** / 1.051 | 30/30 (p 1.9e-9) | 29/30 (p 3.2e-6) |
+| LightGBM | 1 h | after anomaly | 0.696 / 0.636 / **0.625** / 0.619 | 29/30 (p 3.8e-6) | 29/30 (p 3.8e-6) |
+| LightGBM | 1 h | all | 0.653 / 0.625 / **0.625** / 0.620 | 29/30 (p 3.8e-6) | 28/30 (p 4.4e-6) |
+| naive | 1 day | after anomaly | 2.036 / **1.377** / 1.499 / 1.448 | 30/30 (p 1.9e-9) | 10/30 (p 6.1e-4, S1 better) |
+| naive | 1 day | all | 1.356 / **1.159** / 1.216 / 1.196 | 30/30 (p 1.9e-9) | 10/30 (p 5.1e-4, S1 better) |
+| naive | 1 h | after anomaly | 0.995 / **0.920** / 0.939 / 0.923 | 30/30 (p 1.9e-9) | 0/30 (p 1.9e-9, S1 better) |
+| naive | 1 h | all | 0.916 / **0.890** / 0.898 / 0.891 | 30/30 (p 1.9e-9) | 0/30 (p 1.9e-9, S1 better) |
+
+- **DM per dataset, LightGBM, S2 significantly better than S1 / worse:** 1 h after anomaly 26 / 1; 1 h all 25 / 1; 1 day after anomaly 14 / 0; 1 day all 19 / 0 (of 30). Against S0: 28, 29, 19, 26 better.
+- **Per rate (LightGBM):** 10/10 datasets (p = 0.002) in most rows. Exceptions: at 3 %, S2 vs S0 9/10 in three rows (p 0.004–0.084) and S2 vs S1 9/10 in all four rows (p 0.037–0.084), with a higher 3 % mean at 1 h (0.645 vs 0.631); at 7 %, 1 h all, S2 vs S1 9/10 (p 0.004).
+- **Oracle gap (LightGBM):** S2 − S3 = 0.0006–0.0059 MASE.
+- 156 min on CPU.
 
 ## 11. NB6 transfer to Tetouan (`results/transfer_tetouan/`; frozen method; 2017; whole year after the burn-in)
 

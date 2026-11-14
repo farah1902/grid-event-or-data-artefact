@@ -82,7 +82,7 @@ grid-event labels: a 4.15-fold overstatement (F51).
    - residual hierarchy (Fig 8): it works for outages, not for fills (F30);
    - detector-only candidates and typology gaps (F32, E18);
    - the end model reproduces the label model (F33) and corrects the threshold of one rule (F34).
-   - Then the injection benchmark (NB4): Table 5 and Fig 9 (detectors and baselines), then **Table 7e and Fig 9b, the ablations of the main detector, with the learned-graph ablation first** (D67, F42, F43). Table 6 and Figs 10–11 cover attribution.
+   - Then the injection benchmark (NB4): Table 5 and Fig 9 (detectors and baselines; the deep baselines GDN and USAD, D82/F61, are added in the results step), then **Table 7e and Fig 9b, the ablations of the main detector, with the learned-graph ablation first** (D67, F42, F43). Table 6 and Figs 10–11 cover attribution.
 7. **Case studies on real data:** the catalogue (Table 4 draft in results_summary §7), C01/C09 re-reads, synthetic restoration ramps, the daily logger freeze.
 8. **Downstream (NB5):**
    - Counting every dead state as an outage overstates southern outage time 4.15× on the real data (F51). On the 30 injected test datasets, the naive count is 1.88× the truth and the typed count 1.26×, closer in 30/30 (p = 1.9 × 10⁻⁹); 99.98 % of the typed excess lies inside injected A1 spans, i.e. the A1 → G1 confusion (F59; first measured on 4 datasets in F52).

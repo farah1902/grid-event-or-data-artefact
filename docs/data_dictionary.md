@@ -297,6 +297,16 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 - `table_graph_ablation.csv`: rate, method, setting, F1, precision, recall, F1_zone_strict, AUC_PR, F1_own_background_excluded, real_data_alarms, recall_U_SHOCK, recall_U_PARTIAL, start_err_min. Test period, mean ± sd over seeds.
 - `wilcoxon_graph_ablation.csv`: rate, comparison, metric (f1, f1_bgx, auc_pr), means, main_wins, ties, Wilcoxon p, n_seeds.
 - `reproduction_main_detector.csv`: the main detector's test F1 recomputed here (CPU) against the stored NB4 row (Colab GPU), per rate and seed.
+
+**`deep_baselines/`**: GDN and USAD, computed after the NB4 run by `tools/deep_baselines.py` (D82) on the same datasets:
+- `training_history.csv`: model, train_fold, epoch, losses (GDN: train and validation MSE per zone-step, scaled units; USAD: loss1, loss2), seconds.
+- `dev_detection_grid.csv`: development seeds 100–104 × 48 settings × {alone, rules + detector} × period, as `dev/dev_detection_grid.csv`.
+- `runs/r{rate}_s{seed}_detection.csv` and `test_detection.csv`: per method (GDN, USAD) and period: the `_detection.csv` metrics of `runs/`, the `*_bgx` metrics, `auc_pr`, the setting (w, q, gap), gamma.
+- `table_deep_baselines.csv`: rate, method, setting, F1, precision, recall, F1_zone_strict, AUC_PR, F1_own_background_excluded, real_data_alarms, recall_U_SHOCK, recall_U_PARTIAL, start_err_min, recall_A1 … recall_G4. Test period, mean ± sd over seeds.
+- `wilcoxon_deep_baselines.csv`: rate, baseline, reference (main, rules, ours, STL + MAD, Isolation Forest, LOF; the stored NB4 rows), metric (f1, f1_bgx, f1_zone), means, reference_wins, ties, Wilcoxon p, n_seeds.
+- `gdn_forecast_vs_persistence.csv` (`tools/gdn_forecast_check.py`): per GDN model and window set (in / out of sample): n, MSE of GDN, of the last value and of the mean of the last 5 values (scaled units), their ratio, mean self-attention.
+- `summary.json`: development settings and F1, real-data alarms, both configurations, training seconds and epochs, test F1 per rate and method.
+- Models: `models/deep_baselines.pt` (state dicts and per-fold min-max scalers; `deep_baselines.load`).
 - `summary.json`: development result (own setting of the no-graph TCN, its F1, the main detector's recomputed best setting), real-data alarms, reproduction statistics, test F1 per rate and method.
 
 ## Main detector on the real data — `results/main_detector/` (NB4 §8b, D61)
@@ -332,6 +342,17 @@ The classes are A1, A2, A3, G1, G2, G3, G4, N. **For detector candidates, label 
 | `outage_summary.csv` | per rate and over all 30 (rate = "all"): n, mean, sd, min and max of the naive and typed ratios; typed_closer_n (datasets where the typed count is closer to the truth, distance = abs(log ratio)); wilcoxon_p (paired Wilcoxon signed-rank on those distances); mean count ratios; mean typed precision and recall; share of the typed excess inside injected A1 spans; share of the naive excess inside injected artefact spans; mean truth zone-hours |
 | `reproduction_nb5.csv` | max absolute difference to NB5's `injected/*_outage.csv` on its 4 datasets (asserted 0) |
 | `summary.json` | the same summary as JSON, runtime |
+
+### Forecasting on all 30 NB4 test datasets — `results/downstream_v1/forecast_all/` (from `tools/forecast_all_datasets.py`; D83)
+
+| File | Content |
+|---|---|
+| `runs/r{rate}_s{seed}_forecast.csv`, `runs/r{rate}_s{seed}_dm.csv` | as `injected/*_forecast.csv` and `*_dm.csv` (NB5 §4, unchanged), for every rate and seed |
+| `forecast_per_dataset.csv`, `dm_per_dataset.csv` | all 30 datasets stacked |
+| `forecast_summary.csv` | per model, horizon, subset and rate (1 %, 3 %, 7 %, all): n, mean and sd of MASE for S0–S3; S2_better_than_S0_n and S2_better_than_S1_n (datasets with lower S2 MASE); paired Wilcoxon p (S0 vs S2, S1 vs S2); S2_minus_S3_mean |
+| `dm_summary.csv` | per model, horizon, subset and comparison: n datasets, sig_better / sig_worse (DM p < 0.05 with S2 better / worse), mean DM statistic |
+| `reproduction_nb5.csv` | max absolute difference to NB5's 4 datasets (forecast metrics and DM; asserted < 1e-3, observed 0.0) |
+| `summary.json` | datasets, rates, seeds, reproduction, runtime |
 
 ## Transfer test — `results/transfer_tetouan/` (from `src/transfer.py`, NB6; D68–D70)
 

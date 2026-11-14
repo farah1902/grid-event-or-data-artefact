@@ -1,0 +1,72 @@
+{
+  "development": {
+    "GDN": {
+      "w": 6,
+      "q": 99.5,
+      "gap": 1,
+      "f1_alone_dev": 0.5669391774715654
+    },
+    "USAD": {
+      "w": 6,
+      "q": 99.0,
+      "gap": 3,
+      "f1_alone_dev": 0.44643210387758947
+    }
+  },
+  "real_data_alarms": {
+    "GDN": 366,
+    "USAD": 243
+  },
+  "device": "cpu",
+  "torch_version": "2.2.0+cpu",
+  "gdn_cfg": {
+    "win": 5,
+    "dim": 64,
+    "topk": 5,
+    "batch": 32,
+    "epochs": 30,
+    "lr": 0.001,
+    "decay": 0.0,
+    "val_ratio": 0.2,
+    "early_stop": 15,
+    "dropout": 0.2
+  },
+  "usad_cfg": {
+    "win": 12,
+    "hidden": 100,
+    "batch": 7919,
+    "epochs": 100,
+    "train_frac": 0.8,
+    "alpha": 0.5,
+    "beta": 0.5
+  },
+  "training_seconds": {
+    "GDN | fold False": 389,
+    "GDN | fold True": 400,
+    "USAD | fold False": 419,
+    "USAD | fold True": 1191
+  },
+  "epochs_run": {
+    "GDN | fold False": 29,
+    "GDN | fold True": 26,
+    "USAD | fold False": 100,
+    "USAD | fold True": 100
+  },
+  "seconds": 2850,
+  "test_f1": {
+    "1% | GDN": "0.370 \u00b1 0.044",
+    "1% | USAD": "0.286 \u00b1 0.046",
+    "3% | GDN": "0.563 \u00b1 0.028",
+    "3% | USAD": "0.413 \u00b1 0.025",
+    "7% | GDN": "0.707 \u00b1 0.025",
+    "7% | USAD": "0.517 \u00b1 0.038"
+  },
+  "test_f1_bgx": {
+    "1% | GDN": "0.681 \u00b1 0.046",
+    "1% | USAD": "0.427 \u00b1 0.082",
+    "3% | GDN": "0.702 \u00b1 0.046",
+    "3% | USAD": "0.448 \u00b1 0.031",
+    "7% | GDN": "0.740 \u00b1 0.030",
+    "7% | USAD": "0.475 \u00b1 0.041"
+  }
+}

@@ -80,7 +80,7 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
 | Table 2 (typology and signatures) | **done (NB7)** | `results/paper/tables/Table2_typology.csv` (with real-data counts) |
 | Table 3 (labelling rules) | done | `docs/methods.md` §4 |
 | Table 4 (event catalogue) | **done (NB7)** | `results/paper/tables/Table4_key_events.csv`; the full released catalogue is `results/catalogue_final/` (D72) |
-| Table 5–7 (detection, attribution, ablations) | **done** (NB4) | `results/benchmark_v1/table5*`, `table6*`, `table7*`; plus the no-graph ablation `graph_ablation/table_graph_ablation.csv` (D62). Numbers: results_summary §9 |
+| Table 5–7 (detection, attribution, ablations) | **done** (NB4) | `results/benchmark_v1/table5*`, `table6*`, `table7*`; plus the no-graph ablation `graph_ablation/table_graph_ablation.csv` (D62) and the deep baselines `deep_baselines/table_deep_baselines.csv` (D82; **to be added to Table 5 and Fig 7 in the results step**). Numbers: results_summary §9 |
 | Table 8 (forecasting) | **done** (NB5) | `results/downstream_v1/table8_forecasting.csv`, `table8_dm.csv`; results_summary §10.2 |
 | Table 9 (Tetouan) | **done** (NB6) | `results/transfer_tetouan/table9_detection.csv`, `table9_attribution.csv`, `table9_recall_by_type.csv`, `table9_wilcoxon.csv`; results_summary §11 |
 

@@ -1,4 +1,4 @@
-% Experimental design -- budget 800 words (body text).
+% Experimental design -- budget 880 words (body text).
 % Sources: docs/decisions.md D54, D56, D57, D60-D66, D68-D71, D76; docs/methods.md sections 6.1, 8, 9;
 % src/inject.py (Table: DUR_H, _pick_zones, _place), src/benchmark.py (detection_metrics, step_auc, attribution_scores),
 % src/label_model.py (ece), src/downstream.py (mase_scale, dm_test, dm_table); results/benchmark_v1/summary.json and
@@ -9,9 +9,9 @@ Detection and attribution are measured on injected events, and the value of the 
 
 \subsection{Injection benchmark}\label{sec:injection}
 
-Events are written into the real southern series inside \emph{clean zone-time}: zone-steps more than 53 steps from any rule state, after a 35-day burn-in and away from clock-change days. Table~\ref{tab:injection} lists the nine types; two untyped ones probe the detector where no rule fires. Events are placed in random type order, without overlap, until they cover 1, 3 or 7\% of the clean zone-steps.
+Events are written into the real southern series inside \emph{clean zone-time}: zone-steps more than 53 steps from any rule state, after a 35-day burn-in and away from clock-change days. Table~\ref{tab:injection} lists the nine types; two untyped ones probe the detector where no rule fires. Events are placed in random type order, without overlap, until they cover 1, 3 or 7\% of the clean zone-steps. The benchmark favours the rules: the injected artefacts copy the episodes from which the rules were written, and the ramp and overshoot of injected grid events are hypotheses that the real data do not confirm (Sections~\ref{sec:results} and~\ref{sec:discussion}).
 
-The predictors are not retrained: cross-fitted on the real series, they predict every injected step from the other half of the real data. The rule engine, label model and end model are re-run on each injected dataset as on the real data. Every design choice was made on five development datasets (seeds 100--104). The 30 test datasets (three rates $\times$ seeds 0--9; 8,526 events) were used for no choice. Results refer to the test period, July 2023 to May 2024; the earlier period serves only to tune $\beta$.
+The predictors are not retrained: cross-fitted on the real series, they predict every injected step from the other half of the real data. The rule engine, label model and end model are re-run on each injected dataset as on the real data. Every design choice was made on five development datasets: 3\% with seeds 100--102, 1\% with seed 103 and 7\% with seed 104. The 30 test datasets (three rates $\times$ seeds 0--9; 8,526 events) were used for no choice. Results refer to the test period, July 2023 to May 2024; the earlier period serves only to tune $\beta$.
 
 \begin{table}[tbp]
 \centering
@@ -40,9 +40,9 @@ U\_PARTIAL & one zone & 1--8~h & scaled by $U(0.10, 0.45)$, above the dead thres
 
 \subsection{Methods compared}\label{sec:compared}
 
-Detection compares the rule engine alone, the main detector alone and the full method (rule items plus detector-only candidates) with three baselines: STL \cite{cleveland1990stl,seabold2010statsmodels} with a daily period, scored by the robust $z$-score of its remainder (Eq.~\eqref{eq:score}), and Isolation Forest \cite{liu2008iforest} and LOF \cite{breunig2000lof} on five per-step features of $\rho$. Ablations change one component of the main detector: the learned graph (removed), the predictor (LightGBM), the scales (raw band only), the hierarchy (flat zone score) or the event formation (untuned).
+Detection compares the rule engine alone, the main detector alone and the full method (rule items plus detector-only candidates) with three classical baselines, STL \cite{cleveland1990stl,seabold2010statsmodels} with a daily period, scored by the robust $z$-score of its remainder (Eq.~\eqref{eq:score}), and Isolation Forest \cite{liu2008iforest} and LOF \cite{breunig2000lof} on five per-step features of $\rho$, and with two deep multivariate detectors: GDN \cite{deng2021gdn}, attention forecasting over a learned graph and the published method closest to our graph component, and USAD \cite{audibert2020usad}, two adversarially trained autoencoders. Both use their authors' released settings and are trained like our predictors. Ablations change one component of the main detector: the learned graph (removed), the predictor (LightGBM), the scales (raw band only), the hierarchy (flat zone score) or the event formation (the untuned setting $(w, q, g_{\max}) = (1, 99.5\%, 1)$).
 
-Every detector, baselines included, receives its own event formation: the best of the same 48 settings of $(w, q, g_{\max})$ by mean event F1 on the development datasets. Ablations inherit the main detector's setting; the no-graph ablation is also reported at its own. The main detector was chosen among four predictors by a criterion fixed beforehand: the development F1 of the rules plus its candidates. Baselines that were not run are discussed in Section~\ref{sec:discussion}.
+Every detector, baselines included, receives its own event formation: the best of the same 48 settings of $(w, q, g_{\max})$ by mean event F1 on the development datasets. Ablations inherit the main detector's setting; the no-graph ablation is also reported at its own. The main detector was chosen among four predictors by a criterion fixed beforehand: the development F1 of the rules plus its candidates.
 
 Attribution compares the rules' majority vote, the label model, the end model and the fusion on the typed injected events that the full method detects.
 
@@ -83,7 +83,7 @@ r = H / H^{\mathrm{true}}, \qquad \delta = |\log r|.
 
 \subsection{Downstream test}\label{sec:downstream}
 
-On the southern system, the cleaning strategies S0--S3 (Section~\ref{sec:cleaning}) feed two forecasters, 1~h and 1~day ahead: a global LightGBM direct forecaster that also reads the event indicator, trained up to 31 December 2023, and a model-free reference (persistence at 1~h, seasonal naive at 1~day). Forecasts are scored from 1 January to 24 May 2024 against the recorded values, on zone-steps that every strategy treats as normal, and separately on those within two days after an anomalous state. Forecasting uses the real data and four injected test datasets; outage counts use all 30. Naive counting takes every flagged dead state and typed counting only those inside grid-event items; the truth is the injected G1--G4 spans.
+On the southern system, the cleaning strategies S0--S3 (Section~\ref{sec:cleaning}) feed two forecasters, 1~h and 1~day ahead: a global LightGBM direct forecaster that also reads the event indicator, trained up to 31 December 2023, and a model-free reference (persistence at 1~h, seasonal naive at 1~day). Forecasts are scored from 1 January to 24 May 2024 against the recorded values, on zone-steps that every strategy treats as normal, and separately on those within two days after an anomalous state. Forecasts and outage counts are evaluated on the real data and on all 30 injected test datasets. Naive counting takes every flagged dead state and typed counting only those inside grid-event items; the truth is the injected G1--G4 spans.
 
 \subsection{Transfer test}\label{sec:transfer}
 

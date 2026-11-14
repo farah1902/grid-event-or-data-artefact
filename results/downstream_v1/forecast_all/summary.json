@@ -1,0 +1,43 @@
+{
+ "datasets": 30,
+ "rates": [
+  0.01,
+  0.03,
+  0.07
+ ],
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9
+ ],
+ "reproduces_nb5": [
+  {
+   "dataset": "r03_s00",
+   "max_abs_diff_forecast": 0.0,
+   "max_abs_diff_dm": 0.0
+  },
+  {
+   "dataset": "r03_s01",
+   "max_abs_diff_forecast": 0.0,
+   "max_abs_diff_dm": 0.0
+  },
+  {
+   "dataset": "r03_s02",
+   "max_abs_diff_forecast": 0.0,
+   "max_abs_diff_dm": 0.0
+  },
+  {
+   "dataset": "r07_s00",
+   "max_abs_diff_forecast": 0.0,
+   "max_abs_diff_dm": 0.0
+  }
+ ],
+ "minutes_this_call": 156.1
+}

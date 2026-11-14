@@ -634,7 +634,7 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 - **S1 erases every outage:** a forecaster-oriented cleaning that interpolates everything reports no outage time at all.
 - **Paper:** typed cleaning cuts the outage-time error from +88 % to +36 % on average. The remaining error is a measured, named confusion. Do not claim "correct outage statistics" (the guide's expected effect); claim "much closer to the truth than naive counting, with a known residual bias".
 
-### F53 — Typed cleaning gives the best LightGBM forecasts on real and injected data; the gain sits after anomalies and comes close to the oracle — *solid*
+### F53 — Typed cleaning gives the best LightGBM forecasts on real and injected data; the gain sits after anomalies and comes close to the oracle — *solid* (**injected part extended to all 30 test datasets in F62; cite F62**)
 - **Real data, MASE, S0 / S1 / S2** (Diebold–Mariano p for S1 vs S2 and S0 vs S2):
 
   | Horizon | After an anomaly (24,744 zone-steps) | DM p | All test steps (305,257) | DM p |
@@ -654,7 +654,7 @@ All numbers in this section are from the **development datasets** (seeds 100–1
   - "Type-aware cleaning improves day-ahead forecasts after anomalies by 14 % (MASE) over naive interpolation on the real data, and comes within about 1 % of an oracle on injected data (MASE 1.056 vs 1.046)."
   - Report the 'all steps' rows too: over the whole test period the effect is small (≤ 3 %), because anomalies are rare.
 
-### F54 — The typed advantage needs a forecaster that reads the event indicator: a model-free forecaster prefers erasing outages — *solid*
+### F54 — The typed advantage needs a forecaster that reads the event indicator: a model-free forecaster prefers erasing outages — *solid* (**confirmed on 30 datasets in F62**)
 - **Naive reference** (persistence at 1 h, seasonal naive at 1 day), injected data, MASE S0 / S1 / S2 / S3:
   - 1 h, all steps: 0.913 / **0.881** / 0.891 / 0.882;
   - 1 day, all steps: 1.401 / **1.155** / 1.236 / 1.199.
@@ -771,3 +771,40 @@ All numbers in this section are from the **development datasets** (seeds 100–1
   - **The result holds for every real β ≥ 0.4, not only on the grid:** for each item, the log-ratio of two classes' fused scores, β log(q_a/q_b) + (1 − β) log(f_a/f_b), is linear in β, so a label that wins at β = 0.4 and at β = 1 wins on the whole interval; abstaining items (p = q) do not depend on β. Below 0.4 at most two items change, both G3 → G4.
 - The released catalogue (`results/catalogue_final/catalogue.csv`) carries the same 35 / 13 / 7 Marrakech labels.
 - **Paper:** §4.7 states the reason and the insensitivity in one sentence.
+
+### F61 — The deep multivariate baselines GDN and USAD lose to the rules, to the main detector and to STL in every seed — *solid*
+- **Test period, event F1 (eq. 17), mean ± sd over 10 seeds, 1 % / 3 % / 7 %** (`results/benchmark_v1/deep_baselines/table_deep_baselines.csv`):
+  - GDN 0.370 ± 0.044 / 0.563 ± 0.028 / 0.707 ± 0.025; USAD 0.286 ± 0.046 / 0.413 ± 0.025 / 0.517 ± 0.038;
+  - for reference (NB4): main detector 0.644 / 0.813 / 0.854; rules alone 0.863 / 0.879 / 0.896; rules + detector 0.721 / 0.876 / 0.906; STL + MAD 0.625 / 0.735 / 0.771; LOF 0.570 / 0.720 / 0.698; Isolation Forest 0.211 / 0.462 / 0.605.
+- **Paired Wilcoxon over seeds** (`wilcoxon_deep_baselines.csv`): the main detector, the rules, the full method and STL + MAD beat both GDN and USAD in 10 of 10 seeds at every rate (p = 0.002), on F1 and on zone-strict F1. With each method's own background alarms excluded, the same holds, except GDN vs STL + MAD (STL better in 9/10, 10/10, 8/10; p = 0.010, 0.002, 0.037).
+- **Against the other classical baselines:** GDN beats Isolation Forest at every rate (10/10, 10/10, 8/10) and loses to LOF at 1 % and 3 % (10/10), not significantly at 7 % (p = 0.43). USAD beats Isolation Forest at 1 % only and loses to LOF at every rate.
+- **Other views:** own-background-excluded F1 GDN 0.681 / 0.702 / 0.740, USAD 0.427 / 0.448 / 0.475; zone-strict GDN 0.287 / 0.456 / 0.568, USAD 0.232 / 0.349 / 0.405; step AUC-PR GDN 0.177 / 0.282 / 0.353, USAD 0.129 / 0.321 / 0.422; real-data alarms GDN 366, USAD 243 (main detector alone 191).
+- **What they find:** GDN finds the multi-city zero gaps (recall A1 0.99 / 0.98 / 0.96) and injected regional outages (G1 1.00) but almost no single-zone fill (A3 0.00 / 0.01 / 0.01) and a quarter of the simultaneous fills (A2 0.25–0.29): a hold or a straight line is easy to forecast. U_SHOCK recall GDN 0.26–0.32, USAD 0.06–0.09 (main detector: see §9.3). Onset error: GDN 20 min, USAD 90–95 min.
+- **Development:** F1 alone 0.567 (GDN) and 0.446 (USAD) at their tuned settings.
+- **Paper:** "Two deep multivariate detectors, GDN and USAD, run with their authors' settings, reach event F1 of 0.37–0.71 and 0.29–0.52, below the rules (0.86–0.90), the main detector (0.64–0.85) and STL (0.63–0.77) in every seed." It supports the paper's point that acquisition artefacts are better found by their signatures than by generic anomaly scores. Caveat: the benchmark favours the rules (D84), and GDN forecasts poorly on this data (F63).
+
+### F62 — On all 30 test datasets, typed cleaning gives the best LightGBM forecasts in 28–30 of 30 datasets; the naive forecaster still prefers interpolation — *solid* (confirms F53 and F54; cite these numbers)
+- **MASE, mean over 30 datasets, S0 / S1 / S2 / S3** (`results/downstream_v1/forecast_all/forecast_summary.csv`; Wilcoxon over datasets):
+
+  | Model | Horizon | Subset | S0 / S1 / S2 / S3 | S2 better than S0 | S2 better than S1 |
+  |---|---|---|---|---|---|
+  | LightGBM | 1 day | after anomaly | 1.295 / 1.140 / **1.058** / 1.052 | 29/30 (p 3.7e-9) | 29/30 (p 4.7e-7) |
+  | LightGBM | 1 day | all | 1.174 / 1.076 / **1.052** / 1.051 | 30/30 (p 1.9e-9) | 29/30 (p 3.2e-6) |
+  | LightGBM | 1 h | after anomaly | 0.696 / 0.636 / **0.625** / 0.619 | 29/30 (p 3.8e-6) | 29/30 (p 3.8e-6) |
+  | LightGBM | 1 h | all | 0.653 / 0.625 / **0.625** / 0.620 | 29/30 (p 3.8e-6) | 28/30 (p 4.4e-6) |
+  | naive | 1 day | after anomaly | 2.036 / **1.377** / 1.499 / 1.448 | 30/30 (p 1.9e-9) | 10/30 (S1 better, p 6.1e-4) |
+  | naive | 1 h | after anomaly | 0.995 / **0.920** / 0.939 / 0.923 | 30/30 (p 1.9e-9) | 0/30 (S1 better, p 1.9e-9) |
+
+- **Diebold–Mariano per dataset, LightGBM** (`dm_summary.csv`): S2 significantly better than S1 in 26/30 (1 h after anomaly), 25/30 (1 h all), 14/30 (1 day after anomaly) and 19/30 (1 day all); significantly worse in at most 1/30. Against S0: 28, 29, 19, 26 of 30.
+- **Weak spot:** at 3 %, 1 h, S2 beats S1 in 9 of 10 datasets but not significantly (p = 0.084), and its mean MASE is higher (0.645 vs 0.631): one dataset carries a large S2 loss.
+- **S2 vs the oracle S3:** MASE gap 0.0006–0.0059 for LightGBM (about 0.5 % day-ahead after an anomaly).
+- **Naive reference (F54 confirmed):** S1 beats S2 at 1 h in 30/30 datasets and at 1 day in 20/30; S2 beats S0 in 30/30. DM: S2 significantly worse than S1 in 21/30 at 1 h and 11/30 at 1 day.
+- **The 4-dataset means (F53) were close:** e.g. LightGBM day-ahead after an anomaly S1 1.107 → 1.140 and S2 1.056 → 1.058 over 30.
+- **Paper:** "Over 30 injected datasets, type-aware cleaning gives the lowest LightGBM error in 28–30 of them (Wilcoxon p ≤ 5 × 10⁻⁶) and comes within 0.5 % of an oracle day-ahead; with a forecaster that cannot read the event indicator, interpolation remains better for forecasting, at the cost of the outage statistics (F59)."
+
+### F63 — GDN, run as released, forecasts the feeders 7–14 times worse than the last value — *solid*
+- **Rule-clean windows of the real series, min-max scaled units** (`results/benchmark_v1/deep_baselines/gdn_forecast_vs_persistence.csv`, `tools/gdn_forecast_check.py`): MSE GDN 0.0042 / 0.0049 (model trained before Jul 2023; in / out of sample) and 0.0027 / 0.0025 (trained after), vs 0.00035–0.00038 for the last value and 0.0007–0.0008 for the mean of the last 5 values: 6.7–13.8 × persistence.
+- **Mean attention weight on the zone itself:** 0.22 and 0.51 (the rest goes to its 4 learned neighbours). In GDN's attention the target's own term is the same for every neighbour it scores, so a node cannot learn to attend to itself specifically; its forecast is a blend of feeders, and the shared output layer flattens it.
+- Before the min-max scaling was added (D82) the ratio was about 10 × in unscaled units; the scaling made the inputs faithful but did not remove the gap.
+- **Not a training failure:** both folds early-stopped (29 and 26 epochs) at a stable training loss; the code follows the official layers.
+- **Paper:** state GDN's forecast error next to persistence (supplement), so that the comparison is seen to use GDN as released. It agrees with F42: on few-zone feeder systems, mixing neighbours does not help; our TCN-GAT reads each zone's own history through its temporal network and uses the graph only for the neighbours' current values. If the static-attention argument is used in the text, cite Brody et al. (ICLR 2022) after checking it.

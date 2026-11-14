@@ -34,6 +34,7 @@ src/paper_figures.py          NB7: final catalogue, Fig 1 (basemap), Fig 2 (typo
 src/paper_regen.py            NB7: regenerated Fig 8, Fig 9, E4, E6, E19, E22 (D74)
 src/paper_tables.py           NB7: paper tables, numbered figure set + MANIFEST.md, catalogue release (D72, D75)
 src/transfer.py               NB6: Tetouan transfer (register the system, frozen label model, predictors trained on Tetouan, metrics)
+src/deep_baselines.py         GDN and USAD re-implemented with their authors' released settings (D82)
 src/downstream.py             NB5: cleaning strategies S0-S3, global LightGBM direct forecaster, seasonal naive, MASE/DM test, outage statistics
 notebooks/NB1_evidence_figures.ipynb   Fig 1, 3, 4, 5, E1–E8 (executed)
 notebooks/NB1b_rules_v1.ipynb          rule engine v1 diagnostics, Fig 7, E9–E11 (executed)
@@ -51,6 +52,9 @@ tools/make_transfer_diagram.py Fig 14: the Tetouan transfer protocol diagram (D7
 tools/ablation_summary.py     Table 7e + Fig 9b: all ablations of the main detector, the learned graph first (D67; reads stored files, seconds)
 tools/outage_all_datasets.py  outage statistics on all 30 NB4 test datasets (NB5's code unchanged) -> results/downstream_v1/outage_all/ (D76, F59)
 tools/marrakech_beta_sensitivity.py Marrakech labels vs the fusion weight β (NB3's stored q, f) -> results/end_model_v1/marrakech_beta_sensitivity.* (D80, F60)
+tools/deep_baselines.py      deep multivariate baselines GDN and USAD on the NB4 datasets -> results/benchmark_v1/deep_baselines/ (D82, F61)
+tools/gdn_forecast_check.py  GDN's forecast vs persistence on the real series (F63)
+tools/forecast_all_datasets.py forecasting test (NB5 §4, unchanged) on all 30 NB4 test datasets -> results/downstream_v1/forecast_all/ (D83, F62)
 results/event_catalogue_v0/   v0 outputs
 results/catalogue_v1/         v1 items, votes, zone runs, rule summary
 results/labels_v1/            label-model outputs (q.csv = probabilistic labels)
@@ -110,6 +114,8 @@ python tools/graph_ablation.py                 # after NB4: no-graph ablation on
 python tools/make_nb5_downstream.py notebooks/NB5_downstream.ipynb   # then execute NB5 like the others (local CPU)
 python tools/make_nb6_tetouan.py notebooks/NB6_tetouan.ipynb         # then execute NB6 (local CPU, ~13 min)
 python tools/outage_all_datasets.py           # outage statistics on the 30 NB4 test datasets, ~1 h on CPU (D76); before NB7 (Fig 12c)
+python tools/forecast_all_datasets.py         # forecasting on the 30 NB4 test datasets, ~2.5 h on CPU (D83)
+python tools/deep_baselines.py                # GDN and USAD on the NB4 datasets, ~50 min on CPU (D82); then tools/gdn_forecast_check.py
 python tools/make_nb7_final_figures.py notebooks/NB7_final_figures.ipynb   # then execute NB7 (~2 min)
 ```
 Sync the repo to the Drive copy before a Colab run, and pull the outputs after it:

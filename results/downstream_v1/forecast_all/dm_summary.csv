@@ -1,0 +1,25 @@
+model,horizon,subset,comparison,n,sig_better,sig_worse,DM_mean
+LightGBM,1 day,after anomaly (2 days),S0 vs S2,30,19,0,3.1822411591931408
+LightGBM,1 day,after anomaly (2 days),S1 vs S2,30,14,0,1.8878458813091936
+LightGBM,1 day,after anomaly (2 days),S2 vs S3,30,0,0,0.43025851414334054
+LightGBM,1 day,all,S0 vs S2,30,26,0,4.766087821871772
+LightGBM,1 day,all,S1 vs S2,30,19,0,2.2110904898625092
+LightGBM,1 day,all,S2 vs S3,30,0,0,0.10268460997814717
+LightGBM,1 h,after anomaly (2 days),S0 vs S2,30,28,1,4.597827876249281
+LightGBM,1 h,after anomaly (2 days),S1 vs S2,30,26,1,3.665186638799112
+LightGBM,1 h,after anomaly (2 days),S2 vs S3,30,0,0,2.28275128002582
+LightGBM,1 h,all,S0 vs S2,30,29,1,5.536684741386055
+LightGBM,1 h,all,S1 vs S2,30,25,1,3.999589972075273
+LightGBM,1 h,all,S2 vs S3,30,0,0,3.8082999131261817
+naive,1 day,after anomaly (2 days),S0 vs S2,30,21,0,2.3518048320420957
+naive,1 day,after anomaly (2 days),S1 vs S2,30,0,11,-1.3424571909320888
+naive,1 day,after anomaly (2 days),S2 vs S3,30,0,0,1.0989819150783495
+naive,1 day,all,S0 vs S2,30,21,0,2.329608670520534
+naive,1 day,all,S1 vs S2,30,0,11,-1.3351921843999786
+naive,1 day,all,S2 vs S3,30,0,0,1.1038782211025364
+naive,1 h,after anomaly (2 days),S0 vs S2,30,24,0,2.885111499673364
+naive,1 h,after anomaly (2 days),S1 vs S2,30,0,21,-2.243598051857234
+naive,1 h,after anomaly (2 days),S2 vs S3,30,0,0,1.4990563774045016
+naive,1 h,all,S0 vs S2,30,24,0,2.883338817151305
+naive,1 h,all,S1 vs S2,30,0,21,-2.2425836336945077
+naive,1 h,all,S2 vs S3,30,0,0,1.5269900455869103
