@@ -48,14 +48,14 @@ Honesty items that protect the value (each stated where it belongs, never hidden
 
 | Section | Words |
 |---|---|
-| 1 Introduction | 682 |
+| 1 Introduction | 687 |
 | 2 Related work | 895 |
 | 3 Data, hierarchy and typology | 892 |
 | 4 Method | 1,736 |
 | 5 Experimental design | 880 |
 | 6 Results | 1,938 |
 | 7 Discussion | 862 |
-| 8 Conclusions | 215 |
+| 8 Conclusions | 210 |
 | **Total** | **8,000** |
 
 Main paper: **12 figures, 10 tables, 27 equations**; the rest in the supplement. Captions, tables and references do not count towards the 8,000 words.
