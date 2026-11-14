@@ -768,5 +768,6 @@ All numbers in this section are from the **development datasets** (seeds 100–1
   - the label-model and end-model arg max agree on 53 of 55; the 2 disagreements (D003, D011) are G3 (q) vs G4 (f), fused to G3;
   - β ∈ {0.4, …, 1.0}: 0 labels change relative to β = 0.5;
   - β ∈ {0.1, 0.2, 0.3}: 1 label changes (G3 → G4); β = 0: 2 change.
+  - **The result holds for every real β ≥ 0.4, not only on the grid:** for each item, the log-ratio of two classes' fused scores, β log(q_a/q_b) + (1 − β) log(f_a/f_b), is linear in β, so a label that wins at β = 0.4 and at β = 1 wins on the whole interval; abstaining items (p = q) do not depend on β. Below 0.4 at most two items change, both G3 → G4.
 - The released catalogue (`results/catalogue_final/catalogue.csv`) carries the same 35 / 13 / 7 Marrakech labels.
 - **Paper:** §4.7 states the reason and the insensitivity in one sentence.
