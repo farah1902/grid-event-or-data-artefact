@@ -12,7 +12,7 @@ PAPER = Path(__file__).resolve().parents[1]
 SECTIONS = ["01_introduction", "02_related_work", "03_data", "04_method", "05_experiments",
             "06_results", "07_discussion", "08_conclusions"]
 BUDGET = {"01_introduction": 682, "02_related_work": 895, "03_data": 892, "04_method": 1736,
-          "05_experiments": 880, "06_results": 1940, "07_discussion": 862, "08_conclusions": 215}
+          "05_experiments": 880, "06_results": 1938, "07_discussion": 862, "08_conclusions": 215}
 TARGET = (8000, 8100)
 
 
