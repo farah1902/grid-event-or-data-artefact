@@ -65,7 +65,7 @@ The value in brackets is the correlation at δ\*. The 2023-03-26 and 2024-03-31 
 
 **Episodes:** 230, of which 38 have ≥ 2 items.
 
-**Exact-zero share η of the dead items** (`items.csv`; H1, D87): the three multi-city dead items (D077, D096, D117) have η = 1.0. Southern single-zone dead items: 74, of which 40 have η < 0.9 (noise floor) and 19 have η = 1.0. All dead items: 84 of 126 have η < 0.9. Marrakech: all 48 dead items are in zone M2, 44 with η < 0.9.
+**Exact-zero share η of the dead items** (`items.csv`; H1, D87): the three multi-city dead items (D077, D096, D117) have η = 1.0. Southern single-zone dead items: 74, of which 40 have η < 0.9 (noise floor), 15 have 0.9 ≤ η < 1 and 19 have η = 1.0; all 74 are labelled G3 or G4 in the final catalogue (η < 0.9: G3 10, G4 30; 0.9–1: G3 4, G4 11; η = 1: G3 3, G4 16). All dead items: 84 of 126 have η < 0.9. Marrakech: all 48 dead items are in zone M2, 44 with η < 0.9.
 
 **Votes per rule** (`rule_summary.csv`):
 
