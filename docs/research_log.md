@@ -571,3 +571,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Introduction review (D96):** data-first hook added (artefacts dominate by our typing, the only regional-outage candidate is an acquisition failure, straight lines are the most common fill, restoration shape carries almost no evidence); 4.15 framed as relative to our typing with the injected 1.88 vs 1.26 as the verified version; detector bullet states the precision cost at low contamination; "22 kV" dropped after checking the data paper (explicit only for the three southern cities). Introduction 682 words; Conclusions budget 215.
 
 **Introduction accepted (D96):** one wording fix after acceptance: "from the telemetry and the grouping of feeders into cities, without labelled data" instead of "from the telemetry alone". Introduction 687 words; Conclusions budget 210.
+
+**Section 8 (Conclusions) written (D97):** 210 words; summary, what the data contain (by our typing), injected results, catalogue, four future-work items including deliberate manipulation. Body text 8,100 words. Next: abstract, highlights, graphical abstract, front matter and final checks.

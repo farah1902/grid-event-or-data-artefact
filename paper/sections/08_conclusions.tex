@@ -1,4 +1,9 @@
-% Conclusions -- budget 210 words. Plan (paper/OUTLINE.md): V1-V5 summary; future work. Step 10.
+% Conclusions -- budget 210 words (body text).
+% Sources: Sections 1, 6 and 7 of this paper; docs/results_summary.md (macro-F1 0.90-0.94, ECE 0.07-0.10, outage counts
+% closer in 30 of 30 datasets, Tetouan A1); limitations of Section 7.3; deliberate manipulation as future work at the
+% author's request (answer 1 on Section 2; hassine2025security verified, notes in references.bib).
 \section{Conclusions}\label{sec:conclusions}
 
-[To be written.]
+This paper typed the anomalies of a multi-city feeder record as acquisition artefacts or grid events, with calibrated probabilities and without labelled data. Rules read the level of each anomaly and the traces a recording chain leaves, a constrained label model turns their sparse votes into stable probabilistic labels, and a residual detector adds anomalies the rules cannot type. By our typing, most of what looks like an outage in the Moroccan telemetry is an acquisition failure; straight-line interpolation is the most common fill, and restoration shape carries almost no evidence. On injected events the labels reach macro-F1 0.90--0.94 at an expected calibration error of 0.07--0.10, typed counting is closer to the true outage time than naive counting in every dataset, and the method transfers to another city without re-tuning, except for zero-fill gaps, whose evidence is cross-city. The released catalogue lets later studies impute the artefacts and keep the grid events.
+
+Four extensions follow. Utility outage records would validate the labels on real events. Untyped detector candidates, partial drops, surges and short disturbances, call for new types. An episode-level label model would use context that item-level labels ignore. Deliberately manipulated readings, a concern of smart-grid security \cite{hassine2025security}, would add a third cause beside artefacts and grid events.
