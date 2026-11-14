@@ -11,7 +11,7 @@ from pathlib import Path
 PAPER = Path(__file__).resolve().parents[1]
 SECTIONS = ["01_introduction", "02_related_work", "03_data", "04_method", "05_experiments",
             "06_results", "07_discussion", "08_conclusions"]
-BUDGET = {"01_introduction": 720, "02_related_work": 840, "03_data": 900, "04_method": 1740,
+BUDGET = {"01_introduction": 665, "02_related_work": 895, "03_data": 900, "04_method": 1740,
           "05_experiments": 880, "06_results": 1910, "07_discussion": 860, "08_conclusions": 250}
 TARGET = (8000, 8100)
 
