@@ -66,7 +66,7 @@ with $\Delta^{+}$ and $\Delta^{-}$ the largest rise and fall, is near 0 when cur
 
 \subsection{Labelling rules}\label{sec:rules}
 
-Nineteen rules turn these signatures into votes (Table~\ref{tab:rules}). Each rule emits one label or abstains. The rules fall into nine families: simultaneity, holds, restoration, city, single zone, calendar, clock, conservation and straight-line fills. Nine of the rules are \emph{defining}, i.e. their condition is the type's definition. A rule may vote for the grid-event family as a whole (G) rather than a single type. No rule uses external records.
+Nineteen rules turn these signatures into votes (Table~\ref{tab:rules}). Each rule emits one label or abstains. The rules fall into nine families: simultaneity, holds, restoration, city, single zone, calendar, clock, conservation and straight-line fills. Nine of the rules are \emph{defining}, i.e. their condition is the type's definition. A rule may vote for the grid-event family as a whole (G) rather than a single type. Rule numbers follow the released code: two rules planned on external utility and press records (R17, R18) were not implemented, so no rule uses external records and the numbering skips from R16 to R19.
 
 \begin{table}[tbp]
 \centering
@@ -108,11 +108,11 @@ The Dawid--Skene model \cite{dawid1979} treats each rule $r$ as an annotator wit
 q_i(y) \propto \pi_y \prod_{r:\, \lambda_r(i) \neq \varnothing} \theta_r\big(y, \lambda_r(i)\big).
 \label{eq:ds}
 \end{equation}
-When abstentions are ignored, as in Eq.~(\ref{eq:ds}), a rule that can emit only one label $l$ has $\theta_r(y, l) = 1$ for every $y$: its vote multiplies every class by the same factor, and the posterior equals the prior. All nineteen rules are of this kind, so Eq.~(\ref{eq:ds}) cannot use them. Modelling abstention restores the information, but a free confusion matrix per rule is then poorly identified, because most items receive only one to three votes (Section~\ref{sec:results}).
+When abstentions are ignored, as in Eq.~(\ref{eq:ds}), a rule that can emit only one label $l$ has $\theta_r(y, l) = 1$ for every $y$: its vote multiplies every class by the same factor, and the posterior equals the prior. All nineteen rules are of this kind, so Eq.~(\ref{eq:ds}) cannot use them. Modelling abstention restores the information, but a free confusion matrix per rule is then unstable: most items receive only one to three votes, and different restarts of the estimation reach different labels (Section~\ref{sec:results}).
 
 \subsection{A constrained label model with abstention}\label{sec:labelmodel}
 
-Three constraints make the model identifiable. First, each item kind and level has a feasible set $\mathcal{Y}(i)$; for example, a dead item spanning two cities can only be A1 or G1, and a single-zone fill only A3 or N. Second, a rule only counts on the items it can observe (its applicability set $\mathcal{A}(i)$), and its abstention there is informative. Third, each rule output $l$ has a set $S(r, l)$ of types it speaks for. The posterior is
+Three constraints make the model well-posed and stable. First, each item kind and level has a feasible set $\mathcal{Y}(i)$; for example, a dead item spanning two cities can only be A1 or G1, and a single-zone fill only A3 or N. Second, a rule only counts on the items it can observe (its applicability set $\mathcal{A}(i)$), and its abstention there is informative. Third, each rule output $l$ has a set $S(r, l)$ of types it speaks for. The posterior is
 \begin{equation}
 q_i(y) \propto \one[y \in \mathcal{Y}(i)]\; \pi_{k(i)}(y) \prod_{r \in \mathcal{A}(i)} \theta_r\big(y, o_{ir}\big), \qquad o_{ir} \in \{\varnothing\} \cup \mathrm{out}(r),
 \label{eq:lm}
@@ -131,7 +131,7 @@ b_{rl} = \frac{\beta_1 + \sum_i n_{i} \one[o_{ir} = l]}{\beta_1 + \beta_0 + \sum
 \end{gathered}
 \label{eq:mstep}
 \end{equation}
-where the sums run over the items to which $r$ applies, and $m_i$ and $n_i$ are the posterior masses on $S(r,l)$ and on its complement. We set $(\alpha_1, \alpha_0) = (1, 1)$, or $(9, 1)$ for defining rules, $(\beta_1, \beta_0) = (1, 9)$ and $\gamma = 1$, and keep the best of 20 restarts. % D28-D34
+where the sums run over the items to which $r$ applies, and $m_i$ and $n_i$ are the posterior masses on $S(r,l)$ and on its complement. We set $(\alpha_1, \alpha_0) = (1, 1)$, or $(9, 1)$ for defining rules, $(\beta_1, \beta_0) = (1, 9)$ and $\gamma = 1$, and keep the best of 20 restarts. The defining-rule prior matters: without it, 39\% of the real dead items change label (the sensitivity to every prior and rule family is reported in the supplementary material). With these constraints all 20 restarts reach the same labels, and the model recovers its own parameters from votes simulated from it (Section~\ref{sec:results}). % D28-D34, F22, F24
 
 \subsection{Multi-scale hierarchical residual detector}\label{sec:detector}
 
@@ -140,7 +140,7 @@ The detector predicts each zone's relative level $\rho_{z,t}$ (clipped to $[0, 3
 e_{z,t} = \rho_{z,t} - \hat{\rho}_{z,t}, \qquad \hat{\rho}_{z,t} = f\big(\rho_{z,<t},\, \{\rho_{z',t}\}_{z' \in \mathcal{N}(z)},\, \mathbf{c}_t\big),
 \label{eq:residual}
 \end{equation}
-where $\mathbf{c}_t$ holds calendar features and the zone's values one and seven days earlier. The predictor $f$ combines a causal temporal convolutional network \cite{bai2018tcn} over the zone's past (six residual blocks, dilations 1 to 32, a receptive field of about 42~h) with two-head graph attention \cite{velickovic2018gat} over the current values of its neighbours $\mathcal{N}(z)$: the zones of the same city and the four zones of other cities whose learned embeddings are most similar, as in GDN \cite{deng2021gdn}. It is trained with a Huber loss \cite{huber1964} on rule-clean steps only, with two-fold temporal cross-fitting so that every prediction is made out of sample. The learned graph is evaluated as an ablation (Section~\ref{sec:results}).
+where $\mathbf{c}_t$ holds calendar features and the zone's values one and seven days earlier. The predictor $f$ combines a causal temporal convolutional network \cite{bai2018tcn} over the zone's past (six residual blocks of two causal convolutions with kernel size 3 and dilations 1 to 32, a receptive field of 253 steps, about 42~h) with two-head graph attention \cite{velickovic2018gat} over the current values of its neighbours $\mathcal{N}(z)$: the zones of the same city and the four zones of other cities whose learned embeddings are most similar, as in GDN \cite{deng2021gdn}. It is trained with a Huber loss \cite{huber1964} on rule-clean steps only, with two-fold temporal cross-fitting so that every prediction is made out of sample. The learned graph is evaluated as an ablation (Section~\ref{sec:results}).
 
 The residual is split into frequency bands by a maximal overlap discrete wavelet transform (MODWT) with LA(8) filters \cite{percival2000wavelet},
 \begin{equation}
@@ -165,7 +165,7 @@ The zone-step score $Z_{z,t} = \max_b \max(s^{g}_t, s^{u_{c(z)}}_t, s^{v_z}_t)$ 
 \mathrm{flag}_{z,t} = \one\big[\tilde{Z}_{z,t} > \gamma_q\big],
 \label{eq:events}
 \end{equation}
-with $\gamma_q$ the $q$-quantile of $\tilde{Z}$ on zone-steps far from any rule state. Flag runs of at least three steps, merged across gaps of up to $g_{\max}$ steps, are the detector's events; those that overlap no rule item are \emph{detector-only candidates}. The setting $(w, q, g_{\max}) = (24, 99.9\%, 12)$, i.e. 4~h smoothing, was chosen on development data like the settings of every compared detector (Section~\ref{sec:experiments}).
+with $\gamma_q$ the $q$-quantile of $\tilde{Z}$ on zone-steps more than 53 steps (about 9~h, half the support of the widest band) from any rule state in the zone and from any multi-zone rule state in the system. Flag runs of at least three steps, merged across gaps of up to $g_{\max}$ steps, are the detector's events; those that overlap no rule item are \emph{detector-only candidates}. The setting $(w, q, g_{\max}) = (24, 99.9\%, 12)$, i.e. 4~h smoothing, was chosen on development data like the settings of every compared detector (Section~\ref{sec:experiments}). The phase alignment and the centred smoothing use future steps, so the detector is retrospective: it builds a catalogue offline and is not a real-time alarm.
 
 \subsection{End model and fusion}\label{sec:fusion}
 
@@ -179,7 +179,7 @@ and predicts out of fold, with folds grouped by episode. The fusion is a weighte
 p_i(y) \propto \one[y \in \mathcal{Y}(i)]\; q_i(y)^{\beta}\, f(y \mid \boldsymbol{\phi}_i)^{1-\beta}.
 \label{eq:fusion}
 \end{equation}
-The rules bring evidence the features cannot express, and the end model brings detector and context evidence, so either source can change the winning type. The weight $\beta$ is tuned on the training period of the injected data (Section~\ref{sec:experiments}). The end model abstains ($p = q$) for classes with too little training mass, and detector-only candidates use a uniform $q$, so their type follows $f$. Clock and transfer items keep their label-model posterior.
+The rules bring evidence the features cannot express, and the end model brings detector and context evidence, so either source can change the winning type. The weight $\beta$ is tuned on the training period of the injected data (Section~\ref{sec:experiments}); the real southern catalogue uses $\beta = 0.6$, the value selected at 3\% contamination, and Marrakech items use $\beta = 0.5$. The end model abstains ($p = q$) on items whose label-model class has fewer than three items of training mass, and detector-only candidates use a uniform $q$, so their type follows $f$. Clock and transfer items keep their label-model posterior.
 
 \subsection{Type-aware cleaning}\label{sec:cleaning}
 
