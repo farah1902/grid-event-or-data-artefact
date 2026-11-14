@@ -1,0 +1,61 @@
+% Grid event or data artefact? -- manuscript for Applied Energy (Elsevier, elsarticle class).
+% Build: latexmk -pdf main.tex   (or pdflatex, bibtex, pdflatex, pdflatex). Word count: python tools/wordcount.py
+% Rules for every sentence: numbers only from docs/results_summary.md; references only from verified DOI metadata
+% (paper/README.md). Figures are copied to figures/ as Figure_N.pdf by tools/sync_figures.py.
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{lineno}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% notation used throughout
+\newcommand{\xh}{\hat{x}}
+
+\journal{Applied Energy}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Grid event or data artefact? Hierarchical weak supervision for anomaly attribution in multi-city feeder telemetry}
+
+% Authors, affiliations and the corresponding author are added by the author (title-page rules in paper/OUTLINE.md).
+\author[a]{[Author names to be added]}
+\affiliation[a]{organization={[Affiliation to be added]},
+                country={Morocco}}
+
+\begin{abstract}
+[Written last: at most 250 words; purpose, procedures, main findings with their statistical significance, principal conclusions.]
+\end{abstract}
+
+\begin{keyword}
+weak supervision \sep anomaly attribution \sep feeder telemetry \sep data quality \sep outage statistics \sep load forecasting \sep distribution networks
+\end{keyword}
+
+\end{frontmatter}
+
+\linenumbers
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_data}
+\input{sections/04_method}
+\input{sections/05_experiments}
+\input{sections/06_results}
+\input{sections/07_discussion}
+\input{sections/08_conclusions}
+\input{sections/declarations}
+
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+
+\end{document}

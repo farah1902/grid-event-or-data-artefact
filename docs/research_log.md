@@ -510,3 +510,15 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 - the writing order (methods and results first, introduction and abstract last).
 - **Length (later the same day):** the author found a third-party table giving ~8,000 words for research articles. A further search found 8,000, 7,000–10,000 and 12,000 on third-party pages and 5,000 in an outdated 2015 author pack; none official. Working budget set to **8,000 words of body text** (the safer figure), with a per-section budget in the outline; main paper trimmed to 11 figures and 9 tables (the two logger episodes become one composite figure; the clock evidence and the key-events table move to the supplement).
 - **Official guide, "Writing and formatting" section** (pasted by the author): recorded in `paper/OUTLINE.md` (files, title page, abstract, keywords 1–7, highlights, graphical abstract ≥ 1328 px, math, tables without vertical rules or shading and not duplicating figures, figures as separate files with embedded fonts and ≥ 300 dpi, no combined images unless compared, accessible colour). Consequences: the two logger episodes stay two figures (main paper 12 figures, 9 tables); PDFs to be re-exported with TrueType fonts; booktabs tables that add what their figure does not show. Length limit, declarations and reference style still to be read on the guide.
+
+## Session 12 — 2026-11-14 — Writing steps 2 and 3: LaTeX skeleton, verified dataset references, §3 drafted
+
+**Author's decisions:** length 8,000–8,100 words of body text; no conflict of interest; CRediT later; data and code available; references in numbered style ([1]) via a .bib file importable into Zotero or Mendeley.
+
+**Step 2, skeleton (`paper/`):** `main.tex` (elsarticle 3.5 2026/01/09 from MiKTeX, `preprint,12pt`, line numbers, elsarticle-num), one file per section with its budget, `declarations.tex`, `references.bib`, `tools/sync_figures.py` (Figure_1 … Figure_12 from results/figures/), `tools/wordcount.py` (texcount, body text only), `README.md` (build, rules, status), `.gitignore`.
+
+**References verified** (DOI content negotiation, 2026-11-14): UCI 1158 (10.24432/C5FC8R), Data in Brief (10.1016/j.dib.2025.112067, full text read), OPSEARCH (10.1007/s12597-025-00950-w), UCI 849 Tetouan (10.24432/C5B034), IRSEC 2018 (10.1109/IRSEC.2018.8703007). The research guide had listed some method references "from memory"; none is used until verified.
+
+**Step 3, §3 Data, hierarchy and typology (first draft, 712 words):** datasets (Table 1), Fig 1, hierarchy and the acquisition layer, problem formulation with Eqs (1)–(2), typology (Table 2, Fig 2). Checks run: the 12 missing stamps are identical in the three southern cities (from 23 Apr 2023 02:00); Foum El Oued zones 5–7 carry values to 24 May 2024 in the UCI file (the data paper's table says 26 Dec 2023); the UCI Tetouan record states no unit. Wording decision D77 (no "one data logger" in the paper).
+
+**Compiled** (latexmk, no errors); pages rendered and checked: tables and figures place correctly; the figures still carry baked-in titles and small text (figure step).

@@ -63,6 +63,7 @@ results/catalogue_final/      NB7: the released typed catalogue (catalogue, epis
 results/paper/                NB7: the paper set: MANIFEST.md (numbering, captions), figures/, tables/
 data/external/natural_earth/  Natural Earth 1:50m land (public domain) for the Fig 1 basemap
 results/figures/              all figures (png + pdf) and small csv tables
+paper/                        the manuscript (LaTeX, Applied Energy): OUTLINE.md (plan), README.md (build, rules, status), sections/, references.bib (verified only)
 _local_archive/               git-ignored scratch (duplicates, zips, old copies). Not part of the project
 ```
 
