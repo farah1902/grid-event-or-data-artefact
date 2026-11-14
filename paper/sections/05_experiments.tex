@@ -1,4 +1,94 @@
-% Experimental design -- budget 750 words. Plan (paper/OUTLINE.md): 5.1 injection benchmark; 5.2 methods compared; 5.3 metrics, Eqs (22)-(26); 5.4 statistics; 5.5 downstream protocol; 5.6 transfer protocol; 5.7 implementation. Step 5.
+% Experimental design -- budget 800 words (body text).
+% Sources: docs/decisions.md D54, D56, D57, D60-D66, D68-D71, D76; docs/methods.md sections 6.1, 8, 9;
+% src/inject.py (Table: DUR_H, _pick_zones, _place), src/benchmark.py (detection_metrics, step_auc, attribution_scores),
+% src/label_model.py (ece), src/downstream.py (mase_scale, dm_test, dm_table); results/benchmark_v1/summary.json and
+% dev_selection.json (8,526 events; 48 settings; development seeds 100-104).
 \section{Experimental design}\label{sec:experiments}
 
-[To be written.]
+Detection and attribution are measured on injected events, and the value of the catalogue downstream.
+
+\subsection{Injection benchmark}\label{sec:injection}
+
+Events are written into the real southern series inside \emph{clean zone-time}: zone-steps more than 53 steps from any rule state, after a 35-day burn-in and away from clock-change days. Table~\ref{tab:injection} lists the nine types; two untyped ones probe the detector where no rule fires. Events are placed in random type order, without overlap, until they cover 1, 3 or 7\% of the clean zone-steps.
+
+The predictors are not retrained: cross-fitted on the real series, they predict every injected step from the other half of the real data. The rule engine, label model and end model are re-run on each injected dataset as on the real data. Every design choice was made on five development datasets (seeds 100--104). The 30 test datasets (three rates $\times$ seeds 0--9; 8,526 events) were used for no choice. Results refer to the test period, July 2023 to May 2024; the earlier period serves only to tune $\beta$.
+
+\begin{table}[tbp]
+\centering
+\caption{Injected event types. Durations are log-uniform in the range, except G4 (uniform). $\xh$: expected value (Eq.~\eqref{eq:expected}); $U(a,b)$: uniform draw. Artefact signatures are copied from real episodes; grid-event signatures follow the hypothesised physics of Section~\ref{sec:typology}. Each event blocks its zones for $\pm 12$~h, and a multi-city event blocks the whole system for $\pm 3$~h. Clock errors (A4) and load transfers (G5) are not injected: their rules are calendar-gated or act on whole days.}
+\label{tab:injection}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}l L{3.6cm} l Y@{}}
+\toprule
+Type & Zones & Duration & Injected signature \\
+\midrule
+A1 & all zones of 2--3 cities & 0.5--24~h & exact zeros \\
+A2 & 2 or more zones of one city (50\%), one city (25\%) or 2--3 cities (25\%) & 1--48~h & each zone held at its last value or interpolated by a straight line (50/50); a whole-city fill is followed by an A1 zero fill with probability 0.5 \\
+A3 & one zone & 1--6~h & hold or straight-line fill \\
+\midrule
+G1 & all zones of 2 cities & 1--18~h & noise floor $\xh \cdot U(0, 0.03)$ with 0--30\% exact zeros; linear ramp of 20--90~min; overshoot $\omega \sim U(1.1, 1.5)$ decaying over 1--2~h \\
+G2 & all zones of one city & 20~min--6~h & as G1 \\
+G3 & one zone, any hour & 1--48~h & as G1 \\
+G4 & one zone, start 06:00--11:59, 70\% at weekends & 1--6~h & noise floor as G1; ramp of 10--30~min; no overshoot \\
+\midrule
+U\_SHOCK & all zones of 2--3 cities & 0.5--4~h & scaled by $U(0.5, 0.8)$; no rule fires \\
+U\_PARTIAL & one zone & 1--8~h & scaled by $U(0.10, 0.45)$, above the dead threshold \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Methods compared}\label{sec:compared}
+
+Detection compares the rule engine alone, the main detector alone and the full method (rule items plus detector-only candidates) with three baselines: STL \cite{cleveland1990stl,seabold2010statsmodels} with a daily period, scored by the robust $z$-score of its remainder (Eq.~\eqref{eq:score}), and Isolation Forest \cite{liu2008iforest} and LOF \cite{breunig2000lof} on five per-step features of $\rho$. Ablations change one component of the main detector: the learned graph (removed), the predictor (LightGBM), the scales (raw band only), the hierarchy (flat zone score) or the event formation (untuned).
+
+Every detector, baselines included, receives its own event formation: the best of the same 48 settings of $(w, q, g_{\max})$ by mean event F1 on the development datasets. Ablations inherit the main detector's setting; the no-graph ablation is also reported at its own. The main detector was chosen among four predictors by a criterion fixed beforehand: the development F1 of the rules plus its candidates. Baselines that were not run are discussed in Section~\ref{sec:discussion}.
+
+Attribution compares the rules' majority vote, the label model, the end model and the fusion on the typed injected events that the full method detects.
+
+\subsection{Metrics}\label{sec:metrics}
+
+Detection is counted per event, without the point adjustment that inflates scores \cite{kim2022rigorous}. With $E$ the injected and $\hat{E}$ the predicted events,
+\begin{equation}
+\begin{gathered}
+P = \frac{|\hat{E}^{*}|}{|\hat{E}|}, \qquad R = \frac{|E^{*}|}{|E|}, \qquad F_1 = \frac{2PR}{P + R}, \\
+\hat{E}^{*} = \{\hat{e} \in \hat{E} : \hat{e} \cap E \neq \emptyset\}, \qquad E^{*} = \{e \in E : e \cap \hat{E} \neq \emptyset\},
+\end{gathered}
+\label{eq:eventf1}
+\end{equation}
+where $\hat{e} \cap E \neq \emptyset$ means that $\hat{e}$ overlaps an injected span in time, its restoration tail included; the zone-strict variant also requires a shared zone. Predictions that touch neither clean zone-time nor an injected span are not scored. A second view also ignores each method's own alarms on the uninjected series, as rule states already are. Step-wise AUC-PR and recall per type are also reported.
+
+Attribution is scored by macro-F1 over the seven typed classes and by the expected calibration error \cite{guo2017calibration} of the arg-max probability over ten equal-width bins $B_b$:
+\begin{equation}
+\mathrm{ECE} = \sum_{b=1}^{10} \frac{|B_b|}{n} \left| \mathrm{acc}(B_b) - \mathrm{conf}(B_b) \right|.
+\label{eq:ece}
+\end{equation}
+
+Forecasts $\hat{y}_{z,t}$ are scored on a set $S$ of zone-steps by the mean absolute scaled error \cite{hyndman2006mase},
+\begin{equation}
+\mathrm{MASE} = \frac{1}{|S|} \sum_{(z,t) \in S} a_{z,t}, \qquad a_{z,t} = \frac{|x_{z,t} - \hat{y}_{z,t}|}{s_z},
+\label{eq:mase}
+\end{equation}
+where $s_z$ is the mean absolute one-day change of zone $z$ on normal training steps. Two strategies are compared by a Diebold--Mariano test \cite{diebold1995dm} on the loss summed over zones, $L_t = \sum_z a_{z,t}$:
+\begin{equation}
+d_t = L^{(1)}_t - L^{(2)}_t, \qquad \mathrm{DM} = \frac{\bar{d}}{\sqrt{\hat{\Omega}/n}}, \qquad
+\hat{\Omega} = \hat{\gamma}_0 + 2 \sum_{k=1}^{h} \Big(1 - \frac{k}{h+1}\Big) \hat{\gamma}_k,
+\label{eq:dm}
+\end{equation}
+where $\hat{\gamma}_k$ is the lag-$k$ autocovariance of $d_t$, with the Newey--West bandwidth \cite{newey1987hac} equal to the horizon $h$ because direct forecasts overlap. Outage counts are compared by the ratio of counted to true outage zone-hours and its log distance:
+\begin{equation}
+r = H / H^{\mathrm{true}}, \qquad \delta = |\log r|.
+\label{eq:outage}
+\end{equation}
+
+\subsection{Downstream test}\label{sec:downstream}
+
+On the southern system, the cleaning strategies S0--S3 (Section~\ref{sec:cleaning}) feed two forecasters, 1~h and 1~day ahead: a global LightGBM direct forecaster that also reads the event indicator, trained up to 31 December 2023, and a model-free reference (persistence at 1~h, seasonal naive at 1~day). Forecasts are scored from 1 January to 24 May 2024 against the recorded values, on zone-steps that every strategy treats as normal, and separately on those within two days after an anomalous state. Forecasting uses the real data and four injected test datasets; outage counts use all 30. Naive counting takes every flagged dead state and typed counting only those inside grid-event items; the truth is the injected G1--G4 spans.
+
+\subsection{Transfer test}\label{sec:transfer}
+
+Tetouan tests the method on a new system with nothing re-tuned. The rules, the label-model parameters (applied by one E-step), the architectures, the training settings and the event formation are frozen; the expected value, the score scales, the predictor weights and $\gamma_q$ (at the frozen percentile) are re-estimated from Tetouan's unlabelled series. With one city, G1 is not injected and multi-city types become city-wide. Thirty fresh injected datasets (three rates $\times$ 10 seeds) are scored over 2017.
+
+\subsection{Statistics and reproducibility}\label{sec:statistics}
+
+Results are mean $\pm$ standard deviation over the 10 seeds of each rate. Methods are compared by exact paired two-sided Wilcoxon signed-rank tests \cite{wilcoxon1945}: the smallest attainable $p$ is 0.002 over 10 seeds and $1.9 \times 10^{-9}$ over 30 datasets. The code uses Python, PyTorch \cite{paszke2019pytorch}, LightGBM 4.6.0 \cite{ke2017lightgbm} and scikit-learn \cite{pedregosa2011sklearn}; every injected dataset is regenerated from its rate and seed, and versions, settings and run times are given in the supplementary material.

@@ -52,13 +52,13 @@ Honesty items that protect the value (each stated where it belongs, never hidden
 | 2 Related work | 850 |
 | 3 Data, hierarchy and typology | 900 |
 | 4 Method | 1,700 |
-| 5 Experimental design | 750 |
-| 6 Results | 2,000 |
+| 5 Experimental design | 800 |
+| 6 Results | 1,950 |
 | 7 Discussion | 700 |
 | 8 Conclusions | 250 |
 | **Total** | **8,000** |
 
-Main paper: **12 figures, 9 tables, 27 equations**; the rest in the supplement. Captions, tables and references do not count towards the 8,000 words.
+Main paper: **12 figures, 10 tables, 27 equations**; the rest in the supplement. Captions, tables and references do not count towards the 8,000 words.
 
 ## Structure, with the place of every figure, table and equation
 
@@ -101,7 +101,7 @@ Paper numbering follows the order of first citation. Source files: `results/pape
 4.8 Type-aware cleaning S0–S3. **Eq. (22)** artefact imputation: x̂ scaled to join both edges.
 
 ### 5 Experimental design
-5.1 Injection benchmark: observed signatures injected into clean zone-time (D54), types, rates 1 / 3 / 7 %, development seeds 100–104 for every choice, test seeds 0–9 untouched until the final run (D60, D63). Fig S10.
+5.1 Injection benchmark: observed signatures injected into clean zone-time (D54), types (**Table: injected event types**, added in step 5: zones, durations and signature parameters from `src/inject.py`; it replaces about 150 words of text), rates 1 / 3 / 7 %, development seeds 100–104 for every choice, test seeds 0–9 untouched until the final run (D60, D63). Fig S10.
 5.2 Methods compared: rules; main detector; its ablations (graph off, single scale, flat, raw residual, LightGBM predictor, NB3 event formation); hybrids; STL + MAD; LOF; Isolation Forest. Event formation tuned alike for every detector (D60).
 5.3 Metrics: **Eq. (23)** event F1 (guide eq 17), zone-strict variant, step AUC-PR, onset error; **Eq. (24)** ECE (guide eq 18), macro-F1; **Eq. (25)** MASE (guide eq 19); **Eq. (26)** Diebold–Mariano statistic on summed scaled loss (guide eq 20, D66); **Eq. (27)** outage ratio and its distance |log ratio| (D76).
 5.4 Statistics: mean ± sd over 10 seeds; paired Wilcoxon signed-rank tests.
