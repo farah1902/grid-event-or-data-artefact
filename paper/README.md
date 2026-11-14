@@ -41,7 +41,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 3 | §3 Data, hierarchy and typology | revised after review (2026-11-14, D78), 891 words |
 | 4 | §4 Method | accepted (2026-11-14, D79, D80), 1,700 words; Eqs (3)–(22), Table 3 (rules), Fig 3; 12 method references verified |
 | 5 | §5 Experimental design | revised after review (2026-11-14, D82–D84), 880 words; Eqs (23)–(27), table of injected types; deep baselines GDN and USAD run; forecasting on all 30 datasets; 13 references verified |
-| 6 | §6 Results | revised after review (2026-11-14, D86), 1,798 words; Figs 4–12, Tables 5–8; all 12 figures in submission form |
+| 6 | §6 Results | accepted (2026-11-14, D85, D86), 1,798 words; Figs 4–12, Tables 5–8; all 12 figures in submission form |
 | 7–12 | §7 Discussion … final checks | to do |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).
