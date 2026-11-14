@@ -6,8 +6,7 @@ The plan (structure, value thread, place of every figure, table and equation, wr
 ## Build
 
 ```bash
-python paper/tools/sync_figures.py        # copies results/figures/<stem>.pdf -> paper/figures/Figure_N.pdf (Figures 4-12)
-python paper/tools/export_figures.py      # draws Figures 1-3 in submission form (no built-in title, TrueType fonts)
+python paper/tools/export_figures.py      # draws all 12 main figures in submission form (no built-in title, 7.2 in, TrueType fonts; D86)
 cd paper && latexmk -pdf main.tex         # MiKTeX: pdflatex + bibtex; elsarticle 3.5 (2026/01/09), elsarticle-num style
 python paper/tools/wordcount.py           # body-text words per section vs the 8,000-8,100 target
 ```
@@ -20,8 +19,8 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | `sections/01_introduction.tex` … `08_conclusions.tex` | one file per section; the first line holds its word budget and plan |
 | `sections/declarations.tex` | data and code availability, CRediT (later), competing interest (none), funding (later) |
 | `references.bib` | verified references only (see below); importable into Zotero or Mendeley |
-| `figures/Figure_N.pdf` | main figures under submission names, copied by `tools/sync_figures.py` (do not edit by hand) |
-| `tools/sync_figures.py` | paper figure number → source file in `results/figures/` |
+| `figures/Figure_N.pdf` | main figures under submission names, drawn by `tools/export_figures.py` (do not edit by hand) |
+| `tools/export_figures.py` | paper figure number → drawing function (`src/paper_figures.py`, `src/paper_regen.py`, `src/paper_submission.py`) |
 | `tools/wordcount.py` | texcount-based body-text count (text + headings; captions, tables, math, abstract, declarations, references excluded) |
 
 ## Rules for anyone writing here
@@ -42,7 +41,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 3 | §3 Data, hierarchy and typology | revised after review (2026-11-14, D78), 891 words |
 | 4 | §4 Method | accepted (2026-11-14, D79, D80), 1,700 words; Eqs (3)–(22), Table 3 (rules), Fig 3; 12 method references verified |
 | 5 | §5 Experimental design | revised after review (2026-11-14, D82–D84), 880 words; Eqs (23)–(27), table of injected types; deep baselines GDN and USAD run; forecasting on all 30 datasets; 13 references verified |
-| 6 | §6 Results | first draft (2026-11-14, D85), 1,741 words; Figs 4–12, Tables 5–8; Figures 7 and 10 in submission form |
+| 6 | §6 Results | revised after review (2026-11-14, D86), 1,798 words; Figs 4–12, Tables 5–8; all 12 figures in submission form |
 | 7–12 | §7 Discussion … final checks | to do |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).

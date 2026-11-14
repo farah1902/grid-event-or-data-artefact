@@ -587,7 +587,7 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **Wording for the paper:**
   - "multi-scale neural residual detector (TCN-GAT)";
   - the graph component is "evaluated by ablation";
-  - its contribution is "interpretability (learned cross-city dependencies, E20), not detection accuracy".
+  - its contribution is "interpretability (learned cross-city dependencies, E20), not detection accuracy". (**Superseded by D86:** the paper does not show interpretability, so it says only that the graph adds no detection skill.)
 - **Where:** Table 7e and Fig 9b (`tools/ablation_summary.py`; the graph ablation is shaded and listed first), methods §6.2, paper_handoff §2 and §4.
 
 ### D68 — Tetouan transfer protocol: freeze every choice, re-estimate only what is learned from unlabelled data [NB6]
@@ -813,3 +813,23 @@ Code: `src/detector.py`, `src/end_model.py`, `notebooks/NB3_detector_end_model.i
 - **Figure 7 (detection) and Figure 10 (downstream) exported in submission form** (`src/paper_regen.py` paper mode, `paper/tools/export_figures.py`; removed from `sync_figures.py`): print width 7.2 in, text ≥ 6.5 pt, no built-in title, TrueType fonts. Figure 7 shows the compared methods only (full method, rules, main detector, three other predictors, STL, LOF, Isolation Forest, GDN, USAD); the ablations are Figure 8. Figure 10 panel (b) now shows the mean of the 30 injected datasets (D83), and panel (c) labels only the pooled row. The repo versions (`results/figures/fig9_detection`, `fig12_downstream`) were regenerated with the same changes (GDN and USAD rows; panel (b) from 30 datasets).
 - **Corrections found while checking the draft:** the share of the detector's extra alarms that overlap an injected event on other zones is 25–75 %, not "most" (66 % overlap nothing at 1 %); GDN finds fewer than 2 % of single-zone fills (1.4 % at most); the full method's U_SHOCK recall is 5–30 %; the real-data "all steps" gain is about 1 % against interpolation and 3.3 % against the raw data (day-ahead: (1.140 − 1.102) / 1.140); F53's "≤ 3 %" slightly understates the second, and the paper cites only the first.
 - **Still to do (figure step):** Figures 4, 5, 6, 8, 9, 11, 12 are the repo versions (built-in titles, small text at print width); Figure 11 (transfer protocol) is unreadable at text width and needs a redraw.
+
+### D86 — Section 6 review: six text fixes, the "interpretability" claim dropped, every main figure in submission form [paper, step 6 revision] **[changes D67's wording]**
+- **Trigger:** review of Section 6 (2026-11-14, minor revision), and the author's reminder that the Section 3 review had asked for the built-in titles to be removed from **all** figures; only Figures 1–3 (and 7, 10) had been done.
+- **Text fixes, each checked against the registers:**
+  - **Clock:** "clock errors follow the European, not the Moroccan, changes" was wrong (the missing hours of 23 Apr 2023 and 14 Apr 2024 are Morocco's return to GMT+1, F04, C08/C13). Now: duplicated hours at Europe's October changes, missing hours at Morocco's post-Ramadan changes, a profile shift measured reliably only at the European dates (R15 fires only there: Oct 2022, Oct 2023, B on 31 Mar 2024).
+  - **"The graph adds interpretability" removed:** nothing in the paper shows it (the learned edges, E20, are not analysed in the text). The paper now says only that the learned graph adds no detection skill. **This supersedes D67's wording "its contribution is interpretability"**; the graph stays an ablation (D67 otherwise unchanged).
+  - **"No regional outage remains in the data" → "No regional outage is found."**
+  - **Real-data forecasting** now leads with the significant 1-h result (0.656 / 0.661 → 0.613, DM p < 0.001); the 14 % day-ahead gain follows, stated as not significant (p = 0.22).
+  - **Tetouan A1 → G2:** one sentence added: these labels are wrong with confidence above 0.98, so for this class the calibration observed in Morocco does not transfer.
+  - **Fig 6 caption:** says which residual is which (71 % LightGBM, 73 % TCN-GAT) and why the figure uses the LightGBM residual (the hierarchy was analysed with it before the main detector was selected).
+- **Corrections found while redrawing the episode figures** (catalogue items F051, F052, D077, F144, D117, F145, D118): in January 2023 the 15-zone zero fill starts when the Boujdour hold ends (28 Jan 21:10), not "two days later"; in March 2024 held and zero-filled zones run side by side for 43 h (F145 43.0 h, D117 43.8 h), not 45.8 h (the whole episode).
+- **Every main figure now in submission form** (`src/paper_submission.py`, new; `paper/tools/export_figures.py` draws all 12; `paper/tools/sync_figures.py` deleted): no title inside the image, no internal codes (C05, C02, NB3, "guide eq. 13", "logger"), drawn at 7.2 in (≈ Elsevier's 190-mm full-page width) with 6.5–7 pt text, TrueType fonts (checked with pdffonts: all 12 figures CID TrueType). Content changes:
+  - Figures 4 and 5 use the rule engine v1 states (the paper's states) instead of NB1's v0 states; the annotation "Boujdour II commissioned (26 Jan)", taken from the research plan and never verified, is dropped.
+  - Figure 6 shows the LightGBM forecast residual only (the nowcast line is not described in the paper); g maximum 218.0, as results_summary.
+  - Figure 8 is drawn from `table7e_ablations_main_detector.csv`; labels without "NB3".
+  - Figure 9 is rebuilt from `runs/r03_s*_events.csv` and asserts equality with the stored `fig10_confusion_fused.csv`; pooled ECE 0.074 / 0.062 / 0.078, as results_summary.
+  - Figure 11 is redrawn as a compact four-column diagram (stage, frozen, re-estimated, single-city change); the results box and the engineering band are left to Table 8 and the supplement; "kW" and "pre-cleaned" (unverified) removed.
+  - Figure 12 is drawn from `transfer_tetouan/runs/*_detection.csv` and `confusion_label_model_3pct.csv`.
+- **LaTeX:** `lmodern` loaded; the PDF had bitmap Type 3 fonts from T1 encoding without scalable Computer Modern; now none.
+- **Length:** Section 6 1,798 words (budget 1,870).

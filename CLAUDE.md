@@ -31,7 +31,8 @@ src/graph_model.py            TCN-GAT with a learned graph (guide eq. 13; D53) =
 src/inject.py                 injection of observed signatures into clean zone-time (D54)
 src/benchmark.py              variants (VARIANTS, incl. the no-graph multi-scale ablation V_TCN_MS, D62), event formation per detector (D60), pipeline() on any dataset, run() on injected data, baselines, metrics
 src/paper_figures.py          NB7: final catalogue, Fig 1 (basemap), Fig 2 (typology), Fig 6 (framework)
-src/paper_regen.py            NB7: regenerated Fig 8, Fig 9, E4, E6, E19, E22 (D74)
+src/paper_regen.py            NB7: regenerated Fig 8, Fig 9, E4, E6, E19, E22 (D74); paper modes for Figures 7 and 10 (D85)
+src/paper_submission.py       the paper's Figures 4, 5, 6, 8, 9, 11, 12 in submission form (D86); paper/tools/export_figures.py draws all 12
 src/paper_tables.py           NB7: paper tables, numbered figure set + MANIFEST.md, catalogue release (D72, D75)
 src/transfer.py               NB6: Tetouan transfer (register the system, frozen label model, predictors trained on Tetouan, metrics)
 src/deep_baselines.py         GDN and USAD re-implemented with their authors' released settings (D82)

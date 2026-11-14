@@ -112,7 +112,7 @@ grid-event labels: a 4.15-fold overstatement (F51).
   - **Framing decided by the author (D67, 2026-11-10):**
     - "TCN-GAT" stays the named main detector.
     - **The learned graph is presented as an ablation:** graph attention on vs off, everything else equal (methods §6.2, Table 7e, Fig 9b, F42).
-    - Highlight it as an analysed component that enriches the study: the learned cross-city dependencies (E20) are interpretable, while detection accuracy does not depend on the graph.
+    - Say only what is shown: the learned graph adds no detection skill (D86). Do not claim interpretability unless the learned edges (E20) are analysed in the paper.
     - The detection gain is attributed to the neural residual, the multi-scale scoring and the tuned event formation.
 
 ## 3. Corrections to the guide (continuing the guide's own table, #1–13)

@@ -327,8 +327,10 @@ This replaces the LightGBM forecast as the predictor of eq. 27 for the south. Ba
 - the main detector at a single scale and without the hierarchy;
 - TCN-GAT and LightGBM with NB3's event formation.
 
-**Scoring area** (D60): rule-based, the same for every detector.
-
+**Scoring area** (D60): rule-based, the same for every detector.
+
+
+
 ### 6.2 The learned graph as an ablation (D62, D67)
 
 The learned graph is evaluated as an **ablation of the main detector**: graph attention on or off, everything else unchanged.
@@ -339,7 +341,7 @@ The learned graph is evaluated as an **ablation of the main detector**: graph at
   2. with its own event formation, tuned on the development seeds like every other detector, so that it is not handicapped by a setting chosen for the graph.
 - Paired Wilcoxon tests over the 10 seeds compare it with the main detector at each rate (Table 7e, Fig 9b; `tools/graph_ablation.py`, `tools/ablation_summary.py`).
 - **The other ablations in Table 7e:** the predictor (LightGBM instead of TCN-GAT, own tuning), the scales (raw band only), the hierarchy (flat robust z of the zone residual), graph and scales together (TCN, raw band), and the event formation (NB3's setting).
-- **Result (F42):** removing the graph leaves event F1 equal or slightly higher. The paper therefore presents the graph as an analysed component that brings interpretability (the learned cross-city edges, E20), not detection accuracy. The detection gain comes from the neural residual, the multi-scale scoring and the tuned event formation (F41–F43).
+- **Result (F42):** removing the graph leaves event F1 equal or slightly higher. The paper therefore presents the graph as an ablation that adds no detection skill (D86: no interpretability claim, because the paper does not analyse the learned edges). The detection gain comes from the neural residual, the multi-scale scoring and the tuned event formation (F41–F43).
 
 ## 7. End model and fusion (`src/end_model.py`, NB3)
 

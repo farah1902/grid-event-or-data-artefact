@@ -109,3 +109,7 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
   - E3 uses v0 events (S22);
   - E5's C01 panel is superseded by E10 (S23);
   - E17 and E18 show the NB3 LightGBM detector's candidates (S7, S17).
+
+## Paper figures in submission form (D86)
+
+`paper/tools/export_figures.py` draws all 12 main figures into `paper/figures/Figure_N.pdf`: no built-in title, no internal codes, 7.2 in wide, 6.5–7 pt text, TrueType fonts. Figures 1–3: `src/paper_figures.py` (paper mode); 7 and 10: `src/paper_regen.py` (paper mode); 4, 5, 6, 8, 9, 11, 12: `src/paper_submission.py`. The repo figures in `results/figures/` keep their titles (working versions).
