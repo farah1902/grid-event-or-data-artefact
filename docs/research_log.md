@@ -583,3 +583,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Abstract: forecasting significance added (D98):** p < 0.001 one hour ahead (real 7.8e-7, injected 4e-6); 243 words (246 strict).
 
 **Highlights (D99):** five bullets (74–85 characters), `paper/highlights.txt` + `paper/highlights.docx` via `paper/tools/make_highlights.py`. Next: graphical abstract, CRediT, final checks.
+
+**Highlights accepted (D99, 2026-11-15):** bullet 4 reworded to "the outage overcount".
