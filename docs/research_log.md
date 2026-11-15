@@ -579,3 +579,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Abstract written (D98):** 246 words, no acronyms, original plain wording; every number checked against results_summary (three quarters = 926.5 / 1,220.5; 1.26 vs 1.88, 30/30, p = 1.9e-9; 0.90–0.94 and 0.07–0.10; 17 feeders). Next: highlights, graphical abstract, CRediT, final checks.
 
 **Abstract accepted (D98, 2026-11-15):** zone-hours (with "17 feeders (zones)") and "every dead reading" to match the body; 247 words.
+
+**Abstract: forecasting significance added (D98):** p < 0.001 one hour ahead (real 7.8e-7, injected 4e-6); 243 words (246 strict).
