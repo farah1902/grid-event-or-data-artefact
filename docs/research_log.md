@@ -593,3 +593,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Front matter (D101):** authors, affiliations, corresponding author, CRediT statement (principal-author roles partly inferred, to confirm), competing-interest declaration, draft generative-AI declaration. Open: funding statement, repository identifiers.
 
 **Front matter, author's answers (D101):** CRediT confirmed; funding: no specific grant; AI declaration removed (author's decision); public repository content to be specified by the author.
+
+**Final check (D102):** mechanics clean (Table 10 shrunk to fit); Tables 2–9 checked cell by cell from unrounded sources, 12 double-rounding errors fixed (Tables 6, 8, 9); every number in the text traced, one correction (28–30 → 28–29 datasets); 51 citations compared with their notes, four notes extended after checking at the source, two wordings narrowed (Liu 2025, Morrison). New `paper/tools/check_tables.py`. Body text 8,097 words. Open: data availability.

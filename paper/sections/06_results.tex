@@ -78,14 +78,14 @@ Method & Precision & Recall & excluded & F1 & alarms \\
 Full method & 0.65/0.92/0.98 & 0.82/0.83/0.84 & 0.90/0.91/0.91 & 0.63/0.78/0.81 & 70 \\
 Rules alone & 1.00/1.00/1.00 & 0.76/0.79/0.81 & 0.86/0.88/0.90 & 0.86/0.87/0.88 & -- \\
 \midrule
-Main detector & 0.58/0.89/0.98 & 0.73/0.75/0.76 & 0.82/0.84/0.85 & 0.62/0.78/0.81 & 191 \\
-LightGBM residual & 0.57/0.82/0.96 & 0.69/0.72/0.73 & 0.79/0.82/0.83 & 0.61/0.74/0.77 & 152 \\
+Main detector & 0.58/0.89/0.98 & 0.73/0.75/0.76 & 0.82/0.84/0.85 & 0.61/0.78/0.81 & 191 \\
+LightGBM residual & 0.57/0.82/0.96 & 0.68/0.72/0.73 & 0.79/0.82/0.83 & 0.61/0.74/0.77 & 152 \\
 \midrule
-STL & 0.64/0.87/0.97 & 0.62/0.64/0.64 & 0.74/0.76/0.76 & 0.61/0.71/0.71 & 178 \\
+STL & 0.64/0.86/0.97 & 0.62/0.64/0.64 & 0.74/0.76/0.76 & 0.61/0.71/0.71 & 178 \\
 LOF & 0.51/0.77/0.91 & 0.66/0.68/0.57 & 0.71/0.76/0.70 & 0.55/0.69/0.64 & 263 \\
-Isolation Forest & 0.14/0.37/0.65 & 0.48/0.63/0.57 & 0.39/0.63/0.65 & 0.17/0.42/0.53 & 457 \\
+Isolation Forest & 0.14/0.37/0.65 & 0.48/0.63/0.57 & 0.39/0.62/0.65 & 0.17/0.42/0.53 & 457 \\
 GDN & 0.27/0.52/0.78 & 0.60/0.62/0.65 & 0.68/0.70/0.74 & 0.29/0.46/0.57 & 366 \\
-USAD & 0.23/0.49/0.76 & 0.38/0.36/0.39 & 0.43/0.45/0.48 & 0.23/0.35/0.41 & 243 \\
+USAD & 0.23/0.49/0.76 & 0.38/0.36/0.39 & 0.43/0.45/0.47 & 0.23/0.35/0.41 & 243 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -136,7 +136,7 @@ Fusion $p$ & 0.944 $\pm$ 0.037 & 0.919 $\pm$ 0.023 & 0.906 $\pm$ 0.019 & 0.074 &
 
 On the injected data, where the truth is known, naive counting overstates outage zone-hours $1.88 \pm 0.32$ times and typed counting $1.26 \pm 0.24$ times (Fig.~\ref{fig:downstream}c). Typed counting is closer to the truth in all 30 datasets ($p = 1.9 \times 10^{-9}$) and recovers 99.8\% of the true outage zone-steps, and 99.98\% of its remaining excess lies inside injected zero-fill gaps: it is the A1-to-G1 confusion of Section~\ref{sec:res-attribution}, and nothing else. On the real data, the two counts differ 4.15-fold (Section~\ref{sec:res-telemetry}).
 
-Type-aware cleaning also gives the most accurate forecasts when the forecaster reads the event indicator (Table~\ref{tab:downstream}, Fig.~\ref{fig:downstream}a--b). On the real data, the clearest gain is one hour ahead after an anomaly: the LightGBM MASE falls from 0.656 (raw) and 0.661 (interpolated) to 0.613 (DM $p < 0.001$ against interpolation). The day-ahead gain is larger, from 1.501 and 1.233 to 1.061, but not significant ($p = 0.22$), because a few multi-zone events carry it. On the 30 injected datasets, S2 gives the lowest LightGBM error in 28--30 of them (Wilcoxon $p \le 5 \times 10^{-6}$) and comes within 0.006 MASE of the oracle S3. Over all test steps the effect is small, about 1\% against interpolation on the real data, because anomalies are rare. With the model-free reference the order changes: persistence and seasonal naive copy a kept outage into the next hour or day, so interpolation forecasts better (S1 beats S2 in all 30 datasets at 1~h), at the price of erasing the outages from the statistics.
+Type-aware cleaning also gives the most accurate forecasts when the forecaster reads the event indicator (Table~\ref{tab:downstream}, Fig.~\ref{fig:downstream}a--b). On the real data, the clearest gain is one hour ahead after an anomaly: the LightGBM MASE falls from 0.656 (raw) and 0.661 (interpolated) to 0.613 (DM $p < 0.001$ against interpolation). The day-ahead gain is larger, from 1.501 and 1.233 to 1.061, but not significant ($p = 0.22$), because a few multi-zone events carry it. On the 30 injected datasets, S2 gives the lowest LightGBM error in 28--29 of them (Wilcoxon $p \le 5 \times 10^{-6}$) and comes within 0.006 MASE of the oracle S3. Over all test steps the effect is small, about 1\% against interpolation on the real data, because anomalies are rare. With the model-free reference the order changes: persistence and seasonal naive copy a kept outage into the next hour or day, so interpolation forecasts better (S1 beats S2 in all 30 datasets at 1~h), at the price of erasing the outages from the statistics.
 
 \begin{table}[tbp]
 \centering
@@ -155,7 +155,7 @@ LightGBM & 1 h & all & 0.654/0.657/0.654 & 0.019 & 0.653/0.625/0.625/0.620 & 28 
 LightGBM & 1 day & after & 1.501/1.233/1.061 & 0.22 & 1.295/1.140/1.058/1.052 & 29 (5e-7) \\
 LightGBM & 1 day & all & 1.140/1.115/1.102 & 0.25 & 1.174/1.076/1.052/1.051 & 29 (3e-6) \\
 \midrule
-Naive & 1 h & after & 1.081/1.059/1.052 & 0.44 & 0.995/0.920/0.939/0.923 & 0 (2e-9) \\
+Naive & 1 h & after & 1.081/1.059/1.052 & 0.44 & 0.994/0.920/0.939/0.923 & 0 (2e-9) \\
 Naive & 1 day & after & 2.220/1.553/1.278 & 0.16 & 2.036/1.377/1.499/1.448 & 10 (6e-4) \\
 \bottomrule
 \end{tabular}
@@ -195,12 +195,12 @@ Full method & 0.98 / 1.00 / 1.00 & 0.91 / 0.85 / 0.80 & 0.95 / 0.95 / 0.95 & 7 \
 Rules alone & 1.00 / 1.00 / 1.00 & 0.75 / 0.76 / 0.75 & 0.88 / 0.89 / 0.88 & 0 \\
 \midrule
 Main detector & 0.98 / 1.00 / 1.00 & 0.76 / 0.66 / 0.57 & 0.75 / 0.66 / 0.69 & 7 \\
-Main detector, no graph & 0.99 / 1.00 / 1.00 & 0.72 / 0.65 / 0.55 & 0.52 / 0.57 / 0.61 & 9 \\
-LightGBM residual & 0.75 / 0.98 / 1.00 & 0.79 / 0.78 / 0.62 & 0.84 / 0.82 / 0.83 & 15 \\
+Main detector, no graph & 0.99 / 1.00 / 1.00 & 0.72 / 0.65 / 0.55 & 0.51 / 0.57 / 0.61 & 9 \\
+LightGBM residual & 0.75 / 0.98 / 1.00 & 0.78 / 0.78 / 0.62 & 0.84 / 0.81 / 0.83 & 15 \\
 \midrule
-STL & 0.77 / 0.97 / 1.00 & 0.72 / 0.72 / 0.59 & 0.80 / 0.78 / 0.81 & 13 \\
+STL & 0.77 / 0.97 / 1.00 & 0.72 / 0.72 / 0.59 & 0.80 / 0.77 / 0.81 & 13 \\
 Isolation Forest & 0.35 / 0.61 / 0.90 & 0.81 / 0.81 / 0.73 & 0.42 / 0.54 / 0.66 & 72 \\
-LOF & 0.76 / 0.90 / 0.70 & 0.73 / 0.62 / 0.12 & 0.66 / 0.59 / 0.29 & 11 \\
+LOF & 0.75 / 0.90 / 0.70 & 0.73 / 0.62 / 0.12 & 0.66 / 0.58 / 0.29 & 11 \\
 \bottomrule
 \end{tabular}
 \end{table}

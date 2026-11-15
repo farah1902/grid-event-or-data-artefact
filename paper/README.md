@@ -30,9 +30,10 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 1. **Numbers** come only from `docs/results_summary.md` or `results/`; cite the finding (F..) or decision (D..) in a LaTeX comment next to the sentence when it is not obvious.
 2. **References** are added only from their DOI record (`curl -LH "Accept: application/x-bibtex" https://doi.org/<DOI>`, Crossref or DataCite), with a comment above the entry saying when and what was checked. A claim attributed to a paper is checked against the paper itself (abstract or full text), never written from memory.
 3. **Length:** 8,000–8,100 words of body text (author's decision, 2026-11-14); budgets per section in `OUTLINE.md`.
-4. **Journal rules** (official guide, recorded in `OUTLINE.md`): tables with booktabs and no shading, not duplicating figures; equations numbered in order of reference; figures as separate files; abstract ≤ 250 words; 3–5 highlights ≤ 85 characters; 1–7 keywords.
-5. **Wording (D77):** the southern cities "share one recording timeline" and a "common acquisition and export chain"; do not write "one data logger" (the data paper describes per-feeder meters exported manually).
-6. Interpretations keep the confidence level of their finding (*solid*, *strong*, *provisional*).
+4. **Numbers in tables:** compute two-decimal values from unrounded means (per-seed files), never from the 3-decimal summary strings, and run `python paper/tools/check_tables.py` after any change (D102). Printed table numbers: 1 positioning, 2 data, 3 typology, 4 rules, 5 injection, 6 detection, 7 attribution, 8 forecasting, 9 Tetouan, 10 answers.
+5. **Journal rules** (official guide, recorded in `OUTLINE.md`): tables with booktabs and no shading, not duplicating figures; equations numbered in order of reference; figures as separate files; abstract ≤ 250 words; 3–5 highlights ≤ 85 characters; 1–7 keywords.
+6. **Wording (D77):** the southern cities "share one recording timeline" and a "common acquisition and export chain"; do not write "one data logger" (the data paper describes per-feeder meters exported manually).
+7. Interpretations keep the confidence level of their finding (*solid*, *strong*, *provisional*).
 
 ## Status
 
@@ -52,6 +53,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 12 | Highlights | accepted (2026-11-15, D99), 5 bullets, 74–85 characters |
 | 13 | Graphical abstract | accepted (2026-11-15, D100), 13 × 5.2 cm, PDF + TIFF |
 | 14 | Authors, CRediT, declarations | done (2026-11-15, D101); open: which repository content is made public (author to specify) |
-| 15 | final checks (numbers, references) | to do |
+| 15 | Final check | done (2026-11-15, D102): 12 table cells and one text range corrected, 2 citations narrowed; `tools/check_tables.py` |
+| 16 | Data availability statement | open: the author will list what is made public |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).

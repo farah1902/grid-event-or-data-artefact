@@ -4,6 +4,7 @@
 % Import into Zotero or Mendeley: File > Import > BibTeX. Style in the paper: elsarticle-num ([1], [2], ...).
 
 % Verified 2026-11-14: DataCite record of DOI 10.24432/C5FC8R (UCI dataset id 1158).
+% Final check 2026-11-15: the UCI page (archive.ics.uci.edu/dataset/1158) lists "Has Missing Values? No" (Section 3.1).
 @misc{bensalah2025uci,
   author    = {Bensalah, Mouad and Hair, Abdellatif},
   title     = {High-Resolution Load Dataset from Smart Meters Across Various Cities in {Morocco}},
@@ -94,6 +95,8 @@
 }
 
 % Crossref record of DOI 10.14778/3157794.3157797.
+% Final check 2026-11-15: abstract (OpenAlex): Snorkel is "a first-of-its-kind system" and "the first end-to-end
+% implementation" of data programming; it denoises labelling-function outputs "without access to ground truth".
 @article{ratner2017snorkel,
   author  = {Ratner, Alexander and Bach, Stephen H. and Ehrenberg, Henry and Fries, Jason and Wu, Sen and R{\'e}, Christopher},
   title   = {Snorkel: Rapid Training Data Creation with Weak Supervision},
@@ -242,13 +245,14 @@
   title     = {Towards a Rigorous Evaluation of Time-Series Anomaly Detection},
   booktitle = {Proceedings of the {AAAI} Conference on Artificial Intelligence},
   volume    = {36},
-  number    = {7},
   pages     = {7194--7201},
   year      = {2022},
   doi       = {10.1609/aaai.v36i7.20680}
 }
 
 % No DOI. PMLR page proceedings.mlr.press/v70/guo17a.html (BibTeX copied from it).
+% Final check 2026-11-15: abstract (PMLR page): modern neural networks "are poorly calibrated"; temperature scaling is effective.
+% Paper (PMLR PDF), Section 4: "Each method requires a hold-out validation set"; "T is optimized with respect to NLL on the validation set".
 @inproceedings{guo2017calibration,
   author    = {Guo, Chuan and Pleiss, Geoff and Sun, Yu and Weinberger, Kilian Q.},
   title     = {On Calibration of Modern Neural Networks},
@@ -372,6 +376,9 @@
 }
 
 % Crossref record of DOI 10.1016/j.renene.2021.11.118 (anomaly detection in wind-turbine SCADA data to clean the power curve).
+% Final check 2026-11-15: abstract (University of Glasgow eprints 260595): power curve cleaning, "by way of removing curtailment,
+% stoppage, and other anomalies, is an essential step in making raw data useable for further analysis, such as determining
+% turbine performance, site characteristics, or improving forecasting models".
 @article{morrison2022scada,
   author  = {Morrison, Rory and Liu, Xiaolei and Lin, Zi},
   title   = {Anomaly detection in wind turbine {SCADA} data for power curve cleaning},
@@ -579,6 +586,9 @@
 % DOI 10.3390/electronics14234703; abstract (Semantic Scholar): labelling functions combining domain knowledge and
 % machine learning for PMU event identification in transmission networks; t-cherry junction tree estimation;
 % classifiers trained "using limited labeled data and abundant unlabeled data".
+% Final check 2026-11-15: abstract (OpenAlex) states labelling functions, a t-cherry junction tree and classifiers trained "using
+% limited labeled data and abundant unlabeled data"; it does not state data-quality preprocessing (full text not reachable:
+% MDPI blocks automated access), so the data-quality clause of Section 2.3 and Table 1 cites liu2022weakly only.
 @article{liu2025automatic,
   author  = {Liu, Yunchuan and Yang, Lei and Zhang, Junshan},
   title   = {Automatic Labeling of Real-World {PMU} Data: A Weakly Supervised Learning Approach},
@@ -598,7 +608,6 @@
   title     = {Training Complex Models with Multi-Task Weak Supervision},
   booktitle = {Proceedings of the {AAAI} Conference on Artificial Intelligence},
   volume    = {33},
-  number    = {01},
   pages     = {4763--4771},
   year      = {2019},
   doi       = {10.1609/aaai.v33i01.33014763}

@@ -783,7 +783,7 @@ All numbers in this section are from the **development datasets** (seeds 100–1
 - **Development:** F1 alone 0.567 (GDN) and 0.446 (USAD) at their tuned settings.
 - **Paper:** "Two deep multivariate detectors, GDN and USAD, run with their authors' settings, reach event F1 of 0.37–0.71 and 0.29–0.52, below the rules (0.86–0.90), the main detector (0.64–0.85) and STL (0.63–0.77) in every seed." It supports the paper's point that acquisition artefacts are better found by their signatures than by generic anomaly scores. Caveat: the benchmark favours the rules (D84), and GDN forecasts poorly on this data (F63).
 
-### F62 — On all 30 test datasets, typed cleaning gives the best LightGBM forecasts in 28–30 of 30 datasets; the naive forecaster still prefers interpolation — *solid* (confirms F53 and F54; cite these numbers)
+### F62 — On all 30 test datasets, typed cleaning gives the best LightGBM forecasts in 28–29 of 30 datasets; the naive forecaster still prefers interpolation — *solid* (confirms F53 and F54; cite these numbers)
 - **MASE, mean over 30 datasets, S0 / S1 / S2 / S3** (`results/downstream_v1/forecast_all/forecast_summary.csv`; Wilcoxon over datasets):
 
   | Model | Horizon | Subset | S0 / S1 / S2 / S3 | S2 better than S0 | S2 better than S1 |
@@ -793,14 +793,15 @@ All numbers in this section are from the **development datasets** (seeds 100–1
   | LightGBM | 1 h | after anomaly | 0.696 / 0.636 / **0.625** / 0.619 | 29/30 (p 3.8e-6) | 29/30 (p 3.8e-6) |
   | LightGBM | 1 h | all | 0.653 / 0.625 / **0.625** / 0.620 | 29/30 (p 3.8e-6) | 28/30 (p 4.4e-6) |
   | naive | 1 day | after anomaly | 2.036 / **1.377** / 1.499 / 1.448 | 30/30 (p 1.9e-9) | 10/30 (S1 better, p 6.1e-4) |
-  | naive | 1 h | after anomaly | 0.995 / **0.920** / 0.939 / 0.923 | 30/30 (p 1.9e-9) | 0/30 (S1 better, p 1.9e-9) |
+  | naive | 1 h | after anomaly | 0.994 / **0.920** / 0.939 / 0.923 | 30/30 (p 1.9e-9) | 0/30 (S1 better, p 1.9e-9) |
 
 - **Diebold–Mariano per dataset, LightGBM** (`dm_summary.csv`): S2 significantly better than S1 in 26/30 (1 h after anomaly), 25/30 (1 h all), 14/30 (1 day after anomaly) and 19/30 (1 day all); significantly worse in at most 1/30. Against S0: 28, 29, 19, 26 of 30.
 - **Weak spot:** at 3 %, 1 h, S2 beats S1 in 9 of 10 datasets but not significantly (p = 0.084), and its mean MASE is higher (0.645 vs 0.631): one dataset carries a large S2 loss.
+- **Lowest of S0, S1 and S2 (final check, 2026-11-15):** S2 beats both in 29 / 29 / 29 / 28 of 30 datasets (1 day after, 1 day all, 1 h after, 1 h all), so "28–29"; the earlier "28–30" mixed the two pairwise counts.
 - **S2 vs the oracle S3:** MASE gap 0.0006–0.0059 for LightGBM (about 0.5 % day-ahead after an anomaly).
 - **Naive reference (F54 confirmed):** S1 beats S2 at 1 h in 30/30 datasets and at 1 day in 20/30; S2 beats S0 in 30/30. DM: S2 significantly worse than S1 in 21/30 at 1 h and 11/30 at 1 day.
 - **The 4-dataset means (F53) were close:** e.g. LightGBM day-ahead after an anomaly S1 1.107 → 1.140 and S2 1.056 → 1.058 over 30.
-- **Paper:** "Over 30 injected datasets, type-aware cleaning gives the lowest LightGBM error in 28–30 of them (Wilcoxon p ≤ 5 × 10⁻⁶) and comes within 0.5 % of an oracle day-ahead; with a forecaster that cannot read the event indicator, interpolation remains better for forecasting, at the cost of the outage statistics (F59)."
+- **Paper:** "Over 30 injected datasets, type-aware cleaning gives the lowest LightGBM error in 28–29 of them (Wilcoxon p ≤ 5 × 10⁻⁶) and comes within 0.5 % of an oracle day-ahead; with a forecaster that cannot read the event indicator, interpolation remains better for forecasting, at the cost of the outage statistics (F59)."
 
 ### F63 — GDN, run as released, forecasts the feeders 7–14 times worse than the last value — *solid*
 - **Rule-clean windows of the real series, min-max scaled units** (`results/benchmark_v1/deep_baselines/gdn_forecast_vs_persistence.csv`, `tools/gdn_forecast_check.py`): MSE GDN 0.0042 / 0.0049 (model trained before Jul 2023; in / out of sample) and 0.0027 / 0.0025 (trained after), vs 0.00035–0.00038 for the last value and 0.0007–0.0008 for the mean of the last 5 values: 6.7–13.8 × persistence.
@@ -825,7 +826,7 @@ All numbers in this section are from the **development datasets** (seeds 100–1
   - ours vs Snorkel (either variant): better in 9 (1 tie), 8 and 8 of 10 seeds, Wilcoxon p = 0.008, 0.020, 0.010;
   - ours vs majority vote: not better (p = 0.32, 0.14; at 7 % majority vote is better, p = 0.021), as F46.
 - **Where Snorkel errs:** of the 213 events ours types correctly and Snorkel (+ feasible sets) does not, 174 are single-zone fills (A3) labelled N: the A3 rules only ever vote A3, so nothing in the votes separates A3 from N for an estimator without our applicability and feasibility structure. In the other direction (75 events), ours errs mostly on A2 → N (50).
-- **Paper:** Sections 2.3, 4.4 (now "Why generic label models fall short here"), 6.2, 6.5, 7.3 and Table 9.
+- **Paper:** Sections 2.3, 4.4 (now "Why generic label models fall short here"), 6.2, 6.5, 7.3 and Table 10 (answers; printed number).
 
 ### F66 — Majority vote is slightly but significantly more accurate than the label model at 7 % contamination, on both injected test sets; the fusion is not different from majority vote — *solid*
 - **Detected events (Table 6 set; `tools/attribution_wilcoxon.py` -> `results/benchmark_v1/attribution_wilcoxon/`):** per-dataset macro-F1 rebuilt from the NB4 run files (means reproduce `table6_attribution.csv`); paired Wilcoxon over 10 seeds:
@@ -833,4 +834,4 @@ All numbers in this section are from the **development datasets** (seeds 100–1
   - fusion (β*, D50 abstention) vs majority vote: 0.944 vs 0.940 (p = 0.47), 0.919 vs 0.921 (p = 0.89), 0.906 vs 0.913 (p = 0.13).
 - **Rule-matched events (Snorkel test set, F65):** majority vote 0.919 vs label model 0.907 at 7 % (majority vote better in 9 seeds, 1 tie; **p = 0.021**); not different at 1 % and 3 % (p = 0.32, 0.14).
 - **Reading:** on clean injected signatures, where the rules rarely conflict, the label model's re-weighting costs a little accuracy at the highest contamination; the fusion with the end model recovers it. Refines F46 ("does not beat" becomes "slightly worse, significantly only at 7 %").
-- **Paper:** Section 6.5 (both test sets), Section 7.1 ("at least as accurate"), Table 9 RQ3.
+- **Paper:** Section 6.5 (both test sets), Section 7.1 ("at least as accurate"), Table 10 RQ3 (answers; printed number).

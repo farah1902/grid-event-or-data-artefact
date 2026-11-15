@@ -603,7 +603,7 @@ NB5's code unchanged; its 4 datasets reproduced exactly. MASE, mean over 30 data
 | LightGBM | 1 h | all | 0.653 / 0.625 / **0.625** / 0.620 | 29/30 (p 3.8e-6) | 28/30 (p 4.4e-6) |
 | naive | 1 day | after anomaly | 2.036 / **1.377** / 1.499 / 1.448 | 30/30 (p 1.9e-9) | 10/30 (p 6.1e-4, S1 better) |
 | naive | 1 day | all | 1.356 / **1.159** / 1.216 / 1.196 | 30/30 (p 1.9e-9) | 10/30 (p 5.1e-4, S1 better) |
-| naive | 1 h | after anomaly | 0.995 / **0.920** / 0.939 / 0.923 | 30/30 (p 1.9e-9) | 0/30 (p 1.9e-9, S1 better) |
+| naive | 1 h | after anomaly | 0.994 / **0.920** / 0.939 / 0.923 | 30/30 (p 1.9e-9) | 0/30 (p 1.9e-9, S1 better) |
 | naive | 1 h | all | 0.916 / **0.890** / 0.898 / 0.891 | 30/30 (p 1.9e-9) | 0/30 (p 1.9e-9, S1 better) |
 
 - **DM per dataset, LightGBM, S2 significantly better than S1 / worse:** 1 h after anomaly 26 / 1; 1 h all 25 / 1; 1 day after anomaly 14 / 0; 1 day all 19 / 0 (of 30). Against S0: 28, 29, 19, 26 better.
