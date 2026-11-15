@@ -138,7 +138,7 @@ def main(preview=None):
         ax.text(1.0, -0.05, note, transform=ax.transAxes, ha="right", va="top", fontsize=FS["small"], color=MUTED)
 
     # column 2: the method
-    box(ov, c2x, 0.665, c2w, 0.24, "Where?", "feeder to region", "#8C959F")
+    box(ov, c2x, 0.665, c2w, 0.24, "Where?", "feeder to region,\nor recording chain", "#8C959F")
     box(ov, c2x, 0.355, c2w, 0.24, "Which trace?", "line, zero,\nnoise floor", "#8C959F")
     box(ov, c2x, 0.02, c2w, 0.265, "19 rules +\nlabel model", "p(each cause)", INK, fc="#F6F8FA")
     for y_from, y_to in [(0.665, 0.595), (0.355, 0.285)]:
