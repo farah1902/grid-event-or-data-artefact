@@ -21,14 +21,18 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \setlength{\emergencystretch}{1.5em}   % lets TeX loosen a line instead of overfilling it (long citations, list items)
 
-% Float placement (D106, author's request): one float per page. A text page carries at most one float, at its top,
-% and a float page carries a single float (a second one never fits after a separation of one text height).
+% Float placement (D108, author's request): every figure and table stands right after the paragraph that first cites
+% it and is placed there ([htbp]) when it fits, otherwise at the top or bottom of the next page, so the text keeps
+% flowing around it in the order of the source. Two floats share a page only with text between them (one at the
+% top, one in or below the text), never stacked; a page of floats only for a float that fills most of a page (a
+% second float never fits after a separation of one text height), so a small table or figure is never alone on a page.
 \setcounter{topnumber}{1}
-\setcounter{bottomnumber}{0}
-\setcounter{totalnumber}{1}
-\renewcommand{\topfraction}{0.8}
-\renewcommand{\textfraction}{0.15}
-\renewcommand{\floatpagefraction}{0.5}
+\setcounter{bottomnumber}{1}
+\setcounter{totalnumber}{2}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
 \makeatletter
 \setlength{\@fpsep}{\textheight}
 % \floatbarrier: output every pending float before going on (a new page only if a float is pending), as placeins does
@@ -87,9 +91,7 @@ weak supervision \sep anomaly attribution \sep feeder telemetry \sep data qualit
 \input{sections/04_method}
 \input{sections/05_experiments}
 \input{sections/06_results}
-\floatbarrier   % the figures and tables of each section stay in that section
 \input{sections/07_discussion}
-\floatbarrier
 \input{sections/08_conclusions}
 \floatbarrier   % no float after the declarations or among the references
 \input{sections/declarations}

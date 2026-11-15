@@ -7,7 +7,7 @@
 
 Fig.~\ref{fig:framework} summarises the framework. Per-step states turn each series into candidate \emph{items}. Labelling rules vote on the items, and a label model combines the votes into probabilistic labels without any manual annotation (weak supervision \cite{ratner2017snorkel}). In parallel, a multi-scale residual detector scores every zone at every step and finds anomalies that no rule covers. An end model learns the labels from item features, including the detector's scores, and a fusion step combines both sources of evidence into the final typed, probabilistic catalogue. Type-aware cleaning then uses the catalogue.
 
-\begin{figure}[tbp]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{Figure_3}
 \caption{Framework. Per-step states and items feed 19 labelling rules and a constrained Dawid--Skene label model (weak supervision, no manual labels). A multi-scale hierarchical residual detector finds anomalies that no rule covers. An end model and a fusion step produce the typed, probabilistic catalogue, which is evaluated by injection, by a downstream test and by transfer to another city (Section~\ref{sec:experiments}).}
@@ -68,7 +68,7 @@ with $\Delta^{+}$ and $\Delta^{-}$ the largest rise and fall, is near 0 when cur
 
 Nineteen rules turn these signatures into votes (Table~\ref{tab:rules}). Each rule emits one label or abstains. The rules fall into nine families: simultaneity, holds, restoration, city, single zone, calendar, clock, conservation and straight-line fills. Nine of the rules are \emph{defining}, i.e. their condition is the type's definition. A rule may vote for the grid-event family as a whole (G) rather than a single type. Rule numbers follow the released code: two rules planned on external utility and press records (R17, R18) were not implemented, so no rule uses external records and the numbering skips from R16 to R19.
 
-\begin{table}[tbp]
+\begin{table}[htbp]
 \centering
 \caption{Labelling rules. Item: the item kind the rule reads. Coverage: share of the real-data items of that kind on which the rule fires. Precision: the label model's learned precision (mean posterior mass on the voted type over the items the rule fires on). R7 never fires on the real data. $^{\dagger}$Defining rule. $r_E$, $\pi_E$, $\tau_E$: Eq.~(\ref{eq:restoration}).}
 \label{tab:rules}

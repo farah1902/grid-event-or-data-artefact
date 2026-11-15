@@ -9,9 +9,7 @@ The study uses the UCI high-resolution load dataset from smart meters in four Mo
 
 We analyse the file \texttt{Data Morocco.xlsx} of the UCI record (22,434,854 bytes; SHA-256 in the data availability statement), which is byte-identical to the file the repository served on 14 November 2026. Table~\ref{tab:data} lists the series. The three southern cities (15 zones, in amperes) share one 10-min timeline from 14 September 2022 to 24 May 2024. In the data paper's table, Foum El Oued zones 5--7 end on 26 December 2023 \cite{bensalah2025dib}; in the analysed file they continue without a break until 24 May 2024. We call the three cities the \emph{southern system}; it carries most of the analysis. Marrakech (2 zones, in kW, 2023) is recorded on its own 30-min timeline and is treated as a separate system. The UCI Tetouan dataset \cite{salam2018uci,salam2018irsec}, three distribution networks of one city at 10-min steps in 2017, is used only to test transfer to a new system (Section~\ref{sec:results}). Fig.~\ref{fig:data}(a) locates the five cities.
 
-The repository record lists no missing values \cite{bensalah2025uci}, but the regular time grid lacks the same 12 stamps in every southern zone and 25 in Marrakech, and some stamps occur twice: 12 per southern city, all on 30 October 2022 and 29 October 2023, and 3 in Marrakech. Duplicated stamps are averaged. None of the datasets comes with event labels: there is no record of which zeros or flat stretches are outages and which are acquisition failures. Exact zeros alone occupy 7,201 zone-steps in the southern system (Table~\ref{tab:data}). All time stamps are used as recorded, without any clock correction, so that clock errors remain observable as a data property.
-
-\begin{table}[tbp]
+\begin{table}[htbp]
 \centering
 \caption{Datasets. Regular steps: length of the regular time grid from the first to the last stamp. Missing steps: grid steps without a record. Zone-steps: one zone at one time step. Exact zeros are counted after duplicated stamps are averaged (Foum El Oued has 4,329 exact zeros in the raw rows).}
 \label{tab:data}
@@ -34,7 +32,9 @@ Tetouan$^{a}$ & 3 & 10 & n.s. & Jan -- Dec 2017  & 52,416 & 0 & 0 \\
 \footnotesize{$^{a}$Transfer test only. n.s.: unit not stated in the repository record \cite{salam2018uci}.}
 \end{table}
 
-\begin{figure}[tbp]
+The repository record lists no missing values \cite{bensalah2025uci}, but the regular time grid lacks the same 12 stamps in every southern zone and 25 in Marrakech, and some stamps occur twice: 12 per southern city, all on 30 October 2022 and 29 October 2023, and 3 in Marrakech. Duplicated stamps are averaged. None of the datasets comes with event labels: there is no record of which zeros or flat stretches are outages and which are acquisition failures. Exact zeros alone occupy 7,201 zone-steps in the southern system (Table~\ref{tab:data}). All time stamps are used as recorded, without any clock correction, so that clock errors remain observable as a data property.
+
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{Figure_1}
 \caption{Data. (a) The five cities. Laâyoune, Boujdour and Foum El Oued (15 zones, 10~min, A) share one recording timeline; Marrakech (2 zones, 30~min, kW) is a separate system; Tetouan (3 zones, 2017) is the transfer test. Coastline from Natural Earth (1:50m, public domain); no boundaries are drawn. (b) Anomalous states per zone (holds, straight-line fills, exact zeros and noise-floor runs of qualifying length, and missing steps; Section~\ref{sec:method}); dotted lines mark clock-change dates. Time stamps as recorded.}
@@ -67,9 +67,7 @@ An \emph{item} $i$ is a candidate event: a dead or fill span with its set of aff
 
 Table~\ref{tab:typology} and Fig.~\ref{fig:typology} define nine anomaly types, each with a measurable signature at one level of the hierarchy. The four \emph{data artefacts} are zero-fill gaps across cities (A1), simultaneous fills of several zones by held values or straight lines (A2), the same fills in a single zone (A3), and clock errors that shift the daily profile after a clock-change date (A4). The five \emph{grid events} are regional outages (G1), city outages (G2), unplanned feeder outages (G3), planned work (G4) and load transfers between feeders (G5). Items that no type fits are labelled N (normal or untyped).
 
-Straight-line fills were not part of the initial typology. They appeared in the data audit (Section~\ref{sec:results}) and are now part of A2 and A3. The expected signatures of grid events, in particular gradual restoration and cold-load pick-up after an outage, are hypotheses that Section~\ref{sec:results} tests on the real data.
-
-\begin{table}[tbp]
+\begin{table}[htbp]
 \centering
 \caption{Typology. Level: the level of the hierarchy at which the signature appears. Rules: the labelling rules that vote for the type (Section~\ref{sec:method}). Real items: rule items assigned the type in the final catalogue of the real data. $\eta$: share of exact zeros in a dead run; $\pi$: restoration overshoot; $\delta^*$: estimated clock offset; $\kappa$: conservation index.}
 \label{tab:typology}
@@ -93,7 +91,9 @@ G5 & Load transfer & $\geq 2$ zones of a city & One zone steps down while anothe
 \end{tabularx}
 \end{table}
 
-\begin{figure}[tbp]
+Straight-line fills were not part of the initial typology. They appeared in the data audit (Section~\ref{sec:results}) and are now part of A2 and A3. The expected signatures of grid events, in particular gradual restoration and cold-load pick-up after an outage, are hypotheses that Section~\ref{sec:results} tests on the real data.
+
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{Figure_2}
 \caption{Typology. Four data artefacts (A1--A4) and five grid events (G1--G5), each with a measurable signature at one level of the zone--city--region hierarchy and the rules that vote for it (schematic). Straight-line fills are part of A2 and A3.}

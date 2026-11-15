@@ -13,7 +13,7 @@ Events are written into the real southern series inside \emph{clean zone-time}: 
 
 The predictors are not retrained: cross-fitted on the real series, they predict every injected step from the other half of the real data. The rule engine, label model and end model are re-run on each injected dataset as on the real data. Every design choice was made on five development datasets: 3\% with seeds 100--102, 1\% with seed 103 and 7\% with seed 104. The 30 test datasets (three rates $\times$ seeds 0--9; 8,526 events) were used for no choice. Results refer to the test period, July 2023 to May 2024; the earlier period serves only to tune $\beta$.
 
-\begin{table}[tbp]
+\begin{table}[htbp]
 \centering
 \caption{Injected event types. Durations are log-uniform in the range, except G4 (uniform). $\xh$: expected value (Eq.~\eqref{eq:expected}); $U(a,b)$: uniform draw. Artefact signatures are copied from real episodes; grid-event signatures follow the hypothesised physics of Section~\ref{sec:typology}. Each event blocks its zones for $\pm 12$~h, and a multi-city event blocks the whole system for $\pm 3$~h. Clock errors (A4) and load transfers (G5) are not injected: their rules are calendar-gated or act on whole days.}
 \label{tab:injection}

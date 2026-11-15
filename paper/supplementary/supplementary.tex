@@ -22,6 +22,12 @@
 \renewcommand{\thefigure}{S\arabic{figure}}
 \setlength{\LTcapwidth}{\textwidth}
 \setlength{\abovecaptionskip}{4pt}
+% Figures float as in the article (D108): at most two per page with text between them, a page of their own only
+% when they fill most of it; tables stay where they are written
+\setcounter{topnumber}{1}\setcounter{bottomnumber}{1}\setcounter{totalnumber}{2}
+\renewcommand{\topfraction}{0.85}\renewcommand{\bottomfraction}{0.6}\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+\makeatletter\setlength{\@fpsep}{\textheight}\makeatother
 
 % Tables and figures are placed where they are written (no floats), each kept on one page with its caption
 \makeatletter
@@ -187,7 +193,7 @@ Day & City & Zone up ($\Delta$, A) & Zone down ($\Delta$, A) & $\kappa$ & Final 
 \caption{The only conserved load transfer: Boujdour, 16 December 2023. (a) Daily mean current of the three zones and their sum over 45 days either side of the day (dotted); (b) change of the 14-day medians: B2 gains what B1 loses, so the city total is conserved ($\kappa = 0.07$, Table~\ref{tab:s-transfers}), and rule R16 votes G5.}\label{fig:s-transfer}
 \end{sfigure}
 
-\clearpage\section{Rules and label model}\label{sec:s-rules}
+\section{Rules and label model}\label{sec:s-rules}
 \begin{stable}
 \caption{Learned parameters of the constrained label model on the real data. For each rule: the classes its output speaks for, the items on which it is applicable (its precondition can be observed) and on which it fires, the propensity $a$ (probability of the output when the item's class is one the output speaks for), the false-positive rate $b$ (probability of the output otherwise), the evidence $\ln(a/b)$ and the learned precision (mean posterior mass on the classes the output speaks for, over the items the rule fires on). $^{\dagger}$Defining rule, with the prior Beta(9, 1) on $a$ instead of Beta(1, 1). R7 never fires on the real data and has no row.}\label{tab:s-rule-params}
 \scriptsize\setlength{\tabcolsep}{4pt}
@@ -278,7 +284,7 @@ initial $a$ = 0.9, $b$ = 0.02 (default 0.7, 0.05) & 0.0\% & 0.0\% & 0.0\% & 0.0\
 \end{tabular}
 \end{stable}
 
-\clearpage\section{Detector and end model on the real data}\label{sec:s-detector}
+\section{Detector and end model on the real data}\label{sec:s-detector}
 \begin{stable}
 \caption{Accuracy of the predictors of $\rho = x/\hat{x}$ on the real southern data, on rule-clean zone-steps, out of sample (two-fold temporal cross-fitting split at 1 July 2023). Median: median absolute error. The nowcast reads, besides the forecast features, the current value of every other zone (a fully connected input with no learned edges). Corrections are added to the LightGBM forecast by a TCN without or with the learned graph.}\label{tab:s-predictors}
 \footnotesize\setlength{\tabcolsep}{4pt}
@@ -373,11 +379,12 @@ LightGBM residual & ordinary weekday & 746,257 & 0.0018 & 1.00 \\
 \caption{End model on the real data. (a) Label-model label against the out-of-fold end-model label of the rule items; (b) agreement with the label model on the rule items and share of normal windows predicted N, by variant (GBDT: gradient-boosted trees); (c) final labels of the detector-only candidates, from the main detector in the southern system and from the LightGBM residual in Marrakech.}\label{fig:s-endmodel}
 \end{sfigure}
 
-\clearpage\section{Injection benchmark}\label{sec:s-benchmark}
-\begin{sfigure}
+\section{Injection benchmark}\label{sec:s-benchmark}
+\begin{figure}[htbp]
+\centering
 \includegraphics[width=\textwidth]{figures/FigS8}
 \caption{One injected event of each type over the original series (grey), from the dataset with 3\% contamination and seed~0; shading: the injected span. U\_SHOCK and U\_PARTIAL scale the load down and are not typed by any rule.}\label{fig:s-injected}
-\end{sfigure}
+\end{figure}
 
 \begingroup\scriptsize\setlength{\tabcolsep}{3.2pt}
 \begin{longtable}{@{}l >{\raggedright\arraybackslash}p{3.9cm} rrrrrrrrr@{}}
@@ -735,7 +742,7 @@ Rate & Events & Majority vote & Label model (ours) & Snorkel & Snorkel + feasibl
 \end{tabular}
 \end{stable}
 
-\clearpage\section{Downstream test}\label{sec:s-downstream}
+\section{Downstream test}\label{sec:s-downstream}
 \begingroup\scriptsize\setlength{\tabcolsep}{3.2pt}
 \begin{longtable}{@{}l l l l r r r r r r r r@{}}
 \caption{Forecasting on the 30 injected test datasets by rate (the numbers behind Table~8 and Fig.~10 of the article): mean MASE of each cleaning strategy, test period 1 January -- 24 May 2024, on steps within two days after an anomalous state (after) or all scored steps (all); the datasets in which S2 has the lower MASE and the paired Wilcoxon $p$. Naive: persistence at 1~h, seasonal naive at 1~day.}\label{tab:s-forecast30}\\
@@ -868,7 +875,7 @@ all & 30 & 1.88 $\pm$ 0.32 & 1.20--2.56 & 1.26 $\pm$ 0.24 & 1.00--2.16 & 30/30 &
 \end{tabular}
 \end{stable}
 
-\clearpage\section{Transfer test}\label{sec:s-transfer}
+\section{Transfer test}\label{sec:s-transfer}
 \begin{sfigure}
 \includegraphics[width=\textwidth]{figures/FigS9}
 \caption{The UCI Tetouan data used for the transfer test: three zones of one city, 2017, 10-min steps. (a) Daily mean per zone; (b) one week.}\label{fig:s-tetouan}
@@ -960,7 +967,7 @@ Rate & Main detector compared with & F1, main & F1, other & Main better & $p$ \\
 \end{longtable}
 \endgroup
 
-\clearpage\section{Software, settings, run times and seeds}\label{sec:s-repro}
+\section{Software, settings, run times and seeds}\label{sec:s-repro}
 \begin{stable}
 \caption{Software and hardware. The versions of the local environment were read on 15 November 2026; each run records the versions it used in its \texttt{summary.json}. LightGBM is pinned at 4.6.0 (4.7.0 crashed on the local machine).}\label{tab:s-software}
 \footnotesize\setlength{\tabcolsep}{4pt}

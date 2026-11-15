@@ -10,7 +10,7 @@ Table~\ref{tab:answers} answers the research questions and hypotheses of Section
 
 The two public copies of the data, the UCI file analysed here \cite{bensalah2025uci} and the files of the data article \cite{bensalah2025dib}, hold the same series, the second rounded to two decimals; both contain these artefacts. The forecasting study that introduced the data reports its own preprocessing \cite{bensalah2025opsearch}, and a later study aggregates the zones into city series for demand scheduling \cite{sarange2026}. We did not re-examine how these studies treated anomalies and make no claim about their results. Wherever the series are used without typing their anomalies, however, error metrics mix acquisition failures with load behaviour; the released catalogue lets future studies impute the artefacts and keep the grid events. More generally, load-curve cleansing repairs corrupted and missing readings caused by meter and transfer failures \cite{chen2010cleansing}, and SCADA cleaning removes anomalies before further analysis \cite{morrison2022scada}. Both treat anomalies as errors to repair or remove, whereas grid events are information to keep.
 
-\begin{table}[tbp]
+\begin{table}[htbp]
 \centering
 \caption{Answers to the research questions (RQ) and hypotheses (H). Evidence: the sections of this paper that report it.}
 \label{tab:answers}

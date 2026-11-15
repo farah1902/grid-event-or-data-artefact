@@ -148,9 +148,12 @@ def longtable(label, caption, colspec, head, rows, size=r"\footnotesize", sep="4
             f"\\bottomrule\n\\endfoot\n{body}\n\\end{{longtable}}\n\\endgroup\n")
 
 
-def figure(name, label, caption):
-    return (f"\\begin{{sfigure}}\n\\includegraphics[width=\\textwidth]{{figures/{name}}}\n"
-            f"\\caption{{{caption}}}\\label{{{label}}}\n\\end{{sfigure}}\n")
+def figure(name, label, caption, floating=False):
+    """A figure where it is written; floating=True lets a tall figure move to the top of the next page so that the
+    table after it fills the page (D108)."""
+    env, opt = ("figure", "[htbp]\n\\centering") if floating else ("sfigure", "")
+    return (f"\\begin{{{env}}}{opt}\n\\includegraphics[width=\\textwidth]{{figures/{name}}}\n"
+            f"\\caption{{{caption}}}\\label{{{label}}}\n\\end{{{env}}}\n")
 
 
 def rd(f, **kw):
@@ -824,6 +827,12 @@ PREAMBLE = r"""\documentclass[11pt,a4paper]{article}
 \renewcommand{\thefigure}{S\arabic{figure}}
 \setlength{\LTcapwidth}{\textwidth}
 \setlength{\abovecaptionskip}{4pt}
+% Figures float as in the article (D108): at most two per page with text between them, a page of their own only
+% when they fill most of it; tables stay where they are written
+\setcounter{topnumber}{1}\setcounter{bottomnumber}{1}\setcounter{totalnumber}{2}
+\renewcommand{\topfraction}{0.85}\renewcommand{\bottomfraction}{0.6}\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+\makeatletter\setlength{\@fpsep}{\textheight}\makeatother
 
 % Tables and figures are placed where they are written (no floats), each kept on one page with its caption
 \makeatletter
@@ -882,14 +891,14 @@ def build():
                      "and their sum over 45 days either side of the day (dotted); (b) change of the 14-day medians: B2 gains what "
                      "B1 loses, so the city total is conserved ($\\kappa = 0.07$, Table~\\ref{tab:s-transfers}), and rule R16 votes "
                      "G5."),
-              r"\clearpage\section{Rules and label model}\label{sec:s-rules}",
+              r"\section{Rules and label model}\label{sec:s-rules}",
               t_rule_params(),
               figure("FigS4", "fig:s-rules",
                      "Rule diagnostics on the real data. (a) Items each rule votes on, out of the items of the kind it reads, "
                      "coloured by the rule's output; (b) items on which two rules both fire; (c) items on which two rules give "
                      "incompatible outputs. Colour scales are logarithmic."),
               t_stability(), t_recovery(), t_robustness(),
-              r"\clearpage\section{Detector and end model on the real data}\label{sec:s-detector}",
+              r"\section{Detector and end model on the real data}\label{sec:s-detector}",
               t_predictors(), t_dev_selection(), t_hard_negatives(),
               figure("FigS5", "fig:s-signatures",
                      "Signatures of the 126 dead items of the real data, coloured by final label. (a) Share of exact zeros "
@@ -903,21 +912,21 @@ def build():
                      "items; (b) agreement with the label model on the rule items and share of normal windows predicted N, by "
                      "variant (GBDT: gradient-boosted trees); (c) final labels of the detector-only candidates, from the main "
                      "detector in the southern system and from the LightGBM residual in Marrakech."),
-              r"\clearpage\section{Injection benchmark}\label{sec:s-benchmark}",
+              r"\section{Injection benchmark}\label{sec:s-benchmark}",
               figure("FigS8", "fig:s-injected",
                      "One injected event of each type over the original series (grey), from the dataset with 3\\% "
                      "contamination and seed~0; shading: the injected span. U\\_SHOCK and U\\_PARTIAL scale the load down and "
-                     "are not typed by any rule."),
+                     "are not typed by any rule.", floating=True),
               t_recall_by_type(), t_detection_tests(), t_deep(), t_gdn_forecast(), t_deep_tests(),
               t_ablations(), t_graph(), t_variants_3pct(), t_thresholds(), t_rule_families(), t_attribution_tests(), t_snorkel(),
-              r"\clearpage\section{Downstream test}\label{sec:s-downstream}",
+              r"\section{Downstream test}\label{sec:s-downstream}",
               t_forecast30(), t_dm30(), t_dm_real(), t_outage30(),
-              r"\clearpage\section{Transfer test}\label{sec:s-transfer}",
+              r"\section{Transfer test}\label{sec:s-transfer}",
               figure("FigS9", "fig:s-tetouan",
                      "The UCI Tetouan data used for the transfer test: three zones of one city, 2017, 10-min steps. (a) Daily "
                      "mean per zone; (b) one week."),
               t_tetouan_recall(), t_tetouan_attr(), t_tetouan_tests(),
-              r"\clearpage\section{Software, settings, run times and seeds}\label{sec:s-repro}",
+              r"\section{Software, settings, run times and seeds}\label{sec:s-repro}",
               t_software(), t_settings(), t_runtimes(), t_seeds(),
               r"\end{document}"]
     OUT.mkdir(parents=True, exist_ok=True)
