@@ -131,7 +131,10 @@ def build_tables(res, tet_data, cat, eps, ke, typology):
               ("TableS5_hard_negatives", B / "hard_negatives.csv"), ("TableS6_predictor_comparison", B / "predictor_comparison.csv")]
     for name, src in copies:
         shutil.copyfile(src, T / f"{name}.csv"); made[name] = str(src.relative_to(ROOT)).replace("\\", "/")
-    save("TableS7_corrections_to_the_plan", corrections_table(), "docs/paper_handoff.md section 3")
+    if (ROOT / "docs" / "paper_handoff.md").exists():
+        save("TableS7_corrections_to_the_plan", corrections_table(), "docs/paper_handoff.md section 3")
+    else:   # public code release (no docs/ folder): keep the stored table
+        made["TableS7_corrections_to_the_plan"] = "results/paper/tables/TableS7_corrections_to_the_plan.csv (stored)"
     return made
 
 

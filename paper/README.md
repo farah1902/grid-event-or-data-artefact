@@ -54,6 +54,6 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 13 | Graphical abstract | accepted (2026-11-15, D100), 13 × 5.2 cm, PDF + TIFF |
 | 14 | Authors, CRediT, declarations | done (2026-11-15, D101); open: which repository content is made public (author to specify) |
 | 15 | Final check | done (2026-11-15, D102): 12 table cells and one text range corrected, 2 citations narrowed; `tools/check_tables.py` |
-| 16 | Data availability statement | open: the author will list what is made public |
+| 16 | Data availability, release | done (2026-11-15, D103): statement with the public repository URL; public release folder and Overleaf zip built next to the repository (never committed) |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).

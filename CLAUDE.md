@@ -86,6 +86,7 @@ _local_archive/               git-ignored scratch (duplicates, zips, old copies)
 - **Git:** this folder is its own repository (branch `main`, remote `https://github.com/farah1902/grid-event-or-data-artefact`, private).
   - A parent repository exists at `C:\Users\Dell` with an unrelated remote (ESA_LandCover_Streamlit). **Never commit there.**
   - Commit and push after each completed step.
+  - The public code release (`../grid-event-or-data-artefact-code`) and the Overleaf zip (`../grid_event_or_data_artefact_overleaf.zip`) live outside this repository: never commit or push them (author's instruction, 2026-11-15, D103).
   - End commit messages with the attribution line given in the session instructions.
 - **GitHub CLI:** installed at `C:\Program Files\GitHub CLI\gh.exe` and logged in as `farah1902`. It isn't on the bash PATH, so call it with its full path.
 - **User preferences:** move fast; don't plan around the guide's week estimates; skip external-validation chores (emailing the dataset authors, ONEE/press searches); give full working code; push results to the repo.
