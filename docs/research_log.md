@@ -581,3 +581,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Abstract accepted (D98, 2026-11-15):** zone-hours (with "17 feeders (zones)") and "every dead reading" to match the body; 247 words.
 
 **Abstract: forecasting significance added (D98):** p < 0.001 one hour ahead (real 7.8e-7, injected 4e-6); 243 words (246 strict).
+
+**Highlights (D99):** five bullets (74–85 characters), `paper/highlights.txt` + `paper/highlights.docx` via `paper/tools/make_highlights.py`. Next: graphical abstract, CRediT, final checks.

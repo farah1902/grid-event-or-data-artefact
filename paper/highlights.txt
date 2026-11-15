@@ -1,0 +1,5 @@
+Label-free typing of feeder zeros, freezes and straight lines: grid event or artefact
+A constrained label model turns sparse rule votes into stable, calibrated labels
+By our typing, artefacts make up three quarters of southern dead zone-hours
+On injected data, typing cuts outage time from 1.88 to 1.26 times the truth
+A typed anomaly catalogue for a public Moroccan feeder dataset is released

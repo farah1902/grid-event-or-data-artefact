@@ -22,6 +22,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | `figures/Figure_N.pdf` | main figures under submission names, drawn by `tools/export_figures.py` (do not edit by hand) |
 | `tools/export_figures.py` | paper figure number → drawing function (`src/paper_figures.py`, `src/paper_regen.py`, `src/paper_submission.py`) |
 | `tools/wordcount.py` | texcount-based body-text count (text + headings; captions, tables, math, abstract, declarations, references excluded) |
+| `highlights.txt`, `highlights.docx`, `tools/make_highlights.py` | the highlights (source and Word copy for submission); the script checks 3–5 bullets of ≤ 85 characters and writes the .docx |
 
 ## Rules for anyone writing here
 
@@ -47,6 +48,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 9 | §1 Introduction | accepted (2026-11-14, D95, D96), 687 words; RQ1–RQ5 and H1–H3 as in Table 9 |
 | 10 | §8 Conclusions | accepted (2026-11-14, D97), 210 words; body text 8,100 words |
 | 11 | Abstract | first draft (2026-11-14, D98), 246 words, no acronyms |
-| 12 | highlights, graphical abstract, CRediT, final checks | to do |
+| 12 | Highlights | first draft (2026-11-15, D99), 5 bullets, 74–85 characters |
+| 13 | graphical abstract, CRediT, final checks | to do |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).
