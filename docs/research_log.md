@@ -587,3 +587,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Highlights accepted (D99, 2026-11-15):** bullet 4 reworded to "the outage overcount".
 
 **Graphical abstract (D100):** real F1 traces (January 2023 artefact; 30 April 2024 planned work), method column, real dead zone-hours split and the 30 injected outage ratios; PDF + 300-dpi RGB TIFF (1535 × 614 px). The F4 October 2022 outage was dropped as the grid-event example (pure exact zeros, an uncertain H1 case). Next: CRediT, final checks.
+
+**Graphical abstract accepted (D100, 2026-11-15):** colour = cause (red tints for the fill and zeros, blue tint for the noise floor), text halved and enlarged to >= 7.5 pt, docstring fixed.

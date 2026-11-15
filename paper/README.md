@@ -50,7 +50,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 10 | §8 Conclusions | accepted (2026-11-14, D97), 210 words; body text 8,100 words |
 | 11 | Abstract | first draft (2026-11-14, D98), 246 words, no acronyms |
 | 12 | Highlights | accepted (2026-11-15, D99), 5 bullets, 74–85 characters |
-| 13 | Graphical abstract | first draft (2026-11-15, D100), 13 × 5.2 cm, PDF + TIFF |
+| 13 | Graphical abstract | accepted (2026-11-15, D100), 13 × 5.2 cm, PDF + TIFF |
 | 14 | CRediT, final checks | to do |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).
