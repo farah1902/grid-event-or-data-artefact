@@ -23,6 +23,7 @@ claim points to a finding (F…) in `docs/findings.md` or a decision (D…) in `
   - Figs 1, 2 and 6 are drawn;
   - Figs 8 and 9 and E4, E6, E19 and E22 are regenerated with the noted fixes;
   - the paper set (`results/paper/`: 14 main and 28 supplementary figures with draft captions, 28 tables since D76) is ready.
+  - the supplementary material of the article (`paper/supplementary/`, D107: 33 tables, 9 figures, built from the stored results) replaces the draft supplementary list for submission.
 - **External review (2026-11-13; D76, F59):** the naive outage mean corrected to 1.88 (was 1.89, an average of rounded values); outage statistics extended to all 30 NB4 test datasets (typed 1.26× vs naive 1.88×, typed closer in 30/30); Fig 12(c) regenerated from them.
 - **The analysis is complete. Next: writing the paper** from this handoff, `results/paper/MANIFEST.md` and results_summary.
 

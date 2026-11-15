@@ -133,7 +133,7 @@ There are 28 supplementary figures (S1–S28) and 28 tables (CSV). Roles and cav
 Start with [docs/README.md](docs/README.md).
 - To write the paper: [docs/paper_handoff.md](docs/paper_handoff.md).
 - Every number: [docs/results_summary.md](docs/results_summary.md).
-- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D104).
+- Every design choice: [docs/decisions.md](docs/decisions.md) (D01–D107).
 - The paper set (figure numbering, draft captions, tables): [results/paper/MANIFEST.md](results/paper/MANIFEST.md).
 - The transfer to Tetouan, adaptation by adaptation: [docs/transfer_protocol.md](docs/transfer_protocol.md).
 - Every finding: [docs/findings.md](docs/findings.md) (F01–F66).
@@ -162,6 +162,7 @@ Agents working in the repo: read [CLAUDE.md](CLAUDE.md).
 │   ├── transfer.py                           # transfer test: a new system with the method frozen (Tetouan)
 │   ├── paper_figures.py, paper_regen.py      # NB7: final catalogue, Figs 1/2/6, regenerated figures
 │   ├── paper_tables.py                       # NB7: paper tables, numbered figure set, catalogue release
+│   ├── paper_submission.py, paper_supplement.py  # the paper's figures and the supplementary figures in submission form
 │   └── viz.py                                # shared plotting style
 ├── notebooks/                                # NB1, NB1b, NB2, NB3, NB4 (Colab GPU run), NB5, NB6, NB7, all executed
 ├── tools/

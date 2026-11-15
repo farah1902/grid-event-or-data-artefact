@@ -113,3 +113,11 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
 ## Paper figures in submission form (D86)
 
 `paper/tools/export_figures.py` draws all 12 main figures into `paper/figures/Figure_N.pdf`: no built-in title, no internal codes, 7.2 in wide, 6.5–7 pt text, TrueType fonts. Figures 1–3: `src/paper_figures.py` (paper mode); 7 and 10: `src/paper_regen.py` (paper mode); 4, 5, 6, 8, 9, 11, 12: `src/paper_submission.py`. The repo figures in `results/figures/` keep their titles (working versions).
+
+## Supplementary material of the article (D107)
+
+`paper/supplementary/supplementary.pdf`, built by `paper/tools/make_supplementary.py` (tables from the stored results; figures by `src/paper_supplement.py`, no titles, no internal codes). It replaces the NB7 draft list above for submission.
+
+- **Figures:** S1 16–17 July 2023, all southern zones; S2 clock evidence at 30 October 2022; S3 the Boujdour load transfer of 16 December 2023; S4 rule coverage, overlap and conflict; S5 signatures of the dead items; S6 the typed catalogue on one timeline; S7 the end model; S8 one injected event per type (3 %, seed 0); S9 the UCI Tetouan series.
+- **Tables:** S1 key events; S2 clock days; S3 transfer candidates; S4 learned rule parameters; S5 label stability; S6 recovery; S7 sensitivity to rule families and priors; S8 predictor accuracy; S9 development selection of event formation; S10 alarm rates by day type; S11 recall by injected type; S12 detection tests; S13 GDN and USAD; S14 GDN forecast check; S15 deep-baseline tests; S16 ablations of the main detector; S17 graph ablation; S18 detector variants at 3 %; S19 threshold sensitivity; S20 rule families on injected data; S21 attribution tests; S22 Snorkel; S23 forecasting on the 30 datasets; S24 Diebold–Mariano on the 30 datasets; S25 Diebold–Mariano on the real data; S26 outage statistics; S27–S29 Tetouan recall, attribution and tests; S30 software and hardware; S31 settings; S32 run times; S33 seeds.
+- **Cited by number in the article:** S7, S13, S14, S30–S32 (asserted by the generator).

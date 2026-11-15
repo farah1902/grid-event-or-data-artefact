@@ -42,7 +42,10 @@ def _save(fig, out, name):
 
 
 # ---------------------------------------------------------------- Figures 4 and 5: episodes, zone by zone
-def _stack(res, t0, t1, marks, highlight, out, name):
+def _stack(res, t0, t1, marks, note, note_at, highlight, out, name):
+    """One row per southern zone. marks: times of the dotted lines; note: one line of text above the top row, centred
+    on the plot (note_at None) or starting at the time note_at (D105: a note that ran past the right edge widened the
+    saved PDF, so the plot printed narrower than the text width)."""
     t0, t1 = pd.Timestamp(t0), pd.Timestamp(t1)
     zones = [(c, z) for c in R1.SOUTH for z in res["data"][c].columns]
     with plt.rc_context(STYLE):
@@ -64,12 +67,14 @@ def _stack(res, t0, t1, marks, highlight, out, name):
             ax.set_yticks([]); ax.spines["left"].set_visible(False)
             ymax = np.nanmax([x.max(), xh.max()]) if len(x) else 1
             ax.set_ylim(0, (ymax if np.isfinite(ymax) and ymax > 0 else 1) * 1.15)
-            for tm, _ in marks:
+            for tm in marks:
                 ax.axvline(pd.Timestamp(tm), color="#444", lw=.7, ls=":")
             if i and zones[i - 1][0] != c:                      # a line between cities
                 ax.spines["top"].set_visible(True); ax.spines["top"].set_color("#888")
-        for k, (tm, txt) in enumerate(marks):
-            axes[0].annotate(txt, (pd.Timestamp(tm), 1.05 + 0.6 * (k % 2)), xycoords=("data", "axes fraction"),
+        if note_at is None:
+            axes[0].text(0.5, 1.05, note, transform=axes[0].transAxes, fontsize=FS["small"], ha="center", va="bottom")
+        else:
+            axes[0].annotate(note, (pd.Timestamp(note_at), 1.05), xycoords=("data", "axes fraction"),
                              fontsize=FS["small"], ha="left", va="bottom")
         axes[-1].set_xlim(t0, t1)
         axes[-1].xaxis.set_major_locator(mdates.DayLocator())
@@ -86,13 +91,13 @@ def _stack(res, t0, t1, marks, highlight, out, name):
 
 
 def figure_4(res, out):
-    _stack(res, "2023-01-25 12:00", "2023-01-29 18:00",
-           [("2023-01-28 21:10", "28 Jan 21:10: Boujdour hold ends, all 15 zones at exact zero")], {"F4"}, out, "Figure_4")
+    _stack(res, "2023-01-25 12:00", "2023-01-29 18:00", ["2023-01-28 21:10"],
+           "28 Jan 21:10: Boujdour hold ends, all 15 zones at exact zero", None, {"F4"}, out, "Figure_4")
 
 
 def figure_5(res, out):
-    _stack(res, "2024-03-31 03:00", "2024-04-02 14:00",
-           [("2024-03-31 09:10", "09:10: Boujdour and Foum El Oued held"), ("2024-03-31 11:10", "11:10: zero fill; L1, L2 held")],
+    _stack(res, "2024-03-31 03:00", "2024-04-02 14:00", ["2024-03-31 09:10", "2024-03-31 11:10"],
+           "09:10: Boujdour and Foum El Oued held  ·  11:10: zero fill; L1, L2 held", "2024-03-31 09:10",
            {"L1", "L2"}, out, "Figure_5")
 
 

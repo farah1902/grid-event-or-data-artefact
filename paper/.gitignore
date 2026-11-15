@@ -7,5 +7,6 @@
 *.log
 *.out
 *.spl
+*.toc
 *.synctex.gz
 build.log

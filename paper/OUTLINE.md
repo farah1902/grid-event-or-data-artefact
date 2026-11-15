@@ -51,9 +51,9 @@ Honesty items that protect the value (each stated where it belongs, never hidden
 | 1 Introduction | 687 |
 | 2 Related work | 892 |
 | 3 Data, hierarchy and typology | 892 |
-| 4 Method | 1,736 |
-| 5 Experimental design | 883 |
-| 6 Results | 1,938 |
+| 4 Method | 1,732 |
+| 5 Experimental design | 884 |
+| 6 Results | 1,941 |
 | 7 Discussion | 862 |
 | 8 Conclusions | 210 |
 | **Total** | **8,000** |

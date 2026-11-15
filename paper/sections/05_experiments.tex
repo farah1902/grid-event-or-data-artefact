@@ -1,4 +1,4 @@
-% Experimental design -- budget 883 words (body text).
+% Experimental design -- budget 884 words (body text).
 % Sources: docs/decisions.md D54, D56, D57, D60-D66, D68-D71, D76; docs/methods.md sections 6.1, 8, 9;
 % src/inject.py (Table: DUR_H, _pick_zones, _place), src/benchmark.py (detection_metrics, step_auc, attribution_scores),
 % src/label_model.py (ece), src/downstream.py (mase_scale, dm_test, dm_table); results/benchmark_v1/summary.json and
@@ -91,4 +91,4 @@ Tetouan tests the method on a new system. The rules, the label-model parameters 
 
 \subsection{Statistics and reproducibility}\label{sec:statistics}
 
-Results are mean $\pm$ s.d. over 10 seeds per rate. Methods are compared by exact paired two-sided Wilcoxon signed-rank tests \cite{wilcoxon1945}: the smallest attainable $p$ is 0.002 over 10 seeds and $1.9 \times 10^{-9}$ over 30 datasets. The code, developed with an AI coding assistant (Claude, Anthropic) and reviewed by the authors, uses Python, PyTorch \cite{paszke2019pytorch}, LightGBM 4.6.0 \cite{ke2017lightgbm} and scikit-learn \cite{pedregosa2011sklearn}; every injected dataset is regenerated from its rate and seed, and versions, settings and run times are in the supplementary material.
+Results are mean $\pm$ s.d. over 10 seeds per rate. Methods are compared by exact paired two-sided Wilcoxon signed-rank tests \cite{wilcoxon1945}: the smallest attainable $p$ is 0.002 over 10 seeds and $1.9 \times 10^{-9}$ over 30 datasets. The code, developed with an AI coding assistant (Claude, Anthropic) and reviewed by the authors, uses Python, PyTorch \cite{paszke2019pytorch}, LightGBM 4.6.0 \cite{ke2017lightgbm} and scikit-learn \cite{pedregosa2011sklearn}; every injected dataset is regenerated from its rate and seed, and versions, settings and run times are in supplementary Tables~S30--S32.

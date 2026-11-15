@@ -23,6 +23,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | `tools/export_figures.py` | paper figure number → drawing function (`src/paper_figures.py`, `src/paper_regen.py`, `src/paper_submission.py`) |
 | `tools/wordcount.py` | texcount-based body-text count (text + headings; captions, tables, math, abstract, declarations, references excluded) |
 | `graphical_abstract.pdf`, `graphical_abstract.tif`, `tools/make_graphical_abstract.py` | the graphical abstract (vector PDF and 300-dpi TIFF, 1535 × 614 px), drawn from the raw series and stored results |
+| `supplementary/supplementary.tex`, `supplementary.pdf`, `figures/FigS*.pdf` | the supplementary material (D107): 33 tables and 9 figures, built by `tools/make_supplementary.py` from the stored results; compile it on its own |
 | `highlights.txt`, `highlights.docx`, `tools/make_highlights.py` | the highlights (source and Word copy for submission); the script checks 3–5 bullets of ≤ 85 characters and writes the .docx |
 
 ## Rules for anyone writing here
@@ -56,5 +57,7 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 15 | Final check | done (2026-11-15, D102): 12 table cells and one text range corrected, 2 citations narrowed; `tools/check_tables.py` |
 | 16 | Data availability, release | done (2026-11-15, D103): statement with the public repository URL; public release folder and Overleaf zip built next to the repository (never committed) |
 | 17 | Figure 3 legibility | done (2026-11-15, D104): text 1.8× larger, arrows start on the box borders; approved by the author |
+| 18 | Figures 4–5, page layout, RQ/H list | done (2026-11-15, D105, D106): Figure 4 at full width with its note centred, Figure 5's notes on one line, one float per page (50 pages) |
+| 19 | Supplementary material | done (2026-11-15, D107): `supplementary/supplementary.pdf`, 23 pages, 33 tables, 9 figures; the article's four pointers name the tables |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).

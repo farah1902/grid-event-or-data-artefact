@@ -21,6 +21,27 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \setlength{\emergencystretch}{1.5em}   % lets TeX loosen a line instead of overfilling it (long citations, list items)
 
+% Float placement (D106, author's request): one float per page. A text page carries at most one float, at its top,
+% and a float page carries a single float (a second one never fits after a separation of one text height).
+\setcounter{topnumber}{1}
+\setcounter{bottomnumber}{0}
+\setcounter{totalnumber}{1}
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\floatpagefraction}{0.5}
+\makeatletter
+\setlength{\@fpsep}{\textheight}
+% \floatbarrier: output every pending float before going on (a new page only if a float is pending), as placeins does
+\newcommand{\floatbarrier}{\par\begingroup\let\@elt\relax
+  \edef\@tempa{\@botlist\@deferlist\@dbldeferlist}\ifx\@tempa\@empty\else\clearpage\fi\endgroup}
+\makeatother
+
+% Research questions and hypotheses (D106): bold labels inside the text block, wrapped lines aligned with the text
+\newenvironment{labelledlist}{\begin{list}{}{%
+  \setlength{\labelwidth}{2.6em}\setlength{\labelsep}{0.6em}\setlength{\leftmargin}{3.2em}%
+  \setlength{\itemindent}{0pt}\setlength{\topsep}{4pt}\setlength{\itemsep}{2pt}\setlength{\parsep}{0pt}%
+  \renewcommand{\makelabel}[1]{\textbf{##1}\hfil}}}{\end{list}}
+
 % notation used throughout
 \usepackage{dsfont}
 \newcommand{\xh}{\hat{x}}
@@ -66,8 +87,11 @@ weak supervision \sep anomaly attribution \sep feeder telemetry \sep data qualit
 \input{sections/04_method}
 \input{sections/05_experiments}
 \input{sections/06_results}
+\floatbarrier   % the figures and tables of each section stay in that section
 \input{sections/07_discussion}
+\floatbarrier
 \input{sections/08_conclusions}
+\floatbarrier   % no float after the declarations or among the references
 \input{sections/declarations}
 
 \bibliographystyle{elsarticle-num}

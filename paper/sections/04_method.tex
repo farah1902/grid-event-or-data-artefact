@@ -1,4 +1,4 @@
-% Method -- budget 1,750 words (body text).
+% Method -- budget 1,732 words (body text).
 % Source: docs/methods.md (sections 2-8, the method as implemented), docs/decisions.md (D-numbers in comments),
 % results/paper/tables/Table3_rules.csv. External references verified in references.bib.
 \section{Method}\label{sec:method}
@@ -131,7 +131,7 @@ b_{rl} = \frac{\beta_1 + \sum_i n_{i} \one[o_{ir} = l]}{\beta_1 + \beta_0 + \sum
 \end{gathered}
 \label{eq:mstep}
 \end{equation}
-where the sums run over the items to which $r$ applies, and $m_i$ and $n_i$ are the posterior masses on $S(r,l)$ and on its complement. We set $(\alpha_1, \alpha_0) = (1, 1)$, or $(9, 1)$ for defining rules, $(\beta_1, \beta_0) = (1, 9)$ and $\gamma = 1$, and keep the best of 20 restarts. The defining-rule prior matters: without it, 39\% of the real dead items change label (the sensitivity to every prior and rule family is reported in the supplementary material). With these constraints all 20 restarts reach the same labels, and the model recovers its own parameters from votes simulated from it (Section~\ref{sec:results}). % D28-D34, F22, F24
+where the sums run over the items to which $r$ applies, and $m_i$ and $n_i$ are the posterior masses on $S(r,l)$ and on its complement. We set $(\alpha_1, \alpha_0) = (1, 1)$, or $(9, 1)$ for defining rules, $(\beta_1, \beta_0) = (1, 9)$ and $\gamma = 1$, and keep the best of 20 restarts. The defining-rule prior matters: without it, 39\% of the real dead items change label (sensitivity to every prior and rule family: supplementary Table~S7). With these constraints all 20 restarts reach the same labels, and the model recovers its own parameters from votes simulated from it (Section~\ref{sec:results}). % D28-D34, F22, F24
 
 \subsection{Multi-scale hierarchical residual detector}\label{sec:detector}
 
