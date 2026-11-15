@@ -591,3 +591,5 @@ Agents append a new section per session (see `CLAUDE.md`). Decisions are D… (`
 **Graphical abstract accepted (D100, 2026-11-15):** colour = cause (red tints for the fill and zeros, blue tint for the noise floor), text halved and enlarged to >= 7.5 pt, docstring fixed.
 
 **Front matter (D101):** authors, affiliations, corresponding author, CRediT statement (principal-author roles partly inferred, to confirm), competing-interest declaration, draft generative-AI declaration. Open: funding statement, repository identifiers.
+
+**Front matter, author's answers (D101):** CRediT confirmed; funding: no specific grant; AI declaration removed (author's decision); public repository content to be specified by the author.
