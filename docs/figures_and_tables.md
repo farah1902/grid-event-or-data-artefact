@@ -69,7 +69,7 @@ Guide plan update: **Fig 8 (residual hierarchy) is done.** Fig 6 (framework) sho
 | Fig 3 (Jan 2023) | done | `fig3_C05_C06_jan2023` |
 | Fig 4 (Mar 2024) | done | `fig4_C12_mar2024` |
 | Fig 5 (clock evidence) | done | `fig5_clock_2022-10-30` |
-| Fig 6 (framework diagram) | **done (NB7)** | `fig6_framework`: weak-supervision lane, residual-detector lane, end model and fusion, catalogue, the three evaluations |
+| Fig 6 (framework diagram) | **done (NB7)** | `fig6_framework`: weak-supervision lane, residual-detector lane, end model and fusion, catalogue, the three evaluations; paper Figure 3, text enlarged and arrows on the box borders (D104) |
 | Fig 7 (rule coverage, overlap, conflict) | done | `fig7_rule_diagnostics` |
 | Fig 8 (residual hierarchy g, u, v) | done | `fig8_residual_hierarchy` (NB3) |
 | Fig 9 (detection PR curves) | **done** (NB4 Colab run, 2026-11-09) | `fig9_detection` (dot plot of event F1 and step AUC-PR, test period). The no-graph multi-scale row (D62) is not in the figure; add it in NB7 from `graph_ablation/` |

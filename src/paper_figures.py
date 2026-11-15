@@ -341,71 +341,170 @@ def table2_typology(cat):
                          for c, nm, f, lv, s, r in TYPOLOGY])
 
 
-# ====================================================================== Fig 6: framework
-def _box(ax, x, y, w, h, title, body, ec, fc, fs=8.0, tfs=9.0, wrap=None):
-    import textwrap
-    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.004,rounding_size=0.01", fc=fc, ec=ec, lw=1.4))
-    if wrap:
-        body = "\n".join(textwrap.fill(p, wrap, break_on_hyphens=False) for p in body.split("\n"))
-    ax.text(x + 0.008, y + h - 0.012, title, ha="left", va="top", fontsize=tfs, weight="bold", color=ec)
-    ax.text(x + 0.008, y + h - 0.042, body, ha="left", va="top", fontsize=fs, color=INK, linespacing=1.28)
+# ====================================================================== Fig 6: framework (paper Figure 3)
+# Drawn in points: the drawing area is FW_W x FW_H pt (17.5 x 9.4 in) and 1 data unit = 1 pt in both directions. The paper
+# prints it at the text width (390 pt, x 0.31), so the text is as large as the boxes allow (D104): body 14.5 pt, titles and
+# lane headers 16 pt, arrow labels and the type key 13.5 pt. Boxes are drawn exactly on their outline (no outer pad) and
+# arrows are not shortened, so every arrow starts on the source box's border and its tip touches the target's border.
+# _fw_check fails the figure if a box text comes within 3 pt of its border or a free text touches a box.
+FW_W, FW_H = 1260.0, 676.8
+FW_FS, FW_TFS, FW_SFS = 14.5, 16.0, 13.5
+FW_PAD, FW_GAP, FW_LS = 9.0, 6.0, 1.3       # inner padding, title-to-body gap (pt), body line spacing
+FW_IND = " " * 5                             # hanging indent of a title's second line (the width of "6 · " in bold)
 
 
-def _arr(ax, p, q, text=None, color=INK, rad=0.0, fs=7.2, tx=None):
-    ax.add_patch(FancyArrowPatch(p, q, arrowstyle="-|>", mutation_scale=11, color=color, lw=1.2,
-                                 connectionstyle=f"arc3,rad={rad}"))
+def _pt_bbox(ax, artist):
+    """Extent of a drawn artist in data units (points in Fig 6)."""
+    return artist.get_window_extent(ax.figure.canvas.get_renderer()).transformed(ax.transData.inverted())
+
+
+def _box(ax, boxes, name, x, y, w, h, title, body, ec, fc="white"):
+    """Rounded box on (x, y, w, h): bold title at the top left, body below the title's measured extent."""
+    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0,rounding_size=8", fc=fc, ec=ec, lw=1.8))
+    t = ax.text(x + FW_PAD, y + h - FW_PAD, title, ha="left", va="top", fontsize=FW_TFS, weight="bold", color=ec,
+                linespacing=1.15)
+    b = ax.text(x + FW_PAD, _pt_bbox(ax, t).y0 - FW_GAP, body, ha="left", va="top", fontsize=FW_FS, color=INK,
+                linespacing=FW_LS)
+    boxes[name] = ((x, y, w, h), [t, b])
+    return x, y, w, h
+
+
+def _arr(ax, free, p, q, text=None, tx=None, ha="center", color=INK):
+    """Arrow from p (on the source box's border) to q (on the target's border), not shortened at either end."""
+    ax.add_patch(FancyArrowPatch(p, q, arrowstyle="-|>", mutation_scale=16, color=color, lw=1.6, shrinkA=0, shrinkB=0))
     if text:
         x, y = tx if tx else ((p[0] + q[0]) / 2, (p[1] + q[1]) / 2)
-        ax.text(x, y, text, fontsize=fs, color=color, ha="center", va="center", style="italic",
-                bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.9))
+        free.append(ax.text(x, y, text, fontsize=FW_SFS, color=color, ha=ha, va="center", style="italic",
+                            bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.9)))
+
+
+def _fw_check(ax, boxes, free, tol=3.0):
+    """Every box text at least tol pt inside its box; no free text outside the drawing or on a box.
+    Returns the smallest margin (pt) and its box."""
+    ax.figure.canvas.draw()
+    bad, worst = [], (np.inf, "")
+    for name, ((x, y, w, h), texts) in boxes.items():
+        for t in texts:
+            b = _pt_bbox(ax, t)
+            m = min(b.x0 - x, x + w - b.x1, b.y0 - y, y + h - b.y1)
+            worst = min(worst, (m, name))
+            if m < tol:
+                bad.append(f"box {name}: text {m:.1f} pt from the border")
+    for t in free:
+        b = _pt_bbox(ax, t)
+        if b.x0 < 0 or b.x1 > FW_W or b.y0 < 0 or b.y1 > FW_H:
+            bad.append(f"{t.get_text()[:30]!r} outside the drawing")
+        bad += [f"{t.get_text()[:30]!r} touches box {n}" for n, ((x, y, w, h), _) in boxes.items()
+                if b.x0 < x + w and b.x1 > x and b.y0 < y + h and b.y1 > y]
+    if bad:
+        raise ValueError("Fig 6 layout: " + "; ".join(bad))
+    return worst
 
 
 def fig6_framework(fig_dir, n_items=327, n_det=77, paper_name=None):
-    fig = plt.figure(figsize=(17.5, 9.4))
-    ax = fig.add_axes([0, 0, 1, 1]); ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
+    W, H, m = FW_W, FW_H, 4.0
+    band = 0.0 if paper_name else 43.2                     # repo copy (NB7): a title band above the drawing
+    fig = plt.figure(figsize=(W / 72, (H + band) / 72))
+    ax = fig.add_axes([0, 0, 1, H / (H + band)]); ax.set_xlim(0, W); ax.set_ylim(0, H); ax.axis("off")
     BL, OR, GR, RD, TE = "#2F6690", "#C77C11", "#5F6B76", "#C8553D", "#2A9D8F"
-    ax.add_patch(Rectangle((0.145, 0.505), 0.565, 0.40, fc="#F4F7FB", ec="none"))
-    ax.add_patch(Rectangle((0.145, 0.17), 0.565, 0.30, fc="#FBF6EE", ec="none"))
-    ax.text(0.152, 0.893, "WEAK SUPERVISION: no manual labels", fontsize=9, color=BL, weight="bold", va="top")
-    ax.text(0.152, 0.458, "RESIDUAL DETECTOR: anomalies no rule covers", fontsize=9, color=OR, weight="bold", va="top")
+    boxes, free = {}, []
+    # columns: input | two lanes of three box columns | catalogue | evaluations
+    x_in, w_in = m, 146.0
+    w_ev = 146.0; x_ev = W - m - w_ev
+    w_cat = 156.0; x_cat = x_ev - 16 - w_cat
+    lx0, lx1, gc = x_in + w_in + 18, x_cat - 18, 22.0
+    C = (lx1 - lx0 - 16 - 2 * gc) / 3
+    xc = [lx0 + 8 + i * (C + gc) for i in range(3)]
+    # rows: A and B in the weak-supervision lane, C in the detector lane, the type key below
+    head, gr, gl, key_gap, key_h = 34.0, 34.0, 34.0, 12.0, 32.0
+    hr = (H - 2 * m - 2 * head - gr - gl - 20 - key_gap - key_h) / 3
+    l1_top = H - m
+    yA = l1_top - head - hr
+    yB = yA - gr - hr
+    l1_bot = yB - 10
+    l2_top = l1_bot - gl
+    yC = l2_top - head - hr
+    l2_bot = yC - 10
+    mid_y = (yC + yA + hr) / 2                              # middle of the three rows
+    ax.add_patch(Rectangle((lx0, l1_bot), lx1 - lx0, l1_top - l1_bot, fc="#F4F7FB", ec="none"))
+    ax.add_patch(Rectangle((lx0, l2_bot), lx1 - lx0, l2_top - l2_bot, fc="#FBF6EE", ec="none"))
+    free.append(ax.text(xc[0], l1_top - 8, "WEAK SUPERVISION: no manual labels", fontsize=FW_TFS, color=BL, weight="bold",
+                        va="top"))
+    free.append(ax.text(xc[0], l2_top - 8, "RESIDUAL DETECTOR: anomalies no rule covers", fontsize=FW_TFS, color=OR,
+                        weight="bold", va="top"))
     # input
-    _box(ax, 0.01, 0.30, 0.12, 0.42, "INPUT", "feeder series x per zone\n\nzone → city → region\n(one shared timeline in the south)\n\n10-min A (south), 30-min kW (Marrakech)\n\ntimestamps as recorded", GR, "white", wrap=22)
-    # weak supervision lane
-    _box(ax, 0.155, 0.70, 0.17, 0.165, "1 · Per-step states", "x̂ = 14-day same-slot median\nexact zero · noise floor (≤ 5 % of x̂)\nhold (≥ 6 equal values)\nstraight-line fill (≥ 6 collinear points)", BL, "white")
-    _box(ax, 0.155, 0.515, 0.17, 0.165, "2 · Items and episodes", f"dead · fill · clock · transfer items\n({n_items} on the real data)\nitems sharing boundaries → episodes\n(e.g. hold → zero fill)", BL, "white")
-    _box(ax, 0.345, 0.70, 0.17, 0.165, "3 · 19 labelling rules", "vote or abstain, in 9 families:\nsimultaneity · hold · straight line ·\nrestoration · city · single zone ·\ncalendar · clock · conservation", BL, "white")
-    _box(ax, 0.345, 0.515, 0.17, 0.165, "4 · Constrained label model", "Dawid–Skene with feasible classes\nby level, applicability domains,\none-coin parameters and priors\n→ q(y) over A1–A4, G1–G5, N", BL, "white")
+    bi = _box(ax, boxes, "input", x_in, mid_y - 155, w_in, 310, "INPUT",
+              "feeder series x\nper zone\n\nzone → city →\nregion\n(one shared\ntimeline in the\nsouth)\n\n"
+              "10-min A (south),\n30-min kW\n(Marrakech)\n\ntimestamps as\nrecorded", GR)
+    # weak-supervision lane
+    b1 = _box(ax, boxes, "1", xc[0], yA, C, hr, "1 · Per-step states",
+              "x̂ = 14-day same-slot median\nexact zero\nnoise floor (≤ 5 % of x̂)\nhold (≥ 6 equal values)\n"
+              "straight-line fill\n(≥ 6 collinear points)", BL)
+    b2 = _box(ax, boxes, "2", xc[0], yB, C, hr, "2 · Items and episodes",
+              f"dead · fill · clock · transfer\nitems ({n_items} on the real data)\nitems sharing boundaries\n→ episodes\n"
+              "(e.g. hold → zero fill)", BL)
+    b3 = _box(ax, boxes, "3", xc[1], yA, C, hr, "3 · 19 labelling rules",
+              "vote or abstain, in 9 families:\nsimultaneity · hold ·\nstraight line · restoration ·\n"
+              "city · single zone · calendar ·\nclock · conservation", BL)
+    b4 = _box(ax, boxes, "4", xc[1], yB, C, hr, f"4 · Constrained\n{FW_IND}label model",
+              "Dawid–Skene with feasible\nclasses by level, applicability\ndomains, one-coin\nparameters and priors\n"
+              "→ q(y) over A1–A4, G1–G5, N", BL)
     # detector lane
-    _box(ax, 0.155, 0.19, 0.17, 0.235, "5 · Predictor", "TCN-GAT forecast of ρ = x / x̂,\ncross-fitted, trained on\nrule-clean steps\nablations: learned graph on/off;\nLightGBM predictor", OR, "white")
-    _box(ax, 0.345, 0.19, 0.17, 0.235, "6 · Multi-scale residual\n    hierarchy", "\nphase-aligned MODWT bands\nregion g · city u · zone v\nrobust z-scores\nmax over bands and levels", OR, "white")
-    _box(ax, 0.535, 0.19, 0.165, 0.235, "7 · Event formation", "smoothing w · threshold at\npercentile q · merge gap\n(tuned on development data,\nthe same budget for every\ndetector)\n→ detector-only candidates", OR, "white")
+    b5 = _box(ax, boxes, "5", xc[0], yC, C, hr, "5 · Predictor",
+              "TCN-GAT forecast of\nρ = x / x̂, cross-fitted,\ntrained on rule-clean steps\nablations: learned graph\n"
+              "on/off; LightGBM predictor", OR)
+    b6 = _box(ax, boxes, "6", xc[1], yC, C, hr, f"6 · Multi-scale residual\n{FW_IND}hierarchy",
+              "phase-aligned MODWT bands\nregion g · city u · zone v\nrobust z-scores\nmax over bands and levels", OR)
+    b7 = _box(ax, boxes, "7", xc[2], yC, C, hr, "7 · Event formation",
+              "smoothing w · threshold at\npercentile q · merge gap\n(tuned on development data,\n"
+              "the same budget for every\ndetector)\n→ detector-only candidates", OR)
     # end model and fusion
-    _box(ax, 0.535, 0.70, 0.165, 0.165, "8 · End model", "gradient boosting on item\nfeatures (shape, timing,\nepisode context, level scores\nfrom step 6), trained on q\nout of fold → f(y)", TE, "white")
-    _box(ax, 0.535, 0.515, 0.165, 0.165, "9 · Fusion", r"$p \propto q^{\beta}\, f^{1-\beta}$" + "\non feasible classes;\nabstain on rare classes", TE, "white")
-    # catalogue
-    _box(ax, 0.725, 0.40, 0.125, 0.34, "TYPED\nPROBABILISTIC\nCATALOGUE", f"\n\n{n_items + n_det} entries:\n{n_items} rule items\n+ {n_det} detector-only\n\nlabel, confidence,\np(y) per class\n\nepisodes as label\nsequences", RD, "#FBE9E5", tfs=9.2)
-    # evaluation
-    _box(ax, 0.865, 0.64, 0.128, 0.20, "Injection benchmark", "30 datasets, 1/3/7 %\ndetection, attribution,\nablations", GR, "white", wrap=26)
-    _box(ax, 0.865, 0.405, 0.128, 0.20, "Downstream test", "typed cleaning:\nforecasts and outage\nstatistics", GR, "white", wrap=26)
-    _box(ax, 0.865, 0.17, 0.128, 0.20, "Transfer test", "Tetouan, with the\nmethod frozen", GR, "white", wrap=26)
-    # arrows
-    _arr(ax, (0.13, 0.62), (0.155, 0.78)); _arr(ax, (0.13, 0.42), (0.155, 0.31))
-    _arr(ax, (0.24, 0.70), (0.24, 0.68))
-    _arr(ax, (0.325, 0.60), (0.345, 0.78))
-    ax.text(0.3345, 0.69, "items", fontsize=7.2, style="italic", ha="center", va="center", bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none"))
-    _arr(ax, (0.43, 0.70), (0.43, 0.68))
-    _arr(ax, (0.515, 0.60), (0.535, 0.60), "q", tx=(0.525, 0.628))
-    _arr(ax, (0.515, 0.66), (0.535, 0.76), "q as soft\ntargets", tx=(0.516, 0.735))
-    _arr(ax, (0.6175, 0.70), (0.6175, 0.68), "f", tx=(0.628, 0.69))
-    _arr(ax, (0.325, 0.31), (0.345, 0.31)); _arr(ax, (0.515, 0.31), (0.535, 0.31))
-    _arr(ax, (0.6175, 0.425), (0.6175, 0.515), "candidates (labelled by f)", tx=(0.6175, 0.47))
-    _arr(ax, (0.70, 0.60), (0.725, 0.60))
-    for y in (0.74, 0.505, 0.27):
-        _arr(ax, (0.85, 0.57), (0.865, y))
+    b8 = _box(ax, boxes, "8", xc[2], yA, C, hr, "8 · End model",
+              "gradient boosting on item\nfeatures (shape, timing,\nepisode context, level scores\n"
+              "from step 6), trained on q\nout of fold → f(y)", TE)
+    b9 = _box(ax, boxes, "9", xc[2], yB, C, hr, "9 · Fusion",
+              r"$p \propto q^{\beta}\, f^{1-\beta}$" + "\non feasible classes;\nabstain on rare classes", TE)
+    # catalogue and evaluations
+    bc = _box(ax, boxes, "catalogue", x_cat, yB + hr / 2 - 125, w_cat, 250, "TYPED\nPROBABILISTIC\nCATALOGUE",
+              f"{n_items + n_det} entries:\n{n_items} rule items\n+ {n_det} detector-only\n\nlabel, confidence,\n"
+              "p(y) per class\n\nepisodes as label\nsequences", RD, "#FBE9E5")
+    be = [_box(ax, boxes, nm, x_ev, y, w_ev, hr, tt, bd, GR) for nm, y, tt, bd in [    # aligned with rows A, B, C
+        ("injection", yA, "Injection\nbenchmark", "30 datasets,\n1/3/7 %\ndetection,\nattribution,\nablations"),
+        ("downstream", yB, "Downstream\ntest", "typed cleaning:\nforecasts and\noutage statistics"),
+        ("transfer", yC, "Transfer\ntest", "Tetouan, with the\nmethod frozen")]]
+    # arrows: every one starts on a border and ends on a border
+    R = lambda b, y: (b[0] + b[2], y)          # noqa: E731  point on the right border at height y
+    L = lambda b, y: (b[0], y)                 # noqa: E731
+    T = lambda b, x: (x, b[1] + b[3])          # noqa: E731
+    B = lambda b, x: (x, b[1])                 # noqa: E731
+    M = lambda b: b[1] + b[3] / 2              # noqa: E731
+    gap_A = (yA + yB + hr) / 2                 # middle of the gap between rows A and B
+    _arr(ax, free, R(bi, bi[1] + bi[3] - 20), L(b1, M(b1)))
+    _arr(ax, free, R(bi, bi[1] + 20), L(b5, M(b5)))
+    _arr(ax, free, B(b1, xc[0] + C / 2), T(b2, xc[0] + C / 2))
+    _arr(ax, free, R(b2, yB + hr - 22), L(b3, yA + 22), "items")
+    _arr(ax, free, B(b3, xc[1] + C / 2), T(b4, xc[1] + C / 2))
+    _arr(ax, free, R(b4, M(b4)), L(b9, M(b9)), "q", tx=(xc[1] + C + gc / 2, M(b4) + 13))
+    _arr(ax, free, R(b4, yB + hr - 16), B(b8, xc[2] + 22), "q as soft targets", tx=(xc[2] + 34, gap_A), ha="left")
+    _arr(ax, free, B(b8, xc[2] + C - 40), T(b9, xc[2] + C - 40), "f", tx=(xc[2] + C - 29, gap_A))
+    _arr(ax, free, R(b5, M(b5)), L(b6, M(b6)))
+    _arr(ax, free, R(b6, M(b6)), L(b7, M(b7)))
+    _arr(ax, free, T(b7, xc[2] + C / 2), B(b9, xc[2] + C / 2), "candidates (labelled by f)",
+         tx=(xc[2] + C / 2, (l1_bot + l2_top) / 2))
+    _arr(ax, free, R(b9, M(b9)), L(bc, M(b9)))
+    _arr(ax, free, R(bc, bc[1] + bc[3] - 20), L(be[0], be[0][1] + 22))
+    _arr(ax, free, R(bc, M(bc)), L(be[1], M(be[1])))
+    _arr(ax, free, R(bc, bc[1] + 20), L(be[2], be[2][1] + be[2][3] - 22))
+    free.append(ax.text(W / 2, l2_bot - key_gap,
+                        "A1 zero-fill gap · A2 simultaneous fill · A3 single-zone fill · A4 clock error\n"
+                        "G1 regional outage · G2 city outage · G3 unplanned feeder outage · G4 planned work · "
+                        "G5 load transfer · N normal / untyped", ha="center", va="top", fontsize=FW_SFS, color="#444",
+                        linespacing=1.3))
     if not paper_name:
-        ax.text(0.5, 0.965, "Fig 6 — Framework: weak supervision from hierarchical rules, a multi-scale residual detector, an end model and fusion "
-                "produce a typed, probabilistic event catalogue", ha="center", fontsize=12, weight="bold", color=INK)
-    ax.text(0.5, 0.11, "A1 zero-fill gap · A2 simultaneous fill · A3 single-zone fill · A4 clock error · G1 regional outage · G2 city outage · "
-            "G3 unplanned feeder outage · G4 planned work · G5 load transfer · N normal / untyped", ha="center", fontsize=8.5, color="#444")
+        fig.text(0.5, 1 - band / 2 / (H + band), "Fig 6 — Framework: weak supervision from hierarchical rules, a multi-scale "
+                 "residual detector, an end model and fusion produce a typed, probabilistic event catalogue", ha="center",
+                 va="center", fontsize=12, weight="bold", color=INK)
+    worst = _fw_check(ax, boxes, free)
+    print(f"Fig 6 layout check: every text inside its box (smallest margin {worst[0]:.1f} pt, box {worst[1]})")
     _save(fig, fig_dir, "fig6_framework", paper_name)
     return fig
