@@ -59,5 +59,6 @@ python paper/tools/wordcount.py           # body-text words per section vs the 8
 | 17 | Figure 3 legibility | done (2026-11-15, D104): text 1.8× larger, arrows start on the box borders; approved by the author |
 | 18 | Figures 4–5, page layout, RQ/H list | done (2026-11-15, D105, D106, D108): Figure 4 at full width with its note centred, Figure 5's notes on one line; every float in the text after the paragraph that cites it, in source order, none alone on a page (45 pages) |
 | 19 | Supplementary material | done (2026-11-15, D107, D108): `supplementary/supplementary.pdf`, 21 pages, 33 tables, 9 figures; the article's four pointers name the tables |
+| 20 | Research questions and hypotheses | done (2026-11-15, D109): one paragraph in §1, Table 10 in the same words; approved by the author |
 
 **Figure step (to do before submission):** re-export every main figure without the title baked into the image (captions carry it), with TrueType fonts embedded (`pdf.fonttype = 42`), sized for print width with legible text; Fig 1's internal title still says "logger" (D77).

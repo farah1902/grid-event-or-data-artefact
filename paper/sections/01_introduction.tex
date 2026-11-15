@@ -19,19 +19,6 @@ This paper types each anomaly of a feeder record as an acquisition artefact or a
 \item a typed catalogue of the dataset's anomalies (404 entries), released with the code, so that later studies can impute the artefacts and keep the grid events.
 \end{itemize}
 
-The paper asks five research questions:
-\begin{labelledlist}
-\item[RQ1] Can the hierarchy and the signatures alone, without labels, type the anomalies?
-\item[RQ2] Which signatures separate grid events from artefacts?
-\item[RQ3] Does learning add to the rules?
-\item[RQ4] Does type-aware cleaning help downstream?
-\item[RQ5] Does the method transfer without re-tuning?
-\end{labelledlist}
-It also tests three hypotheses on the physics of the signatures:
-\begin{labelledlist}
-\item[H1] Acquisition failures leave exact zeros, holds or straight lines; de-energised feeders leave a noise floor.
-\item[H2] Outages restore with a ramp or an overshoot; gaps return directly.
-\item[H3] Load transfers conserve current; faults and gaps do not.
-\end{labelledlist}
+Five research questions structure the study: whether the hierarchy and the signatures alone, without labels, can type the anomalies (RQ1); which signatures separate grid events from artefacts (RQ2); whether learning adds to the rules (RQ3); whether type-aware cleaning improves outage statistics and forecasts (RQ4); and whether the method transfers to another system without re-tuning (RQ5). It also tests three hypotheses: acquisition failures leave exact zeros, holds or straight lines, whereas de-energised feeders leave a noise floor (H1); outages restore with a ramp or an overshoot, whereas gaps return directly (H2); and load transfers conserve current, whereas faults and gaps do not (H3).
 
-Section~\ref{sec:related} reviews related work; Sections~\ref{sec:data}--\ref{sec:experiments} present the data and typology, the method and the experimental design. Section~\ref{sec:results} reports the results, Section~\ref{sec:discussion} answers the questions and states the limitations, and Section~\ref{sec:conclusions} concludes.
+Section~\ref{sec:related} reviews related work; Sections~\ref{sec:data}--\ref{sec:experiments} present the data, the method and the experimental design, Section~\ref{sec:results} the results and Section~\ref{sec:discussion} the answers and limitations; Section~\ref{sec:conclusions} concludes.

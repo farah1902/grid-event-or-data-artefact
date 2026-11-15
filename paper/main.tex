@@ -40,12 +40,6 @@
   \edef\@tempa{\@botlist\@deferlist\@dbldeferlist}\ifx\@tempa\@empty\else\clearpage\fi\endgroup}
 \makeatother
 
-% Research questions and hypotheses (D106): bold labels inside the text block, wrapped lines aligned with the text
-\newenvironment{labelledlist}{\begin{list}{}{%
-  \setlength{\labelwidth}{2.6em}\setlength{\labelsep}{0.6em}\setlength{\leftmargin}{3.2em}%
-  \setlength{\itemindent}{0pt}\setlength{\topsep}{4pt}\setlength{\itemsep}{2pt}\setlength{\parsep}{0pt}%
-  \renewcommand{\makelabel}[1]{\textbf{##1}\hfil}}}{\end{list}}
-
 % notation used throughout
 \usepackage{dsfont}
 \newcommand{\xh}{\hat{x}}
